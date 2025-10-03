@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# lint-staged 실행 (스테이징된 파일들만 체크)
+echo "🔍 스테이징된 파일들을 Biome으로 체크 중..."
+npx lint-staged
