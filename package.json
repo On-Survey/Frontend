@@ -38,8 +38,8 @@
 	},
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx,json}": [
-			"biome check --apply",
-			"biome format --write"
+			"biome format --write",
+			"biome check"
 		]
 	}
 }
