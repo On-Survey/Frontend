@@ -1,0 +1,84 @@
+# CodeRabbit 설정 파일
+language: "ko-KR" # 한국말로 설정
+early_access: false
+
+reviews:
+  profile: "chill" # 리뷰 너무 빡세게는 안한다는 뜻
+  request_changes_workflow: true # 코드래빗이 리뷰 끝나면 알아서 PR 승인하게끔
+  high_level_summary: true
+  poem: false 
+  review_status: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+
+chat:
+  auto_reply: true
+
+# 프로젝트별 설정
+project:
+  name: "onsurvey"
+  type: "react-typescript"
+  
+# 리뷰 규칙
+rules:
+  # Biome 규칙 강제
+  enforce_biome_rules: true
+  
+  # TypeScript 체크
+  check_typescript: true
+  
+  # 보안 체크
+  security_checks: true
+  
+  # 성능 개선 제안
+  suggest_performance_improvements: true
+  
+  # 접근성 체크
+  accessibility_checks: true
+  
+  # 변경된 파일만 리뷰
+  review_only_changed_files: true
+  
+  # 리뷰 범위 제한
+  review_scope: "modified_lines_only"
+  
+  # 최대 리뷰 파일 수 제한
+  max_files_to_review: 50
+  
+  # 리뷰 깊이 설정 (shallow: 빠름, deep: 상세함)
+  review_depth: "shallow"
+  
+  # 파일 크기 제한 (KB)
+  max_file_size_kb: 500
+  
+  # 변경된 라인 수 제한
+  max_changed_lines: 1000
+  
+  # 너무 큰 PR 경고
+  large_pr_threshold: 500
+
+# 파일별 설정
+files:
+  # API 관련 파일
+  "src/service/**/*.ts":
+    focus: ["api_patterns", "error_handling", "type_safety"]
+  
+  # 컴포넌트 파일
+  "src/components/**/*.tsx":
+    focus: ["react_patterns", "accessibility", "performance"]
+  
+  # 설정 파일
+  "*.config.*":
+    focus: ["configuration", "best_practices"]
+
+# 무시할 파일/패턴
+ignore:
+  - "node_modules/**"
+  - "dist/**"
+  - "build/**"
+  - "*.min.js"
+  - "*.bundle.js"
+  - ".husky/**"
+  - ".github/**"
