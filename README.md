@@ -40,6 +40,17 @@ React + TypeScript + Vite 기반의 온라인 설문조사 플랫폼 프론트�
 pnpm install
 ```
 
+### 환경변수 설정
+`.env` 파일을 생성하고 다음 환경변수들을 설정하세요:
+
+```bash
+# API 서버 URL
+VITE_API_BASE_URL=http://localhost:3001/api
+
+# Sentry DSN (에러 추적)
+VITE_SENTRY_DSN=your_sentry_dsn_here
+```
+
 ### 개발 서버 실행
 ```bash
 pnpm dev
