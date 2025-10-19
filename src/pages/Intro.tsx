@@ -69,7 +69,6 @@ export const Intro = () => {
 				}
 				hideLine={true}
 			/>
-
 			<FixedBottomCTA loading={false} onClick={handleLogin}>
 				다음
 			</FixedBottomCTA>
