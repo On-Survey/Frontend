@@ -9,7 +9,7 @@ export const loginApi = async (
 	authorizationCode: string,
 	referrer: string,
 ): Promise<LoginResponse> => {
-	const response = await api.post("/auth/login/toss", {
+	const response = await api.post("/auth/toss/login", {
 		authorizationCode,
 		referrer,
 	});
