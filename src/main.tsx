@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import * as Sentry from "@sentry/react";
+import { TDSMobileAITProvider } from "@toss/tds-mobile-ait";
 import { App } from "./App.tsx";
 
 Sentry.init({
@@ -11,4 +12,8 @@ Sentry.init({
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element not found");
 
-createRoot(rootElement).render(<App />);
+createRoot(rootElement).render(
+	<TDSMobileAITProvider>
+		<App />
+	</TDSMobileAITProvider>,
+);
