@@ -13,17 +13,14 @@ import { regions } from "../constants/regions";
 import { topics } from "../constants/topics";
 
 const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
-	// 선택된 지역 상태 관리
 	const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
-	// 지역 선택 핸들러
 	const handleRegionSelect = (regionId: string) => {
 		setSelectedRegion(regionId);
 	};
 
 	return (
 		<div className="flex-1 flex flex-col">
-			{/* 스크롤 가능한 리스트 영역 */}
 			<div className="flex-1 overflow-y-auto">
 				<List>
 					{regions.map((region) => {
@@ -57,8 +54,11 @@ const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
 				</List>
 			</div>
 
-			{/* 고정된 하단 버튼 */}
-			<FixedBottomCTA onClick={onNext} loading={false}>
+			<FixedBottomCTA
+				disabled={selectedRegion === null}
+				onClick={onNext}
+				loading={false}
+			>
 				다음
 			</FixedBottomCTA>
 		</div>
@@ -66,10 +66,9 @@ const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
 };
 
 const OnboardingStep2 = () => {
-	// 선택된 주제들 상태 관리 (다중 선택)
 	const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 	const navigate = useNavigate();
-	// 주제 선택/해제 핸들러
+
 	const handleTopicToggle = (topicId: string) => {
 		setSelectedTopics((prev) =>
 			prev.includes(topicId)
@@ -84,7 +83,6 @@ const OnboardingStep2 = () => {
 
 	return (
 		<div className="flex-1 flex flex-col">
-			{/* 스크롤 가능한 리스트 영역 */}
 			<div className="flex-1 overflow-y-auto">
 				<List>
 					{topics.map((topic) => {
@@ -130,8 +128,11 @@ const OnboardingStep2 = () => {
 				</List>
 			</div>
 
-			{/* 고정된 하단 버튼 */}
-			<FixedBottomCTA loading={false} onClick={handleToMainPage}>
+			<FixedBottomCTA
+				disabled={selectedTopics.length === 0}
+				loading={false}
+				onClick={handleToMainPage}
+			>
 				모두 선택했어요
 			</FixedBottomCTA>
 		</div>
@@ -158,7 +159,6 @@ export const Onboarding = () => {
 		setStep(step + 1);
 	};
 
-	// 제목 텍스트를 동적으로 설정
 	const getTitleText = () => {
 		switch (step) {
 			case 1:
@@ -172,7 +172,6 @@ export const Onboarding = () => {
 
 	return (
 		<div className="min-h-screen flex flex-col">
-			{/* 고정된 헤더 영역 (프로그레스바 + 제목) */}
 			<div className="sticky top-0 z-20 bg-white">
 				<OnboardingProgressBar step={step} totalSteps={totalSteps} />
 				<Top
@@ -185,8 +184,6 @@ export const Onboarding = () => {
 				/>
 				{step === 2 && <div className="h-4" />}
 			</div>
-
-			{/* 스크롤 가능한 콘텐츠 영역 */}
 			<div className="flex-1 flex flex-col">
 				{step === 1 && <OnboardingStep1 onNext={handleNext} />}
 				{step === 2 && <OnboardingStep2 />}
