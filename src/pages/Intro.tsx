@@ -21,7 +21,7 @@ export const Intro = () => {
 					loginApiResponse.refreshToken,
 				);
 				// 로그인 성공 시 홈 페이지로 이동
-				navigate("/home");
+				navigate("/onboarding");
 			}
 		} catch (error) {
 			console.error("토스 로그인 실패:", error);
