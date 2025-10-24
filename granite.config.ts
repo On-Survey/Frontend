@@ -18,4 +18,11 @@ export default defineConfig({
 	},
 	permissions: [],
 	outdir: "dist",
+	pluginHooks: {
+		devServer: {
+			port: 5173,
+		},
+		preHandlers: [],
+		postHandlers: [],
+	},
 });
