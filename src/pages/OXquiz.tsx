@@ -1,7 +1,11 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Text } from "@toss/tds-mobile";
-
+import { useNavigate } from "react-router-dom";
 export const OXquiz = () => {
+	const navigate = useNavigate();
+	const handleOXquiz = () => {
+		navigate("/oxquiz-detail");
+	};
 	const questions = [
 		{
 			id: 1,
@@ -41,6 +45,7 @@ export const OXquiz = () => {
 							typography="st8"
 							fontWeight="semibold"
 							className="mb-6"
+							onClick={handleOXquiz}
 						>
 							{q.question}
 						</Text>
