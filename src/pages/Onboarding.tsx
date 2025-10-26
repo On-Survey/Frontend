@@ -78,7 +78,7 @@ const OnboardingStep2 = () => {
 	};
 
 	const handleToMainPage = () => {
-		navigate("/main");
+		navigate("/createForm");
 	};
 
 	return (
