@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { Border, Top } from "@toss/tds-mobile";
+import FormController from "../../components/form/FormController";
 import { useSurvey } from "../../contexts/SurveyContext";
 
 interface QuestionHomeProps {
@@ -39,6 +40,7 @@ function QuestionHome({ onPrevious }: QuestionHomeProps) {
 			/>
 			<Border variant="height16" />
 			<div className="h-3" />
+			<FormController />
 		</>
 	);
 }
