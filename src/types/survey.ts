@@ -108,6 +108,7 @@ export interface SurveyFormState {
 	isSubmitting: boolean; // 제출 중인지 여부
 	isLoading: boolean; // 로딩 중인지 여부
 	error: string | null; // 에러 메시지
+	titleStepCompleted: boolean; // 제목 단계 완료 여부
 }
 
 // 문항 업데이트를 위한 타입 (공통 필드만)
@@ -134,6 +135,7 @@ export type SurveyFormAction =
 	| { type: "SET_SUBMITTING"; payload: boolean }
 	| { type: "SET_ERROR"; payload: string | null }
 	| { type: "SET_DIRTY"; payload: boolean }
+	| { type: "SET_TITLE_STEP_COMPLETED"; payload: boolean }
 	| { type: "RESET_FORM" }
 	| { type: "LOAD_SURVEY"; payload: Survey };
 
@@ -148,6 +150,7 @@ export interface SurveyContextType {
 	reorderQuestions: (questions: Question[]) => void;
 	setTitle: (title: string) => void;
 	setDescription: (description: string) => void;
+	setTitleStepCompleted: (completed: boolean) => void;
 	resetForm: () => void;
 	loadSurvey: (survey: Survey) => void;
 }
