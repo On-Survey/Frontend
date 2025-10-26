@@ -1,9 +1,0 @@
-import { Text } from "@toss/tds-mobile";
-
-export const Intro = () => {
-  return (
-    <div>
-      <Text>Intro</Text>
-    </div>
-  );
-};
