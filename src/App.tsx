@@ -1,4 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { SurveyProvider } from "./contexts/SurveyContext";
 import { Create } from "./pages/Create";
 import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
@@ -14,7 +15,9 @@ export const App = () => {
 				<Route path="/home" element={<Home />} />
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
-				<Route path="/create" element={<Create />} />
+				<SurveyProvider>
+					<Route path="/create" element={<Create />} />
+				</SurveyProvider>
 				<Route path="/OXquiz" element={<OXquiz />} />
 			</Routes>
 		</Router>

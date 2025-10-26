@@ -93,3 +93,61 @@ export interface Survey {
 	status: "draft" | "published" | "closed";
 	authorId: string;
 }
+
+// 설문 생성/편집을 위한 폼 데이터 인터페이스
+export interface SurveyFormData {
+	title: string;
+	description: string;
+	questions: Question[];
+}
+
+// 설문 폼 상태 인터페이스
+export interface SurveyFormState {
+	formData: SurveyFormData;
+	isDirty: boolean; // 변경사항이 있는지 여부
+	isSubmitting: boolean; // 제출 중인지 여부
+	isLoading: boolean; // 로딩 중인지 여부
+	error: string | null; // 에러 메시지
+}
+
+// 문항 업데이트를 위한 타입 (공통 필드만)
+export type QuestionUpdateData = {
+	id?: string;
+	title?: string;
+	description?: string;
+	required?: boolean;
+	order?: number;
+};
+
+// 설문 폼 액션 타입
+export type SurveyFormAction =
+	| { type: "SET_TITLE"; payload: string }
+	| { type: "SET_DESCRIPTION"; payload: string }
+	| { type: "ADD_QUESTION"; payload: Question }
+	| {
+			type: "UPDATE_QUESTION";
+			payload: { id: string; question: QuestionUpdateData };
+	  }
+	| { type: "DELETE_QUESTION"; payload: string }
+	| { type: "REORDER_QUESTIONS"; payload: Question[] }
+	| { type: "SET_LOADING"; payload: boolean }
+	| { type: "SET_SUBMITTING"; payload: boolean }
+	| { type: "SET_ERROR"; payload: string | null }
+	| { type: "SET_DIRTY"; payload: boolean }
+	| { type: "RESET_FORM" }
+	| { type: "LOAD_SURVEY"; payload: Survey };
+
+// 설문 Context 타입
+export interface SurveyContextType {
+	state: SurveyFormState;
+	dispatch: React.Dispatch<SurveyFormAction>;
+	// 편의 함수들
+	addQuestion: (question: Question) => void;
+	updateQuestion: (id: string, question: QuestionUpdateData) => void;
+	deleteQuestion: (id: string) => void;
+	reorderQuestions: (questions: Question[]) => void;
+	setTitle: (title: string) => void;
+	setDescription: (description: string) => void;
+	resetForm: () => void;
+	loadSurvey: (survey: Survey) => void;
+}
