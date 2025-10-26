@@ -1,6 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
-import { useState } from "react";
 import { useSurvey } from "../../contexts/SurveyContext";
 
 interface FormTitleStepProps {
@@ -8,9 +7,10 @@ interface FormTitleStepProps {
 }
 
 function FormTitleStep({ onNext }: FormTitleStepProps) {
-	const { state, setTitle, setDescription } = useSurvey();
+	const { state, setTitle, setDescription, setTitleStepCompleted } =
+		useSurvey();
 
-	const [step, setStep] = useState(false);
+	const step = state.titleStepCompleted;
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setTitle(e.target.value);
@@ -22,7 +22,7 @@ function FormTitleStep({ onNext }: FormTitleStepProps) {
 	};
 
 	const handleNext = () => {
-		setStep(true);
+		setTitleStepCompleted(true);
 	};
 	const handleNextPage = () => {
 		onNext();

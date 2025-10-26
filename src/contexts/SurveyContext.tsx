@@ -25,6 +25,7 @@ const initialState: SurveyFormState = {
 	isSubmitting: false,
 	isLoading: false,
 	error: null,
+	titleStepCompleted: false,
 };
 
 // 리듀서 함수
@@ -123,6 +124,12 @@ function surveyFormReducer(
 				isDirty: action.payload,
 			};
 
+		case "SET_TITLE_STEP_COMPLETED":
+			return {
+				...state,
+				titleStepCompleted: action.payload,
+			};
+
 		case "RESET_FORM":
 			return initialState;
 
@@ -182,6 +189,10 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		dispatch({ type: "SET_DESCRIPTION", payload: description });
 	}, []);
 
+	const setTitleStepCompleted = useCallback((completed: boolean) => {
+		dispatch({ type: "SET_TITLE_STEP_COMPLETED", payload: completed });
+	}, []);
+
 	const resetForm = useCallback(() => {
 		dispatch({ type: "RESET_FORM" });
 	}, []);
@@ -199,6 +210,7 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		reorderQuestions,
 		setTitle,
 		setDescription,
+		setTitleStepCompleted,
 		resetForm,
 		loadSurvey,
 	};
