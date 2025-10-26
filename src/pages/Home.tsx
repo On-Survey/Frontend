@@ -29,16 +29,7 @@ export const Home = () => {
 							/>
 						}
 						verticalPadding="medium"
-						style={{
-							padding: 10,
-							width: "343px",
-							height: "84px",
-							boxShadow: "0px 4px 16px 0px #0000000c",
-							borderColor: colors.blue500,
-							borderWidth: "1px",
-							borderRadius: "24px",
-							opacity: 1,
-						}}
+						className="w-[343px] h-[84px] p-[10px] rounded-3xl border border-blue-500 shadow-md opacity-100"
 						left={
 							<Asset.Icon
 								frameShape={{ width: 24, height: 24 }}
