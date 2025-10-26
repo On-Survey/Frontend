@@ -7,17 +7,73 @@ import {
 	Text,
 } from "@toss/tds-mobile";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const questions = [
+	"반려동물을 키워 본 경험이 있으신가요?",
+	"반려동물의 외모에 대해 관심이 많으신가요?",
+	"동물에 대한 애정이 깊으신가요?",
+];
 
 export const OXquizDetail = () => {
+	const navigate = useNavigate();
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+	const [showNoQuiz, setShowNoQuiz] = useState(false);
+
+	const currentQuestion = questions[currentQuestionIndex];
+	const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
+	const handleCloseModal = () => {
+		setIsBottomSheetOpen(false);
+		setSelectedOption(null);
+
+		if (!isLastQuestion) {
+			setCurrentQuestionIndex(currentQuestionIndex + 1);
+		} else {
+			setShowNoQuiz(true);
+		}
+	};
+
+	const handleNextQuestion = () => {
+		setIsBottomSheetOpen(false);
+		setSelectedOption(null);
+		navigate("/survey");
+	};
+
+	if (showNoQuiz) {
+		return (
+			<div className="flex flex-col items-center justify-center min-h-screen ">
+				<Asset.Image
+					frameShape={Asset.frameShape.CleanW100}
+					backgroundColor="transparent"
+					src="https://static.toss.im/2d-emojis/png/4x/u1F622.png"
+					aria-hidden={true}
+					className="aspect-square"
+				/>
+				<Text
+					display="block"
+					color={adaptive.grey800}
+					typography="st8"
+					fontWeight="semibold"
+					textAlign="center"
+					className="mt-5"
+				>
+					풀 수 있는 퀴즈가 없어요
+				</Text>
+				<div className="mt-5" />
+				<Button size="medium">퀴즈 알림 받을래요</Button>
+			</div>
+		);
+	}
 
 	return (
 		<>
 			<div className="flex flex-col items-center justify-center px-4 py-6 bg-white">
 				<div className="mb-6">
 					<Button size="small" color="dark" variant="weak">
-						Q1
+						Q{currentQuestionIndex + 1}
 					</Button>
 				</div>
 
@@ -29,7 +85,7 @@ export const OXquizDetail = () => {
 					textAlign="center"
 					className="mb-6"
 				>
-					반려동물을 키워 본 경험이 있으신가요?
+					{currentQuestion}
 				</Text>
 
 				<div className="flex items-center justify-center gap-2 mt-8 mb-12">
@@ -50,6 +106,7 @@ export const OXquizDetail = () => {
 					</Text>
 				</div>
 
+				{/* 있/없어요 버튼 */}
 				<div className="flex flex-col gap-2 w-full">
 					<div className="flex flex-start items-center gap-2">
 						<button
@@ -115,6 +172,7 @@ export const OXquizDetail = () => {
 				</div>
 			</div>
 
+			{/* 하단 버튼 */}
 			<FixedBottomCTA
 				loading={false}
 				onClick={() => {
@@ -126,6 +184,7 @@ export const OXquizDetail = () => {
 				확인
 			</FixedBottomCTA>
 
+			{/* 바텀 시트 모달 */}
 			<BottomSheet
 				header={
 					<BottomSheet.Header>
@@ -143,15 +202,11 @@ export const OXquizDetail = () => {
 				cta={
 					<BottomSheet.DoubleCTA
 						leftButton={
-							<Button
-								color="dark"
-								variant="weak"
-								onClick={() => setIsBottomSheetOpen(false)}
-							>
+							<Button color="dark" variant="weak" onClick={handleCloseModal}>
 								닫기
 							</Button>
 						}
-						rightButton={<Button>다음</Button>}
+						rightButton={<Button onClick={handleNextQuestion}>다음</Button>}
 					/>
 				}
 			>
