@@ -1,12 +1,17 @@
 import { colors } from "@toss/tds-colors";
 import { Asset, Button, ListRow, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
+import { BottomNavigation } from "../components/BottomNavigation";
 
 export const Home = () => {
 	const navigate = useNavigate();
 
 	const handleOXQuiz = () => {
 		navigate("/oxquiz");
+	};
+
+	const handleMySurvey = () => {
+		navigate("/mysurvey");
 	};
 	return (
 		<div className="flex flex-col w-full mx-auto p-4">
@@ -211,65 +216,7 @@ export const Home = () => {
 			</div>
 
 			{/* 하단 네비게이션 */}
-			<div
-				className="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 mb-3"
-				style={{
-					borderRadius: "30px",
-					boxShadow:
-						"0px 20px 20px -16px #191F2911, 0px 40px 200px 0px #191F293f",
-				}}
-			>
-				<div className="flex items-center justify-around">
-					<div className="flex flex-col items-center">
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icon-home-mono"
-							color={colors.grey800}
-							aria-hidden={true}
-						/>
-						<Text
-							color={colors.grey900}
-							typography="st13"
-							fontWeight="medium"
-							className="mt-1"
-						>
-							홈
-						</Text>
-					</div>
-					<div className="flex flex-col items-center">
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icon-document-contract-mono"
-							color={colors.grey400}
-							aria-hidden={true}
-						/>
-						<Text
-							color={colors.grey600}
-							typography="st13"
-							fontWeight="medium"
-							className="mt-1"
-						>
-							내 설문
-						</Text>
-					</div>
-					<div className="flex flex-col items-center">
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icon-line-three-mono"
-							color={colors.grey400}
-							aria-hidden={true}
-						/>
-						<Text
-							color={colors.grey600}
-							typography="st13"
-							fontWeight="medium"
-							className="mt-1"
-						>
-							더보기
-						</Text>
-					</div>
-				</div>
-			</div>
+			<BottomNavigation currentPage="home" onMySurveyClick={handleMySurvey} />
 		</div>
 	);
 };
