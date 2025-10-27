@@ -1,6 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
+import DatePage from "./pages/form/DatePage";
+import EssayPage from "./pages/form/EssayPage";
+import MultipleChoicePage from "./pages/form/MultipleChoicePage";
+import NPSPage from "./pages/form/NPSPage";
+import NumberPage from "./pages/form/NumberPage";
+import RatingPage from "./pages/form/RatingPage";
+import ShortAnswerPage from "./pages/form/ShortAnswerPage";
 import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
@@ -19,6 +26,20 @@ export const App = () => {
 					<Route path="/onboarding" element={<Onboarding />} />
 					<Route path="/main" element={<Main />} />
 					<Route path="/createForm" element={<CreateForm />} />
+					<Route
+						path="/createForm/multiple-choice"
+						element={<MultipleChoicePage />}
+					/>
+					<Route path="/createForm/rating" element={<RatingPage />} />
+					<Route path="/createForm/nps" element={<NPSPage />} />
+					<Route
+						path="/createForm/short-answer"
+						element={<ShortAnswerPage />}
+					/>
+					<Route path="/createForm/essay" element={<EssayPage />} />
+					<Route path="/createForm/date" element={<DatePage />} />
+					<Route path="/createForm/number" element={<NumberPage />} />
+					<Route path="/form" element={<CreateForm />} />
 					<Route path="/OXquiz" element={<OXquiz />} />
 					<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 					<Route path="/survey" element={<Survey />} />

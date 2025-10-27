@@ -45,84 +45,86 @@ function FormController() {
 	};
 
 	return (
-		<div className="flex items-center gap-2 w-full justify-between bg-gray-100 p-2">
-			<div className="relative flex-1 overflow-hidden h-[60px]">
-				{/* QuestionController - 왼쪽에서 슬라이드 인 */}
-				<div
-					className={`absolute inset-0 transition-all duration-300 ease-out ${
-						isOpen
-							? "opacity-100 translate-x-0 z-20"
-							: "opacity-0 -translate-x-full z-0"
-					}`}
-				>
-					{isOpen && (
-						<div className="animate-slide-in-left">
-							<QuestionController onPrevious={handleClose} />
-						</div>
-					)}
-				</div>
-
-				{/* 기본 컨트롤들 - 오른쪽으로 슬라이드 아웃 */}
-				<div
-					className={`absolute inset-0 transition-all duration-300 ease-out ${
-						!isOpen
-							? "opacity-100 translate-x-0 z-20"
-							: "opacity-0 translate-x-full z-0 pointer-events-none"
-					}`}
-				>
-					{!isOpen && (
-						<div className="animate-slide-in-right">
-							<div className="flex items-center gap-2 w-full justify-between">
-								<div className="flex items-center gap-10 bg-white rounded-full p-2 w-full justify-center">
-									{MAIN_CONTROLS.map((control) => (
-										<button
-											key={control.id}
-											className={BUTTON_STYLES.mainControl}
-											onClick={actionHandlers[control.action]}
-											type="button"
-										>
-											<Asset.Icon
-												frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
-												backgroundColor={ICON_PROPS.backgroundColor}
-												name={control.icon}
-												color={adaptive.grey600}
-												aria-hidden={ICON_PROPS.ariaHidden}
-												ratio={ICON_PROPS.ratio}
-											/>
-											<Text
-												color={adaptive.grey700}
-												typography={TEXT_PROPS.typography}
-												fontWeight={TEXT_PROPS.fontWeight}
-											>
-												{control.label}
-											</Text>
-										</button>
-									))}
-								</div>
-								<button
-									className={BUTTON_STYLES.nextButton}
-									type="button"
-									onClick={handleNext}
-								>
-									<Asset.Icon
-										frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
-										backgroundColor={ICON_PROPS.backgroundColor}
-										name="icon-arrow-left-big-mono"
-										color={adaptive.background}
-										aria-hidden={ICON_PROPS.ariaHidden}
-										ratio={ICON_PROPS.ratio}
-									/>
-									<Text
-										color={adaptive.background}
-										typography={TEXT_PROPS.typography}
-										fontWeight={TEXT_PROPS.fontWeight}
-									>
-										다음
-									</Text>
-								</button>
+		<div className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6">
+			<div className="flex items-center gap-2 w-full justify-between">
+				<div className="relative flex-1 overflow-hidden h-[60px]">
+					{/* QuestionController - 왼쪽에서 슬라이드 인 */}
+					<div
+						className={`absolute inset-0 transition-all duration-300 ease-out ${
+							isOpen
+								? "opacity-100 translate-x-0 z-20"
+								: "opacity-0 -translate-x-full z-0"
+						}`}
+					>
+						{isOpen && (
+							<div className="animate-slide-in-left">
+								<QuestionController onPrevious={handleClose} />
 							</div>
-						</div>
-					)}
+						)}
+					</div>
+
+					{/* 기본 컨트롤들 - 오른쪽으로 슬라이드 아웃 */}
+					<div
+						className={`absolute inset-0 transition-all duration-300 ease-out ${
+							!isOpen
+								? "opacity-100 translate-x-0 z-20"
+								: "opacity-0 translate-x-full z-0 pointer-events-none"
+						}`}
+					>
+						{!isOpen && (
+							<div className="animate-slide-in-right">
+								<div className="flex items-center gap-2 w-full justify-between">
+									<div className="flex items-center gap-10 bg-white rounded-full p-2 w-full justify-center">
+										{MAIN_CONTROLS.map((control) => (
+											<button
+												key={control.id}
+												className={BUTTON_STYLES.mainControl}
+												onClick={actionHandlers[control.action]}
+												type="button"
+											>
+												<Asset.Icon
+													frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+													backgroundColor={ICON_PROPS.backgroundColor}
+													name={control.icon}
+													color={adaptive.grey600}
+													aria-hidden={ICON_PROPS.ariaHidden}
+													ratio={ICON_PROPS.ratio}
+												/>
+												<Text
+													color={adaptive.grey700}
+													typography={TEXT_PROPS.typography}
+													fontWeight={TEXT_PROPS.fontWeight}
+												>
+													{control.label}
+												</Text>
+											</button>
+										))}
+									</div>
+									<button
+										className={BUTTON_STYLES.nextButton}
+										type="button"
+										onClick={handleNext}
+									>
+										<Asset.Icon
+											frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+											backgroundColor={ICON_PROPS.backgroundColor}
+											name="icon-arrow-left-big-mono"
+											color={adaptive.background}
+											aria-hidden={ICON_PROPS.ariaHidden}
+											ratio={ICON_PROPS.ratio}
+										/>
+										<Text
+											color={adaptive.background}
+											typography={TEXT_PROPS.typography}
+											fontWeight={TEXT_PROPS.fontWeight}
+										>
+											다음
+										</Text>
+									</button>
+								</div>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

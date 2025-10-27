@@ -162,9 +162,18 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 	const [state, dispatch] = useReducer(surveyFormReducer, initialState);
 
 	// 편의 함수들
-	const addQuestion = useCallback((question: Question) => {
-		dispatch({ type: "ADD_QUESTION", payload: question });
-	}, []);
+	const addQuestion = useCallback(
+		(question: Question) => {
+			// 기존 질문들의 최대 order 값을 찾아서 +1
+			const maxOrder = state.formData.questions.reduce(
+				(max, q) => Math.max(max, q.order),
+				-1,
+			);
+			const questionWithOrder = { ...question, order: maxOrder + 1 };
+			dispatch({ type: "ADD_QUESTION", payload: questionWithOrder });
+		},
+		[state.formData.questions],
+	);
 
 	const updateQuestion = useCallback(
 		(id: string, question: QuestionUpdateData) => {
