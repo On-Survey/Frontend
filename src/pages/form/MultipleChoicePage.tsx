@@ -10,6 +10,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
+import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import SelectionLimitBottomSheet from "../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
@@ -30,6 +31,11 @@ function MultipleChoicePage() {
 
 	const [isRequired, setIsRequired] = useState(false);
 	const { isOpen, handleOpen, handleClose } = useModal(false);
+	const {
+		isOpen: isQuestionTitleEditOpen,
+		handleOpen: handleQuestionTitleEditOpen,
+		handleClose: handleQuestionTitleEditClose,
+	} = useModal(false);
 
 	const handleRequiredChange = (checked: boolean) => {
 		setIsRequired(checked);
@@ -75,7 +81,12 @@ function MultipleChoicePage() {
 			</List>
 			<div className="h-4" />
 			<div className="flex flex-col gap-2 px-6">
-				<Button size="large" variant="weak" display="block">
+				<Button
+					size="large"
+					variant="weak"
+					display="block"
+					onClick={handleQuestionTitleEditOpen}
+				>
 					문항 추가하기
 				</Button>
 				<Button size="large" color="dark" variant="weak" display="block">
@@ -129,6 +140,11 @@ function MultipleChoicePage() {
 				questionId={questionId}
 				isOpen={isOpen}
 				handleClose={handleClose}
+			/>
+
+			<QuestionTitleEditBottomSheet
+				isOpen={isQuestionTitleEditOpen}
+				handleClose={handleQuestionTitleEditClose}
 			/>
 
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
