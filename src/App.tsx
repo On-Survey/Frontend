@@ -11,6 +11,7 @@ import ShortAnswerPage from "./pages/form/ShortAnswerPage";
 import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
+import { MySurvey } from "./pages/mysurvey";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
@@ -26,6 +27,7 @@ export const App = () => {
 					<Route path="/onboarding" element={<Onboarding />} />
 					<Route path="/main" element={<Main />} />
 					<Route path="/createForm" element={<CreateForm />} />
+          	<Route path="/mysurvey" element={<MySurvey />} />
 					<Route
 						path="/createForm/multiple-choice"
 						element={<MultipleChoicePage />}
