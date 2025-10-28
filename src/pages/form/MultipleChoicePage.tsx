@@ -10,7 +10,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import SelectionLimitBottomSheet from "../../components/form/SelectionLimitBottomSheet";
+import SelectionLimitBottomSheet from "../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import type { MultipleChoiceQuestion } from "../../types/survey";
