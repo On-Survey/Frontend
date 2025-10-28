@@ -9,7 +9,7 @@ import {
 } from "../../constants/formController";
 import { useModal } from "../../hooks/UseToggle";
 import type { QuestionType } from "../../types/survey";
-import QuestionTitleBottomSheet from "./multipleChoice/QuestionTitleBottomSheet";
+import QuestionTitleBottomSheet from "./QuestionTitleBottomSheet";
 
 interface QuestionControllerProps {
 	onPrevious: () => void;
