@@ -3,7 +3,7 @@ import { Create } from "./pages/Create";
 import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
-import { MySurvey } from "./pages/MySurvey";
+import { MySurvey } from "./pages/mysurvey";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
