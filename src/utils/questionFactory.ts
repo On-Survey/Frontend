@@ -14,10 +14,10 @@ export const createQuestion = (
 	};
 
 	switch (questionType) {
-		case "multiple_choice":
+		case "multipleChoice":
 			return {
 				...baseQuestion,
-				type: "multiple_choice",
+				type: "multipleChoice",
 				options: [
 					{ id: crypto.randomUUID(), text: "옵션 1" },
 					{ id: crypto.randomUUID(), text: "옵션 2" },
@@ -40,10 +40,10 @@ export const createQuestion = (
 				type: "nps",
 				scale: 10,
 			};
-		case "short_answer":
+		case "shortAnswer":
 			return {
 				...baseQuestion,
-				type: "short_answer",
+				type: "shortAnswer",
 			};
 		case "essay":
 			return {

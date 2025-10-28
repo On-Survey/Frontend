@@ -27,15 +27,12 @@ export const App = () => {
 					<Route path="/main" element={<Main />} />
 					<Route path="/createForm" element={<CreateForm />} />
 					<Route
-						path="/createForm/multiple-choice"
+						path="/createForm/multipleChoice"
 						element={<MultipleChoicePage />}
 					/>
 					<Route path="/createForm/rating" element={<RatingPage />} />
 					<Route path="/createForm/nps" element={<NPSPage />} />
-					<Route
-						path="/createForm/short-answer"
-						element={<ShortAnswerPage />}
-					/>
+					<Route path="/createForm/shortAnswer" element={<ShortAnswerPage />} />
 					<Route path="/createForm/essay" element={<EssayPage />} />
 					<Route path="/createForm/date" element={<DatePage />} />
 					<Route path="/createForm/number" element={<NumberPage />} />

@@ -1,7 +1,7 @@
 // 문항 타입 버튼 데이터
 export const QUESTION_TYPES = [
 	{
-		id: "multiple_choice",
+		id: "multipleChoice",
 		label: "객관식",
 		icon: "icon-line-three-dots-mono",
 	},
@@ -16,7 +16,7 @@ export const QUESTION_TYPES = [
 		icon: "icon-circle-piece-mono",
 	},
 	{
-		id: "short_answer",
+		id: "shortAnswer",
 		label: "단답형",
 		icon: "icon-2-list-line-mono",
 	},
