@@ -2,17 +2,21 @@ import { colors } from "@toss/tds-colors";
 import { Asset, Badge, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import type { ActiveSurvey, ClosedSurvey, DraftSurvey } from "./types";
 
+type SurveyState = "draft" | "active" | "closed";
+type BadgeColor = "green" | "blue" | "elephant";
+
 interface SurveyCardProps {
 	survey: DraftSurvey | ActiveSurvey | ClosedSurvey;
-	type: "draft" | "active" | "closed";
+	type: SurveyState;
 }
 
 export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
-	const badgeConfig = {
-		draft: { color: "green" as const, label: "작성중" },
-		active: { color: "blue" as const, label: "노출중" },
-		closed: { color: "elephant" as const, label: "마감" },
-	};
+	const badgeConfig: Record<SurveyState, { color: BadgeColor; label: string }> =
+		{
+			draft: { color: "green", label: "작성중" },
+			active: { color: "blue", label: "노출중" },
+			closed: { color: "elephant", label: "마감" },
+		};
 
 	const config = badgeConfig[type];
 
