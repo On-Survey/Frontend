@@ -7,25 +7,24 @@ import {
 	List,
 	ListRow,
 	Switch,
-	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
-import CreateMultiChoiceBottomSheet from "../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
-import SelectionLimitBottomSheet from "../../components/form/multipleChoice/SelectionLimitBottomSheet";
-import { useSurvey } from "../../contexts/SurveyContext";
-import { useModal } from "../../hooks/UseToggle";
-import type { MultipleChoiceQuestion } from "../../types/survey";
+import { useNavigate } from "react-router-dom";
+import QuestionTitleEditBottomSheet from "../../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import CreateMultiChoiceBottomSheet from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
+import SelectionLimitBottomSheet from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
+import { useSurvey } from "../../../contexts/SurveyContext";
+import { useModal } from "../../../hooks/UseToggle";
+import type { MultipleChoiceQuestion } from "../../../types/survey";
 
-function MultipleChoicePage() {
+function MultipleChoiceMain() {
 	const { state } = useSurvey();
+	const navigate = useNavigate();
 
 	const questions = state.formData.questions;
-
 	const latestMultipleChoice = questions
 		.filter((q) => q.type === "multipleChoice")
 		.sort((a, b) => b.order - a.order)[0];
-	const title = latestMultipleChoice?.title;
 	const questionId = latestMultipleChoice?.id;
 	const allowSelection = (latestMultipleChoice as MultipleChoiceQuestion)
 		?.allowSelection;
@@ -34,7 +33,6 @@ function MultipleChoicePage() {
 	const { isOpen, handleOpen, handleClose } = useModal(false);
 	const {
 		isOpen: isQuestionTitleEditOpen,
-		handleOpen: handleQuestionTitleEditOpen,
 		handleClose: handleQuestionTitleEditClose,
 	} = useModal(false);
 	const {
@@ -47,31 +45,12 @@ function MultipleChoicePage() {
 		setIsRequired(checked);
 	};
 
+	const handleQuestionNavigation = () => {
+		navigate("/createForm/multipleChoice/questions");
+	};
+
 	return (
-		<div>
-			<Top
-				title={
-					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{title}
-					</Top.TitleParagraph>
-				}
-				subtitleBottom={
-					<Top.SubtitleParagraph>
-						보조설명은 이런식으로 들어갈 것 같아요
-					</Top.SubtitleParagraph>
-				}
-				lower={
-					<Top.LowerButton
-						color="dark"
-						size="small"
-						variant="weak"
-						display="inline"
-						onClick={handleQuestionTitleEditOpen}
-					>
-						문항 제목 및 설명 수정하기
-					</Top.LowerButton>
-				}
-			/>
+		<>
 			<Border variant="height16" />
 			<List>
 				<ListRow
@@ -96,7 +75,13 @@ function MultipleChoicePage() {
 				>
 					문항 추가하기
 				</Button>
-				<Button size="large" color="dark" variant="weak" display="block">
+				<Button
+					size="large"
+					color="dark"
+					variant="weak"
+					display="block"
+					onClick={handleQuestionNavigation}
+				>
 					응답에 따라 문항 이동하기
 				</Button>
 			</div>
@@ -143,28 +128,25 @@ function MultipleChoicePage() {
 				/>
 			</List>
 
-			{/* 선택 가능 갯수 설정 바텀시트 */}
 			<SelectionLimitBottomSheet
 				questionId={questionId}
 				isOpen={isOpen}
 				handleClose={handleClose}
 			/>
 
-			{/* 문항 제목 및 설명 수정 바텀시트 */}
 			<QuestionTitleEditBottomSheet
 				isOpen={isQuestionTitleEditOpen}
 				handleClose={handleQuestionTitleEditClose}
 			/>
 
-			{/* 새 보기 추가 바텀시트 */}
 			<CreateMultiChoiceBottomSheet
 				isOpen={isCreateMultiChoiceOpen}
 				handleClose={handleCreateMultiChoiceClose}
 			/>
 
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
-		</div>
+		</>
 	);
 }
 
-export default MultipleChoicePage;
+export default MultipleChoiceMain;
