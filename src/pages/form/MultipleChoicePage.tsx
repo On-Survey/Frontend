@@ -11,6 +11,7 @@ import {
 } from "@toss/tds-mobile";
 import { useState } from "react";
 import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import CreateMultiChoiceBottomSheet from "../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
 import SelectionLimitBottomSheet from "../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
@@ -36,6 +37,11 @@ function MultipleChoicePage() {
 		handleOpen: handleQuestionTitleEditOpen,
 		handleClose: handleQuestionTitleEditClose,
 	} = useModal(false);
+	const {
+		isOpen: isCreateMultiChoiceOpen,
+		handleOpen: handleCreateMultiChoiceOpen,
+		handleClose: handleCreateMultiChoiceClose,
+	} = useModal(false);
 
 	const handleRequiredChange = (checked: boolean) => {
 		setIsRequired(checked);
@@ -60,6 +66,7 @@ function MultipleChoicePage() {
 						size="small"
 						variant="weak"
 						display="inline"
+						onClick={handleQuestionTitleEditOpen}
 					>
 						문항 제목 및 설명 수정하기
 					</Top.LowerButton>
@@ -85,7 +92,7 @@ function MultipleChoicePage() {
 					size="large"
 					variant="weak"
 					display="block"
-					onClick={handleQuestionTitleEditOpen}
+					onClick={handleCreateMultiChoiceOpen}
 				>
 					문항 추가하기
 				</Button>
@@ -136,15 +143,23 @@ function MultipleChoicePage() {
 				/>
 			</List>
 
+			{/* 선택 가능 갯수 설정 바텀시트 */}
 			<SelectionLimitBottomSheet
 				questionId={questionId}
 				isOpen={isOpen}
 				handleClose={handleClose}
 			/>
 
+			{/* 문항 제목 및 설명 수정 바텀시트 */}
 			<QuestionTitleEditBottomSheet
 				isOpen={isQuestionTitleEditOpen}
 				handleClose={handleQuestionTitleEditClose}
+			/>
+
+			{/* 새 보기 추가 바텀시트 */}
+			<CreateMultiChoiceBottomSheet
+				isOpen={isCreateMultiChoiceOpen}
+				handleClose={handleCreateMultiChoiceClose}
 			/>
 
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
