@@ -118,6 +118,7 @@ export type QuestionUpdateData = {
 	description?: string;
 	required?: boolean;
 	order?: number;
+	allowSelection?: number;
 };
 
 // 설문 폼 액션 타입
