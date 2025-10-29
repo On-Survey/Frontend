@@ -1,9 +1,10 @@
 import { BottomSheet, TextField } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSurvey } from "../../contexts/SurveyContext";
-import type { QuestionType } from "../../types/survey";
-import { createQuestion } from "../../utils/questionFactory";
+import { QUESTION_TYPE_ROUTES } from "../../../constants/routes";
+import { useSurvey } from "../../../contexts/SurveyContext";
+import type { QuestionType } from "../../../types/survey";
+import { createQuestion } from "../../../utils/questionFactory";
 
 interface QuestionTitleBottomSheetProps {
 	onClose: () => void;
@@ -32,7 +33,7 @@ function QuestionTitleBottomSheet({
 			addQuestion(newQuestion);
 			setTitle("");
 			onClose();
-			navigate(`/createForm/${questionType}`);
+			navigate(QUESTION_TYPE_ROUTES[questionType]);
 		}
 	};
 

@@ -1,9 +1,9 @@
 // 설문 문항 타입 정의
 export type QuestionType =
-	| "multiple_choice" // 객관식
+	| "multipleChoice" // 객관식
 	| "rating" // 평가형 (양쪽 내용 + 원 10개)
 	| "nps" // NPS (1~10)
-	| "short_answer" // 단답형
+	| "shortAnswer" // 단답형
 	| "essay" // 장문형
 	| "date" // 날짜 (ex: 2025-10-26)
 	| "number"; // 숫자형 (1~100)
@@ -33,7 +33,7 @@ export interface BaseQuestion {
 
 // 객관식 문항
 export interface MultipleChoiceQuestion extends BaseQuestion {
-	type: "multiple_choice";
+	type: "multipleChoice";
 	options: MultipleChoiceOption[];
 	allowSelection: number; // 선택 가능한 최대 개수
 }
@@ -63,7 +63,7 @@ export interface DateQuestion extends BaseQuestion {
 
 // 단답형 문항
 export interface ShortAnswerQuestion extends BaseQuestion {
-	type: "short_answer";
+	type: "shortAnswer";
 }
 
 // 숫자형 문항
@@ -118,6 +118,7 @@ export type QuestionUpdateData = {
 	description?: string;
 	required?: boolean;
 	order?: number;
+	allowSelection?: number;
 };
 
 // 설문 폼 액션 타입
