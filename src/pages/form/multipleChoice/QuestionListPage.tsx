@@ -42,9 +42,17 @@ function QuestionListPage() {
 				/>
 			))}
 			<div className="h-4" />
-			<Button size="large" color="dark" variant="weak" display="block">
-				완료
-			</Button>
+			<div className="px-6">
+				<Button
+					size="large"
+					color="dark"
+					variant="weak"
+					display="block"
+					className=""
+				>
+					완료
+				</Button>
+			</div>
 		</>
 	);
 }
