@@ -2,7 +2,7 @@ import { ProgressStep, ProgressStepper } from "@toss/tds-mobile";
 import { useCreateForm } from "../contexts/CreateFormContext";
 import FormTitleStep from "./form/FormTitleStep";
 import QuestionHome from "./form/QuestionHome";
-import ScreeningQuestion from "./screening/ScreeningQuestion";
+import ScreeningQuestion from "./screening/ScreeningMain";
 
 export const CreateForm = () => {
 	const { activeStep } = useCreateForm();

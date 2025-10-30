@@ -7,10 +7,10 @@ import { useSurvey } from "../../contexts/SurveyContext";
 function QuestionHome() {
 	const { state } = useSurvey();
 	const { handleStepChange } = useCreateForm();
+
 	const handlePrevious = () => {
 		handleStepChange(0);
 	};
-
 	return (
 		<>
 			<Top
@@ -38,6 +38,7 @@ function QuestionHome() {
 			/>
 			<Border variant="height16" />
 			<div className="h-3" />
+
 			<FormController />
 		</>
 	);

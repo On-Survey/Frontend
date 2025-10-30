@@ -1,13 +1,24 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextField, Top } from "@toss/tds-mobile";
+import { useCreateForm } from "../../contexts/CreateFormContext";
 
-function ScreeningQuestion() {
+interface ScreeningQuestionProps {
+	question: string;
+	handleQuestionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+function ScreeningQuestion({
+	question,
+	handleQuestionChange,
+}: ScreeningQuestionProps) {
+	const { goNextScreening } = useCreateForm();
+
 	return (
-		<div>
+		<>
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						스크리닝 질문 구성하기{" "}
+						스크리닝 질문 구성하기
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={
@@ -22,12 +33,15 @@ function ScreeningQuestion() {
 				label="질문"
 				labelOption="sustain"
 				help="짧고 명확한 질문일수록 효과적이에요"
-				value=""
-				placeholder="나는 반려동물을 키운다"
+				value={question}
+				placeholder="질문을 입력해주세요"
 				autoFocus={true}
+				onChange={handleQuestionChange}
 			/>
-			<FixedBottomCTA>다음</FixedBottomCTA>
-		</div>
+			<FixedBottomCTA disabled={!question.trim()} onClick={goNextScreening}>
+				다음
+			</FixedBottomCTA>
+		</>
 	);
 }
 
