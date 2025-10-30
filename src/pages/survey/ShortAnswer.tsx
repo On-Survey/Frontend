@@ -30,6 +30,9 @@ export const SurveyShortAnswer = () => {
 	const maxLength = question?.maxLength ?? 20;
 	const isInvalid = (question?.required ?? false) && answer.trim().length === 0;
 
+	const handleRating = () => {
+		navigate("/survey/rating");
+	};
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<div className="px-4 pt-2" />
@@ -88,7 +91,11 @@ export const SurveyShortAnswer = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" disabled={isInvalid}>
+					<CTAButton
+						display="block"
+						disabled={isInvalid}
+						onClick={handleRating}
+					>
 						확인
 					</CTAButton>
 				}

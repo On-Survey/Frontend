@@ -20,6 +20,7 @@ import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
 import { Survey } from "./pages/Survey";
 import SurveyEssay from "./pages/survey/Essay";
+import SurveyRating from "./pages/survey/Rating";
 import SurveyShortAnswer from "./pages/survey/ShortAnswer";
 import SurveySingleChoice from "./pages/survey/SingleChoice";
 
@@ -58,6 +59,7 @@ export const App = () => {
 					<Route path="/survey/singleChoice" element={<SurveySingleChoice />} />
 					<Route path="/survey/essay" element={<SurveyEssay />} />
 					<Route path="/survey/shortAnswer" element={<SurveyShortAnswer />} />
+					<Route path="/survey/rating" element={<SurveyRating />} />
 				</Routes>
 			</Router>
 		</SurveyProvider>
