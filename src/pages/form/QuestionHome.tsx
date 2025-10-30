@@ -1,16 +1,14 @@
 import { adaptive } from "@toss/tds-colors";
 import { Border, Top } from "@toss/tds-mobile";
 import FormController from "../../components/form/FormController";
+import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-interface QuestionHomeProps {
-	onPrevious: () => void;
-}
-
-function QuestionHome({ onPrevious }: QuestionHomeProps) {
+function QuestionHome() {
 	const { state } = useSurvey();
+	const { handleStepChange } = useCreateForm();
 	const handlePrevious = () => {
-		onPrevious();
+		handleStepChange(0);
 	};
 
 	return (
