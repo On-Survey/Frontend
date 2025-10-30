@@ -8,9 +8,11 @@ import {
 } from "@toss/tds-mobile";
 import { useState } from "react";
 import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
 function DatePage() {
+	const { state } = useSurvey();
 	const {
 		isOpen: isQuestionTitleEditOpen,
 		handleOpen: handleQuestionTitleEditOpen,
@@ -23,12 +25,20 @@ function DatePage() {
 	const handleIsRequiredChange = () => {
 		setIsRequired(!isRequired);
 	};
+
+	const questions = state.formData.questions;
+
+	const latestDate = questions
+		.filter((q) => q.type === "date")
+		.sort((a, b) => b.order - a.order)[0];
+	const title = latestDate?.title;
+
 	return (
 		<div>
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						타인의 개입 없이 일기(블로그, 개인 회고 등)를 쓴 경험이 있나요?
+						{title}
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={
