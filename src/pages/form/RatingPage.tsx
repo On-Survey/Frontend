@@ -74,7 +74,7 @@ function RatingPage() {
 					<Asset.Icon
 						frameShape={Asset.frameShape.CleanW24}
 						backgroundColor="transparent"
-						name="icon-plus-circle-mono"
+						name="icon-minus-circle-mono"
 						color={adaptive.grey400}
 						aria-hidden={true}
 						ratio="1/1"
