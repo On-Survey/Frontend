@@ -1,57 +1,41 @@
 import { colors } from "@toss/tds-colors";
-import {
-	Checkbox,
-	CTAButton,
-	FixedBottomCTA,
-	List,
-	ListRow,
-	ProgressBar,
-	Top,
-} from "@toss/tds-mobile";
+import { CTAButton, FixedBottomCTA, ProgressBar, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const SurveySingleChoice = () => {
-	type Choice = { id: number; label: string };
+export const SurveyShortAnswer = () => {
 	type Question = {
 		id: number;
 		title: string;
 		required: boolean;
-		multiple: false;
-		choices: Choice[];
 		description?: string;
+		maxLength?: number;
 	};
 
 	const navigate = useNavigate();
 	const [question, setQuestion] = useState<Question | null>(null);
-	const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null);
-
-	const handleEssay = () => {
-		navigate("/survey/essay");
-	};
+	const [answer, setAnswer] = useState("");
 
 	useEffect(() => {
 		const mock: Question = {
-			id: 101,
+			id: 301,
 			title: "추석 당일, 오늘의 날씨 예측해볼까요?",
 			required: true,
-			multiple: false,
-			choices: [
-				{ id: 1, label: "비온다" },
-				{ id: 2, label: "눈온다" },
-				{ id: 3, label: "물 마시기" },
-			],
-			description: "1개만 선택할 수 있어요",
+			description: "1 ~ 20 글자 수 제한",
+			maxLength: 20,
 		};
 		setQuestion(mock);
 	}, []);
+
+	const maxLength = question?.maxLength ?? 20;
+	const isInvalid = (question?.required ?? false) && answer.trim().length === 0;
 
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<div className="px-4 pt-2" />
 
 			<div className="px-4 mt-3">
-				<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
+				<ProgressBar size="normal" color={colors.blue500} progress={0.25} />
 			</div>
 
 			<div className="mt-2">
@@ -78,32 +62,18 @@ export const SurveySingleChoice = () => {
 				/>
 			</div>
 
-			<div className="px-2 flex-1 overflow-y-auto pb-28">
-				<List role="radiogroup">
-					{question?.choices.map((choice) => (
-						<ListRow
-							key={choice.id}
-							role="radio"
-							aria-checked={selectedChoiceId === choice.id}
-							onClick={() => setSelectedChoiceId(choice.id)}
-							contents={
-								<ListRow.Texts
-									type="1RowTypeA"
-									top={choice.label}
-									topProps={{ color: colors.grey700 }}
-								/>
-							}
-							right={
-								<Checkbox.Line
-									checked={selectedChoiceId === choice.id}
-									aria-hidden={true}
-									style={{ pointerEvents: "none" }}
-								/>
-							}
-							verticalPadding="large"
-						/>
-					))}
-				</List>
+			<div className="px-4 mt-4 flex-1 overflow-y-auto pb-28">
+				<input
+					type="text"
+					value={answer}
+					onChange={(e) => setAnswer(e.target.value.slice(0, maxLength))}
+					placeholder="내용을 입력해주세요"
+					className="w-full border border-solid border-gray-200 rounded-xl px-4 py-3 text-[15px] leading-6 outline-none focus:border-blue-400"
+					aria-label="단답형 답변 입력"
+				/>
+				<div className="mt-2 text-right text-[12px] text-gray-500">
+					{answer.length} / {maxLength}
+				</div>
 			</div>
 
 			<FixedBottomCTA.Double
@@ -118,8 +88,8 @@ export const SurveySingleChoice = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" onClick={handleEssay}>
-						다음
+					<CTAButton display="block" disabled={isInvalid}>
+						확인
 					</CTAButton>
 				}
 			/>
@@ -127,4 +97,4 @@ export const SurveySingleChoice = () => {
 	);
 };
 
-export default SurveySingleChoice;
+export default SurveyShortAnswer;
