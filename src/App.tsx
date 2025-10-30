@@ -19,6 +19,7 @@ import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
 import { Survey } from "./pages/Survey";
+import SurveySingleChoice from "./pages/survey/SingleChoice";
 
 export const App = () => {
 	return (
@@ -30,7 +31,7 @@ export const App = () => {
 					<Route path="/onboarding" element={<Onboarding />} />
 					<Route path="/main" element={<Main />} />
 					<Route path="/createForm" element={<CreateForm />} />
-          	<Route path="/mysurvey" element={<MySurvey />} />
+					<Route path="/mysurvey" element={<MySurvey />} />
 					<Route
 						path="/createForm/multipleChoice"
 						element={<MultipleChoicePage />}
@@ -52,6 +53,7 @@ export const App = () => {
 					<Route path="/OXquiz" element={<OXquiz />} />
 					<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 					<Route path="/survey" element={<Survey />} />
+					<Route path="/survey/singleChoice" element={<SurveySingleChoice />} />
 				</Routes>
 			</Router>
 		</SurveyProvider>

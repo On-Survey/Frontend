@@ -6,7 +6,7 @@ export const Survey = () => {
 	const navigate = useNavigate();
 
 	const handleStart = () => {
-		navigate("/");
+		navigate("/survey/singleChoice");
 	};
 
 	return (
