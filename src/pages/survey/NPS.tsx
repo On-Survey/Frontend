@@ -27,6 +27,9 @@ export const SurveyNPS = () => {
 
 	const isInvalid = (question?.required ?? false) && score === null;
 
+	const handleNext = () => {
+		navigate("/survey/number");
+	};
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
@@ -90,7 +93,7 @@ export const SurveyNPS = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" disabled={isInvalid}>
+					<CTAButton display="block" disabled={isInvalid} onClick={handleNext}>
 						다음
 					</CTAButton>
 				}
