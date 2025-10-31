@@ -3,11 +3,12 @@ import { CTAButton, FixedBottomCTA, ProgressBar, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const SurveyRating = () => {
+export const SurveyNPS = () => {
 	type Question = {
 		id: number;
 		title: string;
 		required: boolean;
+		description?: string;
 	};
 
 	const navigate = useNavigate();
@@ -16,21 +17,19 @@ export const SurveyRating = () => {
 
 	useEffect(() => {
 		const mock: Question = {
-			id: 401,
-			title: "이번 기능에 얼마나 만족하시나요?",
+			id: 501,
+			title: "온서베이를 지인에게 추천할 의향이 얼마나 되시나요?",
 			required: true,
+			description: "0 ~ 10점 중 선택",
 		};
 		setQuestion(mock);
 	}, []);
 
 	const isInvalid = (question?.required ?? false) && score === null;
 
-	const handleNext = () => {
-		navigate("/survey/nps");
-	};
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={0.25} />
+			<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
 
 			<Top
 				title={
@@ -46,22 +45,24 @@ export const SurveyRating = () => {
 					) : undefined
 				}
 				subtitleBottom={
-					<Top.SubtitleParagraph size={15}>
-						1 ~ 5점 중 선택
-					</Top.SubtitleParagraph>
+					question?.description ? (
+						<Top.SubtitleParagraph size={15}>
+							{question.description}
+						</Top.SubtitleParagraph>
+					) : undefined
 				}
 			/>
 
 			<div className="px-4 mt-20 flex-1 overflow-y-auto pb-28">
 				<div className="flex gap-2.5 justify-center px-6">
-					{Array.from({ length: 5 }, (_, idx) => {
+					{Array.from({ length: 10 }, (_, idx) => {
 						const v = idx + 1;
-						const isActive = score === v;
+						const isActive = score !== null && v <= score;
 						return (
 							<div key={v} className="flex flex-col items-center gap-2">
 								<button
 									type="button"
-									className={`w-8 h-8 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
+									className={`w-6 h-6 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
 									aria-label={`${v}점`}
 									onClick={() => setScore(v)}
 								/>
@@ -74,10 +75,6 @@ export const SurveyRating = () => {
 							</div>
 						);
 					})}
-				</div>
-				<div className="flex items-center justify-between mt-4 px-12">
-					<span className="text-[12px] text-gray-500">매우 아니다</span>
-					<span className="text-[12px] text-gray-500">매우 그렇다</span>
 				</div>
 			</div>
 
@@ -93,7 +90,7 @@ export const SurveyRating = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" disabled={isInvalid} onClick={handleNext}>
+					<CTAButton display="block" disabled={isInvalid}>
 						다음
 					</CTAButton>
 				}
@@ -102,4 +99,4 @@ export const SurveyRating = () => {
 	);
 };
 
-export default SurveyRating;
+export default SurveyNPS;
