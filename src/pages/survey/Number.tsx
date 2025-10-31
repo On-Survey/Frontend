@@ -31,6 +31,10 @@ export const SurveyNumber = () => {
 
 	const isInvalid = (question?.required ?? false) && value.trim().length === 0;
 
+	const handleNext = () => {
+		navigate("/survey/date");
+	};
+
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<ProgressBar size="normal" color={colors.blue500} progress={0.25} />
@@ -85,7 +89,7 @@ export const SurveyNumber = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" disabled={isInvalid}>
+					<CTAButton display="block" disabled={isInvalid} onClick={handleNext}>
 						확인
 					</CTAButton>
 				}

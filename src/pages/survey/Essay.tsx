@@ -36,37 +36,31 @@ export const SurveyEssay = () => {
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<div className="px-4 pt-2" />
+			<ProgressBar size="normal" color={colors.blue500} progress={0.25} />
 
-			<div className="px-4 mt-3">
-				<ProgressBar size="normal" color={colors.blue500} progress={0.25} />
-			</div>
+			<Top
+				title={
+					<Top.TitleParagraph size={22} color={colors.grey900}>
+						{question?.title ?? ""}
+					</Top.TitleParagraph>
+				}
+				subtitleTop={
+					question?.required ? (
+						<Top.SubtitleBadges
+							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
+						/>
+					) : undefined
+				}
+				subtitleBottom={
+					question?.description ? (
+						<Top.SubtitleParagraph size={15}>
+							{question.description}
+						</Top.SubtitleParagraph>
+					) : undefined
+				}
+			/>
 
-			<div className="mt-2">
-				<Top
-					title={
-						<Top.TitleParagraph size={22} color={colors.grey900}>
-							{question?.title ?? ""}
-						</Top.TitleParagraph>
-					}
-					subtitleTop={
-						question?.required ? (
-							<Top.SubtitleBadges
-								badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
-							/>
-						) : undefined
-					}
-					subtitleBottom={
-						question?.description ? (
-							<Top.SubtitleParagraph size={15}>
-								{question.description}
-							</Top.SubtitleParagraph>
-						) : undefined
-					}
-				/>
-			</div>
-
-			<div className="px-4 mt-4 flex-1 overflow-y-auto pb-28">
+			<div className="px-4 flex-1 overflow-y-auto pb-28">
 				<textarea
 					value={answer}
 					onChange={(e) => setAnswer(e.target.value.slice(0, maxLength))}
