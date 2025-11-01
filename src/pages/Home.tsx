@@ -44,12 +44,19 @@ export const Home = () => {
 							/>
 						}
 						right={
-							<Asset.Icon
-								frameShape={{ width: 24, height: 24 }}
-								name="icn-arrow-rightwards"
-								color={colors.grey600}
-								aria-hidden={true}
-							/>
+							<button
+								type="button"
+								className="cursor-pointer"
+								aria-label="설문 보기"
+								onClick={() => navigate("/survey")}
+							>
+								<Asset.Icon
+									frameShape={{ width: 24, height: 24 }}
+									name="icn-arrow-rightwards"
+									color={colors.grey600}
+									aria-hidden={true}
+								/>
+							</button>
 						}
 					/>
 				</button>
@@ -72,12 +79,19 @@ export const Home = () => {
 						<Button size="small" variant="weak">
 							# 건강
 						</Button>
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icn-arrow-rightwards"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
+						<button
+							type="button"
+							className="cursor-pointer"
+							aria-label="설문 보기"
+							onClick={() => navigate("/survey")}
+						>
+							<Asset.Icon
+								frameShape={{ width: 24, height: 24 }}
+								name="icn-arrow-rightwards"
+								color={colors.grey600}
+								aria-hidden={true}
+							/>
+						</button>
 					</div>
 					<Text
 						color={colors.grey900}
@@ -106,12 +120,19 @@ export const Home = () => {
 						<Button size="small" variant="weak">
 							# 건강
 						</Button>
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icn-arrow-rightwards"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
+						<button
+							type="button"
+							className="cursor-pointer"
+							aria-label="설문 보기"
+							onClick={() => navigate("/survey")}
+						>
+							<Asset.Icon
+								frameShape={{ width: 24, height: 24 }}
+								name="icn-arrow-rightwards"
+								color={colors.grey600}
+								aria-hidden={true}
+							/>
+						</button>
 					</div>
 					<Text
 						color={colors.grey900}
