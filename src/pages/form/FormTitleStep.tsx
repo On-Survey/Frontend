@@ -1,14 +1,12 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
+import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-interface FormTitleStepProps {
-	onNext: () => void;
-}
-
-function FormTitleStep({ onNext }: FormTitleStepProps) {
+function FormTitleStep() {
 	const { state, setTitle, setDescription, setTitleStepCompleted } =
 		useSurvey();
+	const { handleStepChange } = useCreateForm();
 
 	const step = state.titleStepCompleted;
 
@@ -25,7 +23,7 @@ function FormTitleStep({ onNext }: FormTitleStepProps) {
 		setTitleStepCompleted(true);
 	};
 	const handleNextPage = () => {
-		onNext();
+		handleStepChange(1);
 	};
 
 	return (

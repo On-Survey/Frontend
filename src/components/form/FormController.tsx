@@ -7,10 +7,12 @@ import {
 	MAIN_CONTROLS,
 	TEXT_PROPS,
 } from "../../constants/formController";
+import { useCreateForm } from "../../contexts/CreateFormContext";
 import QuestionController from "./QuestionController";
 
 function FormController() {
 	const [isOpen, setIsOpen] = useState(false);
+	const { handleStepChange } = useCreateForm();
 
 	const handleOpen = () => {
 		setIsOpen(true);
@@ -25,7 +27,6 @@ function FormController() {
 	};
 
 	const handleAddQuestion = () => {
-		console.log("문항 추가");
 		handleOpen();
 	};
 
@@ -34,7 +35,7 @@ function FormController() {
 	};
 
 	const handleNext = () => {
-		console.log("다음");
+		handleStepChange(2);
 	};
 
 	// 액션 핸들러 매핑
