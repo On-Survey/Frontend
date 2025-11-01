@@ -72,6 +72,8 @@ function ShortAnswerPage() {
 				value={answer}
 				onChange={handleAnswerChange}
 				placeholder="이런 식으로 표기 될거예요"
+				maxLength={20}
+				autoFocus={true}
 			/>
 			<Border variant="padding24" />
 			<ListRow
