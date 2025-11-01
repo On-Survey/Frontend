@@ -35,37 +35,45 @@ function ScreeningOption({
 			/>
 
 			<div className="flex gap-4 w-full px-6">
-				<button
-					type="button"
-					className="flex-1 flex items-center justify-center py-6 transition-all duration-200 bg-blue-100 hover:bg-blue-100 rounded-xl!"
-					aria-label="예"
-					onClick={() => handleSelectedChange("O")}
-				>
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						backgroundColor="transparent"
-						name="icon-o-mono"
-						color={adaptive.blue500}
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-				</button>
+				<div className="flex justify-center w-full items-center gap-2">
+					<button
+						type="button"
+						aria-label="O"
+						onClick={() => handleSelectedChange("O")}
+						className={`flex justify-center  items-center p-4 transition-colors gap-3 cursor-pointer w-full rounded-2xl! ${
+							selected === "O" ? "bg-blue-200" : "bg-blue-100 hover:bg-blue-200"
+						}`}
+					>
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							name="icon-o-mono"
+							color={adaptive.blue500}
+							aria-hidden={true}
+							ratio="1/1"
+						/>
+					</button>
+				</div>
 
-				<button
-					type="button"
-					className="flex-1 flex items-center justify-center py-6 transition-all duration-200 bg-red-100 hover:bg-red-100 rounded-xl!"
-					aria-label="아니오"
-					onClick={() => handleSelectedChange("X")}
-				>
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						backgroundColor="transparent"
-						name="icon-x-mono"
-						color={adaptive.red500}
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-				</button>
+				<div className="flex justify-center w-full items-center gap-2">
+					<button
+						type="button"
+						aria-label="X"
+						onClick={() => handleSelectedChange("X")}
+						className={`flex justify-center items-center p-4 transition-colors gap-3 cursor-pointer w-full rounded-2xl! ${
+							selected === "X" ? "bg-red-200" : "bg-red-100 hover:bg-red-200"
+						}`}
+					>
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							name="icon-x-mono"
+							color={adaptive.red500}
+							aria-hidden={true}
+							ratio="1/1"
+						/>
+					</button>
+				</div>
 			</div>
 
 			<FixedBottomCTA loading={false} disabled={!selected} onClick={handleNext}>
