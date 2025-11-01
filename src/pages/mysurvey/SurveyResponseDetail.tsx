@@ -1,0 +1,155 @@
+import { adaptive } from "@toss/tds-colors";
+import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { BottomNavigation } from "../../components/BottomNavigation";
+import type { SurveyResponseDetail as SurveyResponseDetailType } from "../../types/surveyResponse";
+import { SurveyFilterBottomSheet } from "./components/SurveyFilterBottomSheet";
+
+export const SurveyResponseDetail = () => {
+	const navigate = useNavigate();
+	const { surveyId } = useParams<{ surveyId: string }>();
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+	// Mock
+	const surveyResponse: SurveyResponseDetailType = {
+		id: Number(surveyId),
+		title: "반려동물 외모 취향에 관한 설문",
+		status: "active",
+		responseCount: 11,
+		questions: [
+			{
+				id: "1",
+				title: "키우고 계신 견종이 무엇입니까?",
+				type: "shortAnswer",
+				required: true,
+				responseCount: 11,
+			},
+			{
+				id: "2",
+				title: "해당 견종을 왜 키우고 계신가요?",
+				type: "essay",
+				required: true,
+				responseCount: 10,
+			},
+		],
+	};
+
+	const badgeConfig = {
+		active: { color: "blue" as const },
+		closed: { color: "elephant" as const },
+	};
+
+	const badge = badgeConfig[surveyResponse.status];
+
+	const handleMyPage = () => {
+		navigate("/mypage");
+	};
+
+	const getQuestionTypeLabel = (type: string, required: boolean) => {
+		const typeLabels: Record<string, string> = {
+			shortAnswer: "주관식 단답형",
+			essay: "주관식 서술형",
+			multipleChoice: "객관식",
+			rating: "평가형",
+			nps: "NPS",
+			date: "날짜",
+			number: "숫자",
+		};
+
+		const requiredLabel = required ? "필수" : "선택";
+		const typeLabel = typeLabels[type] || type;
+
+		return `${requiredLabel} / ${typeLabel}`;
+	};
+
+	return (
+		<div className="flex flex-col w-full h-screen bg-white">
+			<Top
+				title={
+					<Top.TitleParagraph size={22} color={adaptive.grey900}>
+						{surveyResponse.title}
+					</Top.TitleParagraph>
+				}
+				subtitleTop={
+					<Top.SubtitleBadges
+						badges={[
+							{
+								text: surveyResponse.status === "active" ? "노출중" : "마감",
+								color: badge.color,
+								variant: "weak",
+							},
+						]}
+					/>
+				}
+				subtitleBottom={
+					<Top.SubtitleParagraph size={15}>
+						{surveyResponse.responseCount}명 응답
+					</Top.SubtitleParagraph>
+				}
+			/>
+			<div className="h-4" />
+
+			<div className="flex-1 overflow-y-auto pb-24">
+				<List>
+					<ListRow
+						contents={
+							<ListRow.Texts
+								type="2RowTypeC"
+								top="설문 질문"
+								topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+								bottom=""
+								bottomProps={{ color: adaptive.grey500 }}
+							/>
+						}
+						right={
+							<button
+								type="button"
+								onClick={() => setIsFilterOpen(true)}
+								aria-label="필터 열기"
+							>
+								<Asset.Icon
+									frameShape={{ width: 18, height: 18 }}
+									name="icon-filter-mono"
+									color={adaptive.grey600}
+									aria-hidden={true}
+								/>
+							</button>
+						}
+						verticalPadding="small"
+						horizontalPadding="small"
+					/>
+					{surveyResponse.questions.map((question) => (
+						<ListRow
+							key={question.id}
+							contents={
+								<ListRow.Texts
+									type="2RowTypeA"
+									top={`${parseInt(question.id, 10)}. ${question.title}`}
+									topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+									bottom={getQuestionTypeLabel(
+										question.type,
+										question.required,
+									)}
+									bottomProps={{ color: adaptive.grey600 }}
+								/>
+							}
+							right={
+								<Button size="medium" variant="weak">
+									{question.responseCount}명
+								</Button>
+							}
+							verticalPadding="large"
+						/>
+					))}
+				</List>
+			</div>
+
+			<BottomNavigation currentPage="more" onMyPageClick={handleMyPage} />
+			<SurveyFilterBottomSheet
+				open={isFilterOpen}
+				onClose={() => setIsFilterOpen(false)}
+			/>
+		</div>
+	);
+};
