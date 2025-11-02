@@ -26,11 +26,11 @@ function DatePage() {
 		setIsRequired(!isRequired);
 	};
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 
 	const latestDate = questions
 		.filter((q) => q.type === "date")
-		.sort((a, b) => b.order - a.order)[0];
+		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestDate?.title;
 
 	return (

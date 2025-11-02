@@ -8,39 +8,33 @@ function RatingCreate() {
 	const navigate = useNavigate();
 	const { addQuestion } = useSurvey();
 	const [title, setTitle] = useState("");
-	const [leftLabel, setLeftLabel] = useState("매우 나쁨");
-	const [rightLabel, setRightLabel] = useState("매우 좋음");
-	const [scale, setScale] = useState(10);
+	const [minValue, setMinValue] = useState("매우 나쁨");
+	const [maxValue, setMaxValue] = useState("매우 좋음");
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTitle(e.target.value);
 	};
 
-	const handleLeftLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setLeftLabel(e.target.value);
+	const handleMinValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setMinValue(e.target.value);
 	};
 
-	const handleRightLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setRightLabel(e.target.value);
-	};
-
-	const handleScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setScale(parseInt(e.target.value) || 10);
+	const handleMaxValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setMaxValue(e.target.value);
 	};
 
 	const handleConfirm = () => {
 		if (title.trim()) {
 			const newQuestion: RatingQuestion = {
-				id: crypto.randomUUID(),
+				surveyId: 0,
+				questionId: Date.now(),
 				type: "rating",
 				title: title.trim(),
-				required: true,
-				order: 0, // addQuestion에서 자동으로 설정됨
-				config: {
-					leftLabel,
-					rightLabel,
-					scale,
-				},
+				description: "",
+				isRequired: true,
+				questionOrder: 0, // addQuestion에서 자동으로 설정됨
+				minValue,
+				maxValue,
 			};
 			addQuestion(newQuestion);
 			navigate("/form");
@@ -88,33 +82,22 @@ function RatingCreate() {
 						<TextField.Clearable
 							variant="line"
 							hasError={false}
-							label="왼쪽 라벨"
+							label="최소값 라벨"
 							labelOption="sustain"
-							value={leftLabel}
-							onChange={handleLeftLabelChange}
-							placeholder="왼쪽 라벨"
+							value={minValue}
+							onChange={handleMinValueChange}
+							placeholder="최소값 라벨"
 						/>
 						<TextField.Clearable
 							variant="line"
 							hasError={false}
-							label="오른쪽 라벨"
+							label="최대값 라벨"
 							labelOption="sustain"
-							value={rightLabel}
-							onChange={handleRightLabelChange}
-							placeholder="오른쪽 라벨"
+							value={maxValue}
+							onChange={handleMaxValueChange}
+							placeholder="최대값 라벨"
 						/>
 					</div>
-
-					<TextField.Clearable
-						variant="line"
-						hasError={false}
-						label="스케일 (1-10)"
-						labelOption="sustain"
-						type="number"
-						value={scale.toString()}
-						onChange={handleScaleChange}
-						placeholder="10"
-					/>
 				</div>
 			</BottomSheet>
 		</div>
