@@ -18,12 +18,12 @@ function QuestionHome({ onPrevious }: QuestionHomeProps) {
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{state.formData.title}
+						{state.survey.title}
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph>
-						{state.formData.description}
+						{state.survey.description}
 					</Top.SubtitleParagraph>
 				}
 				lower={

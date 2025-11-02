@@ -16,10 +16,10 @@ import type {
 
 // 초기 상태
 const initialState: SurveyFormState = {
-	formData: {
+	survey: {
 		title: "",
 		description: "",
-		questions: [],
+		question: [],
 	},
 	isDirty: false,
 	isSubmitting: false,
@@ -37,8 +37,8 @@ function surveyFormReducer(
 		case "SET_TITLE":
 			return {
 				...state,
-				formData: {
-					...state.formData,
+				survey: {
+					...state.survey,
 					title: action.payload,
 				},
 				isDirty: true,
@@ -47,8 +47,8 @@ function surveyFormReducer(
 		case "SET_DESCRIPTION":
 			return {
 				...state,
-				formData: {
-					...state.formData,
+				survey: {
+					...state.survey,
 					description: action.payload,
 				},
 				isDirty: true,
@@ -57,9 +57,9 @@ function surveyFormReducer(
 		case "ADD_QUESTION":
 			return {
 				...state,
-				formData: {
-					...state.formData,
-					questions: [...state.formData.questions, action.payload],
+				survey: {
+					...state.survey,
+					question: [...state.survey.question, action.payload],
 				},
 				isDirty: true,
 			};
@@ -67,10 +67,10 @@ function surveyFormReducer(
 		case "UPDATE_QUESTION":
 			return {
 				...state,
-				formData: {
-					...state.formData,
-					questions: state.formData.questions.map((question) =>
-						question.id === action.payload.id
+				survey: {
+					...state.survey,
+					question: state.survey.question.map((question) =>
+						question.questionId.toString() === action.payload.id
 							? { ...question, ...action.payload.question }
 							: question,
 					),
@@ -81,10 +81,10 @@ function surveyFormReducer(
 		case "DELETE_QUESTION":
 			return {
 				...state,
-				formData: {
-					...state.formData,
-					questions: state.formData.questions.filter(
-						(question) => question.id !== action.payload,
+				survey: {
+					...state.survey,
+					question: state.survey.question.filter(
+						(question) => question.questionId.toString() !== action.payload,
 					),
 				},
 				isDirty: true,
@@ -93,9 +93,9 @@ function surveyFormReducer(
 		case "REORDER_QUESTIONS":
 			return {
 				...state,
-				formData: {
-					...state.formData,
-					questions: action.payload,
+				survey: {
+					...state.survey,
+					question: action.payload,
 				},
 				isDirty: true,
 			};
@@ -136,11 +136,7 @@ function surveyFormReducer(
 		case "LOAD_SURVEY":
 			return {
 				...state,
-				formData: {
-					title: action.payload.title,
-					description: action.payload.description || "",
-					questions: action.payload.questions,
-				},
+				survey: action.payload,
 				isDirty: false,
 				error: null,
 			};
@@ -164,15 +160,15 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 	// 편의 함수들
 	const addQuestion = useCallback(
 		(question: Question) => {
-			// 기존 질문들의 최대 order 값을 찾아서 +1
-			const maxOrder = state.formData.questions.reduce(
-				(max, q) => Math.max(max, q.order),
+			// 기존 질문들의 최대 questionOrder 값을 찾아서 +1
+			const maxOrder = state.survey.question.reduce(
+				(max, q) => Math.max(max, q.questionOrder),
 				-1,
 			);
-			const questionWithOrder = { ...question, order: maxOrder + 1 };
+			const questionWithOrder = { ...question, questionOrder: maxOrder + 1 };
 			dispatch({ type: "ADD_QUESTION", payload: questionWithOrder });
 		},
-		[state.formData.questions],
+		[state.survey.question],
 	);
 
 	const updateQuestion = useCallback(

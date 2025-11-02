@@ -6,7 +6,7 @@ export const QUESTION_TYPE_ROUTES: Record<QuestionType, string> = {
 	rating: "/createForm/rating",
 	nps: "/createForm/nps",
 	shortAnswer: "/createForm/shortAnswer",
-	essay: "/createForm/essay",
+	longAnswer: "/createForm/longAnswer",
 	date: "/createForm/date",
 	number: "/createForm/number",
 };

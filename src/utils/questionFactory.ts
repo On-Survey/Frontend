@@ -4,13 +4,17 @@ import type { Question, QuestionType } from "../types/survey";
 export const createQuestion = (
 	questionType: QuestionType,
 	title: string,
+	surveyId: number = 0,
+	questionOrder: number = 0,
 ): Question => {
 	const baseQuestion = {
-		id: crypto.randomUUID(),
+		surveyId,
+		questionId: Date.now(),
 		type: questionType,
 		title,
-		required: true,
-		order: 0, // addQuestion에서 자동으로 설정됨
+		description: "",
+		isRequired: true,
+		questionOrder,
 	};
 
 	switch (questionType) {
@@ -18,49 +22,44 @@ export const createQuestion = (
 			return {
 				...baseQuestion,
 				type: "multipleChoice",
-				options: [
-					{ id: crypto.randomUUID(), text: "옵션 1" },
-					{ id: crypto.randomUUID(), text: "옵션 2" },
+				maxChoice: 1,
+				option: [
+					{ order: 1, content: "옵션 1", nextQuestionId: 0 },
+					{ order: 2, content: "옵션 2", nextQuestionId: 0 },
 				],
-				allowSelection: 1,
 			};
 		case "rating":
 			return {
 				...baseQuestion,
 				type: "rating",
-				config: {
-					leftLabel: "매우 나쁨",
-					rightLabel: "매우 좋음",
-					scale: 10,
-				},
+				minValue: "매우 나쁨",
+				maxValue: "매우 좋음",
 			};
 		case "nps":
 			return {
 				...baseQuestion,
 				type: "nps",
-				scale: 10,
 			};
 		case "shortAnswer":
 			return {
 				...baseQuestion,
 				type: "shortAnswer",
 			};
-		case "essay":
+		case "longAnswer":
 			return {
 				...baseQuestion,
-				type: "essay",
+				type: "longAnswer",
 			};
 		case "date":
 			return {
 				...baseQuestion,
 				type: "date",
-				choiceDate: "",
+				date: new Date(),
 			};
 		case "number":
 			return {
 				...baseQuestion,
 				type: "number",
-				value: 0,
 			};
 		default:
 			throw new Error(`지원하지 않는 문항 타입: ${questionType}`);

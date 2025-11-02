@@ -21,13 +21,12 @@ function MultipleChoiceMain() {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 	const latestMultipleChoice = questions
 		.filter((q) => q.type === "multipleChoice")
-		.sort((a, b) => b.order - a.order)[0];
-	const questionId = latestMultipleChoice?.id;
-	const allowSelection = (latestMultipleChoice as MultipleChoiceQuestion)
-		?.allowSelection;
+		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+	const questionId = latestMultipleChoice?.questionId.toString();
+	const maxChoice = (latestMultipleChoice as MultipleChoiceQuestion)?.maxChoice;
 
 	const [isRequired, setIsRequired] = useState(false);
 	const { isOpen, handleOpen, handleClose } = useModal(false);
@@ -117,7 +116,7 @@ function MultipleChoiceMain() {
 					right={
 						<ListRow.Texts
 							type="Right1RowTypeB"
-							top={allowSelection?.toString()}
+							top={maxChoice?.toString() || "1"}
 							topProps={{ color: "#3182f6" }}
 							marginTop={0}
 						/>
@@ -128,11 +127,13 @@ function MultipleChoiceMain() {
 				/>
 			</List>
 
-			<SelectionLimitBottomSheet
-				questionId={questionId}
-				isOpen={isOpen}
-				handleClose={handleClose}
-			/>
+			{questionId && (
+				<SelectionLimitBottomSheet
+					questionId={questionId}
+					isOpen={isOpen}
+					handleClose={handleClose}
+				/>
+			)}
 
 			<QuestionTitleEditBottomSheet
 				isOpen={isQuestionTitleEditOpen}

@@ -32,11 +32,11 @@ function EssayPage() {
 		setIsRequired(checked);
 	};
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 
 	const latestEssay = questions
-		.filter((q) => q.type === "essay")
-		.sort((a, b) => b.order - a.order)[0];
+		.filter((q) => q.type === "longAnswer")
+		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestEssay?.title;
 
 	return (
