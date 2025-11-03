@@ -35,11 +35,11 @@ function RatingPage() {
 		}
 	};
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 
 	const latestRating = questions
 		.filter((q) => q.type === "rating")
-		.sort((a, b) => b.order - a.order)[0];
+		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestRating?.title;
 
 	return (
