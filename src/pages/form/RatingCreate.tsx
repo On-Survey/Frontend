@@ -2,27 +2,39 @@ import { BottomSheet, TextField } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
-import type { NPSQuestion } from "../../types/survey";
+import type { RatingQuestion } from "../../types/survey";
 
-function NPSCreate() {
+function RatingCreate() {
 	const navigate = useNavigate();
 	const { addQuestion } = useSurvey();
 	const [title, setTitle] = useState("");
+	const [minValue, setMinValue] = useState("매우 나쁨");
+	const [maxValue, setMaxValue] = useState("매우 좋음");
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTitle(e.target.value);
 	};
 
+	const handleMinValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setMinValue(e.target.value);
+	};
+
+	const handleMaxValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setMaxValue(e.target.value);
+	};
+
 	const handleConfirm = () => {
 		if (title.trim()) {
-			const newQuestion: NPSQuestion = {
+			const newQuestion: RatingQuestion = {
 				surveyId: 0,
 				questionId: Date.now(),
-				type: "nps",
+				type: "rating",
 				title: title.trim(),
 				description: "",
 				isRequired: true,
 				questionOrder: 0, // addQuestion에서 자동으로 설정됨
+				minValue,
+				maxValue,
 			};
 			addQuestion(newQuestion);
 			navigate("/form");
@@ -37,7 +49,7 @@ function NPSCreate() {
 		<div className="min-h-screen bg-gray-50">
 			<BottomSheet
 				header={
-					<BottomSheet.Header>NPS 문항을 생성해주세요</BottomSheet.Header>
+					<BottomSheet.Header>평가형 문항을 생성해주세요</BottomSheet.Header>
 				}
 				open={true}
 				onClose={handleClose}
@@ -66,13 +78,25 @@ function NPSCreate() {
 						autoFocus={true}
 					/>
 
-					<div className="text-sm text-gray-600">
-						<p>
-							NPS (Net Promoter Score)는 고객이 제품이나 서비스를 다른 사람에게
-							추천할 의향을 묻는 질문입니다.
-						</p>
-						<p>0점: 전혀 추천하지 않음</p>
-						<p>10점: 매우 추천함</p>
+					<div className="grid grid-cols-2 gap-4">
+						<TextField.Clearable
+							variant="line"
+							hasError={false}
+							label="최소값 라벨"
+							labelOption="sustain"
+							value={minValue}
+							onChange={handleMinValueChange}
+							placeholder="최소값 라벨"
+						/>
+						<TextField.Clearable
+							variant="line"
+							hasError={false}
+							label="최대값 라벨"
+							labelOption="sustain"
+							value={maxValue}
+							onChange={handleMaxValueChange}
+							placeholder="최대값 라벨"
+						/>
 					</div>
 				</div>
 			</BottomSheet>
@@ -80,4 +104,4 @@ function NPSCreate() {
 	);
 }
 
-export default NPSCreate;
+export default RatingCreate;

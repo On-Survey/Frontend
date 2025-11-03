@@ -1,14 +1,12 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
+import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-interface FormTitleStepProps {
-	onNext: () => void;
-}
-
-function FormTitleStep({ onNext }: FormTitleStepProps) {
+function FormTitleStep() {
 	const { state, setTitle, setDescription, setTitleStepCompleted } =
 		useSurvey();
+	const { handleStepChange } = useCreateForm();
 
 	const step = state.titleStepCompleted;
 
@@ -25,7 +23,7 @@ function FormTitleStep({ onNext }: FormTitleStepProps) {
 		setTitleStepCompleted(true);
 	};
 	const handleNextPage = () => {
-		onNext();
+		handleStepChange(1);
 	};
 
 	return (
@@ -63,7 +61,7 @@ function FormTitleStep({ onNext }: FormTitleStepProps) {
 					hasError={false}
 					label="상세 설명"
 					help="50자 이내로 작성할 수 있어요"
-					value={state.formData.description}
+					value={state.survey.description}
 					placeholder="상세 설명"
 					onChange={handleDescriptionChange}
 					autoFocus={step}
@@ -79,7 +77,7 @@ function FormTitleStep({ onNext }: FormTitleStepProps) {
 					variant="line"
 					hasError={false}
 					label="제목"
-					value={state.formData.title}
+					value={state.survey.title}
 					placeholder="제목"
 					onChange={handleTitleChange}
 				/>

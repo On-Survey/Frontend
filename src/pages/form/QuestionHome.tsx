@@ -1,29 +1,27 @@
 import { adaptive } from "@toss/tds-colors";
 import { Border, Top } from "@toss/tds-mobile";
 import FormController from "../../components/form/FormController";
+import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-interface QuestionHomeProps {
-	onPrevious: () => void;
-}
-
-function QuestionHome({ onPrevious }: QuestionHomeProps) {
+function QuestionHome() {
 	const { state } = useSurvey();
-	const handlePrevious = () => {
-		onPrevious();
-	};
+	const { handleStepChange } = useCreateForm();
 
+	const handlePrevious = () => {
+		handleStepChange(0);
+	};
 	return (
 		<>
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{state.formData.title}
+						{state.survey.title}
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph>
-						{state.formData.description}
+						{state.survey.description}
 					</Top.SubtitleParagraph>
 				}
 				lower={
@@ -40,6 +38,7 @@ function QuestionHome({ onPrevious }: QuestionHomeProps) {
 			/>
 			<Border variant="height16" />
 			<div className="h-3" />
+
 			<FormController />
 		</>
 	);

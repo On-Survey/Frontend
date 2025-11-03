@@ -7,10 +7,10 @@ function QuestionListPage() {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 	const multipleChoiceQuestions = questions
 		.filter((q) => q.type === "multipleChoice")
-		.sort((a, b) => b.order - a.order);
+		.sort((a, b) => b.questionOrder - a.questionOrder);
 
 	const handleQuestionClick = (questionId: string) => {
 		navigate(`/createForm/multipleChoice/questions/${questionId}`);
@@ -20,7 +20,7 @@ function QuestionListPage() {
 		<>
 			{multipleChoiceQuestions.map((question) => (
 				<ListRow
-					key={question.id}
+					key={question.questionId}
 					contents={
 						<ListRow.Texts
 							type="1RowTypeA"
@@ -38,7 +38,7 @@ function QuestionListPage() {
 					}
 					verticalPadding="large"
 					arrowType="right"
-					onClick={() => handleQuestionClick(question.id)}
+					onClick={() => handleQuestionClick(question.questionId.toString())}
 				/>
 			))}
 			<div className="h-4" />

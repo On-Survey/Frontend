@@ -25,7 +25,7 @@ function SelectionLimitBottomSheet({
 
 	const handleConfirm = () => {
 		updateQuestion(questionId, {
-			allowSelection: selectionLimit,
+			maxChoice: selectionLimit,
 		});
 		handleClose();
 	};

@@ -4,61 +4,45 @@ export type QuestionType =
 	| "rating" // 평가형 (양쪽 내용 + 원 10개)
 	| "nps" // NPS (1~10)
 	| "shortAnswer" // 단답형
-	| "essay" // 장문형
+	| "longAnswer" // 장문형
 	| "date" // 날짜 (ex: 2025-10-26)
 	| "number"; // 숫자형 (1~100)
 
-// 객관식 문항 옵션
-export interface MultipleChoiceOption {
-	id: string;
-	text: string;
-}
-
-// 평가형 문항 설정
-export interface RatingQuestionConfig {
-	leftLabel: string; // 왼쪽 라벨
-	rightLabel: string; // 오른쪽 라벨
-	scale: number; // 스케일 (기본 10)
-}
-
-// 기본 문항 인터페이스
+// 기본 문항 인터페이스 (공통 필드)
 export interface BaseQuestion {
-	id: string;
+	surveyId: number;
+	questionId: number;
 	type: QuestionType;
 	title: string;
-	description?: string;
-	required: boolean;
-	order: number;
+	description: string;
+	isRequired: boolean;
+	questionOrder: number; // 전체 문항 중 순서
+}
+
+// 객관식 문항 옵션
+export interface MultipleChoiceOption {
+	order: number; // 옵션 중 순서
+	content: string;
+	nextQuestionId: number;
 }
 
 // 객관식 문항
 export interface MultipleChoiceQuestion extends BaseQuestion {
 	type: "multipleChoice";
-	options: MultipleChoiceOption[];
-	allowSelection: number; // 선택 가능한 최대 개수
+	maxChoice: number;
+	option: MultipleChoiceOption[];
 }
 
 // 평가형 문항
 export interface RatingQuestion extends BaseQuestion {
 	type: "rating";
-	config: RatingQuestionConfig;
+	minValue: string;
+	maxValue: string;
 }
 
 // NPS 문항
 export interface NPSQuestion extends BaseQuestion {
 	type: "nps";
-	scale: number; // 스케일
-}
-
-// 서술형 문항
-export interface EssayQuestion extends BaseQuestion {
-	type: "essay";
-}
-
-// 날짜 문항
-export interface DateQuestion extends BaseQuestion {
-	type: "date";
-	choiceDate: string;
 }
 
 // 단답형 문항
@@ -66,10 +50,20 @@ export interface ShortAnswerQuestion extends BaseQuestion {
 	type: "shortAnswer";
 }
 
+// 장문형 문항
+export interface LongAnswerQuestion extends BaseQuestion {
+	type: "longAnswer";
+}
+
+// 날짜형 문항
+export interface DateQuestion extends BaseQuestion {
+	type: "date";
+	date: Date;
+}
+
 // 숫자형 문항
 export interface NumberQuestion extends BaseQuestion {
 	type: "number";
-	value: number;
 }
 
 // 모든 문항 타입의 유니온
@@ -77,33 +71,37 @@ export type Question =
 	| MultipleChoiceQuestion
 	| RatingQuestion
 	| NPSQuestion
-	| EssayQuestion
-	| DateQuestion
 	| ShortAnswerQuestion
+	| LongAnswerQuestion
+	| DateQuestion
 	| NumberQuestion;
+
+// 문항 정보 구조
+export interface QuestionInfo {
+	surveyId: number;
+	info: {
+		multipleChoice: MultipleChoiceQuestion[];
+		rating: RatingQuestion[];
+		nps: NPSQuestion[];
+		shortAnswer: ShortAnswerQuestion[];
+		longAnswer: LongAnswerQuestion[];
+		date: DateQuestion[];
+		number: NumberQuestion[];
+	};
+}
 
 // 설문 전체 인터페이스
 export interface Survey {
-	id: string;
-	title: string;
-	description?: string;
-	questions: Question[];
-	createdAt: string;
-	updatedAt: string;
-	status: "draft" | "published" | "closed";
-	authorId: string;
-}
-
-// 설문 생성/편집을 위한 폼 데이터 인터페이스
-export interface SurveyFormData {
+	userId?: number;
+	surveyId?: number;
 	title: string;
 	description: string;
-	questions: Question[];
+	question: Question[];
 }
 
 // 설문 폼 상태 인터페이스
 export interface SurveyFormState {
-	formData: SurveyFormData;
+	survey: Survey;
 	isDirty: boolean; // 변경사항이 있는지 여부
 	isSubmitting: boolean; // 제출 중인지 여부
 	isLoading: boolean; // 로딩 중인지 여부
@@ -113,12 +111,15 @@ export interface SurveyFormState {
 
 // 문항 업데이트를 위한 타입 (공통 필드만)
 export type QuestionUpdateData = {
-	id?: string;
+	questionId?: number;
 	title?: string;
 	description?: string;
-	required?: boolean;
-	order?: number;
-	allowSelection?: number;
+	isRequired?: boolean;
+	questionOrder?: number;
+	maxChoice?: number;
+	minValue?: string;
+	maxValue?: string;
+	date?: Date;
 };
 
 // 설문 폼 액션 타입
