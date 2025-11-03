@@ -1,12 +1,7 @@
-import {
-	Outlet,
-	Route,
-	BrowserRouter as Router,
-	Routes,
-} from "react-router-dom";
-import { CreateFormProvider } from "./contexts/CreateFormContext";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
+import { CreateFormStart } from "./pages/CreateFormStart";
 import DatePage from "./pages/form/DatePage";
 import EssayPage from "./pages/form/EssayPage";
 import MultipleChoiceMain from "./pages/form/multipleChoice/MultipleChoiceMain";
@@ -25,21 +20,19 @@ import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
 import { Survey } from "./pages/Survey";
-
+import { SurveyListPage } from "./pages/SurveyList";
 export const App = () => {
 	return (
-		<Router>
-			<Routes>
-				<Route path="/" element={<Intro />} />
-				<Route path="/home" element={<Home />} />
-				<Route path="/onboarding" element={<Onboarding />} />
-				<Route path="/main" element={<Main />} />
-				<Route path="/mysurvey" element={<MySurvey />} />
-				<Route path="/OXquiz" element={<OXquiz />} />
-				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
-				<Route path="/survey" element={<Survey />} />
-				<Route element={<SurveyProviderLayout />}>
-					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
+		<SurveyProvider>
+			<Router>
+				<Routes>
+					<Route path="/" element={<Intro />} />
+					<Route path="/home" element={<Home />} />
+					<Route path="/onboarding" element={<Onboarding />} />
+					<Route path="/main" element={<Main />} />
+					<Route path="/createFormStart" element={<CreateFormStart />} />
+					<Route path="/createForm" element={<CreateForm />} />
+					<Route path="/mysurvey" element={<MySurvey />} />
 					<Route
 						path="/createForm/multipleChoice"
 						element={<MultipleChoicePage />}
@@ -57,21 +50,13 @@ export const App = () => {
 					<Route path="/createForm/essay" element={<EssayPage />} />
 					<Route path="/createForm/date" element={<DatePage />} />
 					<Route path="/createForm/number" element={<NumberPage />} />
-					<Route path="/form" element={<CreateFormProviderWrapper />} />
-				</Route>
-			</Routes>
-		</Router>
+					<Route path="/form" element={<CreateForm />} />
+					<Route path="/OXquiz" element={<OXquiz />} />
+					<Route path="/oxquiz-detail" element={<OXquizDetail />} />
+					<Route path="/survey" element={<Survey />} />
+					<Route path="/surveyList" element={<SurveyListPage />} />
+				</Routes>
+			</Router>
+		</SurveyProvider>
 	);
 };
-
-const SurveyProviderLayout = () => (
-	<SurveyProvider>
-		<Outlet />
-	</SurveyProvider>
-);
-
-const CreateFormProviderWrapper = () => (
-	<CreateFormProvider>
-		<CreateForm />
-	</CreateFormProvider>
-);
