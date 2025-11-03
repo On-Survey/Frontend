@@ -7,6 +7,7 @@ import {
 import { CreateFormProvider } from "./contexts/CreateFormContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
+import { CreateFormStart } from "./pages/CreateFormStart";
 import DatePage from "./pages/form/DatePage";
 import EssayPage from "./pages/form/EssayPage";
 import MultipleChoiceMain from "./pages/form/multipleChoice/MultipleChoiceMain";
@@ -25,6 +26,7 @@ import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
 import { Survey } from "./pages/Survey";
+import { SurveyListPage } from "./pages/SurveyList";
 
 export const App = () => {
 	return (
@@ -34,10 +36,12 @@ export const App = () => {
 				<Route path="/home" element={<Home />} />
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
+				<Route path="/createFormStart" element={<CreateFormStart />} />
 				<Route path="/mysurvey" element={<MySurvey />} />
 				<Route path="/OXquiz" element={<OXquiz />} />
 				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 				<Route path="/survey" element={<Survey />} />
+				<Route path="/surveyList" element={<SurveyListPage />} />
 				<Route element={<SurveyProviderLayout />}>
 					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
 					<Route

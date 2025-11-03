@@ -42,10 +42,6 @@ export const Home = () => {
 		navigate("/mysurvey");
 	};
 
-	const handleMyPage = () => {
-		navigate("/mypage");
-	};
-
 	const handleViewAllSurveys = () => {
 		navigate("/surveyList");
 	};
@@ -177,11 +173,7 @@ export const Home = () => {
 
 			<div className="mb-24" />
 
-			<BottomNavigation
-				currentPage="home"
-				onMySurveyClick={handleMySurvey}
-				onMyPageClick={handleMyPage}
-			/>
+			<BottomNavigation currentPage="home" onMySurveyClick={handleMySurvey} />
 		</div>
 	);
 };
