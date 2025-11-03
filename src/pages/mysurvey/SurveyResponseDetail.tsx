@@ -28,7 +28,7 @@ export const SurveyResponseDetail = () => {
 			{
 				id: "2",
 				title: "해당 견종을 왜 키우고 계신가요?",
-				type: "essay",
+				type: "longAnswer",
 				required: true,
 				responseCount: 10,
 			},
@@ -145,7 +145,7 @@ export const SurveyResponseDetail = () => {
 				</List>
 			</div>
 
-			<BottomNavigation currentPage="more" onMyPageClick={handleMyPage} />
+			<BottomNavigation currentPage="more" onMoreClick={handleMyPage} />
 			<SurveyFilterBottomSheet
 				open={isFilterOpen}
 				onClose={() => setIsFilterOpen(false)}
