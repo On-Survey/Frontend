@@ -22,7 +22,6 @@ function EssayPage() {
 
 	const [isRequired, setIsRequired] = useState(false);
 	const [answer, setAnswer] = useState("");
-	const [answerError, setAnswerError] = useState(false);
 
 	const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setAnswer(e.target.value);
@@ -33,11 +32,7 @@ function EssayPage() {
 	};
 
 	const handleSubmit = () => {
-		if (answer.length > 500) {
-			setAnswerError(true);
-		} else {
-			setAnswerError(false);
-		}
+		console.log("submit");
 	};
 
 	const questions = state.survey.question;
@@ -74,7 +69,6 @@ function EssayPage() {
 			/>
 			<TextArea
 				variant="box"
-				hasError={answerError}
 				label="장문형 문항"
 				labelOption="sustain"
 				help="500글자까지 입력할 수 있어요"
@@ -82,6 +76,7 @@ function EssayPage() {
 				placeholder="내용을 입력해주세요"
 				height={160}
 				onChange={handleAnswerChange}
+				maxLength={500}
 			/>
 			<Border variant="padding24" />
 			<ListRow
