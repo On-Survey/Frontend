@@ -34,7 +34,7 @@ export const OrderCancelBottomSheet = ({
 								닫기
 							</Button>
 						}
-						rightButton={<Button onClick={onConfirm}>환불</Button>}
+						rightButton={<Button onClick={onConfirm}>주문취소</Button>}
 					/>
 				}
 			>
