@@ -21,6 +21,7 @@ import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
 import { MySurvey } from "./pages/mysurvey";
+import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
@@ -35,6 +36,7 @@ export const App = () => {
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
 				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
 				<Route path="/OXquiz" element={<OXquiz />} />
 				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 				<Route path="/survey" element={<Survey />} />

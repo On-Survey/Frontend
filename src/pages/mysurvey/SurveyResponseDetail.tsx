@@ -3,17 +3,22 @@ import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
+import {
+	QUESTION_TYPE_LABELS,
+	SURVEY_BADGE_CONFIG,
+	SURVEY_STATUS_LABELS,
+} from "../../constants/survey";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../../types/surveyResponse";
 import { SurveyFilterBottomSheet } from "./components/SurveyFilterBottomSheet";
 
 export const SurveyResponseDetail = () => {
 	const navigate = useNavigate();
-	const { surveyId } = useParams<{ surveyId: string }>();
+	const { id } = useParams<{ id: string }>();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 	// Mock
 	const surveyResponse: SurveyResponseDetailType = {
-		id: Number(surveyId),
+		id: Number(id) || 1,
 		title: "반려동물 외모 취향에 관한 설문",
 		status: "active",
 		responseCount: 11,
@@ -35,31 +40,15 @@ export const SurveyResponseDetail = () => {
 		],
 	};
 
-	const badgeConfig = {
-		active: { color: "blue" as const },
-		closed: { color: "elephant" as const },
-	};
-
-	const badge = badgeConfig[surveyResponse.status];
+	const badge = SURVEY_BADGE_CONFIG[surveyResponse.status];
 
 	const handleMyPage = () => {
 		navigate("/mypage");
 	};
 
 	const getQuestionTypeLabel = (type: string, required: boolean) => {
-		const typeLabels: Record<string, string> = {
-			shortAnswer: "주관식 단답형",
-			essay: "주관식 서술형",
-			multipleChoice: "객관식",
-			rating: "평가형",
-			nps: "NPS",
-			date: "날짜",
-			number: "숫자",
-		};
-
 		const requiredLabel = required ? "필수" : "선택";
-		const typeLabel = typeLabels[type] || type;
-
+		const typeLabel = QUESTION_TYPE_LABELS[type] || type;
 		return `${requiredLabel} / ${typeLabel}`;
 	};
 
@@ -75,7 +64,7 @@ export const SurveyResponseDetail = () => {
 					<Top.SubtitleBadges
 						badges={[
 							{
-								text: surveyResponse.status === "active" ? "노출중" : "마감",
+								text: SURVEY_STATUS_LABELS[surveyResponse.status],
 								color: badge.color,
 								variant: "weak",
 							},

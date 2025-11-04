@@ -1,5 +1,5 @@
 // 연령대 데이터
-export const ageRanges = [
+export const AGE_RANGES = [
 	"전체",
 	"10대",
 	"20대",
@@ -10,4 +10,4 @@ export const ageRanges = [
 ];
 
 // 성별 데이터
-export const genders = ["전체", "남성", "여성"];
+export const GENDERS = ["전체", "남성", "여성"];

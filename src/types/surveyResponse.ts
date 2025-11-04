@@ -16,3 +16,12 @@ export interface SurveyResponseQuestion {
 	required: boolean;
 	responseCount: number;
 }
+
+// 배지 설정 타입
+export type SurveyStatus = "active" | "closed";
+
+export type BadgeColor = "blue" | "elephant";
+
+export interface BadgeConfig {
+	color: BadgeColor;
+}
