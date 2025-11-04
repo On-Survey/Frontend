@@ -9,7 +9,7 @@ import {
 } from "../../constants/formController";
 import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useModal } from "../../hooks/UseToggle";
-import QuestionController from "./QuestionController";
+import { QuestionController } from "./QuestionController";
 
 export const FormController = () => {
 	const [isOpen, setIsOpen] = useState(false);

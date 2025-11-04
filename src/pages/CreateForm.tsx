@@ -1,9 +1,8 @@
 import { ProgressStep, ProgressStepper } from "@toss/tds-mobile";
 import { useCreateForm } from "../contexts/CreateFormContext";
-import FormTitleStep from "./form/FormTitleStep";
-import QuestionHome from "./form/QuestionHome";
-import InterestPage from "./interest/InterestPage";
-import ScreeningQuestion from "./screening/ScreeningMain";
+import { FormTitleStep, QuestionHome } from "./form";
+import { InterestPage } from "./interest";
+import { ScreeningMain } from "./screening";
 
 export const CreateForm = () => {
 	const { activeStep } = useCreateForm();
@@ -22,7 +21,7 @@ export const CreateForm = () => {
 			<div className="flex flex-col w-full px-1 gap-4 mt-3 flex-1 overflow-y-auto">
 				{activeStep === 0 && <FormTitleStep />}
 				{activeStep === 1 && <QuestionHome />}
-				{activeStep === 2 && <ScreeningQuestion />}
+				{activeStep === 2 && <ScreeningMain />}
 				{activeStep === 3 && <InterestPage />}
 				{activeStep === 4 && <div>Step 5</div>}
 			</div>
