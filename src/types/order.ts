@@ -3,13 +3,23 @@ export interface Order {
 	date: string;
 	title: string;
 	price: string;
-	status: "active" | "closed" | "cancelled";
+	status:
+		| "active"
+		| "closed"
+		| "refund_requested"
+		| "refund_rejected"
+		| "refund_completed";
 }
 
 export interface OrderDetail {
 	id: number;
 	title: string;
-	status: "active" | "closed" | "cancelled";
+	status:
+		| "active"
+		| "closed"
+		| "refund_requested"
+		| "refund_rejected"
+		| "refund_completed";
 	orderDate: string;
 	paymentInfo: {
 		responseCount: number;
@@ -25,4 +35,12 @@ export interface OrderDetail {
 	approvalNumber?: string;
 	paymentStatus?: string;
 	paymentDateTime?: string;
+}
+
+export type OrderHistoryTabId = "all" | "cancelled";
+
+export interface OrderHistoryTab {
+	id: OrderHistoryTabId;
+	label: string;
+	count: number;
 }

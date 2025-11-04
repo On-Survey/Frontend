@@ -7,16 +7,25 @@ interface OrderCardProps {
 	order: Order;
 }
 
+type BadgeColor = "blue" | "elephant" | "red";
+
+interface BadgeConfig {
+	color: BadgeColor;
+	label: string;
+}
+
+const BADGE_CONFIG: Record<Order["status"], BadgeConfig> = {
+	active: { color: "blue", label: "노출중" },
+	closed: { color: "elephant", label: "마감" },
+	refund_requested: { color: "red", label: "환불 접수" },
+	refund_rejected: { color: "red", label: "환불 반려" },
+	refund_completed: { color: "red", label: "환불 완료" },
+};
+
 export const OrderCard = ({ order }: OrderCardProps) => {
 	const navigate = useNavigate();
 
-	const badgeConfig = {
-		active: { color: "blue" as const, label: "노출중" },
-		closed: { color: "elephant" as const, label: "마감" },
-		cancelled: { color: "red" as const, label: "주문취소" },
-	};
-
-	const config = badgeConfig[order.status];
+	const config = BADGE_CONFIG[order.status];
 
 	const handleClick = () => {
 		navigate(`/mypage/orderHistory/${order.id}`);
