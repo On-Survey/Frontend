@@ -91,7 +91,6 @@ export const SurveySingleChoice = () => {
 								<Checkbox.Line
 									checked={selectedChoiceId === choice.id}
 									aria-hidden={true}
-									style={{ pointerEvents: "none" }}
 								/>
 							}
 							verticalPadding="large"
