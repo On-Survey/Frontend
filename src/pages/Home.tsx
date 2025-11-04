@@ -50,29 +50,15 @@ export const Home = () => {
 		navigate("/createFormStart");
 	};
 
+	const handleQuizClick = () => {
+		navigate("/oxquiz/detail");
+	};
+
 	return (
 		<div className="flex flex-col w-full min-h-screen">
-			<div
-				className="relative mx-4 mb-6 rounded-4xl overflow-hidden flex-shrink-0"
-				style={{ height: "337px" }}
-			>
-				<div
-					className="absolute inset-0"
-					style={{
-						background:
-							"linear-gradient(180deg, #59B5E8 3.52%, #37A6E4 15.71%, #D9D0EE 46.77%, #F1CFD6 59.46%, #FFE1E7 68.61%)",
-						filter: "blur(10px)",
-					}}
-				/>
-				<div
-					className="absolute bottom-0 left-0 right-0 z-100"
-					style={{
-						background:
-							"linear-gradient(180deg, rgba(71, 117, 178, 0.00) 60.95%, rgba(58, 95, 143, 0.60) 80.12%, #3A5F8F 90.2%)",
-						filter: "blur(2px)",
-						height: "100%",
-					}}
-				/>
+			<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden flex-shrink-0 h-[337px]">
+				<div className="absolute inset-0 home-banner-gradient" />
+				<div className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay" />
 				<div className="relative p-6 flex flex-col h-full">
 					<div className="flex-1 flex flex-col justify-between">
 						<div className="block">
@@ -91,7 +77,8 @@ export const Home = () => {
 							size="small"
 							color="light"
 							variant="weak"
-							className="max-w-20 p-0.1!"
+							className="max-w-20 p-0.1! z-999"
+							onClick={handleQuizClick}
 							style={
 								{
 									"--button-background-color": "rgba(7, 44, 77, 0.20)",
