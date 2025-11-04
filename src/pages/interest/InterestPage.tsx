@@ -71,10 +71,9 @@ function InterestPage() {
 									}
 									right={
 										<Checkbox.Line
-											checked={selectedTopics.includes(topic.id)}
+											checked={isSelected}
 											size={20}
 											aria-hidden={true}
-											style={{ pointerEvents: "none" }}
 										/>
 									}
 									verticalPadding="large"
