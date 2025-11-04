@@ -8,9 +8,9 @@ function QuestionOptionsPage() {
 	const { questionId } = useParams<{ questionId: string }>();
 	const { state } = useSurvey();
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 	const question = questions.find(
-		(q) => q.id === questionId,
+		(q) => q.questionId.toString() === questionId,
 	) as MultipleChoiceQuestion;
 
 	return (
@@ -22,8 +22,8 @@ function QuestionOptionsPage() {
 					</Top.TitleParagraph>
 				}
 			/>
-			{question.options.map((option) => (
-				<div key={option.id}>{option.text}</div>
+			{question.option.map((option) => (
+				<div key={option.order}>{option.content}</div>
 			))}
 		</>
 	);
