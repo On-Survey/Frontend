@@ -4,9 +4,11 @@ import {
 	BrowserRouter as Router,
 	Routes,
 } from "react-router-dom";
+import { CreateFormProvider } from "./contexts/CreateFormContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
 import DatePage from "./pages/form/DatePage";
+import LongAnswerPage from "./pages/form/LongAnswerPage";
 import MultipleChoiceMain from "./pages/form/multipleChoice/MultipleChoiceMain";
 import MultipleChoicePage from "./pages/form/multipleChoice/MultipleChoicePage";
 import QuestionListPage from "./pages/form/multipleChoice/QuestionListPage";
@@ -51,7 +53,7 @@ export const App = () => {
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route element={<SurveyProviderLayout />}>
-					<Route path="/createForm" element={<CreateFormWrapper />} />
+					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
 					<Route
 						path="/createForm/multipleChoice"
 						element={<MultipleChoicePage />}
@@ -66,9 +68,10 @@ export const App = () => {
 					<Route path="/createForm/rating" element={<RatingPage />} />
 					<Route path="/createForm/nps" element={<NPSPage />} />
 					<Route path="/createForm/shortAnswer" element={<ShortAnswerPage />} />
+					<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
 					<Route path="/createForm/date" element={<DatePage />} />
 					<Route path="/createForm/number" element={<NumberPage />} />
-					<Route path="/form" element={<CreateFormWrapper />} />
+					<Route path="/form" element={<CreateFormProviderWrapper />} />
 				</Route>
 			</Routes>
 		</Router>
@@ -81,4 +84,8 @@ const SurveyProviderLayout = () => (
 	</SurveyProvider>
 );
 
-const CreateFormWrapper = () => <CreateForm />;
+const CreateFormProviderWrapper = () => (
+	<CreateFormProvider>
+		<CreateForm />
+	</CreateFormProvider>
+);
