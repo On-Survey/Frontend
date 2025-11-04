@@ -1,6 +1,6 @@
 import { getPlatformOS } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
-import { FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
+import { Button, Text, Top, useToast } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { OrderDetail as OrderDetailType } from "../../types/order";
@@ -12,6 +12,7 @@ export const OrderDetail = () => {
 	const [orderDetail, setOrderDetail] = useState<OrderDetailType | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 	const platform = getPlatformOS();
+	const { openToast } = useToast();
 
 	useEffect(() => {
 		// mock
@@ -19,7 +20,7 @@ export const OrderDetail = () => {
 			id: Number(orderId) || 1,
 			title: "반려동물 외모 취향에 관한 설문",
 			status: "active",
-			orderDate: "2024. 10. 21",
+			orderDate: "2024 . 10. 21",
 			paymentInfo: {
 				responseCount: 50,
 				responseCountPrice: 200,
@@ -31,6 +32,9 @@ export const OrderDetail = () => {
 				locationPrice: 70,
 			},
 			totalPrice: "23,400원",
+			approvalNumber: "303503544",
+			paymentStatus: "승인",
+			paymentDateTime: "2020년 7월 29일 15:14",
 		};
 		setOrderDetail(mockOrderDetail);
 	}, [orderId]);
@@ -45,6 +49,13 @@ export const OrderDetail = () => {
 
 	const handleCancelOrder = () => {
 		setIsBottomSheetOpen(false);
+		if (platform === "android") {
+			openToast("환불접수가 완료됐어요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: false,
+			});
+		}
 		navigate("/mypage/orderHistory");
 	};
 
@@ -71,119 +82,115 @@ export const OrderDetail = () => {
 					</Top.SubtitleParagraph>
 				}
 			/>
-			<div className="flex-1 p-6">
+			<div className="p-4">
+				<Button
+					size="medium"
+					color="dark"
+					variant="weak"
+					onClick={handleCancelOrderClick}
+				>
+					{platform === "ios" ? "앱스토어에서 환불 신청" : "환불 받기"}
+				</Button>
+			</div>
+			<div className="flex-1 px-6 overflow-y-auto">
+				{[
+					{
+						label: "승인번호",
+						value: orderDetail.approvalNumber || "",
+					},
+					{
+						label: "결제상태",
+						value: orderDetail.paymentStatus || "",
+					},
+					{
+						label: "결제일시",
+						value: orderDetail.paymentDateTime || "",
+					},
+					{
+						label: "최종 결제 금액",
+						value: orderDetail.totalPrice,
+					},
+				].map((item) => (
+					<div
+						key={item.label}
+						className="flex justify-between items-center mb-5"
+					>
+						<Text
+							display="block"
+							color={adaptive.grey600}
+							typography="st8"
+							fontWeight="medium"
+						>
+							{item.label}
+						</Text>
+						<Text
+							display="block"
+							color={adaptive.grey900}
+							typography="st8"
+							fontWeight="medium"
+						>
+							{item.value}
+						</Text>
+					</div>
+				))}
+
 				<Text
 					display="block"
-					color={adaptive.grey900}
+					color={adaptive.grey600}
 					typography="st8"
-					fontWeight="bold"
+					fontWeight="medium"
 				>
-					결제 정보
+					결제정보
 				</Text>
 
 				<div className="mt-4 bg-gray-50 rounded-2xl p-4">
-					<div className="flex justify-between items-center mb-4">
-						<Text
-							display="block"
-							color={adaptive.grey600}
-							typography="t5"
-							fontWeight="semibold"
+					{[
+						{
+							label: "희망 응답자 수",
+							value: `${orderDetail.paymentInfo.responseCount}명`,
+							price: orderDetail.paymentInfo.responseCountPrice,
+						},
+						{
+							label: "성별",
+							value: orderDetail.paymentInfo.gender,
+							price: orderDetail.paymentInfo.genderPrice,
+						},
+						{
+							label: "연령대",
+							value: orderDetail.paymentInfo.ageRange,
+							price: orderDetail.paymentInfo.ageRangePrice,
+						},
+						{
+							label: "거주지",
+							value: orderDetail.paymentInfo.location,
+							price: orderDetail.paymentInfo.locationPrice,
+						},
+					].map((item) => (
+						<div
+							key={item.label}
+							className="flex justify-between items-center mb-4 last:mb-0"
 						>
-							희망 응답자 수 - {orderDetail.paymentInfo.responseCount}명
-						</Text>
-						<Text
-							display="block"
-							color={adaptive.grey800}
-							typography="t5"
-							fontWeight="semibold"
-						>
-							{orderDetail.paymentInfo.responseCountPrice.toLocaleString()}원
-						</Text>
-					</div>
-
-					<div className="flex justify-between items-center mb-4">
-						<Text
-							display="block"
-							color={adaptive.grey600}
-							typography="t5"
-							fontWeight="semibold"
-						>
-							성별 - {orderDetail.paymentInfo.gender}
-						</Text>
-						<Text
-							display="block"
-							color={adaptive.grey800}
-							typography="t5"
-							fontWeight="semibold"
-							textAlign="right"
-						>
-							{orderDetail.paymentInfo.genderPrice.toLocaleString()}원
-						</Text>
-					</div>
-
-					<div className="flex justify-between items-center mb-4">
-						<Text
-							display="block"
-							color={adaptive.grey600}
-							typography="t5"
-							fontWeight="semibold"
-						>
-							연령대 - {orderDetail.paymentInfo.ageRange}
-						</Text>
-						<Text
-							display="block"
-							color={adaptive.grey800}
-							typography="t5"
-							fontWeight="semibold"
-							textAlign="right"
-						>
-							{orderDetail.paymentInfo.ageRangePrice.toLocaleString()}원
-						</Text>
-					</div>
-
-					<div className="flex justify-between items-center mb-4">
-						<Text
-							display="block"
-							color={adaptive.grey600}
-							typography="t5"
-							fontWeight="semibold"
-						>
-							거주지 - {orderDetail.paymentInfo.location}
-						</Text>
-						<Text
-							display="block"
-							color={adaptive.grey800}
-							typography="t5"
-							fontWeight="semibold"
-							textAlign="right"
-						>
-							{orderDetail.paymentInfo.locationPrice.toLocaleString()}원
-						</Text>
-					</div>
-				</div>
-
-				<div className="mt-8 flex justify-between items-center">
-					<Text
-						display="block"
-						color={adaptive.grey900}
-						typography="st8"
-						fontWeight="bold"
-					>
-						최종 결제 금액
-					</Text>
-					<Text
-						display="block"
-						color={adaptive.blue500}
-						typography="st8"
-						fontWeight="bold"
-					>
-						{orderDetail.totalPrice}
-					</Text>
+							<Text
+								display="block"
+								color={adaptive.grey600}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								{item.label} - {item.value}
+							</Text>
+							<Text
+								display="block"
+								color={adaptive.grey800}
+								typography="t5"
+								fontWeight="semibold"
+								textAlign="right"
+							>
+								{item.price.toLocaleString()}원
+							</Text>
+						</div>
+					))}
 				</div>
 			</div>
-			<FixedBottomCTA loading={false} onClick={handleCancelOrderClick}>
-				주문 취소
-			</FixedBottomCTA>
 
 			<OrderCancelBottomSheet
 				open={isBottomSheetOpen}

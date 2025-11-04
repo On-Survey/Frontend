@@ -22,4 +22,7 @@ export interface OrderDetail {
 		locationPrice: number;
 	};
 	totalPrice: string;
+	approvalNumber?: string;
+	paymentStatus?: string;
+	paymentDateTime?: string;
 }

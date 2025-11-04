@@ -13,7 +13,7 @@ export const OrderCancelBottomSheet = ({
 	onConfirm,
 	platform,
 }: OrderCancelBottomSheetProps) => {
-	if (platform === "ios") {
+	if (platform === "android") {
 		// android
 		return (
 			<BottomSheet
@@ -34,7 +34,7 @@ export const OrderCancelBottomSheet = ({
 								닫기
 							</Button>
 						}
-						rightButton={<Button onClick={onConfirm}>주문취소</Button>}
+						rightButton={<Button onClick={onConfirm}>환불</Button>}
 					/>
 				}
 			>
