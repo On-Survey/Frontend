@@ -17,6 +17,7 @@ import NPSPage from "./pages/form/NPSPage";
 import NumberPage from "./pages/form/NumberPage";
 import RatingPage from "./pages/form/RatingPage";
 import ShortAnswerPage from "./pages/form/ShortAnswerPage";
+import TitleAndDescriptionEditPage from "./pages/form/TitleAndDescriptionEditPage";
 import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
@@ -51,6 +52,10 @@ export const App = () => {
 							element={<QuestionOptionsPage />}
 						/>
 					</Route>
+					<Route
+						path="/createForm/:questionType/edit"
+						element={<TitleAndDescriptionEditPage />}
+					/>
 					<Route path="/createForm/rating" element={<RatingPage />} />
 					<Route path="/createForm/nps" element={<NPSPage />} />
 					<Route path="/createForm/shortAnswer" element={<ShortAnswerPage />} />

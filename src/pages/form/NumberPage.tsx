@@ -8,17 +8,12 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { useModal } from "../../hooks/UseToggle";
 
 function NumberPage() {
 	const { state } = useSurvey();
-	const {
-		isOpen: isQuestionTitleEditOpen,
-		handleOpen: handleQuestionTitleEditOpen,
-		handleClose: handleQuestionTitleEditClose,
-	} = useModal(false);
+	const navigate = useNavigate();
 
 	const [answer, setAnswer] = useState("");
 	const [isRequired, setIsRequired] = useState(false);
@@ -36,6 +31,11 @@ function NumberPage() {
 		.filter((q) => q.type === "number")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestNumber?.title;
+	const description = latestNumber?.description;
+
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/number/edit`);
+	};
 
 	return (
 		<div>
@@ -47,7 +47,7 @@ function NumberPage() {
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph>
-						보조설명은 이런식으로 들어갈 것 같아요
+						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
 					</Top.SubtitleParagraph>
 				}
 				lower={
@@ -56,7 +56,7 @@ function NumberPage() {
 						size="small"
 						variant="weak"
 						display="inline"
-						onClick={handleQuestionTitleEditOpen}
+						onClick={handleTitleAndDescriptionEdit}
 					>
 						문항 제목 및 설명 수정하기
 					</Top.LowerButton>
@@ -91,10 +91,6 @@ function NumberPage() {
 					/>
 				}
 				verticalPadding="large"
-			/>
-			<QuestionTitleEditBottomSheet
-				isOpen={isQuestionTitleEditOpen}
-				handleClose={handleQuestionTitleEditClose}
 			/>
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
