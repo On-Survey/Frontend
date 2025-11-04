@@ -7,18 +7,35 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { validateNumberInput } from "../../utils/validators";
+
+type FormData = {
+	number: string;
+};
+
+type Question = {
+	id: number;
+	title: string;
+	required: boolean;
+};
 
 export const SurveyNumber = () => {
-	type Question = {
-		id: number;
-		title: string;
-		required: boolean;
-	};
-
 	const navigate = useNavigate();
 	const [question, setQuestion] = useState<Question | null>(null);
-	const [value, setValue] = useState("");
+
+	const {
+		control,
+		handleSubmit,
+		watch,
+		formState: { errors },
+	} = useForm<FormData>({
+		mode: "onChange",
+		defaultValues: {
+			number: "",
+		},
+	});
 
 	useEffect(() => {
 		const mock: Question = {
@@ -29,9 +46,12 @@ export const SurveyNumber = () => {
 		setQuestion(mock);
 	}, []);
 
-	const isInvalid = (question?.required ?? false) && value.trim().length === 0;
+	const watchedValue = watch("number");
+	const isRequired = question?.required ?? false;
+	const isInvalid =
+		isRequired && (!watchedValue || watchedValue.trim().length === 0);
 
-	const handleNext = () => {
+	const onSubmit = () => {
 		navigate("/survey/date");
 	};
 
@@ -57,24 +77,38 @@ export const SurveyNumber = () => {
 				}
 			/>
 
-			<TextField.Clearable
-				variant="line"
-				hasError={false}
-				label="숫자형"
-				labelOption="sustain"
-				value={value}
-				onChange={(e) => {
-					const val = e.target.value;
-					if (val === "" || /^\d+$/.test(val)) {
-						const num = val === "" ? 0 : parseInt(val, 10);
-						if (val === "" || (num >= 1 && num <= 100)) {
-							setValue(val);
+			<Controller
+				name="number"
+				control={control}
+				rules={{
+					validate: (value) => {
+						if (isRequired && (!value || value.trim().length === 0)) {
+							return "필수 입력 항목입니다";
 						}
-					}
+						if (value && !validateNumberInput(value)) {
+							return "1부터 100까지의 숫자만 입력할 수 있습니다";
+						}
+						return true;
+					},
 				}}
-				placeholder="1부터 100까지 입력할 수 있어요"
-				type="tel"
-				inputMode="numeric"
+				render={({ field: { onChange, value } }) => (
+					<TextField.Clearable
+						variant="line"
+						hasError={!!errors.number}
+						label="숫자형"
+						labelOption="sustain"
+						value={value}
+						onChange={(e) => {
+							const val = e.target.value;
+							if (validateNumberInput(val)) {
+								onChange(val);
+							}
+						}}
+						placeholder="1부터 100까지 입력할 수 있어요"
+						type="tel"
+						inputMode="numeric"
+					/>
+				)}
 			/>
 
 			<FixedBottomCTA.Double
@@ -89,7 +123,11 @@ export const SurveyNumber = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" disabled={isInvalid} onClick={handleNext}>
+					<CTAButton
+						display="block"
+						disabled={isInvalid}
+						onClick={handleSubmit(onSubmit)}
+					>
 						확인
 					</CTAButton>
 				}
