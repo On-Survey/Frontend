@@ -17,6 +17,7 @@ function NumberPage() {
 
 	const [answer, setAnswer] = useState("");
 	const [isRequired, setIsRequired] = useState(false);
+	const [answerError, setAnswerError] = useState(false);
 
 	const handleAnswerChange = (value: string) => {
 		setAnswer(value);
@@ -24,6 +25,14 @@ function NumberPage() {
 
 	const handleRequiredChange = (checked: boolean) => {
 		setIsRequired(checked);
+	};
+
+	const handleSubmit = () => {
+		if (Number(answer) > 100) {
+			setAnswerError(true);
+		} else {
+			setAnswerError(false);
+		}
 	};
 
 	const questions = state.survey.question;
@@ -65,7 +74,7 @@ function NumberPage() {
 			{/* 숫자키패드 사용을 위해서는 type="number" 대신 inputMode="numeric"를 사용해주세요. */}
 			<TextField.Clearable
 				variant="line"
-				hasError={false}
+				hasError={answerError}
 				label="숫자형"
 				labelOption="sustain"
 				value={answer.toString()}
@@ -92,7 +101,14 @@ function NumberPage() {
 				}
 				verticalPadding="large"
 			/>
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleSubmit}
+				disabled={answer.length < 1}
+			>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
 }
