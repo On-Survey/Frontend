@@ -26,3 +26,4 @@ dist-ssr
 .granite
 onsurvey.ait
 .env
+tsconfig.app.tsbuildinfo

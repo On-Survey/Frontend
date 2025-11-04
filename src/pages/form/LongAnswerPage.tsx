@@ -1,37 +1,46 @@
 import { adaptive } from "@toss/tds-colors";
 import {
+	Border,
 	FixedBottomCTA,
 	ListRow,
 	Switch,
+	TextArea,
 	Top,
-	WheelDatePicker,
 } from "@toss/tds-mobile";
 import { useState } from "react";
 import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
-function DatePage() {
+function EssayPage() {
 	const { state } = useSurvey();
 	const {
 		isOpen: isQuestionTitleEditOpen,
-		handleOpen: handleQuestionTitleEditOpen,
 		handleClose: handleQuestionTitleEditClose,
+		handleOpen: handleQuestionTitleEditOpen,
 	} = useModal(false);
 
-	const [date, setDate] = useState(new Date());
-	const [isRequired, setIsRequired] = useState(true);
+	const [isRequired, setIsRequired] = useState(false);
+	const [answer, setAnswer] = useState("");
 
-	const handleIsRequiredChange = () => {
-		setIsRequired(!isRequired);
+	const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setAnswer(e.target.value);
+	};
+
+	const handleRequiredChange = (checked: boolean) => {
+		setIsRequired(checked);
+	};
+
+	const handleSubmit = () => {
+		console.log("submit");
 	};
 
 	const questions = state.survey.question;
 
-	const latestDate = questions
-		.filter((q) => q.type === "date")
+	const latestEssay = questions
+		.filter((q) => q.type === "longAnswer")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestDate?.title;
+	const title = latestEssay?.title;
 
 	return (
 		<div>
@@ -58,17 +67,21 @@ function DatePage() {
 					</Top.LowerButton>
 				}
 			/>
-
-			<WheelDatePicker
-				title={"날짜를 선택해 주세요"}
-				value={date}
-				onChange={(date) => setDate(date)}
-				triggerLabel={"날짜"}
-				buttonText={"선택하기"}
+			<TextArea
+				variant="box"
+				label="장문형 문항"
+				labelOption="sustain"
+				help="500글자까지 입력할 수 있어요"
+				value={answer}
+				placeholder="내용을 입력해주세요"
+				height={160}
+				onChange={handleAnswerChange}
+				maxLength={500}
 			/>
+			<Border variant="padding24" />
 			<ListRow
 				role="switch"
-				aria-checked={isRequired}
+				aria-checked={true}
 				contents={
 					<ListRow.Texts
 						type="1RowTypeA"
@@ -77,7 +90,10 @@ function DatePage() {
 					/>
 				}
 				right={
-					<Switch checked={isRequired} onChange={handleIsRequiredChange} />
+					<Switch
+						checked={isRequired}
+						onChange={() => handleRequiredChange(!isRequired)}
+					/>
 				}
 				verticalPadding="large"
 			/>
@@ -85,9 +101,15 @@ function DatePage() {
 				isOpen={isQuestionTitleEditOpen}
 				handleClose={handleQuestionTitleEditClose}
 			/>
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA
+				onClick={handleSubmit}
+				loading={false}
+				disabled={answer.length < 1}
+			>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
 }
 
-export default DatePage;
+export default EssayPage;

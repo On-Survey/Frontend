@@ -1,8 +1,14 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+	Outlet,
+	Route,
+	BrowserRouter as Router,
+	Routes,
+} from "react-router-dom";
+import { CreateFormProvider } from "./contexts/CreateFormContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
 import DatePage from "./pages/form/DatePage";
-import EssayPage from "./pages/form/EssayPage";
+import LongAnswerPage from "./pages/form/LongAnswerPage";
 import MultipleChoiceMain from "./pages/form/multipleChoice/MultipleChoiceMain";
 import MultipleChoicePage from "./pages/form/multipleChoice/MultipleChoicePage";
 import QuestionListPage from "./pages/form/multipleChoice/QuestionListPage";
@@ -25,22 +31,22 @@ import { OXquizDetail } from "./pages/OXquizDetail";
 import { Survey } from "./pages/Survey";
 export const App = () => {
 	return (
-		<SurveyProvider>
-			<Router>
-				<Routes>
-					<Route path="/" element={<Intro />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/onboarding" element={<Onboarding />} />
-					<Route path="/main" element={<Main />} />
-					<Route path="/createForm" element={<CreateForm />} />
-					<Route path="/mysurvey" element={<MySurvey />} />
-					<Route path="/mypage" element={<Mypage />} />
-					<Route path="/mypage/orderHistory" element={<OrderHistory />} />
-					<Route
-						path="/mypage/orderHistory/:orderId"
-						element={<OrderDetail />}
-					/>
-					<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
+		<Router>
+			<Routes>
+				<Route path="/" element={<Intro />} />
+				<Route path="/home" element={<Home />} />
+				<Route path="/onboarding" element={<Onboarding />} />
+				<Route path="/main" element={<Main />} />
+				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route path="/mypage" element={<Mypage />} />
+				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
+				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
+				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
+				<Route path="/OXquiz" element={<OXquiz />} />
+				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
+				<Route path="/survey" element={<Survey />} />
+				<Route element={<SurveyProviderLayout />}>
+					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
 					<Route
 						path="/createForm/multipleChoice"
 						element={<MultipleChoicePage />}
@@ -55,15 +61,24 @@ export const App = () => {
 					<Route path="/createForm/rating" element={<RatingPage />} />
 					<Route path="/createForm/nps" element={<NPSPage />} />
 					<Route path="/createForm/shortAnswer" element={<ShortAnswerPage />} />
-					<Route path="/createForm/essay" element={<EssayPage />} />
+					<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
 					<Route path="/createForm/date" element={<DatePage />} />
 					<Route path="/createForm/number" element={<NumberPage />} />
-					<Route path="/form" element={<CreateForm />} />
-					<Route path="/OXquiz" element={<OXquiz />} />
-					<Route path="/oxquiz-detail" element={<OXquizDetail />} />
-					<Route path="/survey" element={<Survey />} />
-				</Routes>
-			</Router>
-		</SurveyProvider>
+					<Route path="/form" element={<CreateFormProviderWrapper />} />
+				</Route>
+			</Routes>
+		</Router>
 	);
 };
+
+const SurveyProviderLayout = () => (
+	<SurveyProvider>
+		<Outlet />
+	</SurveyProvider>
+);
+
+const CreateFormProviderWrapper = () => (
+	<CreateFormProvider>
+		<CreateForm />
+	</CreateFormProvider>
+);

@@ -8,25 +8,21 @@ function NPSCreate() {
 	const navigate = useNavigate();
 	const { addQuestion } = useSurvey();
 	const [title, setTitle] = useState("");
-	const [scale, setScale] = useState(10);
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTitle(e.target.value);
 	};
 
-	const handleScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setScale(parseInt(e.target.value) || 10);
-	};
-
 	const handleConfirm = () => {
 		if (title.trim()) {
 			const newQuestion: NPSQuestion = {
-				id: crypto.randomUUID(),
+				surveyId: 0,
+				questionId: Date.now(),
 				type: "nps",
 				title: title.trim(),
-				required: true,
-				order: 0, // addQuestion에서 자동으로 설정됨
-				scale,
+				description: "",
+				isRequired: true,
+				questionOrder: 0, // addQuestion에서 자동으로 설정됨
 			};
 			addQuestion(newQuestion);
 			navigate("/form");
@@ -68,17 +64,6 @@ function NPSCreate() {
 						onChange={handleTitleChange}
 						placeholder="질문을 입력해주세요"
 						autoFocus={true}
-					/>
-
-					<TextField.Clearable
-						variant="line"
-						hasError={false}
-						label="스케일 (1-10)"
-						labelOption="sustain"
-						type="number"
-						value={scale.toString()}
-						onChange={handleScaleChange}
-						placeholder="10"
 					/>
 
 					<div className="text-sm text-gray-600">

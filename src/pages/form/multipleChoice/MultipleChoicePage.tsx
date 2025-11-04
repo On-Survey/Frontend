@@ -6,11 +6,11 @@ import { useSurvey } from "../../../contexts/SurveyContext";
 function MultipleChoicePage() {
 	const { state } = useSurvey();
 
-	const questions = state.formData.questions;
+	const questions = state.survey.question;
 
 	const latestMultipleChoice = questions
 		.filter((q) => q.type === "multipleChoice")
-		.sort((a, b) => b.order - a.order)[0];
+		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestMultipleChoice?.title;
 
 	return (
