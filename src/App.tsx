@@ -40,6 +40,7 @@ export const App = () => {
 				<Route path="/mysurvey" element={<MySurvey />} />
 				<Route path="/OXquiz" element={<OXquiz />} />
 				<Route path="/oxquiz/detail" element={<OXquizDetail />} />
+				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 				<Route path="/survey" element={<Survey />} />
 				<Route path="/surveyList" element={<SurveyListPage />} />
 				<Route element={<SurveyProviderLayout />}>
