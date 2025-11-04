@@ -21,7 +21,7 @@ export const QUESTION_TYPES = [
 		icon: "icon-2-list-line-mono",
 	},
 	{
-		id: "essay",
+		id: "longAnswer",
 		label: "장문형",
 		icon: "icon-chat-bubble-text-square-mono",
 	},
