@@ -84,7 +84,11 @@ function InterestPage() {
 					</List>
 				</div>
 
-				<FixedBottomCTA loading={false} onClick={handleNext}>
+				<FixedBottomCTA
+					loading={false}
+					onClick={handleNext}
+					disabled={selectedTopics.length === 0}
+				>
 					다음
 				</FixedBottomCTA>
 			</div>
