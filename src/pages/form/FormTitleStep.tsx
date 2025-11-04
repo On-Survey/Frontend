@@ -58,13 +58,13 @@ function FormTitleStep() {
 			>
 				<TextArea
 					variant="line"
-					hasError={false}
 					label="상세 설명"
 					help="50자 이내로 작성할 수 있어요"
 					value={state.survey.description}
 					placeholder="상세 설명"
 					onChange={handleDescriptionChange}
 					autoFocus={step}
+					maxLength={50}
 				/>
 			</div>
 
@@ -75,16 +75,30 @@ function FormTitleStep() {
 			>
 				<TextArea
 					variant="line"
-					hasError={false}
 					label="제목"
 					value={state.survey.title}
 					placeholder="제목"
 					onChange={handleTitleChange}
+					maxLength={50}
 				/>
 			</div>
 
-			{!step && <FixedBottomCTA onClick={handleNext}>확인</FixedBottomCTA>}
-			{step && <FixedBottomCTA onClick={handleNextPage}>확인</FixedBottomCTA>}
+			{!step && (
+				<FixedBottomCTA
+					disabled={!state.survey.title.trim()}
+					onClick={handleNext}
+				>
+					확인
+				</FixedBottomCTA>
+			)}
+			{step && (
+				<FixedBottomCTA
+					disabled={!state.survey.description.trim()}
+					onClick={handleNextPage}
+				>
+					확인
+				</FixedBottomCTA>
+			)}
 		</>
 	);
 }
