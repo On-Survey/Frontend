@@ -11,7 +11,7 @@ import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useModal } from "../../hooks/UseToggle";
 import QuestionController from "./QuestionController";
 
-function FormController() {
+export const FormController = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { handleStepChange } = useCreateForm();
 
@@ -170,6 +170,4 @@ function FormController() {
 			</div>
 		</>
 	);
-}
-
-export default FormController;
+};

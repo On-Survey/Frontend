@@ -7,11 +7,11 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import RatingLabelEditBottomSheete from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
+import { RatingLabelEditBottomSheete } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
-function RatingPage() {
+export const RatingPage = () => {
 	const { state } = useSurvey();
 
 	const [isRequired, setIsRequired] = useState(false);
@@ -157,6 +157,4 @@ function RatingPage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default RatingPage;
+};

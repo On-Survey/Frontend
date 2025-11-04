@@ -3,7 +3,7 @@ import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function FormTitleStep() {
+export const FormTitleStep = () => {
 	const { state, setTitle, setDescription, setTitleStepCompleted } =
 		useSurvey();
 	const { handleStepChange } = useCreateForm();
@@ -101,6 +101,4 @@ function FormTitleStep() {
 			)}
 		</>
 	);
-}
-
-export default FormTitleStep;
+};

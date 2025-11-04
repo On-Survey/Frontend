@@ -7,11 +7,11 @@ import {
 	WheelDatePicker,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { QuestionTitleEditBottomSheet } from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
-function DatePage() {
+export const DatePage = () => {
 	const { state } = useSurvey();
 	const {
 		isOpen: isQuestionTitleEditOpen,
@@ -88,6 +88,4 @@ function DatePage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default DatePage;
+};

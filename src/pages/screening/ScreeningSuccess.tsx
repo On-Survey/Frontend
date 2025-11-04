@@ -7,7 +7,10 @@ interface ScreeningSuccessProps {
 	selected: "O" | "X";
 }
 
-function ScreeningSuccess({ question, selected }: ScreeningSuccessProps) {
+export const ScreeningSuccess = ({
+	question,
+	selected,
+}: ScreeningSuccessProps) => {
 	const { handleStepChange } = useCreateForm();
 	return (
 		<>
@@ -40,6 +43,4 @@ function ScreeningSuccess({ question, selected }: ScreeningSuccessProps) {
 			</FixedBottomCTA>
 		</>
 	);
-}
-
-export default ScreeningSuccess;
+};

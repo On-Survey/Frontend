@@ -6,10 +6,10 @@ interface CreateMultiChoiceBottomSheetProps {
 	handleClose: () => void;
 }
 
-function CreateMultiChoiceBottomSheet({
+export const CreateMultiChoiceBottomSheet = ({
 	isOpen,
 	handleClose,
-}: CreateMultiChoiceBottomSheetProps) {
+}: CreateMultiChoiceBottomSheetProps) => {
 	return (
 		<BottomSheet
 			header={<BottomSheet.Header>어떤 항목을 추가할까요?</BottomSheet.Header>}
@@ -41,6 +41,4 @@ function CreateMultiChoiceBottomSheet({
 			/>
 		</BottomSheet>
 	);
-}
-
-export default CreateMultiChoiceBottomSheet;
+};

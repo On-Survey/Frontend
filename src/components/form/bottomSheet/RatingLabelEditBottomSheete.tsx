@@ -8,13 +8,13 @@ interface RatingLabelEditBottomSheeteProps {
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function RatingLabelEditBottomSheete({
+export const RatingLabelEditBottomSheete = ({
 	label,
 	isOpen,
 	handleClose,
 	value,
 	onChange,
-}: RatingLabelEditBottomSheeteProps) {
+}: RatingLabelEditBottomSheeteProps) => {
 	return (
 		<BottomSheet
 			open={isOpen}
@@ -45,6 +45,4 @@ function RatingLabelEditBottomSheete({
 			/>
 		</BottomSheet>
 	);
-}
-
-export default RatingLabelEditBottomSheete;
+};

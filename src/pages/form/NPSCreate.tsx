@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import type { NPSQuestion } from "../../types/survey";
 
-function NPSCreate() {
+export const NPSCreate = () => {
 	const navigate = useNavigate();
 	const { addQuestion } = useSurvey();
 	const [title, setTitle] = useState("");
@@ -78,6 +78,4 @@ function NPSCreate() {
 			</BottomSheet>
 		</div>
 	);
-}
-
-export default NPSCreate;
+};

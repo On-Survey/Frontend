@@ -4,7 +4,7 @@ import { useState } from "react";
 import { topics } from "../../constants/topics";
 import { useCreateForm } from "../../contexts/CreateFormContext";
 
-function InterestPage() {
+export const InterestPage = () => {
 	const { handleStepChange } = useCreateForm();
 
 	const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -93,6 +93,4 @@ function InterestPage() {
 			</div>
 		</>
 	);
-}
-
-export default InterestPage;
+};

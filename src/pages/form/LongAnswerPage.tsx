@@ -8,11 +8,11 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { QuestionTitleEditBottomSheet } from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
-function EssayPage() {
+export const LongAnswerPage = () => {
 	const { state } = useSurvey();
 	const {
 		isOpen: isQuestionTitleEditOpen,
@@ -110,6 +110,4 @@ function EssayPage() {
 			</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default EssayPage;
+};

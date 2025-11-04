@@ -9,12 +9,12 @@ import {
 } from "../../constants/formController";
 import { useModal } from "../../hooks/UseToggle";
 import type { QuestionType } from "../../types/survey";
-import QuestionTitleBottomSheet from "./bottomSheet/QuestionTitleBottomSheet";
+import { QuestionTitleBottomSheet } from "./bottomSheet/QuestionTitleBottomSheet";
 
 interface QuestionControllerProps {
 	onPrevious: () => void;
 }
-function QuestionController({ onPrevious }: QuestionControllerProps) {
+export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 	const { isOpen, handleOpen, handleClose } = useModal();
 	const [selectedQuestionType, setSelectedQuestionType] =
 		useState<QuestionType | null>(null);
@@ -94,6 +94,4 @@ function QuestionController({ onPrevious }: QuestionControllerProps) {
 			</div>
 		</>
 	);
-}
-
-export default QuestionController;
+};

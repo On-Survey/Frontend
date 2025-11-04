@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import type { RatingQuestion } from "../../types/survey";
 
-function RatingCreate() {
+export const RatingCreate = () => {
 	const navigate = useNavigate();
 	const { addQuestion } = useSurvey();
 	const [title, setTitle] = useState("");
@@ -102,6 +102,4 @@ function RatingCreate() {
 			</BottomSheet>
 		</div>
 	);
-}
-
-export default RatingCreate;
+};

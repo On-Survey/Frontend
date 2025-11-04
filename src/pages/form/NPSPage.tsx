@@ -3,7 +3,7 @@ import { FixedBottomCTA, SegmentedControl, Text, Top } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function NPSPage() {
+export const NPSPage = () => {
 	const { state } = useSurvey();
 
 	const [isRequired, setIsRequired] = useState(false);
@@ -73,6 +73,4 @@ function NPSPage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default NPSPage;
+};

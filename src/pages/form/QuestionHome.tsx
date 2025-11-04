@@ -1,10 +1,10 @@
 import { adaptive } from "@toss/tds-colors";
 import { Border, Top } from "@toss/tds-mobile";
-import FormController from "../../components/form/FormController";
+import { FormController } from "../../components/form/FormController";
 import { useCreateForm } from "../../contexts/CreateFormContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function QuestionHome() {
+export const QuestionHome = () => {
 	const { state } = useSurvey();
 	const { handleStepChange } = useCreateForm();
 
@@ -42,6 +42,4 @@ function QuestionHome() {
 			<FormController />
 		</>
 	);
-}
-
-export default QuestionHome;
+};
