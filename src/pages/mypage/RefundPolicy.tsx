@@ -62,39 +62,49 @@ export const RefundPolicy = () => {
 							설문 응답이 시작 된 이후에는 아래 경우, 부분 환불 진행 (영업일
 							기준 3일 이내에 카드 자동 환불)
 						</Text>
-						<div className="mt-6">
-							<Text
-								display="block"
-								color={colors.grey600}
-								typography="t7"
-								fontWeight="medium"
-							>
-								1) 설문 마감일까지 응답을 수집하는데, 요청 응답수만큼 응답이
-								모이지 않은 경우
-							</Text>
-						</div>
-						<div className="mt-6">
-							<Text
-								display="block"
-								color={colors.grey600}
-								typography="t7"
-								fontWeight="medium"
-							>
-								2) 설문 진행 중 고객이 주문을 취소하여, 요청 응답수만큼 응답이
-								모이지 않은 경우
-							</Text>
-						</div>
-						<div className="mt-6">
-							<Text
-								display="block"
-								color={colors.grey600}
-								typography="t7"
-								fontWeight="medium"
-							>
-								✱ 부분 환불 금액 산정 기준 주문 금액 <br />✱ 요청 응답 수 /
-								부족한 응답 수 <br /> = 해당 금액에 대해 부분 환불 진행
-							</Text>
-						</div>
+						{[
+							{
+								id: "refund-1",
+								text: "1) 설문 마감일까지 응답을 수집하는데, 요청 응답수만큼 응답이 모이지 않은 경우",
+							},
+							{
+								id: "refund-2",
+								text: "2) 설문 진행 중 고객이 주문을 취소하여, 요청 응답수만큼 응답이 모이지 않은 경우",
+							},
+							{
+								id: "refund-3",
+								lines: [
+									"✱ 부분 환불 금액 산정 기준 주문 금액",
+									"✱ 요청 응답 수 / 부족한 응답 수",
+									"= 해당 금액에 대해 부분 환불 진행",
+								],
+							},
+						].map((item) => (
+							<div key={item.id} className="mt-6">
+								{"lines" in item && item.lines ? (
+									item.lines.map((line) => (
+										<Text
+											key={line}
+											display="block"
+											color={colors.grey600}
+											typography="t7"
+											fontWeight="medium"
+										>
+											{line}
+										</Text>
+									))
+								) : (
+									<Text
+										display="block"
+										color={colors.grey600}
+										typography="t7"
+										fontWeight="medium"
+									>
+										{"text" in item ? item.text : ""}
+									</Text>
+								)}
+							</div>
+						))}
 					</div>
 				</div>
 			</div>

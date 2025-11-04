@@ -36,58 +36,51 @@ export const OrderHistory = () => {
 			? orders
 			: orders.filter((order) => order.status === "cancelled");
 
+	const tabs = [
+		{
+			id: "all" as const,
+			label: "전체",
+			count: orders.length,
+		},
+		{
+			id: "cancelled" as const,
+			label: "주문취소",
+			count: orders.filter((order) => order.status === "cancelled").length,
+		},
+	];
+
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<div className="flex-1 overflow-y-auto p-6">
 				<div className="flex gap-6 mb-6">
-					<button
-						type="button"
-						onClick={() => setActiveTab("all")}
-						className="flex items-start gap-2"
-					>
-						<Text
-							display="block"
-							color={activeTab === "all" ? adaptive.grey900 : adaptive.grey500}
-							typography="st8"
-							fontWeight="semibold"
-						>
-							전체
-						</Text>
-						<Text
-							display="block"
-							color={activeTab === "all" ? adaptive.grey900 : adaptive.grey500}
-							typography="st8"
-							fontWeight="semibold"
-						>
-							{orders.length}
-						</Text>
-					</button>
-					<button
-						type="button"
-						onClick={() => setActiveTab("cancelled")}
-						className="flex items-start gap-2"
-					>
-						<Text
-							display="block"
-							color={
-								activeTab === "cancelled" ? adaptive.grey900 : adaptive.grey500
-							}
-							typography="st8"
-							fontWeight="semibold"
-						>
-							주문취소
-						</Text>
-						<Text
-							display="block"
-							color={
-								activeTab === "cancelled" ? adaptive.grey900 : adaptive.grey500
-							}
-							typography="st8"
-							fontWeight="semibold"
-						>
-							{orders.filter((order) => order.status === "cancelled").length}
-						</Text>
-					</button>
+					{tabs.map((tab) => {
+						const isActive = activeTab === tab.id;
+						return (
+							<button
+								key={tab.id}
+								type="button"
+								onClick={() => setActiveTab(tab.id)}
+								className="flex items-start gap-2"
+							>
+								<Text
+									display="block"
+									color={isActive ? adaptive.grey900 : adaptive.grey500}
+									typography="st8"
+									fontWeight="semibold"
+								>
+									{tab.label}
+								</Text>
+								<Text
+									display="block"
+									color={isActive ? adaptive.grey900 : adaptive.grey500}
+									typography="st8"
+									fontWeight="semibold"
+								>
+									{tab.count}
+								</Text>
+							</button>
+						);
+					})}
 				</div>
 
 				{/* 주문 목록 */}
