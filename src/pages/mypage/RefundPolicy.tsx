@@ -1,8 +1,26 @@
 import { colors } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
 
+type FontWeight = "semibold" | "medium";
+
+interface RefundPolicyItem {
+	id: string;
+	text?: string;
+	lines?: string[];
+}
+
+interface RefundPolicySection {
+	id: string;
+	number: string;
+	numberFontWeight: FontWeight;
+	title: string;
+	titleFontWeight: FontWeight;
+	description: string;
+	items: RefundPolicyItem[];
+}
+
 export const RefundPolicy = () => {
-	const sections = [
+	const sections: RefundPolicySection[] = [
 		{
 			id: "section-01",
 			number: "01",
