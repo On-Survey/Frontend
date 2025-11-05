@@ -8,17 +8,10 @@ import {
 	EstimateField,
 	GENDER,
 } from "../../constants/payment";
-import type { Estimate } from ".";
+import { usePaymentEstimate } from "../../contexts/PaymentEstimateContext";
 
-interface EstimatePageProps {
-	estimate: Estimate;
-	handleEstimateChange: (estimate: Estimate) => void;
-}
-
-export const EstimatePage = ({
-	estimate,
-	handleEstimateChange,
-}: EstimatePageProps) => {
+export const EstimatePage = () => {
+	const { estimate } = usePaymentEstimate();
 	const [isDateBottomSheetOpen, setIsDateBottomSheetOpen] = useState(false);
 	const [type, setType] = useState<EstimateField>(
 		EstimateField.DesiredParticipants,
@@ -64,8 +57,6 @@ export const EstimatePage = ({
 	return (
 		<>
 			<PaymentBottomSheet
-				estimate={estimate}
-				handleEstimateChange={handleEstimateChange}
 				isOpen={isDateBottomSheetOpen}
 				handleClose={handleDateBottomSheetClose}
 				options={handleReturn().options ?? []}

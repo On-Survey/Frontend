@@ -1,9 +1,8 @@
 import { BottomSheet } from "@toss/tds-mobile";
-import type { Estimate } from "../../../pages/payment";
+import type { Estimate } from "../../../contexts/PaymentEstimateContext";
+import { usePaymentEstimate } from "../../../contexts/PaymentEstimateContext";
 
 interface PaymentBottomSheetProps {
-	estimate: Estimate;
-	handleEstimateChange: (estimate: Estimate) => void;
 	isOpen: boolean;
 	handleClose: () => void;
 	options: { name: string; value: string; hideUnCheckedCheckBox?: boolean }[];
@@ -13,15 +12,14 @@ interface PaymentBottomSheetProps {
 }
 
 export const PaymentBottomSheet = ({
-	estimate,
 	isOpen,
 	handleClose,
-	handleEstimateChange,
 	options,
 	value,
 	title,
 	field,
 }: PaymentBottomSheetProps) => {
+	const { estimate, handleEstimateChange } = usePaymentEstimate();
 	const computedOptions = options.map((option) => ({
 		...option,
 		hideUnCheckedCheckBox: option.value !== value,

@@ -5,6 +5,7 @@ import {
 	Routes,
 } from "react-router-dom";
 import { MultiStepProvider } from "./contexts/MultiStepContext";
+import { PaymentEstimateProvider } from "./contexts/PaymentEstimateContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
 import DatePage from "./pages/form/DatePage";
@@ -53,7 +54,9 @@ export const App = () => {
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route element={<SurveyProviderLayout />}>
-					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
+					<Route element={<PaymentEstimateProviderLayout />}>
+						<Route path="/createForm" element={<CreateFormProviderWrapper />} />
+					</Route>
 					<Route
 						path="/createForm/multipleChoice"
 						element={<MultipleChoicePage />}
@@ -71,7 +74,6 @@ export const App = () => {
 					<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
 					<Route path="/createForm/date" element={<DatePage />} />
 					<Route path="/createForm/number" element={<NumberPage />} />
-					<Route path="/form" element={<CreateFormProviderWrapper />} />
 				</Route>
 			</Routes>
 		</Router>
@@ -82,6 +84,12 @@ const SurveyProviderLayout = () => (
 	<SurveyProvider>
 		<Outlet />
 	</SurveyProvider>
+);
+
+const PaymentEstimateProviderLayout = () => (
+	<PaymentEstimateProvider>
+		<Outlet />
+	</PaymentEstimateProvider>
 );
 
 const CreateFormProviderWrapper = () => (

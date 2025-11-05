@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import {
 	EstimatePage,
@@ -19,26 +18,9 @@ export type Estimate = {
 export const PaymentMain = () => {
 	const { paymentStep } = useMultiStep();
 
-	const [estimate, setEstimate] = useState<Estimate>({
-		date: "",
-		location: "",
-		age: "",
-		gender: "",
-		desiredParticipants: "",
-	});
-
-	const handleEstimateChange = (estimate: Estimate) => {
-		setEstimate(estimate);
-	};
-
 	return (
 		<>
-			{paymentStep === 0 && (
-				<EstimatePage
-					estimate={estimate}
-					handleEstimateChange={handleEstimateChange}
-				/>
-			)}
+			{paymentStep === 0 && <EstimatePage />}
 			{paymentStep === 1 && <PaymentProductPage />}
 			{paymentStep === 2 && <PaymentConfirmationPage />}
 			{paymentStep === 3 && <PaymentLoading />}
