@@ -7,8 +7,15 @@ import {
 	Post,
 	Top,
 } from "@toss/tds-mobile";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 
 export const PaymentConfirmationPage = () => {
+	const { goNextPayment } = useMultiStep();
+
+	const handleNext = () => {
+		goNextPayment();
+	};
+
 	return (
 		<>
 			<Top
@@ -59,7 +66,9 @@ export const PaymentConfirmationPage = () => {
 				</Post.Paragraph>
 			</BottomInfo>
 
-			<FixedBottomCTA loading={false}>다음</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleNext}>
+				다음
+			</FixedBottomCTA>
 		</>
 	);
 };
