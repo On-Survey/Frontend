@@ -23,8 +23,7 @@ import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
 import { MySurvey } from "./pages/mysurvey";
 import { Onboarding } from "./pages/Onboarding";
-import { OXquiz } from "./pages/OXquiz";
-import { OXquizDetail } from "./pages/OXquizDetail";
+import { OxScreening } from "./pages/OxScreening";
 import { Survey } from "./pages/Survey";
 import { SurveyListPage } from "./pages/SurveyList";
 
@@ -38,9 +37,7 @@ export const App = () => {
 				<Route path="/main" element={<Main />} />
 				<Route path="/createFormStart" element={<CreateFormStart />} />
 				<Route path="/mysurvey" element={<MySurvey />} />
-				<Route path="/OXquiz" element={<OXquiz />} />
-				<Route path="/oxquiz/detail" element={<OXquizDetail />} />
-				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
+				<Route path="/oxScreening" element={<OxScreening />} />
 				<Route path="/survey" element={<Survey />} />
 				<Route path="/surveyList" element={<SurveyListPage />} />
 				<Route element={<SurveyProviderLayout />}>

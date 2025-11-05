@@ -51,7 +51,7 @@ export const Home = () => {
 	};
 
 	const handleQuizClick = () => {
-		navigate("/oxquiz/detail");
+		navigate("/oxScreening");
 	};
 
 	return (
