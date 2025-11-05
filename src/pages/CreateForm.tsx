@@ -1,12 +1,12 @@
 import { ProgressStep, ProgressStepper } from "@toss/tds-mobile";
-import { useCreateForm } from "../contexts/CreateFormContext";
+import { useMultiStep } from "../contexts/MultiStepContext";
 import FormTitleStep from "./form/FormTitleStep";
 import QuestionHome from "./form/QuestionHome";
 import InterestPage from "./interest/InterestPage";
 import ScreeningQuestion from "./screening/ScreeningMain";
 
 export const CreateForm = () => {
-	const { activeStep } = useCreateForm();
+	const { activeStep } = useMultiStep();
 
 	return (
 		<div className="min-h-screen flex flex-col">

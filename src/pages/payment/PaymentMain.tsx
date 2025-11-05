@@ -1,4 +1,4 @@
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 import {
 	EstimatePage,
 	PaymentConfirmationPage,
@@ -8,7 +8,7 @@ import {
 } from ".";
 
 export const PaymentMain = () => {
-	const { paymentStep } = useCreateForm();
+	const { paymentStep } = useMultiStep();
 	return (
 		<>
 			{paymentStep === 0 && <EstimatePage />}

@@ -4,7 +4,7 @@ import {
 	BrowserRouter as Router,
 	Routes,
 } from "react-router-dom";
-import { CreateFormProvider } from "./contexts/CreateFormContext";
+import { MultiStepProvider } from "./contexts/MultiStepContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
 import DatePage from "./pages/form/DatePage";
@@ -85,7 +85,7 @@ const SurveyProviderLayout = () => (
 );
 
 const CreateFormProviderWrapper = () => (
-	<CreateFormProvider>
+	<MultiStepProvider>
 		<CreateForm />
-	</CreateFormProvider>
+	</MultiStepProvider>
 );

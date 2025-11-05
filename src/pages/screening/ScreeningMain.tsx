@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 import ScreeningOption from "./ScreeningOption";
 import ScreeningQuestion from "./ScreeningQuestion";
 import ScreeningSuccess from "./ScreeningSuccess";
 
 function ScreeningMain() {
-	const { screeningStep } = useCreateForm();
+	const { screeningStep } = useMultiStep();
 	const [question, setQuestion] = useState("");
 	const [selected, setSelected] = useState<"O" | "X" | null>(null);
 

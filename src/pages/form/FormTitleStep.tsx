@@ -1,12 +1,12 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 
 function FormTitleStep() {
 	const { state, setTitle, setDescription, setTitleStepCompleted } =
 		useSurvey();
-	const { handleStepChange } = useCreateForm();
+	const { handleStepChange } = useMultiStep();
 
 	const step = state.titleStepCompleted;
 
