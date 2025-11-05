@@ -25,6 +25,7 @@ import { MySurvey } from "./pages/mysurvey";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
+import { LocationSelectPage } from "./pages/payment/LocationSelectPage";
 import { Survey } from "./pages/Survey";
 import SurveyDate from "./pages/survey/Date";
 import SurveyEssay from "./pages/survey/Essay";
@@ -54,26 +55,35 @@ export const App = () => {
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route element={<SurveyProviderLayout />}>
-					<Route element={<PaymentEstimateProviderLayout />}>
-						<Route path="/createForm" element={<CreateFormProviderWrapper />} />
-					</Route>
-					<Route
-						path="/createForm/multipleChoice"
-						element={<MultipleChoicePage />}
-					>
-						<Route index element={<MultipleChoiceMain />} />
-						<Route path="questions" element={<QuestionListPage />} />
+					<Route element={<MultiStepProviderWrapper />}>
+						<Route element={<PaymentEstimateProviderLayout />}>
+							<Route path="/createForm" element={<CreateForm />} />
+							<Route
+								path="/payment/location"
+								element={<LocationSelectPage />}
+							/>
+						</Route>
 						<Route
-							path="questions/:questionId"
-							element={<QuestionOptionsPage />}
+							path="/createForm/multipleChoice"
+							element={<MultipleChoicePage />}
+						>
+							<Route index element={<MultipleChoiceMain />} />
+							<Route path="questions" element={<QuestionListPage />} />
+							<Route
+								path="questions/:questionId"
+								element={<QuestionOptionsPage />}
+							/>
+						</Route>
+						<Route path="/createForm/rating" element={<RatingPage />} />
+						<Route path="/createForm/nps" element={<NPSPage />} />
+						<Route
+							path="/createForm/shortAnswer"
+							element={<ShortAnswerPage />}
 						/>
+						<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
+						<Route path="/createForm/date" element={<DatePage />} />
+						<Route path="/createForm/number" element={<NumberPage />} />
 					</Route>
-					<Route path="/createForm/rating" element={<RatingPage />} />
-					<Route path="/createForm/nps" element={<NPSPage />} />
-					<Route path="/createForm/shortAnswer" element={<ShortAnswerPage />} />
-					<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
-					<Route path="/createForm/date" element={<DatePage />} />
-					<Route path="/createForm/number" element={<NumberPage />} />
 				</Route>
 			</Routes>
 		</Router>
@@ -92,8 +102,8 @@ const PaymentEstimateProviderLayout = () => (
 	</PaymentEstimateProvider>
 );
 
-const CreateFormProviderWrapper = () => (
+const MultiStepProviderWrapper = () => (
 	<MultiStepProvider>
-		<CreateForm />
+		<Outlet />
 	</MultiStepProvider>
 );

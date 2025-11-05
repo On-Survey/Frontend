@@ -1,6 +1,8 @@
+import { Storage } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, TextField } from "@toss/tds-mobile";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { PaymentBottomSheet } from "../../components/payment";
 import {
 	AGE,
@@ -12,6 +14,9 @@ import { usePaymentEstimate } from "../../contexts/PaymentEstimateContext";
 
 export const EstimatePage = () => {
 	const { estimate } = usePaymentEstimate();
+
+	const navigate = useNavigate();
+
 	const [isDateBottomSheetOpen, setIsDateBottomSheetOpen] = useState(false);
 	const [type, setType] = useState<EstimateField>(
 		EstimateField.DesiredParticipants,
@@ -96,6 +101,10 @@ export const EstimatePage = () => {
 						aria-hidden={true}
 					/>
 				}
+				onClick={() => {
+					Storage.setItem("createFormReturnStep", "4");
+					navigate("/payment/location");
+				}}
 			/>
 			<TextField.Button
 				variant="line"
