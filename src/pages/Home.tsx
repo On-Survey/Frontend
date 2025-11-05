@@ -13,6 +13,11 @@ export const Home = () => {
 	const handleMySurvey = () => {
 		navigate("/mysurvey");
 	};
+
+	const handleMyPage = () => {
+		navigate("/mypage");
+	};
+
 	return (
 		<div className="flex flex-col w-full mx-auto p-4">
 			{/* OX 퀴즈 카드 */}
@@ -44,12 +49,19 @@ export const Home = () => {
 							/>
 						}
 						right={
-							<Asset.Icon
-								frameShape={{ width: 24, height: 24 }}
-								name="icn-arrow-rightwards"
-								color={colors.grey600}
-								aria-hidden={true}
-							/>
+							<button
+								type="button"
+								className="cursor-pointer"
+								aria-label="설문 보기"
+								onClick={() => navigate("/survey")}
+							>
+								<Asset.Icon
+									frameShape={{ width: 24, height: 24 }}
+									name="icn-arrow-rightwards"
+									color={colors.grey600}
+									aria-hidden={true}
+								/>
+							</button>
 						}
 					/>
 				</button>
@@ -72,12 +84,19 @@ export const Home = () => {
 						<Button size="small" variant="weak">
 							# 건강
 						</Button>
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icn-arrow-rightwards"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
+						<button
+							type="button"
+							className="cursor-pointer"
+							aria-label="설문 보기"
+							onClick={() => navigate("/survey")}
+						>
+							<Asset.Icon
+								frameShape={{ width: 24, height: 24 }}
+								name="icn-arrow-rightwards"
+								color={colors.grey600}
+								aria-hidden={true}
+							/>
+						</button>
 					</div>
 					<Text
 						color={colors.grey900}
@@ -106,12 +125,19 @@ export const Home = () => {
 						<Button size="small" variant="weak">
 							# 건강
 						</Button>
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icn-arrow-rightwards"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
+						<button
+							type="button"
+							className="cursor-pointer"
+							aria-label="설문 보기"
+							onClick={() => navigate("/survey")}
+						>
+							<Asset.Icon
+								frameShape={{ width: 24, height: 24 }}
+								name="icn-arrow-rightwards"
+								color={colors.grey600}
+								aria-hidden={true}
+							/>
+						</button>
 					</div>
 					<Text
 						color={colors.grey900}
@@ -216,7 +242,11 @@ export const Home = () => {
 			</div>
 
 			{/* 하단 네비게이션 */}
-			<BottomNavigation currentPage="home" onMySurveyClick={handleMySurvey} />
+			<BottomNavigation
+				currentPage="home"
+				onMySurveyClick={handleMySurvey}
+				onMyPageClick={handleMyPage}
+			/>
 		</div>
 	);
 };
