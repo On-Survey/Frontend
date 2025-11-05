@@ -8,7 +8,7 @@ import {
 } from "react";
 
 export type Estimate = {
-	date: string;
+	date: Date | null;
 	location: string;
 	age: string;
 	gender: string;
@@ -26,7 +26,7 @@ const PaymentEstimateContext = createContext<
 
 export const PaymentEstimateProvider = ({ children }: PropsWithChildren) => {
 	const [estimate, setEstimate] = useState<Estimate>({
-		date: "",
+		date: null,
 		location: "",
 		age: "",
 		gender: "",

@@ -3,7 +3,10 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, TextField } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PaymentBottomSheet } from "../../components/payment";
+import {
+	DateSelectBottomSheet,
+	PaymentBottomSheet,
+} from "../../components/payment";
 import {
 	AGE,
 	DESIRED_PARTICIPANTS,
@@ -11,24 +14,30 @@ import {
 	GENDER,
 } from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentEstimateContext";
+import { useModal } from "../../hooks/UseToggle";
 
 export const EstimatePage = () => {
-	const { estimate } = usePaymentEstimate();
+	const { estimate, handleEstimateChange } = usePaymentEstimate();
 
 	const navigate = useNavigate();
 
-	const [isDateBottomSheetOpen, setIsDateBottomSheetOpen] = useState(false);
+	const {
+		isOpen: isBottomSheetOpen,
+		handleOpen: handleBottomSheetOpen,
+		handleClose: handleBottomSheetClose,
+	} = useModal(false);
+
+	const handleDateBottomSheetConfirm = (date: Date) => {
+		handleEstimateChange({ ...estimate, date });
+	};
+
 	const [type, setType] = useState<EstimateField>(
 		EstimateField.DesiredParticipants,
 	);
 
-	const handleDateBottomSheetClose = () => {
-		setIsDateBottomSheetOpen(false);
-	};
-
 	const handleTypeChange = (type: EstimateField) => {
 		setType(type);
-		setIsDateBottomSheetOpen(true);
+		handleBottomSheetOpen();
 	};
 
 	const handleReturn = () => {
@@ -61,30 +70,17 @@ export const EstimatePage = () => {
 
 	return (
 		<>
+			<DateSelectBottomSheet
+				value={estimate.date ?? new Date()}
+				onChange={handleDateBottomSheetConfirm}
+			/>
 			<PaymentBottomSheet
-				isOpen={isDateBottomSheetOpen}
-				handleClose={handleDateBottomSheetClose}
+				isOpen={isBottomSheetOpen}
+				handleClose={handleBottomSheetClose}
 				options={handleReturn().options ?? []}
 				value={handleReturn().value}
 				title={handleReturn().title}
 				field={handleReturn().field}
-			/>
-			<TextField.Button
-				variant="line"
-				hasError={false}
-				label="설문조사 마감일"
-				labelOption="sustain"
-				help="선택일 자정에 설문이 마감돼요"
-				value={estimate.date}
-				placeholder="날짜를 선택해주세요"
-				right={
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						name="icon-arrow-down-mono"
-						color={adaptive.grey400}
-						aria-hidden={true}
-					/>
-				}
 			/>
 			<TextField.Button
 				variant="line"
