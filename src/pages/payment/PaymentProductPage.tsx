@@ -8,13 +8,20 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { COIN_OPTIONS } from "../../constants/payment";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 export const PaymentProductPage = () => {
+	const { goNextPayment } = useMultiStep();
+
 	const { selectedCoinAmount, handleSelectedCoinAmountChange } =
 		usePaymentEstimate();
 
 	const displayAmount = selectedCoinAmount ?? 30000;
+
+	const handleNext = () => {
+		goNextPayment();
+	};
 
 	return (
 		<>
@@ -73,7 +80,9 @@ export const PaymentProductPage = () => {
 					);
 				})}
 			</List>
-			<FixedBottomCTA loading={false}>다음</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleNext}>
+				다음
+			</FixedBottomCTA>
 		</>
 	);
 };
