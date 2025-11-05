@@ -18,13 +18,15 @@ export type Estimate = {
 type PaymentEstimateContextValue = {
 	estimate: Estimate;
 	handleEstimateChange: (next: Estimate) => void;
+	selectedCoinAmount: number | null;
+	handleSelectedCoinAmountChange: (amount: number | null) => void;
 };
 
-const PaymentEstimateContext = createContext<
-	PaymentEstimateContextValue | undefined
->(undefined);
+const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
+	undefined,
+);
 
-export const PaymentEstimateProvider = ({ children }: PropsWithChildren) => {
+export const PaymentProvider = ({ children }: PropsWithChildren) => {
 	const [estimate, setEstimate] = useState<Estimate>({
 		date: null,
 		location: "",
@@ -33,24 +35,43 @@ export const PaymentEstimateProvider = ({ children }: PropsWithChildren) => {
 		desiredParticipants: "",
 	});
 
+	const [selectedCoinAmount, setSelectedCoinAmount] = useState<number | null>(
+		null,
+	);
+
 	const handleEstimateChange = useCallback((next: Estimate) => {
 		setEstimate(next);
 	}, []);
 
+	const handleSelectedCoinAmountChange = useCallback(
+		(amount: number | null) => {
+			setSelectedCoinAmount(amount);
+		},
+		[],
+	);
+
 	const value = useMemo(
-		() => ({ estimate, handleEstimateChange }),
-		[estimate, handleEstimateChange],
+		() => ({
+			estimate,
+			handleEstimateChange,
+			selectedCoinAmount,
+			handleSelectedCoinAmountChange,
+		}),
+		[
+			estimate,
+			handleEstimateChange,
+			selectedCoinAmount,
+			handleSelectedCoinAmountChange,
+		],
 	);
 
 	return (
-		<PaymentEstimateContext.Provider value={value}>
-			{children}
-		</PaymentEstimateContext.Provider>
+		<PaymentContext.Provider value={value}>{children}</PaymentContext.Provider>
 	);
 };
 
 export const usePaymentEstimate = () => {
-	const ctx = useContext(PaymentEstimateContext);
+	const ctx = useContext(PaymentContext);
 	if (!ctx) {
 		throw new Error(
 			"usePaymentEstimate must be used within a PaymentEstimateProvider",

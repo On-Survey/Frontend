@@ -45,3 +45,16 @@ export enum EstimateField {
 	Gender = "gender",
 	DesiredParticipants = "desiredParticipants",
 }
+
+export type CoinOption = {
+	amount: number;
+	price: string;
+};
+
+export const COIN_OPTIONS: CoinOption[] = [
+	{ amount: 10000, price: "10,000원" },
+	{ amount: 20000, price: "20,000원" },
+	{ amount: 30000, price: "30,000원" },
+	{ amount: 40000, price: "40,000원" },
+	{ amount: 50000, price: "50,000원" },
+];

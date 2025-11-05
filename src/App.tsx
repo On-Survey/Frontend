@@ -5,7 +5,7 @@ import {
 	Routes,
 } from "react-router-dom";
 import { MultiStepProvider } from "./contexts/MultiStepContext";
-import { PaymentEstimateProvider } from "./contexts/PaymentEstimateContext";
+import { PaymentProvider } from "./contexts/PaymentContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
 import DatePage from "./pages/form/DatePage";
@@ -56,7 +56,7 @@ export const App = () => {
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route element={<SurveyProviderLayout />}>
 					<Route element={<MultiStepProviderWrapper />}>
-						<Route element={<PaymentEstimateProviderLayout />}>
+						<Route element={<PaymentProviderLayout />}>
 							<Route path="/createForm" element={<CreateForm />} />
 							<Route
 								path="/payment/location"
@@ -96,10 +96,10 @@ const SurveyProviderLayout = () => (
 	</SurveyProvider>
 );
 
-const PaymentEstimateProviderLayout = () => (
-	<PaymentEstimateProvider>
+const PaymentProviderLayout = () => (
+	<PaymentProvider>
 		<Outlet />
-	</PaymentEstimateProvider>
+	</PaymentProvider>
 );
 
 const MultiStepProviderWrapper = () => (

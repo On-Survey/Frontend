@@ -7,18 +7,20 @@ import { PaymentMain } from "./payment";
 import ScreeningQuestion from "./screening/ScreeningMain";
 
 export const CreateForm = () => {
-	const { activeStep } = useMultiStep();
+	const { activeStep, paymentStep } = useMultiStep();
 
 	return (
 		<div className="min-h-screen flex flex-col">
 			<div className="sticky top-0 z-50 w-full bg-white">
-				<ProgressStepper variant="compact" activeStepIndex={activeStep}>
-					<ProgressStep />
-					<ProgressStep />
-					<ProgressStep />
-					<ProgressStep />
-					<ProgressStep />
-				</ProgressStepper>
+				{paymentStep === 0 && (
+					<ProgressStepper variant="compact" activeStepIndex={activeStep}>
+						<ProgressStep />
+						<ProgressStep />
+						<ProgressStep />
+						<ProgressStep />
+						<ProgressStep />
+					</ProgressStepper>
+				)}
 			</div>
 			<div className="flex flex-col w-full px-1 gap-4 mt-3 flex-1 overflow-y-auto">
 				{activeStep === 0 && <FormTitleStep />}

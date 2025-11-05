@@ -7,13 +7,14 @@ import {
 	DateSelectBottomSheet,
 	PaymentBottomSheet,
 } from "../../components/payment";
+import { CoinAlertBottomSheet } from "../../components/payment/bottomSheet/CoinAlertBottomSheet";
 import {
 	AGE,
 	DESIRED_PARTICIPANTS,
 	EstimateField,
 	GENDER,
 } from "../../constants/payment";
-import { usePaymentEstimate } from "../../contexts/PaymentEstimateContext";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
 
 export const EstimatePage = () => {
@@ -25,6 +26,12 @@ export const EstimatePage = () => {
 		isOpen: isBottomSheetOpen,
 		handleOpen: handleBottomSheetOpen,
 		handleClose: handleBottomSheetClose,
+	} = useModal(false);
+
+	const {
+		isOpen: isCoinBottomSheetOpen,
+		handleOpen: handleCoinBottomSheetOpen,
+		handleClose: handleCoinBottomSheetClose,
 	} = useModal(false);
 
 	const handleDateBottomSheetConfirm = (date: Date) => {
@@ -70,6 +77,10 @@ export const EstimatePage = () => {
 
 	return (
 		<>
+			<CoinAlertBottomSheet
+				isOpen={isCoinBottomSheetOpen}
+				handleClose={handleCoinBottomSheetClose}
+			/>
 			<DateSelectBottomSheet
 				value={estimate.date ?? new Date()}
 				onChange={handleDateBottomSheetConfirm}
@@ -153,7 +164,7 @@ export const EstimatePage = () => {
 				}
 				onClick={() => handleTypeChange(EstimateField.DesiredParticipants)}
 			/>
-			<FixedBottomCTA disabled={true} loading={false}>
+			<FixedBottomCTA loading={false} onClick={handleCoinBottomSheetOpen}>
 				56,500원 결제하기
 			</FixedBottomCTA>
 		</>

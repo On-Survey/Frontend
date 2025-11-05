@@ -1,6 +1,6 @@
 import { BottomSheet } from "@toss/tds-mobile";
-import type { Estimate } from "../../../contexts/PaymentEstimateContext";
-import { usePaymentEstimate } from "../../../contexts/PaymentEstimateContext";
+import type { Estimate } from "../../../contexts/PaymentContext";
+import { usePaymentEstimate } from "../../../contexts/PaymentContext";
 
 interface PaymentBottomSheetProps {
 	isOpen: boolean;

@@ -7,7 +7,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
-import { usePaymentEstimate } from "../../contexts/PaymentEstimateContext";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 export const LocationSelectPage = () => {
 	const { estimate, handleEstimateChange } = usePaymentEstimate();
