@@ -3,6 +3,7 @@ import { useMultiStep } from "../contexts/MultiStepContext";
 import FormTitleStep from "./form/FormTitleStep";
 import QuestionHome from "./form/QuestionHome";
 import InterestPage from "./interest/InterestPage";
+import { PaymentMain } from "./payment";
 import ScreeningQuestion from "./screening/ScreeningMain";
 
 export const CreateForm = () => {
@@ -24,7 +25,7 @@ export const CreateForm = () => {
 				{activeStep === 1 && <QuestionHome />}
 				{activeStep === 2 && <ScreeningQuestion />}
 				{activeStep === 3 && <InterestPage />}
-				{activeStep === 4 && <div>Step 5</div>}
+				{activeStep === 4 && <PaymentMain />}
 			</div>
 		</div>
 	);
