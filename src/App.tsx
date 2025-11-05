@@ -26,6 +26,7 @@ import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
 import { MySurvey } from "./pages/mysurvey";
+import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
@@ -46,6 +47,7 @@ export const App = () => {
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
 				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
 				<Route path="/mypage" element={<Mypage />} />
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />

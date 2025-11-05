@@ -1,5 +1,6 @@
 import { colors } from "@toss/tds-colors";
 import { Asset, Badge, Button, ProgressBar, Text } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
 import type { ActiveSurvey, ClosedSurvey, DraftSurvey } from "./types";
 
 type SurveyState = "draft" | "active" | "closed";
@@ -11,6 +12,7 @@ interface SurveyCardProps {
 }
 
 export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
+	const navigate = useNavigate();
 	const badgeConfig: Record<SurveyState, { color: BadgeColor; label: string }> =
 		{
 			draft: { color: "green", label: "작성중" },
@@ -20,13 +22,25 @@ export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
 
 	const config = badgeConfig[type];
 
+	const handleDetailClick = () => {
+		if (type !== "draft") {
+			navigate(`/mysurvey/${survey.id}`);
+		}
+	};
+
 	return (
 		<div className="bg-gray-50 rounded-xl p-4 relative">
 			<div className="flex items-start justify-between mb-2">
 				<Badge variant="weak" color={config.color} size="small">
 					{config.label}
 				</Badge>
-				<button type="button" className="cursor-pointer" aria-label="더보기">
+				<button
+					type="button"
+					className="cursor-pointer"
+					aria-label="더보기"
+					onClick={handleDetailClick}
+					disabled={type === "draft"}
+				>
 					<Asset.Icon
 						frameShape={{ width: 24, height: 24 }}
 						name="icn-arrow-rightwards"
