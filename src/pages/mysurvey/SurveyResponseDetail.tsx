@@ -134,7 +134,7 @@ export const SurveyResponseDetail = () => {
 				</List>
 			</div>
 
-			<BottomNavigation currentPage="more" onMoreClick={handleMyPage} />
+			<BottomNavigation currentPage="more" onMyPageClick={handleMyPage} />
 			<SurveyFilterBottomSheet
 				open={isFilterOpen}
 				onClose={() => setIsFilterOpen(false)}
