@@ -1,5 +1,8 @@
 // 이미지 선택 기능을 제공하는 커스텀 훅
-import { fetchAlbumPhotos } from "@apps-in-toss/web-framework";
+import {
+	fetchAlbumPhotos,
+	getOperationalEnvironment,
+} from "@apps-in-toss/web-framework";
 import { useRef, useState } from "react";
 
 export const useImagePicker = (defaultImage?: string) => {
@@ -9,10 +12,8 @@ export const useImagePicker = (defaultImage?: string) => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const isWebEnvironment = () => {
-		return (
-			typeof window !== "undefined" &&
-			!window.navigator.userAgent.includes("TossApps")
-		);
+		const environment = getOperationalEnvironment();
+		return environment !== "sandbox" && environment !== "toss";
 	};
 
 	const handleImageClick = async () => {
