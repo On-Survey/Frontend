@@ -7,17 +7,12 @@ import {
 	WheelDatePicker,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { useModal } from "../../hooks/UseToggle";
 
 function DatePage() {
 	const { state } = useSurvey();
-	const {
-		isOpen: isQuestionTitleEditOpen,
-		handleOpen: handleQuestionTitleEditOpen,
-		handleClose: handleQuestionTitleEditClose,
-	} = useModal(false);
+	const navigate = useNavigate();
 
 	const [date, setDate] = useState(new Date());
 	const [isRequired, setIsRequired] = useState(true);
@@ -32,6 +27,11 @@ function DatePage() {
 		.filter((q) => q.type === "date")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestDate?.title;
+	const description = latestDate?.description;
+
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/date/edit`);
+	};
 
 	return (
 		<div>
@@ -43,7 +43,7 @@ function DatePage() {
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph>
-						보조설명은 이런식으로 들어갈 것 같아요
+						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
 					</Top.SubtitleParagraph>
 				}
 				lower={
@@ -52,7 +52,7 @@ function DatePage() {
 						size="small"
 						variant="weak"
 						display="inline"
-						onClick={handleQuestionTitleEditOpen}
+						onClick={handleTitleAndDescriptionEdit}
 					>
 						문항 제목 및 설명 수정하기
 					</Top.LowerButton>
@@ -80,10 +80,6 @@ function DatePage() {
 					<Switch checked={isRequired} onChange={handleIsRequiredChange} />
 				}
 				verticalPadding="large"
-			/>
-			<QuestionTitleEditBottomSheet
-				isOpen={isQuestionTitleEditOpen}
-				handleClose={handleQuestionTitleEditClose}
 			/>
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
