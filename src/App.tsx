@@ -20,6 +20,10 @@ import ShortAnswerPage from "./pages/form/ShortAnswerPage";
 import { Home } from "./pages/Home";
 import { Intro } from "./pages/Intro";
 import { Main } from "./pages/Main";
+import { Mypage } from "./pages/Mypage";
+import OrderDetail from "./pages/mypage/OrderDetail";
+import OrderHistory from "./pages/mypage/OrderHistory";
+import RefundPolicy from "./pages/mypage/RefundPolicy";
 import { MySurvey } from "./pages/mysurvey";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
@@ -32,7 +36,6 @@ import SurveyNumber from "./pages/survey/Number";
 import SurveyRating from "./pages/survey/Rating";
 import SurveyShortAnswer from "./pages/survey/ShortAnswer";
 import SurveySingleChoice from "./pages/survey/SingleChoice";
-
 export const App = () => {
 	return (
 		<Router>
@@ -42,6 +45,10 @@ export const App = () => {
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
 				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route path="/mypage" element={<Mypage />} />
+				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
+				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
+				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
 				<Route path="/OXquiz" element={<OXquiz />} />
 				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 				<Route path="/survey" element={<Survey />} />

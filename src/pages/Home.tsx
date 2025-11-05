@@ -13,6 +13,11 @@ export const Home = () => {
 	const handleMySurvey = () => {
 		navigate("/mysurvey");
 	};
+
+	const handleMyPage = () => {
+		navigate("/mypage");
+	};
+
 	return (
 		<div className="flex flex-col w-full mx-auto p-4">
 			{/* OX 퀴즈 카드 */}
@@ -237,7 +242,11 @@ export const Home = () => {
 			</div>
 
 			{/* 하단 네비게이션 */}
-			<BottomNavigation currentPage="home" onMySurveyClick={handleMySurvey} />
+			<BottomNavigation
+				currentPage="home"
+				onMySurveyClick={handleMySurvey}
+				onMyPageClick={handleMyPage}
+			/>
 		</div>
 	);
 };
