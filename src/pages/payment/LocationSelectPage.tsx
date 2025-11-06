@@ -7,6 +7,12 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
+import {
+	REGIONS_5_PERCENT_SURCHARGE,
+	REGIONS_10_PERCENT_SURCHARGE,
+	REGIONS_15_PERCENT_SURCHARGE,
+	REGIONS_NO_SURCHARGE,
+} from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 export const LocationSelectPage = () => {
@@ -41,7 +47,7 @@ export const LocationSelectPage = () => {
 				}
 				descriptionPosition="bottom"
 			/>
-			{["전체"].map((region) => (
+			{REGIONS_NO_SURCHARGE.map((region) => (
 				<ListRow
 					key={region}
 					role="checkbox"
@@ -72,7 +78,7 @@ export const LocationSelectPage = () => {
 				descriptionPosition="bottom"
 			/>
 			<div>
-				{["서울", "경기"].map((region) => (
+				{REGIONS_5_PERCENT_SURCHARGE.map((region) => (
 					<ListRow
 						key={region}
 						role="checkbox"
@@ -104,26 +110,24 @@ export const LocationSelectPage = () => {
 				descriptionPosition="bottom"
 			/>
 			<div>
-				{["인천", "대전", "세종", "부산", "울산", "대구", "광주"].map(
-					(region) => (
-						<ListRow
-							key={region}
-							role="checkbox"
-							aria-checked={isChecked(region)}
-							onClick={() => setLocation(region)}
-							contents={
-								<ListRow.Texts
-									type="1RowTypeA"
-									top={region}
-									topProps={{ color: adaptive.grey700 }}
-								/>
-							}
-							right={
-								<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
-							}
-						/>
-					),
-				)}
+				{REGIONS_10_PERCENT_SURCHARGE.map((region) => (
+					<ListRow
+						key={region}
+						role="checkbox"
+						aria-checked={isChecked(region)}
+						onClick={() => setLocation(region)}
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
+								top={region}
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						right={
+							<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
+						}
+					/>
+				))}
 			</div>
 			<ListHeader
 				title={
@@ -138,26 +142,24 @@ export const LocationSelectPage = () => {
 				descriptionPosition="bottom"
 			/>
 			<div>
-				{["강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"].map(
-					(region) => (
-						<ListRow
-							key={region}
-							role="checkbox"
-							aria-checked={isChecked(region)}
-							onClick={() => setLocation(region)}
-							contents={
-								<ListRow.Texts
-									type="1RowTypeA"
-									top={region}
-									topProps={{ color: adaptive.grey700 }}
-								/>
-							}
-							right={
-								<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
-							}
-						/>
-					),
-				)}
+				{REGIONS_15_PERCENT_SURCHARGE.map((region) => (
+					<ListRow
+						key={region}
+						role="checkbox"
+						aria-checked={isChecked(region)}
+						onClick={() => setLocation(region)}
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
+								top={region}
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						right={
+							<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
+						}
+					/>
+				))}
 			</div>
 			<FixedBottomCTA loading={false} onClick={() => navigate("/createForm")}>
 				다음
