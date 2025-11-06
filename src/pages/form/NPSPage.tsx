@@ -1,10 +1,12 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, SegmentedControl, Text, Top } from "@toss/tds-mobile";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
 function NPSPage() {
 	const { state } = useSurvey();
+	const navigate = useNavigate();
 
 	const [isRequired, setIsRequired] = useState(false);
 	const [score, setScore] = useState<number | null>(null);
@@ -19,6 +21,11 @@ function NPSPage() {
 		.filter((q) => q.type === "nps")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestNPS?.title;
+	const description = latestNPS?.description;
+
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/nps/edit`);
+	};
 
 	return (
 		<div>
@@ -31,8 +38,19 @@ function NPSPage() {
 				subtitleTop={<Top.SubtitleBadges badges={[]} />}
 				subtitleBottom={
 					<Top.SubtitleParagraph size={15}>
-						문항 설명(선택)
+						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
 					</Top.SubtitleParagraph>
+				}
+				lower={
+					<Top.LowerButton
+						color="dark"
+						size="small"
+						variant="weak"
+						display="inline"
+						onClick={handleTitleAndDescriptionEdit}
+					>
+						문항 제목 및 설명 수정하기
+					</Top.LowerButton>
 				}
 			/>
 			<SegmentedControl

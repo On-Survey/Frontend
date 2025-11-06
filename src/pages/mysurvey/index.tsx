@@ -13,6 +13,10 @@ export const MySurvey = () => {
 		navigate("/createForm");
 	};
 
+	const handleMyPage = () => {
+		navigate("/mypage");
+	};
+
 	// Mock
 	const draftSurveys = [{ id: 1, title: "영화 시청 경험에 관한 설문" }];
 	const activeSurveys = [
@@ -56,7 +60,7 @@ export const MySurvey = () => {
 			</div>
 
 			{/* 하단 네비게이션 */}
-			<BottomNavigation currentPage="mysurvey" />
+			<BottomNavigation currentPage="mysurvey" onMyPageClick={handleMyPage} />
 		</div>
 	);
 };

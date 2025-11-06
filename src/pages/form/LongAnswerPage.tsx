@@ -8,17 +8,12 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { useModal } from "../../hooks/UseToggle";
 
 function EssayPage() {
 	const { state } = useSurvey();
-	const {
-		isOpen: isQuestionTitleEditOpen,
-		handleClose: handleQuestionTitleEditClose,
-		handleOpen: handleQuestionTitleEditOpen,
-	} = useModal(false);
+	const navigate = useNavigate();
 
 	const [isRequired, setIsRequired] = useState(false);
 	const [answer, setAnswer] = useState("");
@@ -41,6 +36,11 @@ function EssayPage() {
 		.filter((q) => q.type === "longAnswer")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestEssay?.title;
+	const description = latestEssay?.description;
+
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/essay/edit`);
+	};
 
 	return (
 		<div>
@@ -52,7 +52,7 @@ function EssayPage() {
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph>
-						보조설명은 이런식으로 들어갈 것 같아요
+						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
 					</Top.SubtitleParagraph>
 				}
 				lower={
@@ -61,7 +61,7 @@ function EssayPage() {
 						size="small"
 						variant="weak"
 						display="inline"
-						onClick={handleQuestionTitleEditOpen}
+						onClick={handleTitleAndDescriptionEdit}
 					>
 						문항 제목 및 설명 수정하기
 					</Top.LowerButton>
@@ -97,13 +97,9 @@ function EssayPage() {
 				}
 				verticalPadding="large"
 			/>
-			<QuestionTitleEditBottomSheet
-				isOpen={isQuestionTitleEditOpen}
-				handleClose={handleQuestionTitleEditClose}
-			/>
 			<FixedBottomCTA
-				onClick={handleSubmit}
 				loading={false}
+				onClick={handleSubmit}
 				disabled={answer.length < 1}
 			>
 				확인
