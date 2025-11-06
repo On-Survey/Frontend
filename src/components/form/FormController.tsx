@@ -45,6 +45,11 @@ function FormController() {
 		handleStepChange(2);
 	};
 
+	const handleSkip = () => {
+		handleStepChange(3);
+		handleConfirmDialogClose();
+	};
+
 	const handleDialogConfirm = () => {
 		handleNext();
 		handleConfirmDialogClose();
@@ -67,10 +72,7 @@ function FormController() {
 				open={isConfirmDialogOpen}
 				onClose={handleDialogCancel}
 				cancelButton={
-					<ConfirmDialog.CancelButton
-						size="xlarge"
-						onClick={handleConfirmDialogClose}
-					>
+					<ConfirmDialog.CancelButton size="xlarge" onClick={handleSkip}>
 						건너뛰기
 					</ConfirmDialog.CancelButton>
 				}
