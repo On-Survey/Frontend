@@ -30,6 +30,13 @@ import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
+import DateResultPage from "./pages/result/DateResultPage";
+import LongAnswerResultPage from "./pages/result/LongAnswerResultPage";
+import MultipleChoiceResultPage from "./pages/result/MultipleChoiceResultPage";
+import NpsResultPage from "./pages/result/NpsResultPage";
+import NumberResultPage from "./pages/result/NumberResultPage";
+import RatingResultPage from "./pages/result/RatingResultPage";
+import ShortAnswerResultPage from "./pages/result/ShortAnswerResultPage";
 import { Survey } from "./pages/Survey";
 import SurveyDate from "./pages/survey/Date";
 import SurveyEssay from "./pages/survey/Essay";
@@ -38,6 +45,7 @@ import SurveyNumber from "./pages/survey/Number";
 import SurveyRating from "./pages/survey/Rating";
 import SurveyShortAnswer from "./pages/survey/ShortAnswer";
 import SurveySingleChoice from "./pages/survey/SingleChoice";
+
 export const App = () => {
 	return (
 		<Router>
@@ -62,6 +70,19 @@ export const App = () => {
 				<Route path="/survey/nps" element={<SurveyNPS />} />
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
+				<Route
+					path="/result/short-answer"
+					element={<ShortAnswerResultPage />}
+				/>
+				<Route path="/result/long-answer" element={<LongAnswerResultPage />} />
+				<Route
+					path="/result/multiple-choice"
+					element={<MultipleChoiceResultPage />}
+				/>
+				<Route path="/result/rating" element={<RatingResultPage />} />
+				<Route path="/result/nps" element={<NpsResultPage />} />
+				<Route path="/result/date" element={<DateResultPage />} />
+				<Route path="/result/number" element={<NumberResultPage />} />
 				<Route element={<SurveyProviderLayout />}>
 					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
 					<Route
