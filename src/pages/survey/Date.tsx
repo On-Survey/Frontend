@@ -6,7 +6,7 @@ import {
 	WheelDatePicker,
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 export const SurveyDate = () => {
 	type Question = {
 		id: number;
@@ -26,6 +26,10 @@ export const SurveyDate = () => {
 		setQuestion(mock);
 	}, []);
 
+	const navigate = useNavigate();
+	const handleComplete = () => {
+		navigate("/survey/complete");
+	};
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
@@ -49,7 +53,9 @@ export const SurveyDate = () => {
 				buttonText="선택하기"
 			/>
 
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleComplete}>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
 };

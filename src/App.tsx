@@ -39,6 +39,7 @@ import NumberResultPage from "./pages/result/NumberResultPage";
 import RatingResultPage from "./pages/result/RatingResultPage";
 import ShortAnswerResultPage from "./pages/result/ShortAnswerResultPage";
 import { Survey } from "./pages/Survey";
+import SurveyComplete from "./pages/survey/Complete";
 import SurveyDate from "./pages/survey/Date";
 import SurveyEssay from "./pages/survey/Essay";
 import SurveyNPS from "./pages/survey/NPS";
@@ -71,6 +72,7 @@ export const App = () => {
 				<Route path="/survey/nps" element={<SurveyNPS />} />
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
+				<Route path="/survey/complete" element={<SurveyComplete />} />
 				<Route
 					path="/result/short-answer"
 					element={<ShortAnswerResultPage />}
