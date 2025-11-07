@@ -22,13 +22,13 @@ export const MySurvey = () => {
 		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
 			onEvent: ({ id }) => {
 				if (id === "heart") {
-					console.log("하트 버튼 클릭");
+					navigate("/estimate");
 				}
 			},
 		});
 
 		return cleanup;
-	}, []);
+	}, [navigate]);
 
 	const handleAddSurvey = () => {
 		navigate("/createForm");

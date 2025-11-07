@@ -7,6 +7,7 @@ import {
 import { CreateFormProvider } from "./contexts/CreateFormContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
+import EstimatePage from "./pages/estimate/EstimatePage";
 import DatePage from "./pages/form/DatePage";
 import LongAnswerPage from "./pages/form/LongAnswerPage";
 import MultipleChoiceMain from "./pages/form/multipleChoice/MultipleChoiceMain";
@@ -83,6 +84,7 @@ export const App = () => {
 				<Route path="/result/nps" element={<NpsResultPage />} />
 				<Route path="/result/date" element={<DateResultPage />} />
 				<Route path="/result/number" element={<NumberResultPage />} />
+				<Route path="/estimate" element={<EstimatePage />} />
 				<Route element={<SurveyProviderLayout />}>
 					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
 					<Route

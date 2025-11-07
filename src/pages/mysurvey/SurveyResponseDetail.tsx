@@ -30,13 +30,13 @@ export const SurveyResponseDetail = () => {
 		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
 			onEvent: ({ id: buttonId }) => {
 				if (buttonId === "heart") {
-					console.log("하트 버튼 클릭");
+					navigate("/estimate");
 				}
 			},
 		});
 
 		return cleanup;
-	}, []);
+	}, [navigate]);
 
 	const RESULT_PAGE_PATHS: Record<QuestionType, string> = {
 		shortAnswer: "/result/short-answer",
