@@ -5,14 +5,14 @@ interface BottomNavigationProps {
 	currentPage: "home" | "mysurvey" | "more";
 	onHomeClick?: () => void;
 	onMySurveyClick?: () => void;
-	onMoreClick?: () => void;
+	onMyPageClick?: () => void;
 }
 
 export const BottomNavigation = ({
 	currentPage,
 	onHomeClick,
 	onMySurveyClick,
-	onMoreClick,
+	onMyPageClick,
 }: BottomNavigationProps) => {
 	const getIconColor = (page: string) => {
 		return currentPage === page ? colors.grey800 : colors.grey400;
@@ -35,6 +35,14 @@ export const BottomNavigation = ({
 			onMySurveyClick();
 		} else {
 			window.location.href = "/mysurvey";
+		}
+	};
+
+	const handleMyPageClick = () => {
+		if (onMyPageClick) {
+			onMyPageClick();
+		} else {
+			window.location.href = "/mypage";
 		}
 	};
 
@@ -102,13 +110,13 @@ export const BottomNavigation = ({
 				)}
 				<button
 					type="button"
-					onClick={onMoreClick}
+					onClick={handleMyPageClick}
 					className="flex flex-col items-center cursor-pointer"
 					aria-label="더보기"
 				>
 					<Asset.Icon
 						frameShape={{ width: 24, height: 24 }}
-						name="icon-line-three-mono"
+						name="icon-user-mono"
 						color={getIconColor("more")}
 						aria-hidden={true}
 					/>
@@ -118,7 +126,7 @@ export const BottomNavigation = ({
 						fontWeight="medium"
 						className="mt-1"
 					>
-						더보기
+						마이페이지
 					</Text>
 				</button>
 			</div>
