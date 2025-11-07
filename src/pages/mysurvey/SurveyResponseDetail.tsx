@@ -1,6 +1,7 @@
+import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import {
@@ -16,6 +17,26 @@ export const SurveyResponseDetail = () => {
 	const navigate = useNavigate();
 	const { id } = useParams<{ id: string }>();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+	useEffect(() => {
+		partner.addAccessoryButton({
+			id: "heart",
+			title: "하트",
+			icon: {
+				name: "icon-heart-mono",
+			},
+		});
+
+		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
+			onEvent: ({ id: buttonId }) => {
+				if (buttonId === "heart") {
+					console.log("하트 버튼 클릭");
+				}
+			},
+		});
+
+		return cleanup;
+	}, []);
 
 	const RESULT_PAGE_PATHS: Record<QuestionType, string> = {
 		shortAnswer: "/result/short-answer",
