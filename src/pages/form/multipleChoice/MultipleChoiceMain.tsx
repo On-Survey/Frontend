@@ -10,14 +10,14 @@ import {
 } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import QuestionTitleEditBottomSheet from "../../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
-import CreateMultiChoiceBottomSheet from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
-import SelectionLimitBottomSheet from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
+import { QuestionTitleEditBottomSheet } from "../../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
+import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
 import type { MultipleChoiceQuestion } from "../../../types/survey";
 
-function MultipleChoiceMain() {
+export const MultipleChoiceMain = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -148,6 +148,4 @@ function MultipleChoiceMain() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</>
 	);
-}
-
-export default MultipleChoiceMain;
+};

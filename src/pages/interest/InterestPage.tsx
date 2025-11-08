@@ -4,7 +4,7 @@ import { useState } from "react";
 import { topics } from "../../constants/topics";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 
-function InterestPage() {
+export const InterestPage = () => {
 	const { handleStepChange } = useMultiStep();
 
 	const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -93,6 +93,4 @@ function InterestPage() {
 			</div>
 		</>
 	);
-}
-
-export default InterestPage;
+};

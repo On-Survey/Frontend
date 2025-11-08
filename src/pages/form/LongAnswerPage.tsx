@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function EssayPage() {
+export const LongAnswerPage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -106,6 +106,4 @@ function EssayPage() {
 			</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default EssayPage;
+};

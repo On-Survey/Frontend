@@ -5,10 +5,10 @@ interface QuestionTitleEditBottomSheetProps {
 	isOpen: boolean;
 	handleClose: () => void;
 }
-function QuestionTitleEditBottomSheet({
+export const QuestionTitleEditBottomSheet = ({
 	isOpen,
 	handleClose,
-}: QuestionTitleEditBottomSheetProps) {
+}: QuestionTitleEditBottomSheetProps) => {
 	return (
 		<BottomSheet
 			header={<BottomSheet.Header>어떤 것을 수정할까요?</BottomSheet.Header>}
@@ -40,6 +40,4 @@ function QuestionTitleEditBottomSheet({
 			/>
 		</BottomSheet>
 	);
-}
-
-export default QuestionTitleEditBottomSheet;
+};

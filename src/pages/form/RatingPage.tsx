@@ -8,11 +8,11 @@ import {
 } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RatingLabelEditBottomSheete from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
+import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
-function RatingPage() {
+export const RatingPage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -74,14 +74,14 @@ function RatingPage() {
 
 	return (
 		<div>
-			<RatingLabelEditBottomSheete
+			<RatingLabelEditBottomSheet
 				label="좌측 라벨"
 				isOpen={isMinValueEditOpen}
 				handleClose={handleMinValueEditClose}
 				value={minValue}
 				onChange={handleMinValueChange}
 			/>
-			<RatingLabelEditBottomSheete
+			<RatingLabelEditBottomSheet
 				label="우측 라벨"
 				isOpen={isMaxValueEditOpen}
 				handleClose={handleMaxValueEditClose}
@@ -175,6 +175,4 @@ function RatingPage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default RatingPage;
+};

@@ -7,10 +7,10 @@ interface ScreeningOptionProps {
 	handleSelectedChange: (selected: "O" | "X") => void;
 }
 
-function ScreeningOption({
+export const ScreeningOption = ({
 	selected,
 	handleSelectedChange,
-}: ScreeningOptionProps) {
+}: ScreeningOptionProps) => {
 	const { goNextScreening } = useMultiStep();
 
 	const handleNext = () => {
@@ -81,6 +81,4 @@ function ScreeningOption({
 			</FixedBottomCTA>
 		</>
 	);
-}
-
-export default ScreeningOption;
+};

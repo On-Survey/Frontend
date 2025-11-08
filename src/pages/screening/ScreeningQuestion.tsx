@@ -7,10 +7,10 @@ interface ScreeningQuestionProps {
 	handleQuestionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function ScreeningQuestion({
+export const ScreeningQuestion = ({
 	question,
 	handleQuestionChange,
-}: ScreeningQuestionProps) {
+}: ScreeningQuestionProps) => {
 	const { goNextScreening } = useMultiStep();
 
 	return (
@@ -43,6 +43,4 @@ function ScreeningQuestion({
 			</FixedBottomCTA>
 		</>
 	);
-}
-
-export default ScreeningQuestion;
+};

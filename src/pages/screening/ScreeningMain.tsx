@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
-import ScreeningOption from "./ScreeningOption";
-import ScreeningQuestion from "./ScreeningQuestion";
-import ScreeningSuccess from "./ScreeningSuccess";
+import { ScreeningOption, ScreeningQuestion, ScreeningSuccess } from ".";
 
-function ScreeningMain() {
+export const ScreeningMain = () => {
 	const { screeningStep } = useMultiStep();
 	const [question, setQuestion] = useState("");
 	const [selected, setSelected] = useState<"O" | "X" | null>(null);
@@ -39,6 +37,4 @@ function ScreeningMain() {
 			)}
 		</>
 	);
-}
-
-export default ScreeningMain;
+};

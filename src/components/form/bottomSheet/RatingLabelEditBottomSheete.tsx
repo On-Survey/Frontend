@@ -1,6 +1,6 @@
 import { BottomSheet, TextField } from "@toss/tds-mobile";
 
-interface RatingLabelEditBottomSheeteProps {
+interface RatingLabelEditBottomSheetProps {
 	label: string;
 	isOpen: boolean;
 	handleClose: () => void;
@@ -8,13 +8,13 @@ interface RatingLabelEditBottomSheeteProps {
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function RatingLabelEditBottomSheete({
+export const RatingLabelEditBottomSheet = ({
 	label,
 	isOpen,
 	handleClose,
 	value,
 	onChange,
-}: RatingLabelEditBottomSheeteProps) {
+}: RatingLabelEditBottomSheetProps) => {
 	return (
 		<BottomSheet
 			open={isOpen}
@@ -45,6 +45,4 @@ function RatingLabelEditBottomSheete({
 			/>
 		</BottomSheet>
 	);
-}
-
-export default RatingLabelEditBottomSheete;
+};

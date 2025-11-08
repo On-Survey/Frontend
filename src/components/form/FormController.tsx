@@ -9,9 +9,9 @@ import {
 } from "../../constants/formController";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useModal } from "../../hooks/UseToggle";
-import QuestionController from "./QuestionController";
+import { QuestionController } from "./QuestionController";
 
-function FormController() {
+export const FormController = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { handleStepChange } = useMultiStep();
 
@@ -172,6 +172,4 @@ function FormController() {
 			</div>
 		</>
 	);
-}
-
-export default FormController;
+};
