@@ -1,10 +1,11 @@
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 
 export const MultipleChoicePage = () => {
 	const { state } = useSurvey();
+	const navigate = useNavigate();
 
 	const questions = state.survey.question;
 
@@ -12,6 +13,11 @@ export const MultipleChoicePage = () => {
 		.filter((q) => q.type === "multipleChoice")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestMultipleChoice?.title;
+	const description = latestMultipleChoice?.description;
+
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/multipleChoice/edit`);
+	};
 
 	return (
 		<div>
@@ -23,8 +29,19 @@ export const MultipleChoicePage = () => {
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph>
-						보조설명은 이런식으로 들어갈 것 같아요
+						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
 					</Top.SubtitleParagraph>
+				}
+				lower={
+					<Top.LowerButton
+						color="dark"
+						size="small"
+						variant="weak"
+						display="inline"
+						onClick={handleTitleAndDescriptionEdit}
+					>
+						문항 제목 및 설명 수정하기
+					</Top.LowerButton>
 				}
 			/>
 			<Outlet />

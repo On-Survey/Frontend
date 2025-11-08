@@ -1,6 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextField, Top } from "@toss/tds-mobile";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 
 interface ScreeningQuestionProps {
 	question: string;
@@ -11,7 +11,7 @@ export const ScreeningQuestion = ({
 	question,
 	handleQuestionChange,
 }: ScreeningQuestionProps) => {
-	const { goNextScreening } = useCreateForm();
+	const { goNextScreening } = useMultiStep();
 
 	return (
 		<>

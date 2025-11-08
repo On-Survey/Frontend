@@ -1,6 +1,7 @@
 export * from "./DatePage";
 export * from "./FormTitleStep";
 export * from "./LongAnswerPage";
+export * from "./multipleChoice";
 export * from "./NPSCreate";
 export * from "./NPSPage";
 export * from "./NumberPage";
@@ -8,3 +9,4 @@ export * from "./QuestionHome";
 export * from "./RatingCreate";
 export * from "./RatingPage";
 export * from "./ShortAnswerPage";
+export * from "./TitleAndDescriptionEditPage";

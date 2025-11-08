@@ -2,10 +2,10 @@ import { adaptive, colors } from "@toss/tds-colors";
 import { Checkbox, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
 import { useState } from "react";
 import { topics } from "../../constants/topics";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 
 export const InterestPage = () => {
-	const { handleStepChange } = useCreateForm();
+	const { handleStepChange } = useMultiStep();
 
 	const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
 

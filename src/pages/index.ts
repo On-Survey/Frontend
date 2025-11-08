@@ -1,6 +1,5 @@
 export * from "./CreateForm";
 export * from "./form";
-export * from "./form/multipleChoice";
 export * from "./Home";
 export * from "./Intro";
 export * from "./interest";
@@ -9,5 +8,6 @@ export * from "./mysurvey";
 export * from "./Onboarding";
 export * from "./OXquiz";
 export * from "./OXquizDetail";
+export * from "./payment";
 export * from "./Survey";
 export * from "./screening";

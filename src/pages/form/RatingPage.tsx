@@ -7,12 +7,14 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import { RatingLabelEditBottomSheete } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
+import { useNavigate } from "react-router-dom";
+import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
 export const RatingPage = () => {
 	const { state } = useSurvey();
+	const navigate = useNavigate();
 
 	const [isRequired, setIsRequired] = useState(false);
 	const [score, setScore] = useState<number | null>(null);
@@ -64,17 +66,22 @@ export const RatingPage = () => {
 		.filter((q) => q.type === "rating")
 		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 	const title = latestRating?.title;
+	const description = latestRating?.description;
+
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/rating/edit`);
+	};
 
 	return (
 		<div>
-			<RatingLabelEditBottomSheete
+			<RatingLabelEditBottomSheet
 				label="좌측 라벨"
 				isOpen={isMinValueEditOpen}
 				handleClose={handleMinValueEditClose}
 				value={minValue}
 				onChange={handleMinValueChange}
 			/>
-			<RatingLabelEditBottomSheete
+			<RatingLabelEditBottomSheet
 				label="우측 라벨"
 				isOpen={isMaxValueEditOpen}
 				handleClose={handleMaxValueEditClose}
@@ -90,8 +97,19 @@ export const RatingPage = () => {
 				subtitleTop={<Top.SubtitleBadges badges={[]} />}
 				subtitleBottom={
 					<Top.SubtitleParagraph size={15}>
-						문항 설명(선택)
+						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
 					</Top.SubtitleParagraph>
+				}
+				lower={
+					<Top.LowerButton
+						color="dark"
+						size="small"
+						variant="weak"
+						display="inline"
+						onClick={handleTitleAndDescriptionEdit}
+					>
+						문항 제목 및 설명 수정하기
+					</Top.LowerButton>
 				}
 			/>
 			<SegmentedControl
