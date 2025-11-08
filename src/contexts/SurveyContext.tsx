@@ -14,6 +14,7 @@ import type {
 	SurveyContextType,
 	SurveyFormAction,
 	SurveyFormState,
+	TopicInfo,
 } from "../types/survey";
 
 // 초기 상태
@@ -33,6 +34,7 @@ const initialState: SurveyFormState = {
 		question: "",
 		answerType: null,
 	},
+	topics: [],
 };
 
 // 리듀서 함수
@@ -174,6 +176,27 @@ function surveyFormReducer(
 				isDirty: true,
 			};
 
+		case "SET_TOPICS":
+			return {
+				...state,
+				topics: action.payload,
+				isDirty: true,
+			};
+
+		case "ADD_TOPIC":
+			return {
+				...state,
+				topics: [...state.topics, action.payload],
+				isDirty: true,
+			};
+
+		case "REMOVE_TOPIC":
+			return {
+				...state,
+				topics: state.topics.filter((topic) => topic.id !== action.payload),
+				isDirty: true,
+			};
+
 		case "RESET_FORM":
 			return initialState;
 
@@ -261,6 +284,18 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		dispatch({ type: "SET_SCREENING", payload: screening });
 	}, []);
 
+	const setTopics = useCallback((topics: TopicInfo[]) => {
+		dispatch({ type: "SET_TOPICS", payload: topics });
+	}, []);
+
+	const addTopic = useCallback((topic: TopicInfo) => {
+		dispatch({ type: "ADD_TOPIC", payload: topic });
+	}, []);
+
+	const removeTopic = useCallback((topicId: string) => {
+		dispatch({ type: "REMOVE_TOPIC", payload: topicId });
+	}, []);
+
 	const resetForm = useCallback(() => {
 		dispatch({ type: "RESET_FORM" });
 	}, []);
@@ -283,6 +318,9 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		setScreeningQuestion,
 		setScreeningAnswerType,
 		setScreening,
+		setTopics,
+		addTopic,
+		removeTopic,
 		resetForm,
 		loadSurvey,
 	};

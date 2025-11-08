@@ -109,6 +109,12 @@ export interface ScreeningInfo {
 	answerType: ScreeningAnswerType | null; // 참여 가능한 답변 (O 또는 X)
 }
 
+// 관심사 정보 인터페이스
+export interface TopicInfo {
+	id: string;
+	name: string;
+}
+
 // 설문 폼 상태 인터페이스
 export interface SurveyFormState {
 	survey: Survey;
@@ -118,6 +124,7 @@ export interface SurveyFormState {
 	error: string | null; // 에러 메시지
 	titleStepCompleted: boolean; // 제목 단계 완료 여부
 	screening: ScreeningInfo; // 스크리닝 정보
+	topics: TopicInfo[]; // 관심사 정보
 }
 
 // 문항 업데이트를 위한 타입 (공통 필드만)
@@ -154,6 +161,9 @@ export type SurveyFormAction =
 	| { type: "SET_SCREENING_QUESTION"; payload: string }
 	| { type: "SET_SCREENING_ANSWER_TYPE"; payload: ScreeningAnswerType | null }
 	| { type: "SET_SCREENING"; payload: ScreeningInfo }
+	| { type: "SET_TOPICS"; payload: TopicInfo[] }
+	| { type: "ADD_TOPIC"; payload: TopicInfo }
+	| { type: "REMOVE_TOPIC"; payload: string }
 	| { type: "RESET_FORM" }
 	| { type: "LOAD_SURVEY"; payload: Survey };
 
@@ -173,6 +183,9 @@ export interface SurveyContextType {
 	setScreeningQuestion: (question: string) => void;
 	setScreeningAnswerType: (answerType: ScreeningAnswerType | null) => void;
 	setScreening: (screening: ScreeningInfo) => void;
+	setTopics: (topics: TopicInfo[]) => void;
+	addTopic: (topic: TopicInfo) => void;
+	removeTopic: (topicId: string) => void;
 	resetForm: () => void;
 	loadSurvey: (survey: Survey) => void;
 }
