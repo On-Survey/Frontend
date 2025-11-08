@@ -117,6 +117,7 @@ export type QuestionUpdateData = {
 	isRequired?: boolean;
 	questionOrder?: number;
 	maxChoice?: number;
+	option?: MultipleChoiceOption[];
 	minValue?: string;
 	maxValue?: string;
 	date?: Date;
@@ -156,3 +157,46 @@ export interface SurveyContextType {
 	resetForm: () => void;
 	loadSurvey: (survey: Survey) => void;
 }
+
+// 타입 가드 함수들
+export const isMultipleChoiceQuestion = (
+	question: Question | undefined,
+): question is MultipleChoiceQuestion => {
+	return question?.type === "multipleChoice";
+};
+
+export const isRatingQuestion = (
+	question: Question | undefined,
+): question is RatingQuestion => {
+	return question?.type === "rating";
+};
+
+export const isNPSQuestion = (
+	question: Question | undefined,
+): question is NPSQuestion => {
+	return question?.type === "nps";
+};
+
+export const isShortAnswerQuestion = (
+	question: Question | undefined,
+): question is ShortAnswerQuestion => {
+	return question?.type === "shortAnswer";
+};
+
+export const isLongAnswerQuestion = (
+	question: Question | undefined,
+): question is LongAnswerQuestion => {
+	return question?.type === "longAnswer";
+};
+
+export const isDateQuestion = (
+	question: Question | undefined,
+): question is DateQuestion => {
+	return question?.type === "date";
+};
+
+export const isNumberQuestion = (
+	question: Question | undefined,
+): question is NumberQuestion => {
+	return question?.type === "number";
+};
