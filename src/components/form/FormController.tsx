@@ -8,12 +8,15 @@ import {
 	TEXT_PROPS,
 } from "../../constants/formController";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { QuestionController } from "./QuestionController";
 
 export const FormController = () => {
-	const [isOpen, setIsOpen] = useState(false);
 	const { handleStepChange } = useMultiStep();
+	const { setScreeningEnabled } = useSurvey();
+
+	const [isOpen, setIsOpen] = useState(false);
 
 	const {
 		isOpen: isConfirmDialogOpen,
@@ -51,6 +54,7 @@ export const FormController = () => {
 	};
 
 	const handleDialogConfirm = () => {
+		setScreeningEnabled(true);
 		handleNext();
 		handleConfirmDialogClose();
 	};

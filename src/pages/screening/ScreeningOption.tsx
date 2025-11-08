@@ -1,17 +1,16 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { useSurvey } from "../../contexts/SurveyContext";
 
-interface ScreeningOptionProps {
-	selected: "O" | "X" | null;
-	handleSelectedChange: (selected: "O" | "X") => void;
-}
-
-export const ScreeningOption = ({
-	selected,
-	handleSelectedChange,
-}: ScreeningOptionProps) => {
+export const ScreeningOption = () => {
 	const { goNextScreening } = useMultiStep();
+	const { state, setScreeningAnswerType } = useSurvey();
+	const selected = state.screening.answerType;
+
+	const handleSelectedChange = (answerType: "O" | "X") => {
+		setScreeningAnswerType(answerType);
+	};
 
 	const handleNext = () => {
 		if (!selected) return;

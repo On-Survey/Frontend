@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { Border, List, ListRow, Text, Top } from "@toss/tds-mobile";
+import { List, ListRow, Text, Top } from "@toss/tds-mobile";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { isMultipleChoiceQuestion } from "../../../types/survey";

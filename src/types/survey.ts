@@ -99,6 +99,16 @@ export interface Survey {
 	question: Question[];
 }
 
+// 스크리닝 타입
+export type ScreeningAnswerType = "O" | "X";
+
+// 스크리닝 정보 인터페이스
+export interface ScreeningInfo {
+	enabled: boolean; // 스크리닝 사용 여부
+	question: string; // 스크리닝 질문
+	answerType: ScreeningAnswerType | null; // 참여 가능한 답변 (O 또는 X)
+}
+
 // 설문 폼 상태 인터페이스
 export interface SurveyFormState {
 	survey: Survey;
@@ -107,6 +117,7 @@ export interface SurveyFormState {
 	isLoading: boolean; // 로딩 중인지 여부
 	error: string | null; // 에러 메시지
 	titleStepCompleted: boolean; // 제목 단계 완료 여부
+	screening: ScreeningInfo; // 스크리닝 정보
 }
 
 // 문항 업데이트를 위한 타입 (공통 필드만)
@@ -139,6 +150,10 @@ export type SurveyFormAction =
 	| { type: "SET_ERROR"; payload: string | null }
 	| { type: "SET_DIRTY"; payload: boolean }
 	| { type: "SET_TITLE_STEP_COMPLETED"; payload: boolean }
+	| { type: "SET_SCREENING_ENABLED"; payload: boolean }
+	| { type: "SET_SCREENING_QUESTION"; payload: string }
+	| { type: "SET_SCREENING_ANSWER_TYPE"; payload: ScreeningAnswerType | null }
+	| { type: "SET_SCREENING"; payload: ScreeningInfo }
 	| { type: "RESET_FORM" }
 	| { type: "LOAD_SURVEY"; payload: Survey };
 
@@ -154,6 +169,10 @@ export interface SurveyContextType {
 	setTitle: (title: string) => void;
 	setDescription: (description: string) => void;
 	setTitleStepCompleted: (completed: boolean) => void;
+	setScreeningEnabled: (enabled: boolean) => void;
+	setScreeningQuestion: (question: string) => void;
+	setScreeningAnswerType: (answerType: ScreeningAnswerType | null) => void;
+	setScreening: (screening: ScreeningInfo) => void;
 	resetForm: () => void;
 	loadSurvey: (survey: Survey) => void;
 }

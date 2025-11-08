@@ -8,6 +8,8 @@ import {
 import type {
 	Question,
 	QuestionUpdateData,
+	ScreeningAnswerType,
+	ScreeningInfo,
 	Survey,
 	SurveyContextType,
 	SurveyFormAction,
@@ -26,6 +28,11 @@ const initialState: SurveyFormState = {
 	isLoading: false,
 	error: null,
 	titleStepCompleted: false,
+	screening: {
+		enabled: false,
+		question: "",
+		answerType: null,
+	},
 };
 
 // 리듀서 함수
@@ -130,6 +137,43 @@ function surveyFormReducer(
 				titleStepCompleted: action.payload,
 			};
 
+		case "SET_SCREENING_ENABLED":
+			return {
+				...state,
+				screening: {
+					...state.screening,
+					enabled: action.payload,
+				},
+				isDirty: true,
+			};
+
+		case "SET_SCREENING_QUESTION":
+			return {
+				...state,
+				screening: {
+					...state.screening,
+					question: action.payload,
+				},
+				isDirty: true,
+			};
+
+		case "SET_SCREENING_ANSWER_TYPE":
+			return {
+				...state,
+				screening: {
+					...state.screening,
+					answerType: action.payload,
+				},
+				isDirty: true,
+			};
+
+		case "SET_SCREENING":
+			return {
+				...state,
+				screening: action.payload,
+				isDirty: true,
+			};
+
 		case "RESET_FORM":
 			return initialState;
 
@@ -198,6 +242,25 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		dispatch({ type: "SET_TITLE_STEP_COMPLETED", payload: completed });
 	}, []);
 
+	const setScreeningEnabled = useCallback((enabled: boolean) => {
+		dispatch({ type: "SET_SCREENING_ENABLED", payload: enabled });
+	}, []);
+
+	const setScreeningQuestion = useCallback((question: string) => {
+		dispatch({ type: "SET_SCREENING_QUESTION", payload: question });
+	}, []);
+
+	const setScreeningAnswerType = useCallback(
+		(answerType: ScreeningAnswerType | null) => {
+			dispatch({ type: "SET_SCREENING_ANSWER_TYPE", payload: answerType });
+		},
+		[],
+	);
+
+	const setScreening = useCallback((screening: ScreeningInfo) => {
+		dispatch({ type: "SET_SCREENING", payload: screening });
+	}, []);
+
 	const resetForm = useCallback(() => {
 		dispatch({ type: "RESET_FORM" });
 	}, []);
@@ -216,6 +279,10 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		setTitle,
 		setDescription,
 		setTitleStepCompleted,
+		setScreeningEnabled,
+		setScreeningQuestion,
+		setScreeningAnswerType,
+		setScreening,
 		resetForm,
 		loadSurvey,
 	};
