@@ -8,8 +8,7 @@ import {
 	ListRow,
 	Switch,
 } from "@toss/tds-mobile";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { QuestionSelectionBottomSheet } from "../../../components/form/bottomSheet/QuestionSelectionBottomSheet";
 import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
 import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
@@ -19,22 +18,31 @@ import { isMultipleChoiceQuestion } from "../../../types/survey";
 
 export const MultipleChoiceMain = () => {
 	const { state, updateQuestion } = useSurvey();
+
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
 	const questions = state.survey.question;
-	const latestMultipleChoice = questions
-		.filter((q) => q.type === "multipleChoice")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl &&
+					q.type === "multipleChoice",
+			)
+		: questions
+				.filter((q) => q.type === "multipleChoice")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const question = isMultipleChoiceQuestion(latestMultipleChoice)
-		? latestMultipleChoice
+	const question = isMultipleChoiceQuestion(targetQuestion)
+		? targetQuestion
 		: undefined;
 
 	const questionId = question?.questionId.toString();
 	const maxChoice = question?.maxChoice;
 	const options = question?.option ?? [];
+	const isRequired = question?.isRequired ?? false;
 
-	const [isRequired, setIsRequired] = useState(false);
 	const { isOpen, handleOpen, handleClose } = useModal(false);
 
 	const {
@@ -50,11 +58,19 @@ export const MultipleChoiceMain = () => {
 	} = useModal(false);
 
 	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
+		}
 	};
 
 	const handleQuestionNavigation = () => {
-		navigate("/createForm/multipleChoice/questions");
+		if (questionId) {
+			navigate(`/createForm/multipleChoice/questions?questionId=${questionId}`);
+		} else {
+			navigate("/createForm/multipleChoice/questions");
+		}
 	};
 
 	const handleDeleteOption = (orderToDelete: number) => {
@@ -69,6 +85,10 @@ export const MultipleChoiceMain = () => {
 				option: updatedOptions,
 			});
 		}
+	};
+
+	const handleConfirm = () => {
+		navigate(-1);
 	};
 
 	return (
@@ -185,7 +205,9 @@ export const MultipleChoiceMain = () => {
 				/>
 			)}
 
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+				확인
+			</FixedBottomCTA>
 		</>
 	);
 };
