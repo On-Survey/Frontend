@@ -1,6 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 
 interface ScreeningOptionProps {
 	selected: "O" | "X" | null;
@@ -11,7 +11,7 @@ function ScreeningOption({
 	selected,
 	handleSelectedChange,
 }: ScreeningOptionProps) {
-	const { goNextScreening } = useCreateForm();
+	const { goNextScreening } = useMultiStep();
 
 	const handleNext = () => {
 		if (!selected) return;

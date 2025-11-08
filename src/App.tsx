@@ -4,7 +4,8 @@ import {
 	BrowserRouter as Router,
 	Routes,
 } from "react-router-dom";
-import { CreateFormProvider } from "./contexts/CreateFormContext";
+import { MultiStepProvider } from "./contexts/MultiStepContext";
+import { PaymentProvider } from "./contexts/PaymentContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { CreateForm } from "./pages/CreateForm";
 import { CreateFormStart } from "./pages/CreateFormStart";
@@ -32,6 +33,7 @@ import { Onboarding } from "./pages/Onboarding";
 import { OXquiz } from "./pages/OXquiz";
 import { OXquizDetail } from "./pages/OXquizDetail";
 import { OxScreening } from "./pages/OxScreening";
+import { LocationSelectPage } from "./pages/payment/LocationSelectPage";
 import { Survey } from "./pages/Survey";
 import { SurveyListPage } from "./pages/SurveyList";
 import SurveyDate from "./pages/survey/Date";
@@ -70,29 +72,40 @@ export const App = () => {
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route element={<SurveyProviderLayout />}>
-					<Route path="/createForm" element={<CreateFormProviderWrapper />} />
-					<Route
-						path="/createForm/multipleChoice"
-						element={<MultipleChoicePage />}
-					>
-						<Route index element={<MultipleChoiceMain />} />
-						<Route path="questions" element={<QuestionListPage />} />
+					<Route element={<MultiStepProviderWrapper />}>
+						<Route element={<PaymentProviderLayout />}>
+							<Route path="/createForm" element={<CreateForm />} />
+							<Route
+								path="/payment/location"
+								element={<LocationSelectPage />}
+							/>
+						</Route>
 						<Route
-							path="questions/:questionId"
-							element={<QuestionOptionsPage />}
+							path="/createForm/multipleChoice"
+							element={<MultipleChoicePage />}
+						>
+							<Route index element={<MultipleChoiceMain />} />
+							<Route path="questions" element={<QuestionListPage />} />
+							<Route
+								path="questions/:questionId"
+								element={<QuestionOptionsPage />}
+							/>
+						</Route>
+						<Route path="/createForm/rating" element={<RatingPage />} />
+						<Route path="/createForm/nps" element={<NPSPage />} />
+						<Route
+							path="/createForm/shortAnswer"
+							element={<ShortAnswerPage />}
 						/>
+						<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
+						<Route path="/createForm/date" element={<DatePage />} />
+						<Route path="/createForm/number" element={<NumberPage />} />
 					</Route>
+
 					<Route
 						path="/createForm/:questionType/edit"
 						element={<TitleAndDescriptionEditPage />}
 					/>
-					<Route path="/createForm/rating" element={<RatingPage />} />
-					<Route path="/createForm/nps" element={<NPSPage />} />
-					<Route path="/createForm/shortAnswer" element={<ShortAnswerPage />} />
-					<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
-					<Route path="/createForm/date" element={<DatePage />} />
-					<Route path="/createForm/number" element={<NumberPage />} />
-					<Route path="/form" element={<CreateFormProviderWrapper />} />
 				</Route>
 			</Routes>
 		</Router>
@@ -105,8 +118,14 @@ const SurveyProviderLayout = () => (
 	</SurveyProvider>
 );
 
-const CreateFormProviderWrapper = () => (
-	<CreateFormProvider>
-		<CreateForm />
-	</CreateFormProvider>
+const PaymentProviderLayout = () => (
+	<PaymentProvider>
+		<Outlet />
+	</PaymentProvider>
+);
+
+const MultiStepProviderWrapper = () => (
+	<MultiStepProvider>
+		<Outlet />
+	</MultiStepProvider>
 );
