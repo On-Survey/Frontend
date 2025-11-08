@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 
-type CreateFormContextValue = {
+type MultiStepContextValue = {
 	activeStep: number;
 	handleStepChange: (step: number) => void;
 	handlePrevious: () => void;
@@ -17,15 +17,21 @@ type CreateFormContextValue = {
 	goNextScreening: () => void;
 	goPrevScreening: () => void;
 	resetScreening: () => void;
+	paymentStep: number;
+	setPaymentStep: (step: number) => void;
+	goNextPayment: () => void;
+	goPrevPayment: () => void;
+	resetPayment: () => void;
 };
 
-const CreateFormContext = createContext<CreateFormContextValue | undefined>(
+const MultiStepContext = createContext<MultiStepContextValue | undefined>(
 	undefined,
 );
 
-export const CreateFormProvider = ({ children }: PropsWithChildren) => {
+export const MultiStepProvider = ({ children }: PropsWithChildren) => {
 	const [activeStep, setActiveStep] = useState(0);
 	const [screeningStep, setScreeningStep] = useState(0);
+	const [paymentStep, setPaymentStep] = useState(0);
 
 	const handleStepChange = useCallback((step: number) => {
 		setActiveStep(step);
@@ -36,15 +42,27 @@ export const CreateFormProvider = ({ children }: PropsWithChildren) => {
 	}, []);
 
 	const goNextScreening = useCallback(() => {
-		setScreeningStep((prev) => Math.min(prev + 1));
+		setScreeningStep((prev) => Math.min(prev + 1, 4));
 	}, []);
 
 	const goPrevScreening = useCallback(() => {
-		setScreeningStep((prev) => Math.max(prev - 1));
+		setScreeningStep((prev) => Math.max(prev - 1, 0));
 	}, []);
 
 	const resetScreening = useCallback(() => {
 		setScreeningStep(0);
+	}, []);
+
+	const goNextPayment = useCallback(() => {
+		setPaymentStep((prev) => Math.min(prev + 1, 4));
+	}, []);
+
+	const goPrevPayment = useCallback(() => {
+		setPaymentStep((prev) => Math.max(prev - 1, 0));
+	}, []);
+
+	const resetPayment = useCallback(() => {
+		setPaymentStep(0);
 	}, []);
 
 	const value = useMemo(
@@ -58,6 +76,11 @@ export const CreateFormProvider = ({ children }: PropsWithChildren) => {
 			goNextScreening,
 			goPrevScreening,
 			resetScreening,
+			paymentStep,
+			setPaymentStep,
+			goNextPayment,
+			goPrevPayment,
+			resetPayment,
 		}),
 		[
 			activeStep,
@@ -67,20 +90,24 @@ export const CreateFormProvider = ({ children }: PropsWithChildren) => {
 			goNextScreening,
 			goPrevScreening,
 			resetScreening,
+			paymentStep,
+			goNextPayment,
+			goPrevPayment,
+			resetPayment,
 		],
 	);
 
 	return (
-		<CreateFormContext.Provider value={value}>
+		<MultiStepContext.Provider value={value}>
 			{children}
-		</CreateFormContext.Provider>
+		</MultiStepContext.Provider>
 	);
 };
 
-export const useCreateForm = () => {
-	const ctx = useContext(CreateFormContext);
+export const useMultiStep = () => {
+	const ctx = useContext(MultiStepContext);
 	if (!ctx) {
-		throw new Error("useCreateForm must be used within a CreateFormProvider");
+		throw new Error("useMultiStep must be used within a MultiStepProvider");
 	}
 	return ctx;
 };
