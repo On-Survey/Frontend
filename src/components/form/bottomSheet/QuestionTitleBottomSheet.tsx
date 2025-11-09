@@ -12,11 +12,11 @@ interface QuestionTitleBottomSheetProps {
 	questionType: QuestionType;
 }
 
-function QuestionTitleBottomSheet({
+export const QuestionTitleBottomSheet = ({
 	onClose,
 	isOpen,
 	questionType,
-}: QuestionTitleBottomSheetProps) {
+}: QuestionTitleBottomSheetProps) => {
 	const { addQuestion } = useSurvey();
 
 	const [title, setTitle] = useState("");
@@ -72,6 +72,4 @@ function QuestionTitleBottomSheet({
 			/>
 		</BottomSheet>
 	);
-}
-
-export default QuestionTitleBottomSheet;
+};

@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function NumberPage() {
+export const NumberPage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -111,6 +111,4 @@ function NumberPage() {
 			</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default NumberPage;
+};

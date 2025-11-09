@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function DatePage() {
+export const DatePage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -84,6 +84,4 @@ function DatePage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default DatePage;
+};

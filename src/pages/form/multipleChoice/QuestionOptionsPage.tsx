@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import type { MultipleChoiceQuestion } from "../../../types/survey";
 
-function QuestionOptionsPage() {
+export const QuestionOptionsPage = () => {
 	const { questionId } = useParams<{ questionId: string }>();
 	const { state } = useSurvey();
 
@@ -27,6 +27,4 @@ function QuestionOptionsPage() {
 			))}
 		</>
 	);
-}
-
-export default QuestionOptionsPage;
+};

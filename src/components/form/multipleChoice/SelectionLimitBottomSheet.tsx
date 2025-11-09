@@ -8,11 +8,11 @@ interface SelectionLimitBottomSheetProps {
 	handleClose: () => void;
 }
 
-function SelectionLimitBottomSheet({
+export const SelectionLimitBottomSheet = ({
 	questionId,
 	isOpen,
 	handleClose,
-}: SelectionLimitBottomSheetProps) {
+}: SelectionLimitBottomSheetProps) => {
 	const { updateQuestion } = useSurvey();
 
 	const [selectionLimit, setSelectionLimit] = useState(1);
@@ -63,6 +63,4 @@ function SelectionLimitBottomSheet({
 			/>
 		</BottomSheet>
 	);
-}
-
-export default SelectionLimitBottomSheet;
+};

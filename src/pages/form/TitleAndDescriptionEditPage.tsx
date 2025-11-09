@@ -2,7 +2,7 @@ import { FixedBottomCTA, TextArea } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function TitleAndDescriptionEditPage() {
+export const TitleAndDescriptionEditPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
 
@@ -62,6 +62,4 @@ function TitleAndDescriptionEditPage() {
 			</FixedBottomCTA>
 		</>
 	);
-}
-
-export default TitleAndDescriptionEditPage;
+};

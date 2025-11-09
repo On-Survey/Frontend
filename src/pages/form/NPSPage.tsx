@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-function NPSPage() {
+export const NPSPage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -91,6 +91,4 @@ function NPSPage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default NPSPage;
+};

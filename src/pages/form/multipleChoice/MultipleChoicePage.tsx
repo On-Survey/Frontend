@@ -3,7 +3,7 @@ import { Top } from "@toss/tds-mobile";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 
-function MultipleChoicePage() {
+export const MultipleChoicePage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -47,6 +47,4 @@ function MultipleChoicePage() {
 			<Outlet />
 		</div>
 	);
-}
-
-export default MultipleChoicePage;
+};

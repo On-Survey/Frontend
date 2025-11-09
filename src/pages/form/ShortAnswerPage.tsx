@@ -8,11 +8,11 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import QuestionTitleEditBottomSheet from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { QuestionTitleEditBottomSheet } from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 
-function ShortAnswerPage() {
+export const ShortAnswerPage = () => {
 	const { state } = useSurvey();
 	const {
 		isOpen: isQuestionTitleEditOpen,
@@ -102,6 +102,4 @@ function ShortAnswerPage() {
 			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default ShortAnswerPage;
+};

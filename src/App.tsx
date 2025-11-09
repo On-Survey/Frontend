@@ -7,33 +7,35 @@ import {
 import { MultiStepProvider } from "./contexts/MultiStepContext";
 import { PaymentProvider } from "./contexts/PaymentContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
-import { CreateForm } from "./pages/CreateForm";
-import { CreateFormStart } from "./pages/CreateFormStart";
-import DatePage from "./pages/form/DatePage";
-import LongAnswerPage from "./pages/form/LongAnswerPage";
-import MultipleChoiceMain from "./pages/form/multipleChoice/MultipleChoiceMain";
-import MultipleChoicePage from "./pages/form/multipleChoice/MultipleChoicePage";
-import QuestionListPage from "./pages/form/multipleChoice/QuestionListPage";
-import QuestionOptionsPage from "./pages/form/multipleChoice/QuestionOptionsPage";
-import NPSPage from "./pages/form/NPSPage";
-import NumberPage from "./pages/form/NumberPage";
-import RatingPage from "./pages/form/RatingPage";
-import ShortAnswerPage from "./pages/form/ShortAnswerPage";
-import TitleAndDescriptionEditPage from "./pages/form/TitleAndDescriptionEditPage";
-import { Home } from "./pages/Home";
-import { Intro } from "./pages/Intro";
-import { Main } from "./pages/Main";
+import {
+	CreateForm,
+	CreateFormStart,
+	DatePage,
+	Home,
+	Intro,
+	LocationSelectPage,
+	LongAnswerPage,
+	Main,
+	MultipleChoiceMain,
+	MultipleChoicePage,
+	MySurvey,
+	NPSPage,
+	NumberPage,
+	Onboarding,
+	QuestionListPage,
+	QuestionOptionsPage,
+	RatingPage,
+	ShortAnswerPage,
+	Survey,
+	SurveyListPage,
+	TitleAndDescriptionEditPage,
+} from "./pages";
 import { Mypage } from "./pages/Mypage";
 import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
-import { MySurvey } from "./pages/mysurvey";
 import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
-import { Onboarding } from "./pages/Onboarding";
 import { OxScreening } from "./pages/OxScreening";
-import { LocationSelectPage } from "./pages/payment/LocationSelectPage";
-import { Survey } from "./pages/Survey";
-import { SurveyListPage } from "./pages/SurveyList";
 import SurveyDate from "./pages/survey/Date";
 import SurveyEssay from "./pages/survey/Essay";
 import SurveyNPS from "./pages/survey/NPS";

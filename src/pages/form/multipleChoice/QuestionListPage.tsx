@@ -3,7 +3,7 @@ import { Button, ListRow } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 
-function QuestionListPage() {
+export const QuestionListPage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 
@@ -55,6 +55,4 @@ function QuestionListPage() {
 			</div>
 		</>
 	);
-}
-
-export default QuestionListPage;
+};
