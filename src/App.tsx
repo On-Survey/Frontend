@@ -30,8 +30,6 @@ import RefundPolicy from "./pages/mypage/RefundPolicy";
 import { MySurvey } from "./pages/mysurvey";
 import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { Onboarding } from "./pages/Onboarding";
-import { OXquiz } from "./pages/OXquiz";
-import { OXquizDetail } from "./pages/OXquizDetail";
 import { OxScreening } from "./pages/OxScreening";
 import { LocationSelectPage } from "./pages/payment/LocationSelectPage";
 import { Survey } from "./pages/Survey";
@@ -59,8 +57,6 @@ export const App = () => {
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
 				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
-				<Route path="/OXquiz" element={<OXquiz />} />
-				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
 				<Route path="/oxScreening" element={<OxScreening />} />
 				<Route path="/survey" element={<Survey />} />
 				<Route path="/surveyList" element={<SurveyListPage />} />
