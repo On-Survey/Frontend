@@ -6,31 +6,56 @@ import {
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { isDateQuestion } from "../../types/survey";
 
-function DatePage() {
-	const { state } = useSurvey();
+export const DatePage = () => {
+	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
-
-	const [date, setDate] = useState(new Date());
-	const [isRequired, setIsRequired] = useState(true);
-
-	const handleIsRequiredChange = () => {
-		setIsRequired(!isRequired);
-	};
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
 	const questions = state.survey.question;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl && q.type === "date",
+			)
+		: questions
+				.filter((q) => q.type === "date")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const latestDate = questions
-		.filter((q) => q.type === "date")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestDate?.title;
-	const description = latestDate?.description;
+	const question = isDateQuestion(targetQuestion) ? targetQuestion : undefined;
+
+	const questionId = question?.questionId.toString();
+	const date = question?.date ?? new Date();
+	const isRequired = question?.isRequired ?? false;
+	const title = question?.title;
+	const description = question?.description;
+
+	const handleDateChange = (newDate: Date) => {
+		if (questionId) {
+			updateQuestion(questionId, {
+				date: newDate,
+			});
+		}
+	};
+
+	const handleIsRequiredChange = () => {
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: !isRequired,
+			});
+		}
+	};
 
 	const handleTitleAndDescriptionEdit = () => {
 		navigate(`/createForm/date/edit`);
+	};
+
+	const handleSubmit = () => {
+		navigate(-1);
 	};
 
 	return (
@@ -62,7 +87,7 @@ function DatePage() {
 			<WheelDatePicker
 				title={"날짜를 선택해 주세요"}
 				value={date}
-				onChange={(date) => setDate(date)}
+				onChange={handleDateChange}
 				triggerLabel={"날짜"}
 				buttonText={"선택하기"}
 			/>
@@ -81,9 +106,9 @@ function DatePage() {
 				}
 				verticalPadding="large"
 			/>
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleSubmit}>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default DatePage;
+};

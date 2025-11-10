@@ -1,14 +1,13 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
+import { useSurvey } from "../../contexts/SurveyContext";
 
-interface ScreeningSuccessProps {
-	question: string;
-	selected: "O" | "X";
-}
-
-function ScreeningSuccess({ question, selected }: ScreeningSuccessProps) {
-	const { handleStepChange } = useCreateForm();
+export const ScreeningSuccess = () => {
+	const { handleStepChange } = useMultiStep();
+	const { state } = useSurvey();
+	const question = state.screening.question;
+	const selected = state.screening.answerType;
 	return (
 		<>
 			<Top
@@ -32,14 +31,13 @@ function ScreeningSuccess({ question, selected }: ScreeningSuccessProps) {
 				fontWeight="semibold"
 				textAlign="center"
 			>
-				[{question}] 질문에 대해 {selected} 선택을 한 타겟만 이 설문에 참여할 수
-				있어요
+				{question && selected
+					? `[${question}] 질문에 대해 ${selected} 선택을 한 타겟만 이 설문에 참여할 수 있어요`
+					: "스크리닝 설문이 구성되었습니다."}
 			</Text>
 			<FixedBottomCTA loading={false} onClick={() => handleStepChange(3)}>
 				다음
 			</FixedBottomCTA>
 		</>
 	);
-}
-
-export default ScreeningSuccess;
+};

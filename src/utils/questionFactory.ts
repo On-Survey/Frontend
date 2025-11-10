@@ -1,6 +1,22 @@
 import type { Question, QuestionType } from "../types/survey";
 
-// 문항 타입에 따른 기본 질문 생성
+export const getQuestionTypeLabel = (type: Question["type"]): string => {
+	const typeLabels: Record<Question["type"], string> = {
+		multipleChoice: "객관식",
+		rating: "평가형",
+		nps: "NPS",
+		shortAnswer: "주관식 (단답형)",
+		longAnswer: "주관식 (장문형)",
+		date: "날짜",
+		number: "숫자",
+	};
+	return typeLabels[type];
+};
+
+export const formatQuestionNumber = (order: number): string => {
+	return String(order).padStart(2, "0");
+};
+
 export const createQuestion = (
 	questionType: QuestionType,
 	title: string,

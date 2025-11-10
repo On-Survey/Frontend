@@ -1,44 +1,14 @@
-import { useState } from "react";
-import { useCreateForm } from "../../contexts/CreateFormContext";
-import ScreeningOption from "./ScreeningOption";
-import ScreeningQuestion from "./ScreeningQuestion";
-import ScreeningSuccess from "./ScreeningSuccess";
+import { useMultiStep } from "../../contexts/MultiStepContext";
+import { ScreeningOption, ScreeningQuestion, ScreeningSuccess } from ".";
 
-function ScreeningMain() {
-	const { screeningStep } = useCreateForm();
-	const [question, setQuestion] = useState("");
-	const [selected, setSelected] = useState<"O" | "X" | null>(null);
-
-	const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setQuestion(e.target.value);
-	};
-
-	const handleSelectedChange = (selected: "O" | "X") => {
-		setSelected(selected);
-	};
+export const ScreeningMain = () => {
+	const { screeningStep } = useMultiStep();
 
 	return (
 		<>
-			{screeningStep === 0 && (
-				<ScreeningQuestion
-					question={question}
-					handleQuestionChange={handleQuestionChange}
-				/>
-			)}
-			{screeningStep === 1 && (
-				<ScreeningOption
-					selected={selected}
-					handleSelectedChange={handleSelectedChange}
-				/>
-			)}
-			{screeningStep === 2 && (
-				<ScreeningSuccess
-					question={question}
-					selected={selected ?? ("" as "O" | "X")}
-				/>
-			)}
+			{screeningStep === 0 && <ScreeningQuestion />}
+			{screeningStep === 1 && <ScreeningOption />}
+			{screeningStep === 2 && <ScreeningSuccess />}
 		</>
 	);
-}
-
-export default ScreeningMain;
+};

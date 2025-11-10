@@ -7,19 +7,37 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import RatingLabelEditBottomSheete from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { isRatingQuestion } from "../../types/survey";
 
-function RatingPage() {
-	const { state } = useSurvey();
+export const RatingPage = () => {
+	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
-	const [isRequired, setIsRequired] = useState(false);
+	const questions = state.survey.question;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl && q.type === "rating",
+			)
+		: questions
+				.filter((q) => q.type === "rating")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+
+	const question = isRatingQuestion(targetQuestion)
+		? targetQuestion
+		: undefined;
+
+	const questionId = question?.questionId.toString();
+	const isRequired = question?.isRequired ?? false;
+	const minValue = question?.minValue ?? "내용 입력하기";
+	const maxValue = question?.maxValue ?? "내용 입력하기";
 	const [score, setScore] = useState<number | null>(null);
-	const [minValue, setMinValue] = useState("내용 입력하기");
-	const [maxValue, setMaxValue] = useState("내용 입력하기");
 
 	const {
 		isOpen: isMinValueEditOpen,
@@ -33,15 +51,27 @@ function RatingPage() {
 	} = useModal(false);
 
 	const handleMinValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setMinValue(e.target.value);
+		if (questionId) {
+			updateQuestion(questionId, {
+				minValue: e.target.value,
+			});
+		}
 	};
 
 	const handleMaxValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setMaxValue(e.target.value);
+		if (questionId) {
+			updateQuestion(questionId, {
+				maxValue: e.target.value,
+			});
+		}
 	};
 
 	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
+		}
 	};
 
 	const handlePlusClick = () => {
@@ -60,28 +90,27 @@ function RatingPage() {
 		}
 	};
 
-	const questions = state.survey.question;
-
-	const latestRating = questions
-		.filter((q) => q.type === "rating")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestRating?.title;
-	const description = latestRating?.description;
+	const title = question?.title;
+	const description = question?.description;
 
 	const handleTitleAndDescriptionEdit = () => {
 		navigate(`/createForm/rating/edit`);
 	};
 
+	const handleConfirm = () => {
+		navigate(-1);
+	};
+
 	return (
 		<div>
-			<RatingLabelEditBottomSheete
+			<RatingLabelEditBottomSheet
 				label="좌측 라벨"
 				isOpen={isMinValueEditOpen}
 				handleClose={handleMinValueEditClose}
 				value={minValue}
 				onChange={handleMinValueChange}
 			/>
-			<RatingLabelEditBottomSheete
+			<RatingLabelEditBottomSheet
 				label="우측 라벨"
 				isOpen={isMaxValueEditOpen}
 				handleClose={handleMaxValueEditClose}
@@ -172,9 +201,9 @@ function RatingPage() {
 					</Text>
 				</button>
 			</div>
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
-}
-
-export default RatingPage;
+};

@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { TextArea, Top } from "@toss/tds-mobile";
+import { formatDateDisplay } from "../../utils/FormatDate";
 
 const dateResponses = [
 	{ id: "date-01", value: "2025-02-17" },
@@ -9,11 +10,6 @@ const dateResponses = [
 	{ id: "date-05", value: "2025-02-21" },
 	{ id: "date-06", value: "2025-02-22" },
 ];
-
-const formatDateDisplay = (value: string) => {
-	const date = new Date(value);
-	return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-};
 
 export const DateResultPage = () => {
 	return (

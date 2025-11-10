@@ -1,20 +1,25 @@
 import { adaptive, colors } from "@toss/tds-colors";
 import { Checkbox, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
-import { useState } from "react";
 import { topics } from "../../constants/topics";
-import { useCreateForm } from "../../contexts/CreateFormContext";
+import { useMultiStep } from "../../contexts/MultiStepContext";
+import { useSurvey } from "../../contexts/SurveyContext";
 
-function InterestPage() {
-	const { handleStepChange } = useCreateForm();
-
-	const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+export const InterestPage = () => {
+	const { handleStepChange } = useMultiStep();
+	const { state, addTopic, removeTopic } = useSurvey();
+	const selectedTopics = state.topics;
 
 	const handleTopicToggle = (topicId: string) => {
-		setSelectedTopics((prev) =>
-			prev.includes(topicId)
-				? prev.filter((id) => id !== topicId)
-				: [...prev, topicId],
-		);
+		const topic = topics.find((t) => t.id === topicId);
+		if (!topic) return;
+
+		const isSelected = selectedTopics.some((t) => t.id === topicId);
+
+		if (isSelected) {
+			removeTopic(topicId);
+		} else {
+			addTopic({ id: topic.id, name: topic.name });
+		}
 	};
 
 	const handleNext = () => {
@@ -39,7 +44,7 @@ function InterestPage() {
 				<div className="flex-1 overflow-y-auto">
 					<List>
 						{topics.map((topic) => {
-							const isSelected = selectedTopics.includes(topic.id);
+							const isSelected = selectedTopics.some((t) => t.id === topic.id);
 							return (
 								<ListRow
 									key={topic.id}
@@ -93,6 +98,4 @@ function InterestPage() {
 			</div>
 		</>
 	);
-}
-
-export default InterestPage;
+};
