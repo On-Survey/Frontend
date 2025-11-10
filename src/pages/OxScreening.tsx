@@ -15,7 +15,7 @@ const questions = [
 	"동물에 대한 애정이 깊으신가요?",
 ];
 
-export const OXquizDetail = () => {
+export const OxScreening = () => {
 	const navigate = useNavigate();
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedOption, setSelectedOption] = useState<string | null>(null);

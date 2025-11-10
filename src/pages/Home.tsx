@@ -1,14 +1,42 @@
-import { colors } from "@toss/tds-colors";
-import { Asset, Button, ListRow, Text } from "@toss/tds-mobile";
+import { adaptive } from "@toss/tds-colors";
+import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
+import mainBanner from "../assets/mainBanner.svg";
 import { BottomNavigation } from "../components/BottomNavigation";
+import { CustomSurveyList } from "../components/surveyList/CustomSurveyList";
+import { UrgentSurveyList } from "../components/surveyList/UrgentSurveyList";
+import type { SurveyListItem } from "../types/surveyList";
+
+// Mock user data
+const USER_NAME = "온서베이";
+
+const MOCK_SURVEYS: SurveyListItem[] = [
+	{
+		id: "1",
+		topicId: "culture_hobby",
+		title: "영화 시청 경험에 관한 설문",
+		iconType: "image",
+		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
+	},
+	{
+		id: "2",
+		topicId: "health_lifestyle",
+		title: "러닝 경험에 관한 설문",
+		iconType: "image",
+		iconSrc:
+			"https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
+	},
+	{
+		id: "3",
+		topicId: "daily_relationships",
+		title: "반려동물 외모 경험에 관한 설문",
+		iconType: "image",
+		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
+	},
+];
 
 export const Home = () => {
 	const navigate = useNavigate();
-
-	const handleOXQuiz = () => {
-		navigate("/oxquiz");
-	};
 
 	const handleMySurvey = () => {
 		navigate("/mysurvey");
@@ -18,230 +46,124 @@ export const Home = () => {
 		navigate("/mypage");
 	};
 
+	const handleViewAllSurveys = () => {
+		navigate("/surveyList");
+	};
+
+	const handleCreateSurvey = () => {
+		navigate("/createFormStart");
+	};
+
+	const handleQuizClick = () => {
+		navigate("/oxScreening");
+	};
+
 	return (
-		<div className="flex flex-col w-full mx-auto p-4">
-			{/* OX 퀴즈 카드 */}
-			<div className="relative mb-8 flex justify-center">
-				<button
-					type="button"
-					className="cursor-pointer hover:opacity-80 transition-opacity"
-					onClick={handleOXQuiz}
-					aria-label="OX 퀴즈 참여하기"
-				>
-					<ListRow
-						contents={
-							<ListRow.Texts
-								type="2RowTypeD"
-								top="간단한 OX 퀴즈 풀고"
-								topProps={{ color: colors.grey600 }}
-								bottom="더 많은 설문을 찾아보세요"
-								bottomProps={{ color: colors.blue500, fontWeight: "bold" }}
-							/>
-						}
-						verticalPadding="medium"
-						className="w-[343px] h-[84px] p-[10px] rounded-3xl border border-blue-500 shadow-md opacity-100"
-						left={
-							<Asset.Icon
-								frameShape={{ width: 24, height: 24 }}
-								name="icon-o-x-quiz"
-								color={colors.blue500}
-								aria-hidden={true}
-							/>
-						}
-						right={
-							<button
-								type="button"
-								className="cursor-pointer"
-								aria-label="설문 보기"
-								onClick={() => navigate("/survey")}
+		<div className="flex flex-col w-full min-h-screen">
+			<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden flex-shrink-0 h-[337px]">
+				<div className="absolute inset-0 home-banner-gradient" />
+				<div className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay" />
+				<div className="relative p-6 flex flex-col h-full">
+					<div className="flex-1 flex flex-col justify-between">
+						<div className="block">
+							<Text
+								color="white"
+								typography="t2"
+								fontWeight="bold"
+								className="mb-2!"
 							>
-								<Asset.Icon
-									frameShape={{ width: 24, height: 24 }}
-									name="icn-arrow-rightwards"
-									color={colors.grey600}
-									aria-hidden={true}
-								/>
-							</button>
-						}
+								간단한 OX 퀴즈 풀고 <br />
+								설문 참여 하기
+							</Text>
+						</div>
+
+						<Button
+							size="small"
+							color="light"
+							variant="weak"
+							className="max-w-20 p-0.1! z-999"
+							onClick={handleQuizClick}
+							style={
+								{
+									"--button-background-color": "rgba(7, 44, 77, 0.20)",
+									"--button-color": "#FFF",
+									"--button-border-radius": "12px",
+								} as React.CSSProperties
+							}
+						>
+							퀴즈 풀기
+						</Button>
+
+						<div className="mt-auto">
+							<Text
+								color="white"
+								typography="t5"
+								fontWeight="bold"
+								className="mb-1 z-999"
+							>
+								설문에 참여하면 50,000원을 받을 수 있어요
+							</Text>
+							<Text
+								color="white"
+								typography="t6"
+								fontWeight="regular"
+								className="z-999 opacity-80"
+							>
+								지금까지 34,092명이 받았어요
+							</Text>
+							<ProgressBar
+								size="normal"
+								color="#FFFFFF"
+								progress={0.55}
+								className="z-999 mt-2"
+							/>
+						</div>
+					</div>
+					<img
+						src={mainBanner}
+						alt="메인 배너"
+						className="absolute bottom-0 right-0 h-100 object-contain opacity-90 z-1"
 					/>
-				</button>
-			</div>
-
-			{/* 사용자를 위한 설문 섹션 */}
-			<div className="mb-8">
-				<div className="flex items-center justify-between m-4">
-					<Text color={colors.grey700} typography="t6" fontWeight="semibold">
-						시원님을 위한 설문
-					</Text>
-					<Text color={colors.grey500} typography="t6" fontWeight="semibold">
-						더보기
-					</Text>
-				</div>
-
-				{/* 설문 카드 1 */}
-				<div className="bg-gray-50 rounded-xl p-4 mb-4">
-					<div className="flex items-center justify-between mb-3">
-						<Button size="small" variant="weak">
-							# 건강
-						</Button>
-						<button
-							type="button"
-							className="cursor-pointer"
-							aria-label="설문 보기"
-							onClick={() => navigate("/survey")}
-						>
-							<Asset.Icon
-								frameShape={{ width: 24, height: 24 }}
-								name="icn-arrow-rightwards"
-								color={colors.grey600}
-								aria-hidden={true}
-							/>
-						</button>
-					</div>
-					<Text
-						color={colors.grey900}
-						typography="st8"
-						fontWeight="semibold"
-						className="mb-2"
-					>
-						영화 시청 경험에 관한 설문
-					</Text>
-					<div className="flex items-center gap-1">
-						<Asset.Icon
-							frameShape={{ width: 20, height: 20 }}
-							name="icon-coin-mono"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
-						<Text color={colors.grey700} typography="t6" fontWeight="medium">
-							3분이면 100원 획득
-						</Text>
-					</div>
-				</div>
-
-				{/* 설문 카드 2 */}
-				<div className="bg-gray-50 rounded-xl p-4">
-					<div className="flex items-center justify-between mb-3">
-						<Button size="small" variant="weak">
-							# 건강
-						</Button>
-						<button
-							type="button"
-							className="cursor-pointer"
-							aria-label="설문 보기"
-							onClick={() => navigate("/survey")}
-						>
-							<Asset.Icon
-								frameShape={{ width: 24, height: 24 }}
-								name="icn-arrow-rightwards"
-								color={colors.grey600}
-								aria-hidden={true}
-							/>
-						</button>
-					</div>
-					<Text
-						color={colors.grey900}
-						typography="st8"
-						fontWeight="semibold"
-						className="mb-2"
-					>
-						영화 시청 경험에 관한 설문
-					</Text>
-					<div className="flex items-center gap-1">
-						<Asset.Icon
-							frameShape={{ width: 20, height: 20 }}
-							name="icon-coin-mono"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
-						<Text color={colors.grey700} typography="t6" fontWeight="medium">
-							3분이면 100원 획득
-						</Text>
-					</div>
 				</div>
 			</div>
 
-			{/* 마감 임박한 설문 섹션 */}
-			<div className="mb-8">
-				<div className="flex items-center justify-between m-4">
-					<Text color={colors.grey700} typography="t6" fontWeight="semibold">
-						마감 임박한 설문
-					</Text>
-					<Text color={colors.grey500} typography="t6" fontWeight="semibold">
-						더보기
-					</Text>
-				</div>
-
-				{/* 설문 카드 */}
-				<div className="bg-gray-50 rounded-xl p-4 mb-4">
-					<div className="flex items-center justify-between mb-3">
-						<Button size="small" variant="weak">
-							# 건강
-						</Button>
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icn-arrow-rightwards"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
-					</div>
-					<Text
-						color={colors.grey900}
-						typography="st8"
-						fontWeight="semibold"
-						className="mb-2"
+			<div className="px-4 pb-4">
+				<div className="bg-blue-50 rounded-2xl p-4 flex items-center justify-between ">
+					<button
+						type="button"
+						onClick={handleCreateSurvey}
+						className="flex-1 cursor-pointer text-left"
+						style={{ background: "none", border: "none", padding: 0 }}
 					>
-						영화 시청 경험에 관한 설문
-					</Text>
-					<div className="flex items-center gap-1">
-						<Asset.Icon
-							frameShape={{ width: 20, height: 20 }}
-							name="icon-coin-mono"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
-						<Text color={colors.grey700} typography="t6" fontWeight="medium">
-							3분이면 100원 획득
+						<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
+							지금 바로 설문 제작해보기!
 						</Text>
-					</div>
-				</div>
-
-				{/* 설문 카드 */}
-				<div className="bg-gray-50 rounded-xl p-4 mb-4">
-					<div className="flex items-center justify-between mb-3">
-						<Button size="small" variant="weak">
-							# 건강
-						</Button>
-						<Asset.Icon
-							frameShape={{ width: 24, height: 24 }}
-							name="icn-arrow-rightwards"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
-					</div>
-					<Text
-						color={colors.grey900}
-						typography="st8"
-						fontWeight="semibold"
-						className="mb-2"
-					>
-						영화 시청 경험에 관한 설문
-					</Text>
-					<div className="flex items-center gap-1">
-						<Asset.Icon
-							frameShape={{ width: 20, height: 20 }}
-							name="icon-coin-mono"
-							color={colors.grey600}
-							aria-hidden={true}
-						/>
-						<Text color={colors.grey700} typography="t6" fontWeight="medium">
-							3분이면 100원 획득
+						<Text color={adaptive.grey600} typography="t7" fontWeight="regular">
+							설문 제작부터 응답 모집까지 간편하고 빠르게
 						</Text>
-					</div>
+					</button>
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW60}
+						backgroundColor="transparent"
+						name="icon-document-lines-blue"
+						aria-hidden={true}
+						ratio="1/1"
+					/>
 				</div>
 			</div>
 
-			{/* 하단 네비게이션 */}
+			<CustomSurveyList
+				surveys={MOCK_SURVEYS}
+				userName={USER_NAME}
+				onViewAll={handleViewAllSurveys}
+			/>
+
+			<Border variant="height16" />
+
+			<UrgentSurveyList onViewAll={handleViewAllSurveys} />
+
+			<div className="mb-24" />
+
 			<BottomNavigation
 				currentPage="home"
 				onMySurveyClick={handleMySurvey}

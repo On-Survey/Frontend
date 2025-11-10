@@ -9,6 +9,7 @@ import { PaymentProvider } from "./contexts/PaymentContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import {
 	CreateForm,
+	CreateFormStart,
 	DatePage,
 	Home,
 	Intro,
@@ -21,13 +22,12 @@ import {
 	NPSPage,
 	NumberPage,
 	Onboarding,
-	OXquiz,
-	OXquizDetail,
 	QuestionListPage,
 	QuestionOptionsPage,
 	RatingPage,
 	ShortAnswerPage,
 	Survey,
+	SurveyListPage,
 	TitleAndDescriptionEditPage,
 } from "./pages";
 import { Mypage } from "./pages/Mypage";
@@ -35,6 +35,7 @@ import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
 import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
+import { OxScreening } from "./pages/OxScreening";
 import SurveyDate from "./pages/survey/Date";
 import SurveyEssay from "./pages/survey/Essay";
 import SurveyNPS from "./pages/survey/NPS";
@@ -51,15 +52,16 @@ export const App = () => {
 				<Route path="/home" element={<Home />} />
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
+				<Route path="/createFormStart" element={<CreateFormStart />} />
 				<Route path="/mysurvey" element={<MySurvey />} />
 				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
 				<Route path="/mypage" element={<Mypage />} />
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
 				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
-				<Route path="/OXquiz" element={<OXquiz />} />
-				<Route path="/oxquiz-detail" element={<OXquizDetail />} />
+				<Route path="/oxScreening" element={<OxScreening />} />
 				<Route path="/survey" element={<Survey />} />
+				<Route path="/surveyList" element={<SurveyListPage />} />
 				<Route path="/survey/singleChoice" element={<SurveySingleChoice />} />
 				<Route path="/survey/essay" element={<SurveyEssay />} />
 				<Route path="/survey/shortAnswer" element={<SurveyShortAnswer />} />
