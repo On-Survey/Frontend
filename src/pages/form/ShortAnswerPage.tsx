@@ -7,35 +7,54 @@ import {
 	TextArea,
 	Top,
 } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { QuestionTitleEditBottomSheet } from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { isShortAnswerQuestion } from "../../types/survey";
 
 export const ShortAnswerPage = () => {
-	const { state } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const {
 		isOpen: isQuestionTitleEditOpen,
 		handleOpen: handleQuestionTitleEditOpen,
 		handleClose: handleQuestionTitleEditClose,
 	} = useModal(false);
 
-	const [answer, setAnswer] = useState("");
-	const [isRequired, setIsRequired] = useState(false);
-
-	const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setAnswer(e.target.value);
-	};
-	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
-	};
+	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
 	const questions = state.survey.question;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl &&
+					q.type === "shortAnswer",
+			)
+		: questions
+				.filter((q) => q.type === "shortAnswer")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const latestMultipleChoice = questions
-		.filter((q) => q.type === "shortAnswer")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestMultipleChoice?.title;
+	const question = isShortAnswerQuestion(targetQuestion)
+		? targetQuestion
+		: undefined;
+
+	const questionId = question?.questionId.toString();
+	const isRequired = question?.isRequired ?? false;
+	const title = question?.title;
+
+	const handleRequiredChange = (checked: boolean) => {
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
+		}
+	};
+
+	const handleConfirm = () => {
+		navigate(-1);
+	};
 
 	return (
 		<div>
@@ -69,8 +88,7 @@ export const ShortAnswerPage = () => {
 				label="단답형 문항"
 				labelOption="sustain"
 				help="20글자까지 입력할 수 있어요"
-				value={answer}
-				onChange={handleAnswerChange}
+				value=""
 				placeholder="이런 식으로 표기 될거예요"
 				maxLength={20}
 				autoFocus={true}
@@ -99,7 +117,9 @@ export const ShortAnswerPage = () => {
 				handleClose={handleQuestionTitleEditClose}
 			/>
 
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
 };

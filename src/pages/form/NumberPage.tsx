@@ -7,40 +7,46 @@ import {
 	TextField,
 	Top,
 } from "@toss/tds-mobile";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { isNumberQuestion } from "../../types/survey";
 
 export const NumberPage = () => {
-	const { state } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
-	const [answer, setAnswer] = useState("");
-	const [isRequired, setIsRequired] = useState(false);
-	const [answerError, setAnswerError] = useState(false);
+	const questions = state.survey.question;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl && q.type === "number",
+			)
+		: questions
+				.filter((q) => q.type === "number")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const handleAnswerChange = (value: string) => {
-		setAnswer(value);
-	};
+	const question = isNumberQuestion(targetQuestion)
+		? targetQuestion
+		: undefined;
+
+	const questionId = question?.questionId.toString();
+	const isRequired = question?.isRequired ?? false;
+	const title = question?.title;
+	const description = question?.description;
 
 	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
-	};
-
-	const handleSubmit = () => {
-		if (Number(answer) > 100) {
-			setAnswerError(true);
-		} else {
-			setAnswerError(false);
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
 		}
 	};
 
-	const questions = state.survey.question;
-	const latestNumber = questions
-		.filter((q) => q.type === "number")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestNumber?.title;
-	const description = latestNumber?.description;
+	const handleSubmit = () => {
+		navigate(-1);
+	};
 
 	const handleTitleAndDescriptionEdit = () => {
 		navigate(`/createForm/number/edit`);
@@ -71,16 +77,14 @@ export const NumberPage = () => {
 					</Top.LowerButton>
 				}
 			/>
-			{/* 숫자키패드 사용을 위해서는 type="number" 대신 inputMode="numeric"를 사용해주세요. */}
+
 			<TextField.Clearable
 				variant="line"
-				hasError={answerError}
+				hasError={false}
 				label="숫자형"
 				labelOption="sustain"
-				value={answer.toString()}
 				placeholder="1부터 100까지 입력할 수 있어요"
-				type="numeric"
-				onChange={(e) => handleAnswerChange(e.target.value)}
+				inputMode="numeric"
 			/>
 			<Border variant="padding24" />
 			<ListRow
@@ -102,11 +106,7 @@ export const NumberPage = () => {
 				verticalPadding="large"
 			/>
 
-			<FixedBottomCTA
-				loading={false}
-				onClick={handleSubmit}
-				disabled={answer.length < 1}
-			>
+			<FixedBottomCTA loading={false} onClick={handleSubmit}>
 				확인
 			</FixedBottomCTA>
 		</div>

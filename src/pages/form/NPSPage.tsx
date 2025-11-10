@@ -1,30 +1,49 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, SegmentedControl, Text, Top } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { isNPSQuestion } from "../../types/survey";
 
 export const NPSPage = () => {
-	const { state } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
-	const [isRequired, setIsRequired] = useState(false);
 	const [score, setScore] = useState<number | null>(null);
 
-	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
-	};
-
 	const questions = state.survey.question;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl && q.type === "nps",
+			)
+		: questions
+				.filter((q) => q.type === "nps")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const latestNPS = questions
-		.filter((q) => q.type === "nps")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestNPS?.title;
-	const description = latestNPS?.description;
+	const question = isNPSQuestion(targetQuestion) ? targetQuestion : undefined;
+
+	const questionId = question?.questionId.toString();
+	const isRequired = question?.isRequired;
+	const title = question?.title;
+	const description = question?.description;
+
+	const handleRequiredChange = (checked: boolean) => {
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
+		}
+	};
 
 	const handleTitleAndDescriptionEdit = () => {
 		navigate(`/createForm/nps/edit`);
+	};
+
+	const handleConfirm = () => {
+		navigate(-1);
 	};
 
 	return (
@@ -55,11 +74,11 @@ export const NPSPage = () => {
 			/>
 			<SegmentedControl
 				alignment="fixed"
-				value={isRequired ? "1-선택" : "0-필수"}
+				value={isRequired ? "0-필수" : "1-선택"}
 				disabled={false}
 				size="large"
 				name="SegmentedControl"
-				onChange={(v) => handleRequiredChange(v === "1-선택")}
+				onChange={(v) => handleRequiredChange(v === "0-필수")}
 			>
 				<SegmentedControl.Item value="0-필수">필수</SegmentedControl.Item>
 				<SegmentedControl.Item value="1-선택">선택</SegmentedControl.Item>
@@ -88,7 +107,9 @@ export const NPSPage = () => {
 					);
 				})}
 			</div>
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+				확인
+			</FixedBottomCTA>
 		</div>
 	);
 };

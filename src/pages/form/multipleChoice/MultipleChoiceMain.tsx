@@ -8,62 +8,115 @@ import {
 	ListRow,
 	Switch,
 } from "@toss/tds-mobile";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { QuestionTitleEditBottomSheet } from "../../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { QuestionSelectionBottomSheet } from "../../../components/form/bottomSheet/QuestionSelectionBottomSheet";
 import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
 import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
-import type { MultipleChoiceQuestion } from "../../../types/survey";
+import { isMultipleChoiceQuestion } from "../../../types/survey";
 
 export const MultipleChoiceMain = () => {
-	const { state } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
+
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
 	const questions = state.survey.question;
-	const latestMultipleChoice = questions
-		.filter((q) => q.type === "multipleChoice")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const questionId = latestMultipleChoice?.questionId.toString();
-	const maxChoice = (latestMultipleChoice as MultipleChoiceQuestion)?.maxChoice;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl &&
+					q.type === "multipleChoice",
+			)
+		: questions
+				.filter((q) => q.type === "multipleChoice")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const [isRequired, setIsRequired] = useState(false);
+	const question = isMultipleChoiceQuestion(targetQuestion)
+		? targetQuestion
+		: undefined;
+
+	const questionId = question?.questionId.toString();
+	const maxChoice = question?.maxChoice;
+	const options = question?.option ?? [];
+	const isRequired = question?.isRequired ?? false;
+
 	const { isOpen, handleOpen, handleClose } = useModal(false);
-	const {
-		isOpen: isQuestionTitleEditOpen,
-		handleClose: handleQuestionTitleEditClose,
-	} = useModal(false);
+
 	const {
 		isOpen: isCreateMultiChoiceOpen,
 		handleOpen: handleCreateMultiChoiceOpen,
 		handleClose: handleCreateMultiChoiceClose,
 	} = useModal(false);
 
+	const {
+		isOpen: isQuestionSelectionOpen,
+		handleOpen: handleQuestionSelectionOpen,
+		handleClose: handleQuestionSelectionClose,
+	} = useModal(false);
+
 	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
+		}
 	};
 
 	const handleQuestionNavigation = () => {
-		navigate("/createForm/multipleChoice/questions");
+		if (questionId) {
+			navigate(`/createForm/multipleChoice/questions?questionId=${questionId}`);
+		} else {
+			navigate("/createForm/multipleChoice/questions");
+		}
+	};
+
+	const handleDeleteOption = (orderToDelete: number) => {
+		if (questionId && question) {
+			const updatedOptions = options
+				.filter((option) => option.order !== orderToDelete)
+				.map((option, index) => ({
+					...option,
+					order: index + 1,
+				}));
+			updateQuestion(questionId, {
+				option: updatedOptions,
+			});
+		}
+	};
+
+	const handleConfirm = () => {
+		navigate(-1);
 	};
 
 	return (
 		<>
 			<Border variant="height16" />
-			<List>
-				<ListRow
-					contents={
-						<ListRow.Texts
-							type="1RowTypeA"
-							top="꾸준히 작성하고 있다."
-							topProps={{ color: adaptive.grey700 }}
-						/>
-					}
-					right={<Asset.Icon name="icon-bin-mono" color={adaptive.grey600} />}
-					verticalPadding="large"
-				/>
-			</List>
+			{options.length > 0 && (
+				<List>
+					{options
+						.sort((a, b) => a.order - b.order)
+						.map((option) => (
+							<ListRow
+								key={option.order}
+								contents={
+									<ListRow.Texts
+										type="1RowTypeA"
+										top={option.content}
+										topProps={{ color: adaptive.grey700 }}
+									/>
+								}
+								right={
+									<Asset.Icon name="icon-bin-mono" color={adaptive.grey600} />
+								}
+								verticalPadding="large"
+								onClick={() => handleDeleteOption(option.order)}
+							/>
+						))}
+				</List>
+			)}
 			<div className="h-4" />
 			<div className="flex flex-col gap-2 px-6">
 				<Button
@@ -135,17 +188,26 @@ export const MultipleChoiceMain = () => {
 				/>
 			)}
 
-			<QuestionTitleEditBottomSheet
-				isOpen={isQuestionTitleEditOpen}
-				handleClose={handleQuestionTitleEditClose}
-			/>
+			{questionId && (
+				<QuestionSelectionBottomSheet
+					questionId={questionId}
+					isOpen={isQuestionSelectionOpen}
+					handleClose={handleQuestionSelectionClose}
+				/>
+			)}
 
-			<CreateMultiChoiceBottomSheet
-				isOpen={isCreateMultiChoiceOpen}
-				handleClose={handleCreateMultiChoiceClose}
-			/>
+			{questionId && (
+				<CreateMultiChoiceBottomSheet
+					questionId={questionId}
+					isOpen={isCreateMultiChoiceOpen}
+					handleClose={handleCreateMultiChoiceClose}
+					handleQuestionSelectionOpen={handleQuestionSelectionOpen}
+				/>
+			)}
 
-			<FixedBottomCTA loading={false}>확인</FixedBottomCTA>
+			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+				확인
+			</FixedBottomCTA>
 		</>
 	);
 };

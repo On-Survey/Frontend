@@ -1,17 +1,17 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextField, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { useSurvey } from "../../contexts/SurveyContext";
 
-interface ScreeningQuestionProps {
-	question: string;
-	handleQuestionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export const ScreeningQuestion = ({
-	question,
-	handleQuestionChange,
-}: ScreeningQuestionProps) => {
+export const ScreeningQuestion = () => {
 	const { goNextScreening } = useMultiStep();
+	const { state, setScreeningQuestion } = useSurvey();
+
+	const question = state.screening.question;
+
+	const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setScreeningQuestion(e.target.value);
+	};
 
 	return (
 		<>

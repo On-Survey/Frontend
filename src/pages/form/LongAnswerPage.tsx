@@ -7,36 +7,47 @@ import {
 	TextArea,
 	Top,
 } from "@toss/tds-mobile";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { isLongAnswerQuestion } from "../../types/survey";
 
 export const LongAnswerPage = () => {
-	const { state } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
-	const [isRequired, setIsRequired] = useState(false);
-	const [answer, setAnswer] = useState("");
+	const questions = state.survey.question;
+	const targetQuestion = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl &&
+					q.type === "longAnswer",
+			)
+		: questions
+				.filter((q) => q.type === "longAnswer")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
 
-	const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setAnswer(e.target.value);
-	};
+	const question = isLongAnswerQuestion(targetQuestion)
+		? targetQuestion
+		: undefined;
+
+	const questionId = question?.questionId.toString();
+	const isRequired = question?.isRequired ?? false;
+	const title = question?.title;
+	const description = question?.description;
 
 	const handleRequiredChange = (checked: boolean) => {
-		setIsRequired(checked);
+		if (questionId) {
+			updateQuestion(questionId, {
+				isRequired: checked,
+			});
+		}
 	};
 
 	const handleSubmit = () => {
-		console.log("submit");
+		navigate(-1);
 	};
-
-	const questions = state.survey.question;
-
-	const latestEssay = questions
-		.filter((q) => q.type === "longAnswer")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestEssay?.title;
-	const description = latestEssay?.description;
 
 	const handleTitleAndDescriptionEdit = () => {
 		navigate(`/createForm/essay/edit`);
@@ -72,10 +83,9 @@ export const LongAnswerPage = () => {
 				label="장문형 문항"
 				labelOption="sustain"
 				help="500글자까지 입력할 수 있어요"
-				value={answer}
+				value=""
 				placeholder="내용을 입력해주세요"
 				height={160}
-				onChange={handleAnswerChange}
 				maxLength={500}
 			/>
 			<Border variant="padding24" />
@@ -97,11 +107,7 @@ export const LongAnswerPage = () => {
 				}
 				verticalPadding="large"
 			/>
-			<FixedBottomCTA
-				loading={false}
-				onClick={handleSubmit}
-				disabled={answer.length < 1}
-			>
+			<FixedBottomCTA loading={false} onClick={handleSubmit}>
 				확인
 			</FixedBottomCTA>
 		</div>
