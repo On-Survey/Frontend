@@ -1,6 +1,7 @@
+import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import {
@@ -8,6 +9,7 @@ import {
 	SURVEY_BADGE_CONFIG,
 	SURVEY_STATUS_LABELS,
 } from "../../constants/survey";
+import type { QuestionType } from "../../types/survey";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../../types/surveyResponse";
 import { SurveyFilterBottomSheet } from "./components/SurveyFilterBottomSheet";
 
@@ -15,6 +17,36 @@ export const SurveyResponseDetail = () => {
 	const navigate = useNavigate();
 	const { id } = useParams<{ id: string }>();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+	useEffect(() => {
+		partner.addAccessoryButton({
+			id: "heart",
+			title: "하트",
+			icon: {
+				name: "icon-heart-mono",
+			},
+		});
+
+		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
+			onEvent: ({ id: buttonId }) => {
+				if (buttonId === "heart") {
+					navigate("/estimate");
+				}
+			},
+		});
+
+		return cleanup;
+	}, [navigate]);
+
+	const RESULT_PAGE_PATHS: Record<QuestionType, string> = {
+		shortAnswer: "/result/short-answer",
+		longAnswer: "/result/long-answer",
+		multipleChoice: "/result/multiple-choice",
+		rating: "/result/rating",
+		nps: "/result/nps",
+		date: "/result/date",
+		number: "/result/number",
+	};
 
 	// Mock
 	const surveyResponse: SurveyResponseDetailType = {
@@ -32,8 +64,43 @@ export const SurveyResponseDetail = () => {
 			},
 			{
 				id: "2",
-				title: "해당 견종을 왜 키우고 계신가요?",
+				title: "주관식 서술형",
 				type: "longAnswer",
+				required: true,
+				responseCount: 10,
+			},
+			{
+				id: "3",
+				title: "객관식",
+				type: "multipleChoice",
+				required: true,
+				responseCount: 10,
+			},
+			{
+				id: "4",
+				title: "평가형",
+				type: "rating",
+				required: true,
+				responseCount: 10,
+			},
+			{
+				id: "5",
+				title: "nps",
+				type: "nps",
+				required: true,
+				responseCount: 10,
+			},
+			{
+				id: "6",
+				title: "date",
+				type: "date",
+				required: true,
+				responseCount: 10,
+			},
+			{
+				id: "7",
+				title: "number",
+				type: "number",
 				required: true,
 				responseCount: 10,
 			},
@@ -42,7 +109,11 @@ export const SurveyResponseDetail = () => {
 
 	const badge = SURVEY_BADGE_CONFIG[surveyResponse.status];
 
-	const handleMyPage = () => {
+	const handleGoMySurvey = () => {
+		navigate("/mysurvey");
+	};
+
+	const handleGoMyPage = () => {
 		navigate("/mypage");
 	};
 
@@ -50,6 +121,14 @@ export const SurveyResponseDetail = () => {
 		const requiredLabel = required ? "필수" : "선택";
 		const typeLabel = QUESTION_TYPE_LABELS[type] || type;
 		return `${requiredLabel} / ${typeLabel}`;
+	};
+
+	const handleResultNavigation = (type: QuestionType) => {
+		const path = RESULT_PAGE_PATHS[type];
+		if (!path) {
+			return;
+		}
+		navigate(path);
 	};
 
 	return (
@@ -124,7 +203,11 @@ export const SurveyResponseDetail = () => {
 								/>
 							}
 							right={
-								<Button size="medium" variant="weak">
+								<Button
+									size="medium"
+									variant="weak"
+									onClick={() => handleResultNavigation(question.type)}
+								>
 									{question.responseCount}명
 								</Button>
 							}
@@ -134,7 +217,11 @@ export const SurveyResponseDetail = () => {
 				</List>
 			</div>
 
-			<BottomNavigation currentPage="more" onMyPageClick={handleMyPage} />
+			<BottomNavigation
+				currentPage="mysurvey"
+				onMySurveyClick={handleGoMySurvey}
+				onMyPageClick={handleGoMyPage}
+			/>
 			<SurveyFilterBottomSheet
 				open={isFilterOpen}
 				onClose={() => setIsFilterOpen(false)}

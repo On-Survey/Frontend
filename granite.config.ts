@@ -2,6 +2,17 @@ import { defineConfig } from "@apps-in-toss/web-framework/config";
 
 export default defineConfig({
 	appName: "onsurvey",
+	navigationBar: {
+		withBackButton: true,
+		withHomeButton: true,
+		initialAccessoryButton: {
+			id: "heart",
+			title: "하트",
+			icon: {
+				name: "icon-heart-mono",
+			},
+		},
+	},
 	brand: {
 		displayName: "onsurvey", // 화면에 노출될 앱의 한글 이름으로 바꿔주세요.
 		primaryColor: "#4593FC", // 화면에 노출될 앱의 기본 색상으로 바꿔주세요.
@@ -18,11 +29,4 @@ export default defineConfig({
 	},
 	permissions: [],
 	outdir: "dist",
-	pluginHooks: {
-		devServer: {
-			port: 5173,
-		},
-		preHandlers: [],
-		postHandlers: [],
-	},
 });

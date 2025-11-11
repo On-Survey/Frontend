@@ -11,6 +11,7 @@ import {
 	CreateForm,
 	CreateFormStart,
 	DatePage,
+	EstimatePage,
 	Home,
 	Intro,
 	LocationSelectPage,
@@ -36,6 +37,14 @@ import OrderHistory from "./pages/mypage/OrderHistory";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
 import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { OxScreening } from "./pages/OxScreening";
+import DateResultPage from "./pages/result/DateResultPage";
+import LongAnswerResultPage from "./pages/result/LongAnswerResultPage";
+import MultipleChoiceResultPage from "./pages/result/MultipleChoiceResultPage";
+import NpsResultPage from "./pages/result/NpsResultPage";
+import NumberResultPage from "./pages/result/NumberResultPage";
+import RatingResultPage from "./pages/result/RatingResultPage";
+import ShortAnswerResultPage from "./pages/result/ShortAnswerResultPage";
+import SurveyComplete from "./pages/survey/Complete";
 import SurveyDate from "./pages/survey/Date";
 import SurveyEssay from "./pages/survey/Essay";
 import SurveyNPS from "./pages/survey/NPS";
@@ -69,6 +78,21 @@ export const App = () => {
 				<Route path="/survey/nps" element={<SurveyNPS />} />
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
+				<Route path="/survey/complete" element={<SurveyComplete />} />
+				<Route
+					path="/result/short-answer"
+					element={<ShortAnswerResultPage />}
+				/>
+				<Route path="/result/long-answer" element={<LongAnswerResultPage />} />
+				<Route
+					path="/result/multiple-choice"
+					element={<MultipleChoiceResultPage />}
+				/>
+				<Route path="/result/rating" element={<RatingResultPage />} />
+				<Route path="/result/nps" element={<NpsResultPage />} />
+				<Route path="/result/date" element={<DateResultPage />} />
+				<Route path="/result/number" element={<NumberResultPage />} />
+				<Route path="/estimate" element={<EstimatePage />} />
 				<Route element={<SurveyProviderLayout />}>
 					<Route element={<MultiStepProviderWrapper />}>
 						<Route element={<PaymentProviderLayout />}>
