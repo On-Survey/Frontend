@@ -6,30 +6,25 @@ import {
 	Text,
 	Toast,
 } from "@toss/tds-mobile";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/UseToggle";
 
 export const SurveyComplete = () => {
 	const navigate = useNavigate();
 	const { isOpen: toastOpen, handleOpen, handleClose } = useModal(false);
-	const handleOpenRef = useRef(handleOpen);
-	const handleCloseRef = useRef(handleClose);
-
-	handleOpenRef.current = handleOpen;
-	handleCloseRef.current = handleClose;
 
 	useEffect(() => {
-		handleOpenRef.current();
+		handleOpen();
 		const timer = setTimeout(() => {
-			handleCloseRef.current();
+			handleClose();
 		}, 3000);
 
 		return () => {
 			clearTimeout(timer);
-			handleCloseRef.current();
+			handleClose();
 		};
-	}, []);
+	}, [handleClose, handleOpen]);
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-white">
