@@ -6,25 +6,12 @@ import {
 	Text,
 	Toast,
 } from "@toss/tds-mobile";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/UseToggle";
 
 export const SurveyComplete = () => {
 	const navigate = useNavigate();
-	const { isOpen: toastOpen, handleOpen, handleClose } = useModal(false);
-
-	useEffect(() => {
-		handleOpen();
-		const timer = setTimeout(() => {
-			handleClose();
-		}, 3000);
-
-		return () => {
-			clearTimeout(timer);
-			handleClose();
-		};
-	}, [handleClose, handleOpen]);
+	const { isOpen: toastOpen, handleClose } = useModal(true);
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-white">
@@ -37,13 +24,12 @@ export const SurveyComplete = () => {
 					text="400원 받았어요."
 					style={{ top: "350px" }}
 					leftAddon={
-						<div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white">
+						<div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white ">
 							P
 						</div>
 					}
 					duration={3000}
 					onClose={handleClose}
-					onExited={handleClose}
 				/>
 				<div className="h-[168px]" />
 				<Text
@@ -81,7 +67,7 @@ export const SurveyComplete = () => {
 					</Text>
 				</div>
 			</div>
-			<FixedBottomCTA loading={false} onClick={() => navigate("/mysurvey")}>
+			<FixedBottomCTA loading={false} onClick={() => navigate("/surveyList")}>
 				다른 설문 참여하기
 			</FixedBottomCTA>
 		</div>

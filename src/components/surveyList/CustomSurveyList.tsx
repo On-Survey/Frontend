@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { List, ListRow, Text } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
 import { topics } from "../../constants/topics";
 import type { SurveyListItem } from "../../types/surveyList";
 
@@ -19,6 +20,12 @@ export const CustomSurveyList = ({
 	userName,
 	onViewAll,
 }: CustomSurveyListProps) => {
+	const navigate = useNavigate();
+
+	const handleSurveyClick = () => {
+		navigate("/survey");
+	};
+
 	return (
 		<>
 			<div className="px-4 pb-3">
@@ -38,6 +45,7 @@ export const CustomSurveyList = ({
 				{surveys.map((survey) => (
 					<ListRow
 						key={survey.id}
+						onClick={handleSurveyClick}
 						contents={
 							<ListRow.Texts
 								type="3RowTypeC"
@@ -56,6 +64,7 @@ export const CustomSurveyList = ({
 										src={survey.iconSrc || ""}
 										shape="original"
 										className="w-8"
+										onClick={handleSurveyClick}
 									/>
 								</div>
 							) : (
