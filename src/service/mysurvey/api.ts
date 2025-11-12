@@ -1,4 +1,4 @@
-import { apiClient } from "../axios/apiClient";
+import { api } from "../axios";
 import type { OngoingSurveyResponse, OngoingSurveyResult } from "./types";
 
 export interface GetOngoingSurveysParams {
@@ -23,12 +23,12 @@ export const getOngoingSurveys = async (
 		...params,
 	};
 
-	const { data } = await apiClient.get<OngoingSurveyResponse>(
+	const { data } = await api.get<OngoingSurveyResponse>(
 		"/v1/survey-participation/surveys/ongoing",
 		{
 			params: mergedParams,
 		},
 	);
 
-	return data.result;
+	return (data as unknown as OngoingSurveyResponse).result;
 };
