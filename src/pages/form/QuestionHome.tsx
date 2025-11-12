@@ -22,7 +22,7 @@ import {
 } from "../../utils/questionFactory";
 
 export const QuestionHome = () => {
-	const { state } = useSurvey();
+	const { state, deleteQuestion } = useSurvey();
 	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
 
@@ -185,7 +185,7 @@ export const QuestionHome = () => {
 								iconSize={16}
 								onClick={(e) => {
 									e.stopPropagation();
-									// TODO: 설문 삭제 연결
+									deleteQuestion(question.questionId.toString());
 								}}
 							/>
 						}
