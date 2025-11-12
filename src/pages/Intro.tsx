@@ -12,15 +12,12 @@ export const Intro = () => {
 	const handleLogin = async () => {
 		try {
 			const { authorizationCode, referrer } = await appLogin();
-			console.log("authorizationCode", authorizationCode);
 			const loginApiResponse = await loginApi(authorizationCode, referrer);
-			// 토큰이 존재하는 경우에만 저장
 			if (loginApiResponse.accessToken && loginApiResponse.refreshToken) {
 				await saveTokens(
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
-				// 로그인 성공 시 홈 페이지로 이동
 				navigate("/onboarding");
 			}
 		} catch (error) {
