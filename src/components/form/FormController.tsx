@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { Asset, ConfirmDialog, Text } from "@toss/tds-mobile";
+import { Asset, ConfirmDialog, Text, useToast } from "@toss/tds-mobile";
 import { useState } from "react";
 import {
 	BUTTON_STYLES,
@@ -10,13 +10,25 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { saveAsDraft } from "../../service/form";
+import {
+	isDateQuestion,
+	isLongAnswerQuestion,
+	isMultipleChoiceQuestion,
+	isNPSQuestion,
+	isNumberQuestion,
+	isRatingQuestion,
+	isShortAnswerQuestion,
+} from "../../types/survey";
 import { QuestionController } from "./QuestionController";
 
 export const FormController = () => {
 	const { handleStepChange } = useMultiStep();
-	const { setScreeningEnabled } = useSurvey();
+	const { setScreeningEnabled, state } = useSurvey();
 
 	const [isOpen, setIsOpen] = useState(false);
+
+	const { openToast } = useToast();
 
 	const {
 		isOpen: isConfirmDialogOpen,
@@ -32,8 +44,26 @@ export const FormController = () => {
 		setIsOpen(false);
 	};
 
-	const handleSave = () => {
-		console.log("임시 저장");
+	const handleSave = async () => {
+		const result = await saveAsDraft({
+			surveyId: state.surveyId ?? 0,
+			info: {
+				multipleChoice: state.survey.question.filter(isMultipleChoiceQuestion),
+				rating: state.survey.question.filter(isRatingQuestion),
+				nps: state.survey.question.filter(isNPSQuestion),
+				shortAnswer: state.survey.question.filter(isShortAnswerQuestion),
+				longAnswer: state.survey.question.filter(isLongAnswerQuestion),
+				date: state.survey.question.filter(isDateQuestion),
+				number: state.survey.question.filter(isNumberQuestion),
+			},
+		});
+		if (result.success) {
+			openToast("임시 저장됐어요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+		}
 	};
 
 	const handleAddQuestion = () => {
