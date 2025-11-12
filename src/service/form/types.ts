@@ -6,15 +6,13 @@ interface BaseResponse {
 }
 
 export interface CreateSurveyResponse extends BaseResponse {
-	result:
-		| {
-				surveyId: number;
-				title: string;
-				description: string;
-				errorClass?: string; // 예시
-				errorMessage?: string; // 예시
-		  }
-		| string;
+	result: {
+		surveyId: number;
+		title: string;
+		description: string;
+		errorClass?: string; // 예시
+		errorMessage?: string; // 예시
+	};
 	success: boolean;
 }
 

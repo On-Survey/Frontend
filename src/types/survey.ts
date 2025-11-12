@@ -117,6 +117,7 @@ export interface TopicInfo {
 
 // 설문 폼 상태 인터페이스
 export interface SurveyFormState {
+	surveyId: number | null;
 	survey: Survey;
 	isDirty: boolean; // 변경사항이 있는지 여부
 	isSubmitting: boolean; // 제출 중인지 여부
@@ -139,6 +140,7 @@ export type QuestionUpdateData = {
 	minValue?: string;
 	maxValue?: string;
 	date?: Date;
+	surveyId?: number;
 };
 
 // 설문 폼 액션 타입
@@ -165,7 +167,8 @@ export type SurveyFormAction =
 	| { type: "ADD_TOPIC"; payload: TopicInfo }
 	| { type: "REMOVE_TOPIC"; payload: string }
 	| { type: "RESET_FORM" }
-	| { type: "LOAD_SURVEY"; payload: Survey };
+	| { type: "LOAD_SURVEY"; payload: Survey }
+	| { type: "SET_SURVEY_ID"; payload: number };
 
 // 설문 Context 타입
 export interface SurveyContextType {
@@ -188,6 +191,7 @@ export interface SurveyContextType {
 	removeTopic: (topicId: string) => void;
 	resetForm: () => void;
 	loadSurvey: (survey: Survey) => void;
+	setSurveyId: (surveyId: number) => void;
 }
 
 // 타입 가드 함수들
