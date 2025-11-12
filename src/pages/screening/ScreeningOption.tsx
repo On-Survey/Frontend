@@ -2,6 +2,7 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { createScreenings } from "../../service/form";
 
 export const ScreeningOption = () => {
 	const { goNextScreening } = useMultiStep();
@@ -12,9 +13,16 @@ export const ScreeningOption = () => {
 		setScreeningAnswerType(answerType);
 	};
 
-	const handleNext = () => {
+	const handleNext = async () => {
 		if (!selected) return;
-		goNextScreening();
+		const result = await createScreenings({
+			surveyId: state.surveyId ?? 0,
+			content: state.screening.question,
+			answer: selected === "O",
+		});
+		if (result.success) {
+			goNextScreening();
+		}
 	};
 
 	return (
