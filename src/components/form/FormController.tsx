@@ -10,7 +10,7 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
-import { saveAsDraft } from "../../service/form";
+import { createSurveyQuestion, saveAsDraft } from "../../service/form";
 import {
 	isDateQuestion,
 	isLongAnswerQuestion,
@@ -35,6 +35,24 @@ export const FormController = () => {
 		handleOpen: handleConfirmDialogOpen,
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
+
+	const handleSaveAndIsConfirmDialogOpen = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			info: {
+				multipleChoice: state.survey.question.filter(isMultipleChoiceQuestion),
+				rating: state.survey.question.filter(isRatingQuestion),
+				nps: state.survey.question.filter(isNPSQuestion),
+				shortAnswer: state.survey.question.filter(isShortAnswerQuestion),
+				longAnswer: state.survey.question.filter(isLongAnswerQuestion),
+				date: state.survey.question.filter(isDateQuestion),
+				number: state.survey.question.filter(isNumberQuestion),
+			},
+		});
+		if (result.success) {
+			handleConfirmDialogOpen();
+		}
+	};
 
 	const handleOpen = () => {
 		setIsOpen(true);
@@ -179,7 +197,7 @@ export const FormController = () => {
 										<button
 											className={BUTTON_STYLES.nextButton}
 											type="button"
-											onClick={handleConfirmDialogOpen}
+											onClick={handleSaveAndIsConfirmDialogOpen}
 										>
 											<Asset.Icon
 												frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
