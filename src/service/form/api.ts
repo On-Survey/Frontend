@@ -1,4 +1,5 @@
 import type { QuestionInfo } from "../../types/survey";
+import { getAccessToken } from "../../utils/tokenManager";
 import { api } from "../axios";
 import type {
 	CreateFormResponse,
@@ -17,10 +18,19 @@ export const createSurvey = async ({
 	const { data } = await api.post<
 		CreateSurveyResponse,
 		{ title: string; description: string }
-	>("/v1/survey-form/surveys", {
-		title,
-		description,
-	});
+	>(
+		"/v1/survey-form/surveys",
+		{
+			title,
+			description,
+		},
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${getAccessToken()}`,
+			},
+		},
+	);
 	return data.data;
 };
 
@@ -33,6 +43,12 @@ export const createSurveyQuestion = async (
 	>(
 		`/v1/survey-form/surveys/${questionInfo.surveyId}/questions`,
 		questionInfo.info,
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${getAccessToken()}`,
+			},
+		},
 	);
 	return data.data;
 };
@@ -49,7 +65,16 @@ export const createScreenings = async ({
 	const { data } = await api.post<
 		CreateScreeningsResponse,
 		{ content: string; answer: boolean }
-	>(`/v1/survey-form/surveys/${surveyId}/screenings`, { content, answer });
+	>(
+		`/v1/survey-form/surveys/${surveyId}/screenings`,
+		{ content, answer },
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${getAccessToken()}`,
+			},
+		},
+	);
 	return data.data;
 };
 
@@ -61,6 +86,12 @@ export const createForm = async ({
 	const { data } = await api.patch<CreateFormResponse, { surveyId: number }>(
 		`/v1/survey-form/surveys/${surveyId}`,
 		{ surveyId },
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${getAccessToken()}`,
+			},
+		},
 	);
 	return data.data;
 };
@@ -74,6 +105,12 @@ export const saveAsDraft = async (
 	>(
 		`/v1/survey-form/surveys/${questionInfo.surveyId}/questions`,
 		questionInfo.info,
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${getAccessToken()}`,
+			},
+		},
 	);
 	return data.data;
 };
