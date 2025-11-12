@@ -128,9 +128,9 @@ export const api = {
 	/**
 	 * POST 요청
 	 */
-	post: <T>(
+	post: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<ApiResponse<T>>> => {
 		return apiClient.post(url, data, config);
@@ -139,9 +139,9 @@ export const api = {
 	/**
 	 * PUT 요청
 	 */
-	put: <T>(
+	put: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<ApiResponse<T>>> => {
 		return apiClient.put(url, data, config);
@@ -150,9 +150,9 @@ export const api = {
 	/**
 	 * PATCH 요청
 	 */
-	patch: <T>(
+	patch: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<ApiResponse<T>>> => {
 		return apiClient.patch(url, data, config);
