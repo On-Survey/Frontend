@@ -1,14 +1,20 @@
 import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { Button } from "@toss/tds-mobile";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { SurveyTabNavigation } from "../../components/SurveyTabNavigation";
+import { getOngoingSurveys } from "../../service/mysurvey";
 import { ActiveTab, AllTab, ClosedTab, DraftTab } from "./components";
+import type { ActiveSurvey } from "./components/types";
 
 export const MySurvey = () => {
 	const navigate = useNavigate();
 	const [selectedTab, setSelectedTab] = useState(0); // 0: 전체, 1: 작성중, 2: 노출중, 3: 마감
+	const [activeSurveys, setActiveSurveys] = useState<ActiveSurvey[]>([]);
+	const [isActiveLoading, setIsActiveLoading] = useState(false);
+	const [activeError, setActiveError] = useState<string | null>(null);
 
 	useEffect(() => {
 		partner.addAccessoryButton({
@@ -30,6 +36,43 @@ export const MySurvey = () => {
 		return cleanup;
 	}, [navigate]);
 
+	useEffect(() => {
+		const fetchOngoingSurveys = async () => {
+			setIsActiveLoading(true);
+			setActiveError(null);
+
+			try {
+				const result = await getOngoingSurveys();
+				console.log("노출 중 설문 조회 결과:", result);
+				const combined = [...result.recommended, ...result.impending].map(
+					(survey) => ({
+						id: survey.surveyId,
+						title: survey.title,
+						description: survey.description,
+						memberId: survey.memberId,
+					}),
+				);
+
+				setActiveSurveys(combined);
+			} catch (error) {
+				console.error("노출 중 설문 조회 실패:", error);
+				if (axios.isAxiosError(error)) {
+					console.log(
+						"응답 상태 코드:",
+						error.response?.status,
+						"응답 데이터:",
+						error.response?.data,
+					);
+				}
+				setActiveError("노출 중인 설문을 가져오는 중 오류가 발생했습니다.");
+			} finally {
+				setIsActiveLoading(false);
+			}
+		};
+
+		void fetchOngoingSurveys();
+	}, []);
+
 	const handleAddSurvey = () => {
 		navigate("/createForm");
 	};
@@ -38,17 +81,7 @@ export const MySurvey = () => {
 		navigate("/mypage");
 	};
 
-	// Mock
 	const draftSurveys = [{ id: 1, title: "영화 시청 경험에 관한 설문" }];
-	const activeSurveys = [
-		{
-			id: 1,
-			title: "영화 시청 경험에 관한 설문",
-			progress: 56,
-			total: 70,
-			deadline: "10월 26일까지",
-		},
-	];
 	const closedSurveys = [{ id: 1, title: "고양이 야옹 시청 경험에 관한 설문" }];
 
 	return (
@@ -66,10 +99,18 @@ export const MySurvey = () => {
 						draftSurveys={draftSurveys}
 						activeSurveys={activeSurveys}
 						closedSurveys={closedSurveys}
+						activeLoading={isActiveLoading}
+						activeError={activeError}
 					/>
 				)}
 				{selectedTab === 1 && <DraftTab surveys={draftSurveys} />}
-				{selectedTab === 2 && <ActiveTab surveys={activeSurveys} />}
+				{selectedTab === 2 && (
+					<ActiveTab
+						surveys={activeSurveys}
+						isLoading={isActiveLoading}
+						error={activeError}
+					/>
+				)}
 				{selectedTab === 3 && <ClosedTab surveys={closedSurveys} />}
 			</div>
 

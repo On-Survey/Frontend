@@ -6,9 +6,11 @@ export interface DraftSurvey {
 export interface ActiveSurvey {
 	id: number;
 	title: string;
-	progress: number;
-	total: number;
-	deadline: string;
+	description?: string;
+	memberId?: number;
+	progress?: number;
+	total?: number;
+	deadline?: string;
 }
 
 export interface ClosedSurvey {
