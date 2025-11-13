@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 빌드 체크
+echo "🔨 프로젝트 빌드 중..."
+pnpm build
+
+# 빌드 실패 시 푸시 중단
+if [ $? -ne 0 ]; then
+  echo "❌ 빌드 실패! 푸시를 중단합니다."
+  exit 1
+fi
+
+echo "✅ 빌드 성공! 푸시를 진행합니다."

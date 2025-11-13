@@ -1,35 +1,153 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+	Outlet,
+	Route,
+	BrowserRouter as Router,
+	Routes,
+} from "react-router-dom";
+import { MultiStepProvider } from "./contexts/MultiStepContext";
+import { PaymentProvider } from "./contexts/PaymentContext";
+import { SurveyProvider } from "./contexts/SurveyContext";
+import {
+	CreateForm,
+	CreateFormStart,
+	DatePage,
+	EstimatePage,
+	Home,
+	Intro,
+	LocationSelectPage,
+	LongAnswerPage,
+	Main,
+	MultipleChoiceMain,
+	MultipleChoicePage,
+	MySurvey,
+	NPSPage,
+	NumberPage,
+	Onboarding,
+	QuestionListPage,
+	QuestionOptionsPage,
+	RatingPage,
+	ShortAnswerPage,
+	Survey,
+	SurveyListPage,
+	TitleAndDescriptionEditPage,
+} from "./pages";
+import { Mypage } from "./pages/Mypage";
+import OrderDetail from "./pages/mypage/OrderDetail";
+import OrderHistory from "./pages/mypage/OrderHistory";
+import RefundPolicy from "./pages/mypage/RefundPolicy";
+import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
+import { OxScreening } from "./pages/OxScreening";
+import DateResultPage from "./pages/result/DateResultPage";
+import LongAnswerResultPage from "./pages/result/LongAnswerResultPage";
+import MultipleChoiceResultPage from "./pages/result/MultipleChoiceResultPage";
+import NpsResultPage from "./pages/result/NpsResultPage";
+import NumberResultPage from "./pages/result/NumberResultPage";
+import RatingResultPage from "./pages/result/RatingResultPage";
+import ShortAnswerResultPage from "./pages/result/ShortAnswerResultPage";
+import SurveyComplete from "./pages/survey/Complete";
+import SurveyDate from "./pages/survey/Date";
+import SurveyEssay from "./pages/survey/Essay";
+import SurveyNPS from "./pages/survey/NPS";
+import SurveyNumber from "./pages/survey/Number";
+import SurveyRating from "./pages/survey/Rating";
+import SurveyShortAnswer from "./pages/survey/ShortAnswer";
+import SurveySingleChoice from "./pages/survey/SingleChoice";
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+	return (
+		<Router>
+			<Routes>
+				<Route path="/" element={<Intro />} />
+				<Route path="/home" element={<Home />} />
+				<Route path="/onboarding" element={<Onboarding />} />
+				<Route path="/main" element={<Main />} />
+				<Route path="/createFormStart" element={<CreateFormStart />} />
+				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
+				<Route path="/mypage" element={<Mypage />} />
+				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
+				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
+				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
+				<Route path="/oxScreening" element={<OxScreening />} />
+				<Route path="/survey" element={<Survey />} />
+				<Route path="/surveyList" element={<SurveyListPage />} />
+				<Route path="/survey/singleChoice" element={<SurveySingleChoice />} />
+				<Route path="/survey/essay" element={<SurveyEssay />} />
+				<Route path="/survey/shortAnswer" element={<SurveyShortAnswer />} />
+				<Route path="/survey/rating" element={<SurveyRating />} />
+				<Route path="/survey/nps" element={<SurveyNPS />} />
+				<Route path="/survey/number" element={<SurveyNumber />} />
+				<Route path="/survey/date" element={<SurveyDate />} />
+				<Route path="/survey/complete" element={<SurveyComplete />} />
+				<Route
+					path="/result/short-answer"
+					element={<ShortAnswerResultPage />}
+				/>
+				<Route path="/result/long-answer" element={<LongAnswerResultPage />} />
+				<Route
+					path="/result/multiple-choice"
+					element={<MultipleChoiceResultPage />}
+				/>
+				<Route path="/result/rating" element={<RatingResultPage />} />
+				<Route path="/result/nps" element={<NpsResultPage />} />
+				<Route path="/result/date" element={<DateResultPage />} />
+				<Route path="/result/number" element={<NumberResultPage />} />
+				<Route path="/estimate" element={<EstimatePage />} />
+				<Route element={<SurveyProviderLayout />}>
+					<Route element={<MultiStepProviderWrapper />}>
+						<Route element={<PaymentProviderLayout />}>
+							<Route path="/createForm" element={<CreateForm />} />
+							<Route
+								path="/payment/location"
+								element={<LocationSelectPage />}
+							/>
+						</Route>
+						<Route
+							path="/createForm/multipleChoice"
+							element={<MultipleChoicePage />}
+						>
+							<Route index element={<MultipleChoiceMain />} />
+							<Route path="questions" element={<QuestionListPage />} />
+							<Route
+								path="questions/:questionId"
+								element={<QuestionOptionsPage />}
+							/>
+						</Route>
+						<Route path="/createForm/rating" element={<RatingPage />} />
+						<Route path="/createForm/nps" element={<NPSPage />} />
+						<Route
+							path="/createForm/shortAnswer"
+							element={<ShortAnswerPage />}
+						/>
+						<Route path="/createForm/longAnswer" element={<LongAnswerPage />} />
+						<Route path="/createForm/date" element={<DatePage />} />
+						<Route path="/createForm/number" element={<NumberPage />} />
+					</Route>
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+					<Route
+						path="/createForm/:questionType/edit"
+						element={<TitleAndDescriptionEditPage />}
+					/>
+				</Route>
+			</Routes>
+		</Router>
+	);
+};
 
-export default App
+const SurveyProviderLayout = () => (
+	<SurveyProvider>
+		<Outlet />
+	</SurveyProvider>
+);
+
+const PaymentProviderLayout = () => (
+	<PaymentProvider>
+		<Outlet />
+	</PaymentProvider>
+);
+
+const MultiStepProviderWrapper = () => (
+	<MultiStepProvider>
+		<Outlet />
+	</MultiStepProvider>
+);

@@ -1,0 +1,80 @@
+import { adaptive } from "@toss/tds-colors";
+import { List, ListRow } from "@toss/tds-mobile";
+import { topics } from "../../constants/topics";
+import type { SurveyListItem } from "../../types/surveyList";
+
+const getTopicTag = (topicId: string): string => {
+	const topic = topics.find((t) => t.id === topicId);
+	return topic ? `#${topic.name}` : `#${topicId}`;
+};
+
+// 설문의 아이콘을 topics에서 가져오기
+const getSurveyIcon = (survey: SurveyListItem) => {
+	const topic = topics.find((t) => t.id === survey.topicId);
+	if (topic) {
+		return {
+			type: topic.icon.type,
+			src: topic.icon.src,
+			name: topic.icon.name,
+		};
+	}
+	// fallback to survey's own icon
+	return {
+		type: survey.iconType,
+		src: survey.iconSrc,
+		name: survey.iconName,
+	};
+};
+
+interface SurveyListProps {
+	surveys: SurveyListItem[];
+}
+
+export const SurveyList = ({ surveys }: SurveyListProps) => {
+	return (
+		<List>
+			{surveys.map((survey) => {
+				const icon = getSurveyIcon(survey);
+				return (
+					<ListRow
+						key={survey.id}
+						contents={
+							<ListRow.Texts
+								type="3RowTypeC"
+								top={getTopicTag(survey.topicId)}
+								topProps={{ color: adaptive.blue500 }}
+								middle={survey.title}
+								middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+								bottom="3분이면 400원 획득"
+								bottomProps={{ color: adaptive.grey600 }}
+							/>
+						}
+						left={
+							icon.type === "image" && icon.src ? (
+								<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+									<ListRow.AssetImage
+										src={icon.src}
+										shape="original"
+										className="w-8"
+									/>
+								</div>
+							) : icon.name ? (
+								<ListRow.AssetIcon name={icon.name} />
+							) : (
+								<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+									<ListRow.AssetImage
+										src={survey.iconSrc || ""}
+										shape="original"
+										className="w-8"
+									/>
+								</div>
+							)
+						}
+						verticalPadding="large"
+						arrowType="right"
+					/>
+				);
+			})}
+		</List>
+	);
+};

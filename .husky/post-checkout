@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# post-checkout 훅은 브랜치 변경이나 파일 체크아웃 시 실행됨
+# $1: 이전 HEAD, $2: 새로운 HEAD, $3: 브랜치 체크아웃 여부 (0: 파일, 1: 브랜치)
+
+echo "📦 의존성 패키지 변경사항 확인 중..."
+
+# 브랜치 체크아웃인 경우에만 실행 (파일 체크아웃 제외)
+if [ "$3" = "1" ]; then
+  # 이전 HEAD와 현재 HEAD의 package.json, pnpm-lock.yaml 비교
+  if git diff --name-only $1 $2 | grep -E "(package\.json|pnpm-lock\.yaml)" > /dev/null; then
+    echo "🔄 의존성 패키지가 변경되었습니다. pnpm install 실행 중..."
+    pnpm install
+    
+    if [ $? -eq 0 ]; then
+      echo "✅ 의존성 설치 완료!"
+    else
+      echo "❌ 의존성 설치 실패!"
+      exit 1
+    fi
+  else
+    echo "✅ 의존성 변경사항 없음"
+  fi
+else
+  echo "📁 파일 체크아웃 - 의존성 체크 건너뜀"
+fi
