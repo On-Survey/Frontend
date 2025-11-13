@@ -104,11 +104,11 @@ export const UrgentSurveyList = ({
 								key={survey.id}
 								type="button"
 								onClick={() => handleSurveyClick(survey)}
-								className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] text-left bg-gradient-to-b ${
+								className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] text-left bg-gradient-to-b rounded-2xl! ${
 									cardGradients[index % cardGradients.length]
 								} shadow-[0_8px_24px_rgba(15,23,42,0.05)] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500`}
 							>
-								<div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mb-3">
+								<div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center mb-3">
 									{renderIcon(survey)}
 								</div>
 								<Text
@@ -131,7 +131,7 @@ export const UrgentSurveyList = ({
 									<div className="mb-3" />
 								)}
 								<div className="flex-1" />
-								<span className="mt-auto inline-flex h-9 items-center justify-center rounded-xl border border-gray-900 px-4 text-sm font-semibold text-gray-900">
+								<span className="mt-auto inline-flex h-9 items-center justify-center rounded-xl px-4 text-sm font-semibold text-gray-700 bg-gray-300/40">
 									시작하기
 								</span>
 							</button>
