@@ -132,7 +132,7 @@ export const api = {
 		url: string,
 		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.post(url, data, config);
 	},
 
@@ -143,7 +143,7 @@ export const api = {
 		url: string,
 		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.put(url, data, config);
 	},
 
@@ -154,7 +154,7 @@ export const api = {
 		url: string,
 		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.patch(url, data, config);
 	},
 
@@ -164,7 +164,7 @@ export const api = {
 	delete: <T>(
 		url: string,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.delete(url, config);
 	},
 };

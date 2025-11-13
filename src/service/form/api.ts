@@ -32,7 +32,8 @@ export const createSurvey = async ({
 			},
 		},
 	);
-	return data.data;
+
+	return data;
 };
 
 export const createSurveyQuestion = async (
@@ -52,7 +53,7 @@ export const createSurveyQuestion = async (
 			},
 		},
 	);
-	return data.data;
+	return data;
 };
 
 export const createScreenings = async ({
@@ -78,7 +79,7 @@ export const createScreenings = async ({
 			},
 		},
 	);
-	return data.data;
+	return data;
 };
 
 export const createForm = async ({
@@ -97,7 +98,7 @@ export const createForm = async ({
 			},
 		},
 	);
-	return data.data;
+	return data;
 };
 
 export const saveAsDraft = async (
@@ -117,5 +118,5 @@ export const saveAsDraft = async (
 			},
 		},
 	);
-	return data.data;
+	return data;
 };
