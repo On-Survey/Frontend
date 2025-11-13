@@ -4,7 +4,6 @@ import axios, {
 	type AxiosResponse,
 	type InternalAxiosRequestConfig,
 } from "axios";
-
 import type { ApiResponse } from "./type";
 
 /**
@@ -34,12 +33,6 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  */
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		// 인증 토큰 헤더 추가 로직은 세션 방식으로 변경되어 주석 처리
-		// const token = getAuthToken();
-		// if (token) {
-		//   config.headers.Authorization = `Bearer ${token}`;
-		// }
-
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {
 			console.log(
@@ -67,15 +60,25 @@ apiClient.interceptors.response.use(
 
 		return response;
 	},
-	(error) => {
+	async (error) => {
 		// 에러 처리
 		if (error.response) {
 			const { status, data } = error.response;
 
-			// 인증 에러 처리
-			if (status === 401) {
-				handleAuthError();
-			}
+			// // 인증 에러 처리
+			// if (status === 401) {
+			// 	const refreshToken = await getRefreshToken();
+
+			// 	if (!refreshToken) {
+			// 		throw new Error("리프레시 토큰이 없습니다.");
+			// 	}
+
+			// 	const newRefreshToken = await reissueToken(refreshToken);
+			// 	if (newRefreshToken) {
+			// 		apiClient.defaults.headers.common["x-refresh-token"] =
+			// 			`Bearer ${newRefreshToken}`;
+			// 	}
+			// }
 
 			// 에러 로깅
 			console.error(`❌ API Error: ${status}`, data);
@@ -88,28 +91,6 @@ apiClient.interceptors.response.use(
 		return Promise.reject(error);
 	},
 );
-
-/**
- * 인증 토큰 가져오기 (구현 필요)
- */
-// function getAuthToken(): string | null {
-//   // 쿠키, 로컬스토리지, 세션스토리지 등에서 토큰 가져오기
-//   if (typeof window !== "undefined") {
-//     return localStorage.getItem("authToken");
-//   }
-//   return null;
-// }
-
-/**
- * 인증 에러 처리 (구현 필요)
- */
-function handleAuthError(): void {
-	// 세션 방식에서는 토큰 제거 불필요, 필요시 로그인 페이지로 리다이렉트만 사용
-	// if (typeof window !== "undefined") {
-	//   localStorage.removeItem("authToken");
-	//   // window.location.href = '/login';
-	// }
-}
 
 /**
  * API 요청 헬퍼 함수들

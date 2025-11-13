@@ -1,14 +1,37 @@
 import { appLogin } from "@apps-in-toss/web-framework";
 import { colors } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, StepperRow, Top } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginApi } from "../service/login";
-import { saveTokens } from "../utils/tokenManager";
+import { loginApi, reissueToken } from "../service/login";
+import {
+	clearTokens,
+	getRefreshToken,
+	saveTokens,
+} from "../utils/tokenManager";
 
 export const Intro = () => {
 	const navigate = useNavigate();
 
-	//@todo: 백엔드랑 로그인 처리 확인 필요
+	// 이전에 로그인한 사용자인지 확인
+	useEffect(() => {
+		const checkAuth = async () => {
+			const storedRefreshToken = await getRefreshToken();
+			if (!storedRefreshToken) return;
+
+			try {
+				const { accessToken, refreshToken } =
+					await reissueToken(storedRefreshToken);
+				await saveTokens(accessToken, refreshToken);
+				navigate("/home", { replace: true });
+			} catch (error) {
+				console.error("토큰 재발급 실패:", error);
+				await clearTokens();
+			}
+		};
+		checkAuth();
+	}, [navigate]);
+
 	const handleLogin = async () => {
 		try {
 			const { authorizationCode, referrer } = await appLogin();
