@@ -5,7 +5,28 @@ import axios, {
 	type InternalAxiosRequestConfig,
 } from "axios";
 
+import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
+
+export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
+	// 요청 전에 토큰 자동 주입
+	if (typeof window !== "undefined") {
+		const token = await getAccessToken();
+		if (token) {
+			config.headers = {
+				...(config.headers || {}),
+				Authorization: `Bearer ${token}`,
+			};
+		}
+	}
+	const response = await apiClient.request<{ result: T }>(config);
+	const payload = response.data?.result;
+	if (payload === undefined) {
+		throw new Error("API 응답에 result 값이 없습니다.");
+	}
+
+	return payload;
+};
 
 /**
  * API 기본 설정
@@ -34,12 +55,6 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  */
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		// 인증 토큰 헤더 추가 로직은 세션 방식으로 변경되어 주석 처리
-		// const token = getAuthToken();
-		// if (token) {
-		//   config.headers.Authorization = `Bearer ${token}`;
-		// }
-
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {
 			console.log(

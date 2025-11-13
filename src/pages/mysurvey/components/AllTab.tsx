@@ -7,33 +7,27 @@ interface AllTabProps {
 	draftSurveys: DraftSurvey[];
 	activeSurveys: ActiveSurvey[];
 	closedSurveys: ClosedSurvey[];
-	activeLoading?: boolean;
-	activeError?: string | null;
 }
 
 export const AllTab = ({
 	draftSurveys,
 	activeSurveys,
 	closedSurveys,
-	activeLoading = false,
-	activeError,
 }: AllTabProps) => {
 	return (
 		<div className="space-y-4">
 			{/* 작성중 */}
-			{draftSurveys.map((survey) => (
-				<SurveyCard key={`draft-${survey.id}`} survey={survey} type="draft" />
-			))}
-			{/* 노출중 */}
-			{activeLoading ? (
+			{draftSurveys.length === 0 ? (
 				<Text color={colors.grey700} typography="t7">
-					노출 중인 설문을 불러오는 중입니다.
+					작성 중인 설문이 없습니다.
 				</Text>
-			) : activeError ? (
-				<Text color={colors.red500} typography="t7">
-					노출 중인 설문을 가져오지 못했습니다.
-				</Text>
-			) : activeSurveys.length === 0 ? (
+			) : (
+				draftSurveys.map((survey) => (
+					<SurveyCard key={`draft-${survey.id}`} survey={survey} type="draft" />
+				))
+			)}
+			{/* 노출중 */}
+			{activeSurveys.length === 0 ? (
 				<Text color={colors.grey700} typography="t7">
 					노출 중인 설문이 없습니다.
 				</Text>
@@ -47,9 +41,19 @@ export const AllTab = ({
 				))
 			)}
 			{/* 마감 */}
-			{closedSurveys.map((survey) => (
-				<SurveyCard key={`closed-${survey.id}`} survey={survey} type="closed" />
-			))}
+			{closedSurveys.length === 0 ? (
+				<Text color={colors.grey700} typography="t7">
+					마감된 설문이 없습니다.
+				</Text>
+			) : (
+				closedSurveys.map((survey) => (
+					<SurveyCard
+						key={`closed-${survey.id}`}
+						survey={survey}
+						type="closed"
+					/>
+				))
+			)}
 		</div>
 	);
 };
