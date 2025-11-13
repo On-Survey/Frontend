@@ -1,4 +1,4 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
+import { closeView, graniteEvent } from "@apps-in-toss/web-framework";
 import { colors } from "@toss/tds-colors";
 import {
 	Checkbox,
@@ -34,6 +34,7 @@ const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
 
 	const handleConfirmDialogConfirm = () => {
 		handleConfirmDialogClose();
+		closeView();
 	};
 
 	useEffect(() => {

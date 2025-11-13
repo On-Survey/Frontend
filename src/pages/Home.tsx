@@ -1,4 +1,4 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
+import { closeView, graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect } from "react";
@@ -74,6 +74,7 @@ export const Home = () => {
 
 	const handleConfirmDialogConfirm = () => {
 		handleConfirmDialogClose();
+		closeView();
 	};
 
 	useEffect(() => {
