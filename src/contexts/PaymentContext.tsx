@@ -34,11 +34,11 @@ const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
 
 export const PaymentProvider = ({ children }: PropsWithChildren) => {
 	const [estimate, setEstimate] = useState<Estimate>({
-		date: null,
-		location: "",
-		age: "",
-		gender: "",
-		desiredParticipants: "",
+		date: new Date(),
+		location: "전체",
+		age: "전체",
+		gender: "전체",
+		desiredParticipants: "50명",
 	});
 
 	const [selectedCoinAmount, setSelectedCoinAmount] =

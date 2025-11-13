@@ -1,4 +1,4 @@
-import { BottomSheet } from "@toss/tds-mobile";
+import { BottomSheet, FixedBottomCTA } from "@toss/tds-mobile";
 import type { Estimate } from "../../../contexts/PaymentContext";
 import { usePaymentEstimate } from "../../../contexts/PaymentContext";
 
@@ -32,12 +32,16 @@ export const PaymentBottomSheet = ({
 			cta={[]}
 		>
 			<BottomSheet.Select
+				className="mb-4"
 				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 					handleEstimateChange({ ...estimate, [field]: e.target.value })
 				}
 				value={value}
 				options={computedOptions}
 			/>
+			<BottomSheet.CTA loading={false} onClick={handleClose}>
+				확인
+			</BottomSheet.CTA>
 		</BottomSheet>
 	);
 };
