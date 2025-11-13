@@ -8,4 +8,6 @@ export interface SurveyListItem {
 	iconType: "image" | "icon";
 	iconSrc?: string;
 	iconName?: string;
+	description?: string;
+	remainingTimeText?: string;
 }

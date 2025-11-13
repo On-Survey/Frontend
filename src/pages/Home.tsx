@@ -1,62 +1,87 @@
+// src/pages/Home.tsx
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import mainBanner from "../assets/mainBanner.svg";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { CustomSurveyList } from "../components/surveyList/CustomSurveyList";
 import { UrgentSurveyList } from "../components/surveyList/UrgentSurveyList";
+import { topics } from "../constants/topics";
+import { getOngoingSurveys } from "../service/surveyList";
+import type { OngoingSurveySummary } from "../service/surveyList/types";
 import type { SurveyListItem } from "../types/surveyList";
 
-// Mock user data
 const USER_NAME = "온서베이";
-
-const MOCK_SURVEYS: SurveyListItem[] = [
-	{
-		id: "1",
-		topicId: "CULTURE",
-		title: "영화 시청 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
-	},
-	{
-		id: "2",
-		topicId: "HEALTH",
-		title: "러닝 경험에 관한 설문",
-		iconType: "image",
-		iconSrc:
-			"https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
-	},
-	{
-		id: "3",
-		topicId: "DAILY_LIFE",
-		title: "반려동물 외모 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
-	},
-];
 
 export const Home = () => {
 	const navigate = useNavigate();
 
-	const handleMySurvey = () => {
-		navigate("/mysurvey");
-	};
+	const [recommended, setRecommended] = useState<SurveyListItem[]>([]);
+	const [impending, setImpending] = useState<SurveyListItem[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
-	const handleMyPage = () => {
-		navigate("/mypage");
-	};
+	const handleMySurvey = () => navigate("/mysurvey");
+	const handleMyPage = () => navigate("/mypage");
+	const handleViewAllSurveys = () => navigate("/surveyList");
+	const handleCreateSurvey = () => navigate("/createFormStart");
+	const handleQuizClick = () => navigate("/oxScreening");
 
-	const handleViewAllSurveys = () => {
-		navigate("/surveyList");
-	};
+	const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
-	const handleCreateSurvey = () => {
-		navigate("/createFormStart");
-	};
+	// ... 위쪽 imports, state, mapToSurveyListItem 동일 ...
 
-	const handleQuizClick = () => {
-		navigate("/oxScreening");
-	};
+	useEffect(() => {
+		const fetch = async () => {
+			setIsLoading(true);
+			setError(null);
+
+			try {
+				const result = await getOngoingSurveys(); // { recommended, impending, hasNext }
+				console.log("노출 중 설문 (recommended):", result.recommended);
+				console.log("노출 중 설문 (impending):", result.impending);
+
+				const mapSurveyToItem = (
+					survey: OngoingSurveySummary,
+				): SurveyListItem => {
+					const topicId = survey.interest ?? DEFAULT_TOPIC;
+					const topic = topics.find((t) => t.id === topicId);
+					const iconSrc =
+						topic?.icon.type === "image" ? topic.icon.src : undefined;
+
+					return {
+						id: String(survey.surveyId),
+						topicId,
+						title: survey.title,
+						iconType: iconSrc ? "image" : "icon",
+						iconSrc,
+						iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
+						description: survey.description,
+					};
+				};
+
+				const rec = (result.recommended ?? []).map(mapSurveyToItem);
+				const imp = (result.impending ?? []).map(mapSurveyToItem);
+
+				setRecommended(rec);
+				setImpending(imp);
+			} catch (err) {
+				console.error("노출 중 설문 조회 실패:", err);
+				setError("설문 목록을 불러오지 못했습니다.");
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		void fetch();
+	}, []);
+
+	const customSurveysToShow = recommended;
+
+	// UrgentSurveyList에는 임박 설문을 그대로 전달
+	const urgentSurveysToShow = impending;
 
 	return (
 		<div className="flex flex-col w-full min-h-screen">
@@ -152,15 +177,30 @@ export const Home = () => {
 				</div>
 			</div>
 
+			{/* 에러 / 로딩 UI */}
+			{isLoading && (
+				<div className="px-4 py-6 text-center text-sm text-gray-500">
+					설문을 불러오는 중입니다...
+				</div>
+			)}
+			{error && (
+				<div className="px-4 py-6 text-center text-sm text-red-500">
+					{error}
+				</div>
+			)}
+
 			<CustomSurveyList
-				surveys={MOCK_SURVEYS}
+				surveys={customSurveysToShow}
 				userName={USER_NAME}
 				onViewAll={handleViewAllSurveys}
 			/>
 
 			<Border variant="height16" />
 
-			<UrgentSurveyList onViewAll={handleViewAllSurveys} />
+			<UrgentSurveyList
+				surveys={urgentSurveysToShow}
+				onViewAll={handleViewAllSurveys}
+			/>
 
 			<div className="mb-24" />
 
