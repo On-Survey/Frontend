@@ -8,9 +8,11 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 export const PaymentConfirmationPage = () => {
 	const { goNextPayment } = useMultiStep();
+	const { selectedCoinAmount } = usePaymentEstimate();
 
 	const handleNext = () => {
 		goNextPayment();
@@ -21,9 +23,9 @@ export const PaymentConfirmationPage = () => {
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						50,000원 결제하고,
+						{selectedCoinAmount?.displayAmount} 결제하고,
 						<br />
-						50000코인을 살까요?
+						{selectedCoinAmount?.displayName}을 살까요?
 					</Top.TitleParagraph>
 				}
 				upper={

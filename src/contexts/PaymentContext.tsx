@@ -15,11 +15,17 @@ export type Estimate = {
 	desiredParticipants: string;
 };
 
+export type SelectedCoinAmount = {
+	sku: string;
+	displayName: string;
+	displayAmount: string;
+};
+
 type PaymentEstimateContextValue = {
 	estimate: Estimate;
 	handleEstimateChange: (next: Estimate) => void;
-	selectedCoinAmount: number | null;
-	handleSelectedCoinAmountChange: (amount: number | null) => void;
+	selectedCoinAmount: SelectedCoinAmount | null;
+	handleSelectedCoinAmountChange: (amount: SelectedCoinAmount) => void;
 };
 
 const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
@@ -35,17 +41,20 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 		desiredParticipants: "",
 	});
 
-	const [selectedCoinAmount, setSelectedCoinAmount] = useState<number | null>(
-		null,
-	);
+	const [selectedCoinAmount, setSelectedCoinAmount] =
+		useState<SelectedCoinAmount | null>(null);
 
 	const handleEstimateChange = useCallback((next: Estimate) => {
 		setEstimate(next);
 	}, []);
 
 	const handleSelectedCoinAmountChange = useCallback(
-		(amount: number | null) => {
-			setSelectedCoinAmount(amount);
+		(amount: SelectedCoinAmount) => {
+			setSelectedCoinAmount({
+				sku: amount.sku,
+				displayName: amount.displayName,
+				displayAmount: amount.displayAmount,
+			});
 		},
 		[],
 	);

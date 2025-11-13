@@ -1,18 +1,36 @@
+import { IAP } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
 import { useEffect } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
+	const { selectedCoinAmount } = usePaymentEstimate();
 
-	//TODO: 실제 로딩 시간으로 변경
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			goNextPayment();
-		}, 3000);
-		return () => clearTimeout(timer);
-	}, [goNextPayment]);
+		const buyIapProduct = async () => {
+			if (!selectedCoinAmount?.sku) {
+				throw new Error("상품 정보가 없습니다");
+			}
+			IAP.createOneTimePurchaseOrder({
+				options: {
+					sku: selectedCoinAmount.sku,
+					processProductGrant: () => true,
+				},
+				onEvent: () => {
+					setTimeout(() => {
+						goNextPayment();
+					}, 3000);
+				},
+				onError: (error) => {
+					console.error("인앱결제에 실패했어요:", error);
+				},
+			});
+		};
+		buyIapProduct();
+	}, [selectedCoinAmount, goNextPayment]);
 
 	return (
 		<>
