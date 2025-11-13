@@ -42,8 +42,11 @@ export const Intro = () => {
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
-				// 로그인 성공 시 홈 페이지로 이동
-				navigate("/onboarding");
+				if (loginApiResponse.onboardingCompleted) {
+					navigate("/home", { replace: true });
+				} else {
+					navigate("/onboarding");
+				}
 			}
 		} catch (error) {
 			console.error("토스 로그인 실패:", error);

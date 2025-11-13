@@ -3,6 +3,7 @@ import { apiClient } from "../axios/apiClient";
 interface LoginResponse {
 	accessToken: string;
 	refreshToken: string;
+	onboardingCompleted: boolean;
 }
 
 export const loginApi = async (
@@ -24,10 +25,12 @@ export const loginApi = async (
 
 	const accessToken = authorizationHeader.split(" ")[1];
 	const refreshToken = refreshTokenHeader.split(" ")[1];
+	const onboardingCompleted = response.data.result.onboardingCompleted;
 
 	return {
 		accessToken,
 		refreshToken,
+		onboardingCompleted,
 	};
 };
 
