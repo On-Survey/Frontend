@@ -9,28 +9,31 @@ import {
 } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { regions } from "../constants/regions";
-import { topics } from "../constants/topics";
+import { type RegionData, regions } from "../constants/regions";
+import { type TopicData, topics } from "../constants/topics";
+import { OnboardingApi } from "../service/onboading";
 
-const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
-	const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-
-	const handleRegionSelect = (regionId: string) => {
-		setSelectedRegion(regionId);
-	};
-
+const OnboardingStep1 = ({
+	onNext,
+	selectedRegion,
+	handleRegionSelect,
+}: {
+	onNext: () => void;
+	selectedRegion: RegionData | null;
+	handleRegionSelect: (region: RegionData) => void;
+}) => {
 	return (
 		<div className="flex-1 flex flex-col">
 			<div className="flex-1 overflow-y-auto">
 				<List>
 					{regions.map((region) => {
-						const isSelected = selectedRegion === region.id;
+						const isSelected = selectedRegion?.id === region.id;
 						return (
 							<ListRow
 								key={region.id}
 								role="checkbox"
 								aria-checked={isSelected}
-								onClick={() => handleRegionSelect(region.id)}
+								onClick={() => handleRegionSelect(region)}
 								contents={
 									<ListRow.Texts
 										type="1RowTypeA"
@@ -65,20 +68,32 @@ const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
 	);
 };
 
-const OnboardingStep2 = () => {
-	const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+const OnboardingStep2 = ({
+	selectedRegion,
+	selectedTopics,
+	handleTopicToggle,
+}: {
+	selectedRegion: RegionData | null;
+	selectedTopics: TopicData[];
+	handleTopicToggle: (topic: TopicData) => void;
+}) => {
 	const navigate = useNavigate();
 
-	const handleTopicToggle = (topicId: string) => {
-		setSelectedTopics((prev) =>
-			prev.includes(topicId)
-				? prev.filter((id) => id !== topicId)
-				: [...prev, topicId],
-		);
-	};
+	const handleSubmit = async () => {
+		if (!selectedRegion) return;
 
-	const handleToMainPage = () => {
-		navigate("/home");
+		const regionValue = selectedRegion.value;
+
+		const topicValues = selectedTopics.map((topic) => topic.value);
+
+		const response = await OnboardingApi({
+			residence: regionValue,
+			interests: topicValues,
+		});
+
+		if (response.success) {
+			navigate("/home");
+		}
 	};
 
 	return (
@@ -86,13 +101,15 @@ const OnboardingStep2 = () => {
 			<div className="flex-1 overflow-y-auto">
 				<List>
 					{topics.map((topic) => {
-						const isSelected = selectedTopics.includes(topic.id);
+						const isSelected = selectedTopics.some(
+							(selectedTopic) => selectedTopic.id === topic.id,
+						);
 						return (
 							<ListRow
 								key={topic.id}
 								role="checkbox"
 								aria-checked={isSelected}
-								onClick={() => handleTopicToggle(topic.id)}
+								onClick={() => handleTopicToggle(topic)}
 								left={
 									topic.icon.type === "image" ? (
 										<ListRow.AssetImage
@@ -115,7 +132,7 @@ const OnboardingStep2 = () => {
 								}
 								right={
 									<Checkbox.Line
-										checked={selectedTopics.includes(topic.id)}
+										checked={isSelected}
 										size={20}
 										aria-hidden={true}
 										style={{ pointerEvents: "none" }}
@@ -131,7 +148,7 @@ const OnboardingStep2 = () => {
 			<FixedBottomCTA
 				disabled={selectedTopics.length === 0}
 				loading={false}
-				onClick={handleToMainPage}
+				onClick={handleSubmit}
 			>
 				모두 선택했어요
 			</FixedBottomCTA>
@@ -154,6 +171,21 @@ const OnboardingProgressBar = ({
 export const Onboarding = () => {
 	const [step, setStep] = useState(1);
 	const totalSteps = 2;
+
+	const [selectedRegion, setSelectedRegion] = useState<RegionData | null>(null);
+	const [selectedTopics, setSelectedTopics] = useState<TopicData[]>([]);
+
+	const handleRegionSelect = (region: RegionData) => {
+		setSelectedRegion(region);
+	};
+
+	const handleTopicToggle = (topic: TopicData) => {
+		setSelectedTopics((prev) =>
+			prev.some((selectedTopic) => selectedTopic.id === topic.id)
+				? prev.filter((selectedTopic) => selectedTopic.id !== topic.id)
+				: [...prev, topic],
+		);
+	};
 
 	const handleNext = () => {
 		setStep(step + 1);
@@ -185,8 +217,20 @@ export const Onboarding = () => {
 				{step === 2 && <div className="h-4" />}
 			</div>
 			<div className="flex-1 flex flex-col">
-				{step === 1 && <OnboardingStep1 onNext={handleNext} />}
-				{step === 2 && <OnboardingStep2 />}
+				{step === 1 && (
+					<OnboardingStep1
+						onNext={handleNext}
+						selectedRegion={selectedRegion}
+						handleRegionSelect={handleRegionSelect}
+					/>
+				)}
+				{step === 2 && (
+					<OnboardingStep2
+						selectedRegion={selectedRegion}
+						selectedTopics={selectedTopics}
+						handleTopicToggle={handleTopicToggle}
+					/>
+				)}
 			</div>
 		</div>
 	);

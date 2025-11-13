@@ -8,6 +8,7 @@ export interface TopicData {
 		src?: string;
 		name?: string;
 	};
+	value: string;
 }
 
 // 주제 데이터 배열
@@ -20,6 +21,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F9F3.png",
 		},
+		value: "CAREER",
 	},
 	{
 		id: "business_tech",
@@ -29,6 +31,7 @@ export const topics: TopicData[] = [
 			type: "icon",
 			name: "icon-it",
 		},
+		value: "BUSINESS",
 	},
 	{
 		id: "finance_consumption",
@@ -38,6 +41,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F4B8.png",
 		},
+		value: "FINANCE",
 	},
 	{
 		id: "health_lifestyle",
@@ -47,6 +51,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
 		},
+		value: "HEALTH",
 	},
 	{
 		id: "culture_hobby",
@@ -56,6 +61,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
 		},
+		value: "CULTURE",
 	},
 	{
 		id: "fashion_beauty",
@@ -65,6 +71,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F576.png",
 		},
+		value: "FASHION",
 	},
 	{
 		id: "social_issues",
@@ -74,6 +81,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F310.png",
 		},
+		value: "SOCIETY",
 	},
 	{
 		id: "self_development_education",
@@ -83,6 +91,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F58B.png",
 		},
+		value: "SELF_IMPROVEMENT",
 	},
 	{
 		id: "daily_relationships",
@@ -92,5 +101,6 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
 		},
+		value: "DAILY_LIFE",
 	},
 ];
