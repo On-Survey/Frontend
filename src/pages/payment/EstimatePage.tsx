@@ -1,7 +1,7 @@
-import { Storage } from "@apps-in-toss/web-framework";
+import { graniteEvent, Storage } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, TextField } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	DateSelectBottomSheet,
@@ -14,12 +14,13 @@ import {
 	EstimateField,
 	GENDER,
 } from "../../constants/payment";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
 
 export const EstimatePage = () => {
 	const { estimate, handleEstimateChange } = usePaymentEstimate();
-
+	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
 
 	const {
@@ -74,6 +75,19 @@ export const EstimatePage = () => {
 				return { value: "", title: "", options: [], field: EstimateField.Age };
 		}
 	};
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				handleStepChange(3);
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [handleStepChange]);
 
 	return (
 		<>

@@ -1,3 +1,4 @@
+import { closeView, graniteEvent } from "@apps-in-toss/web-framework";
 import { colors } from "@toss/tds-colors";
 import {
 	Checkbox,
@@ -7,61 +8,98 @@ import {
 	ProgressBar,
 	Top,
 } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
 import { regions } from "../constants/regions";
 import { topics } from "../constants/topics";
+import { useModal } from "../hooks/UseToggle";
 
 const OnboardingStep1 = ({ onNext }: { onNext: () => void }) => {
 	const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+
+	const {
+		isOpen: isConfirmDialogOpen,
+		handleOpen: handleConfirmDialogOpen,
+		handleClose: handleConfirmDialogClose,
+	} = useModal(false);
 
 	const handleRegionSelect = (regionId: string) => {
 		setSelectedRegion(regionId);
 	};
 
-	return (
-		<div className="flex-1 flex flex-col">
-			<div className="flex-1 overflow-y-auto">
-				<List>
-					{regions.map((region) => {
-						const isSelected = selectedRegion === region.id;
-						return (
-							<ListRow
-								key={region.id}
-								role="checkbox"
-								aria-checked={isSelected}
-								onClick={() => handleRegionSelect(region.id)}
-								contents={
-									<ListRow.Texts
-										type="1RowTypeA"
-										top={region.name}
-										topProps={{ color: colors.grey700 }}
-									/>
-								}
-								right={
-									isSelected ? (
-										<Checkbox.Line
-											checked={true}
-											size={20}
-											aria-hidden={true}
-											style={{ pointerEvents: "none" }}
-										/>
-									) : null
-								}
-							/>
-						);
-					})}
-				</List>
-			</div>
+	const handleConfirmDialogCancel = () => {
+		handleConfirmDialogClose();
+	};
 
-			<FixedBottomCTA
-				disabled={selectedRegion === null}
-				onClick={onNext}
-				loading={false}
-			>
-				다음
-			</FixedBottomCTA>
-		</div>
+	const handleConfirmDialogConfirm = () => {
+		handleConfirmDialogClose();
+		closeView();
+	};
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				handleConfirmDialogOpen();
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [handleConfirmDialogOpen]);
+
+	return (
+		<>
+			<ExitConfirmDialog
+				open={isConfirmDialogOpen}
+				onCancel={handleConfirmDialogCancel}
+				onConfirm={handleConfirmDialogConfirm}
+			/>
+			<div className="flex-1 flex flex-col">
+				<div className="flex-1 overflow-y-auto">
+					<List>
+						{regions.map((region) => {
+							const isSelected = selectedRegion === region.id;
+							return (
+								<ListRow
+									key={region.id}
+									role="checkbox"
+									aria-checked={isSelected}
+									onClick={() => handleRegionSelect(region.id)}
+									contents={
+										<ListRow.Texts
+											type="1RowTypeA"
+											top={region.name}
+											topProps={{ color: colors.grey700 }}
+										/>
+									}
+									right={
+										isSelected ? (
+											<Checkbox.Line
+												checked={true}
+												size={20}
+												aria-hidden={true}
+												style={{ pointerEvents: "none" }}
+											/>
+										) : null
+									}
+								/>
+							);
+						})}
+					</List>
+				</div>
+
+				<FixedBottomCTA
+					disabled={selectedRegion === null}
+					onClick={onNext}
+					loading={false}
+				>
+					다음
+				</FixedBottomCTA>
+			</div>
+		</>
 	);
 };
 

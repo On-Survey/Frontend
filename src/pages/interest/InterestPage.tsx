@@ -1,5 +1,7 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive, colors } from "@toss/tds-colors";
 import { Checkbox, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { topics } from "../../constants/topics";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -21,6 +23,23 @@ export const InterestPage = () => {
 			addTopic({ id: topic.id, name: topic.name });
 		}
 	};
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				if (state.screening.enabled) {
+					handleStepChange(2);
+				} else {
+					handleStepChange(1);
+				}
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [handleStepChange, state.screening.enabled]);
 
 	const handleNext = () => {
 		handleStepChange(4);
