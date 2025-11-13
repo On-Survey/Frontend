@@ -4,6 +4,7 @@ import { Asset, Top } from "@toss/tds-mobile";
 import { useEffect } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { createPayment } from "../../service/payments";
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
@@ -17,12 +18,29 @@ export const PaymentLoading = () => {
 			IAP.createOneTimePurchaseOrder({
 				options: {
 					sku: selectedCoinAmount.sku,
-					processProductGrant: () => true,
+					processProductGrant: async ({ orderId }) => {
+						try {
+							await createPayment({
+								orderId: orderId,
+								price: Number(
+									selectedCoinAmount.displayAmount.replace("원", ""),
+								),
+							});
+							return true;
+						} catch (error) {
+							console.error("결제 정보 전송 실패:", error);
+							return false;
+						}
+					},
 				},
-				onEvent: () => {
-					setTimeout(() => {
-						goNextPayment();
-					}, 3000);
+				onEvent: async (event) => {
+					if (event.type === "success") {
+						const { orderId } = event.data;
+						console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+						setTimeout(() => {
+							goNextPayment();
+						}, 3000);
+					}
 				},
 				onError: (error) => {
 					console.error("인앱결제에 실패했어요:", error);
