@@ -13,14 +13,14 @@ const USER_NAME = "온서베이";
 const MOCK_SURVEYS: SurveyListItem[] = [
 	{
 		id: "1",
-		topicId: "culture_hobby",
+		topicId: "CULTURE",
 		title: "영화 시청 경험에 관한 설문",
 		iconType: "image",
 		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
 	},
 	{
 		id: "2",
-		topicId: "health_lifestyle",
+		topicId: "HEALTH",
 		title: "러닝 경험에 관한 설문",
 		iconType: "image",
 		iconSrc:
@@ -28,7 +28,7 @@ const MOCK_SURVEYS: SurveyListItem[] = [
 	},
 	{
 		id: "3",
-		topicId: "daily_relationships",
+		topicId: "DAILY_LIFE",
 		title: "반려동물 외모 경험에 관한 설문",
 		iconType: "image",
 		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
