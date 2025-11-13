@@ -1,3 +1,4 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -7,16 +8,30 @@ import {
 	Post,
 	Top,
 } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 export const PaymentConfirmationPage = () => {
-	const { goNextPayment } = useMultiStep();
 	const { selectedCoinAmount } = usePaymentEstimate();
+	const { goNextPayment, goPrevPayment } = useMultiStep();
 
 	const handleNext = () => {
 		goNextPayment();
 	};
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				goPrevPayment();
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [goPrevPayment]);
 
 	return (
 		<>

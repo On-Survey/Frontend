@@ -1,11 +1,13 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createScreenings } from "../../service/form";
 
 export const ScreeningOption = () => {
-	const { goNextScreening } = useMultiStep();
+	const { goNextScreening, goPrevScreening } = useMultiStep();
 	const { state, setScreeningAnswerType } = useSurvey();
 	const selected = state.screening.answerType;
 
@@ -24,6 +26,19 @@ export const ScreeningOption = () => {
 			goNextScreening();
 		}
 	};
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				goPrevScreening();
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [goPrevScreening]);
 
 	return (
 		<>

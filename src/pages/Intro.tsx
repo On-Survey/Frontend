@@ -36,7 +36,6 @@ export const Intro = () => {
 		try {
 			const { authorizationCode, referrer } = await appLogin();
 			const loginApiResponse = await loginApi(authorizationCode, referrer);
-			// 토큰이 존재하는 경우에만 저장
 			if (loginApiResponse.accessToken && loginApiResponse.refreshToken) {
 				await saveTokens(
 					loginApiResponse.accessToken,

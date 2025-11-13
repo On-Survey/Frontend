@@ -1,19 +1,45 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
-import { Border, IconButton, List, ListRow, Text, Top } from "@toss/tds-mobile";
+import {
+	Border,
+	ConfirmDialog,
+	IconButton,
+	List,
+	ListRow,
+	Text,
+	Top,
+} from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormController } from "../../components/form/FormController";
 import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { useModal } from "../../hooks/UseToggle";
 import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
 } from "../../utils/questionFactory";
 
 export const QuestionHome = () => {
-	const { state } = useSurvey();
+	const { state, deleteQuestion } = useSurvey();
 	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
+
+	const {
+		isOpen: isConfirmDialogOpen,
+		handleOpen: handleConfirmDialogOpen,
+		handleClose: handleConfirmDialogClose,
+	} = useModal(false);
+
+	const handleConfirmDialogCancel = () => {
+		handleConfirmDialogClose();
+	};
+
+	const handleConfirmDialogConfirm = () => {
+		handleConfirmDialogClose();
+		handleStepChange(0);
+	};
 
 	const handlePrevious = () => {
 		handleStepChange(0);
@@ -31,8 +57,45 @@ export const QuestionHome = () => {
 		}
 	};
 
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				handleConfirmDialogOpen();
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [handleConfirmDialogOpen]);
+
 	return (
 		<>
+			<ConfirmDialog
+				open={isConfirmDialogOpen}
+				onClose={handleConfirmDialogCancel}
+				title="지금 뒤로가면 문항이 사라져요"
+				description="현재 항목을 추가로 작성하지 않았어요.
+여기서 뒤로간다면, 문항이 사라지게 돼요."
+				cancelButton={
+					<ConfirmDialog.CancelButton
+						size="xlarge"
+						onClick={handleConfirmDialogCancel}
+					>
+						닫기
+					</ConfirmDialog.CancelButton>
+				}
+				confirmButton={
+					<ConfirmDialog.ConfirmButton
+						color="danger"
+						size="xlarge"
+						onClick={handleConfirmDialogConfirm}
+					>
+						뒤로가기
+					</ConfirmDialog.ConfirmButton>
+				}
+			/>
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
@@ -122,7 +185,7 @@ export const QuestionHome = () => {
 								iconSize={16}
 								onClick={(e) => {
 									e.stopPropagation();
-									// TODO: 설문 삭제 연결
+									deleteQuestion(question.questionId.toString());
 								}}
 							/>
 						}

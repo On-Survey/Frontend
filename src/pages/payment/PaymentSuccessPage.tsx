@@ -1,5 +1,7 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const PaymentSuccessPage = () => {
@@ -9,6 +11,19 @@ export const PaymentSuccessPage = () => {
 	const handleNavigate = () => {
 		navigate("/mysurvey");
 	};
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				navigate("/mysurvey");
+			},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, [navigate]);
 	return (
 		<>
 			<div className="flex flex-col items-center justify-center gap-3 min-h-screen pb-32">
