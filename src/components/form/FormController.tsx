@@ -10,7 +10,7 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
-import { saveAsDraft } from "../../service/form";
+import { createSurveyQuestion, saveAsDraft } from "../../service/form";
 import {
 	isDateQuestion,
 	isLongAnswerQuestion,
@@ -37,29 +37,29 @@ export const FormController = () => {
 	} = useModal(false);
 
 	const handleSaveAndIsConfirmDialogOpen = async () => {
-		// if (state.survey.question.length === 0) {
-		// 	openToast("문항을 추가해주세요.", {
-		// 		type: "bottom",
-		// 		lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
-		// 		higherThanCTA: true,
-		// 	});
-		// 	return;
-		// }
-		// const result = await createSurveyQuestion({
-		// 	surveyId: state.surveyId ?? 0,
-		// 	info: {
-		// 		multipleChoice: state.survey.question.filter(isMultipleChoiceQuestion),
-		// 		rating: state.survey.question.filter(isRatingQuestion),
-		// 		nps: state.survey.question.filter(isNPSQuestion),
-		// 		shortAnswer: state.survey.question.filter(isShortAnswerQuestion),
-		// 		longAnswer: state.survey.question.filter(isLongAnswerQuestion),
-		// 		date: state.survey.question.filter(isDateQuestion),
-		// 		number: state.survey.question.filter(isNumberQuestion),
-		// 	},
-		// });
-		// if (result.success) {
-		// 	handleConfirmDialogOpen();
-		// }
+		if (state.survey.question.length === 0) {
+			openToast("문항을 추가해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			info: {
+				multipleChoice: state.survey.question.filter(isMultipleChoiceQuestion),
+				rating: state.survey.question.filter(isRatingQuestion),
+				nps: state.survey.question.filter(isNPSQuestion),
+				shortAnswer: state.survey.question.filter(isShortAnswerQuestion),
+				longAnswer: state.survey.question.filter(isLongAnswerQuestion),
+				date: state.survey.question.filter(isDateQuestion),
+				number: state.survey.question.filter(isNumberQuestion),
+			},
+		});
+		if (result.success) {
+			handleConfirmDialogOpen();
+		}
 		handleConfirmDialogOpen();
 	};
 
