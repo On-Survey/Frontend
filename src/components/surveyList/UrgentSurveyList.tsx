@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
-import { Asset, Button, Text } from "@toss/tds-mobile";
+import { Asset, Text } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
 
 import type { SurveyListItem } from "../../types/surveyList";
 
@@ -12,6 +13,7 @@ export const UrgentSurveyList = ({
 	surveys,
 	onViewAll,
 }: UrgentSurveyListProps) => {
+	const navigate = useNavigate();
 	const fallbackSurveys: SurveyListItem[] = [
 		{
 			id: "mock-urgent-1",
@@ -29,6 +31,17 @@ export const UrgentSurveyList = ({
 		"from-[#FFF4C2] to-[#FFE08A]",
 		"from-[#E5DCFF] to-[#C9B7FF]",
 	];
+
+	const handleSurveyClick = (survey: SurveyListItem) => {
+		const searchParams = new URLSearchParams({ surveyId: survey.id });
+		navigate(
+			{
+				pathname: "/survey",
+				search: `?${searchParams.toString()}`,
+			},
+			{ state: { surveyId: survey.id, survey } },
+		);
+	};
 
 	const renderIcon = (survey: SurveyListItem) => {
 		if (survey.iconType === "image" && survey.iconSrc) {
@@ -87,11 +100,13 @@ export const UrgentSurveyList = ({
 						</div>
 					) : (
 						displaySurveys.map((survey, index) => (
-							<div
+							<button
 								key={survey.id}
-								className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] bg-gradient-to-b ${
+								type="button"
+								onClick={() => handleSurveyClick(survey)}
+								className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] text-left bg-gradient-to-b ${
 									cardGradients[index % cardGradients.length]
-								} shadow-[0_8px_24px_rgba(15,23,42,0.05)]`}
+								} shadow-[0_8px_24px_rgba(15,23,42,0.05)] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500`}
 							>
 								<div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mb-3">
 									{renderIcon(survey)}
@@ -116,16 +131,10 @@ export const UrgentSurveyList = ({
 									<div className="mb-3" />
 								)}
 								<div className="flex-1" />
-								<Button
-									size="small"
-									color="dark"
-									variant="weak"
-									display="block"
-									className="mt-auto"
-								>
+								<span className="mt-auto inline-flex h-9 items-center justify-center rounded-xl border border-gray-900 px-4 text-sm font-semibold text-gray-900">
 									시작하기
-								</Button>
-							</div>
+								</span>
+							</button>
 						))
 					)}
 				</div>

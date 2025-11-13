@@ -32,8 +32,15 @@ export const CustomSurveyList = ({
 	];
 	const displaySurveys = surveys.length > 0 ? surveys : fallbackSurveys;
 
-	const handleSurveyClick = () => {
-		navigate("/survey");
+	const handleSurveyClick = (survey: SurveyListItem) => {
+		const searchParams = new URLSearchParams({ surveyId: survey.id });
+		navigate(
+			{
+				pathname: "/survey",
+				search: `?${searchParams.toString()}`,
+			},
+			{ state: { surveyId: survey.id, survey } },
+		);
 	};
 
 	return (
@@ -55,7 +62,7 @@ export const CustomSurveyList = ({
 				{displaySurveys.map((survey) => (
 					<ListRow
 						key={survey.id}
-						onClick={handleSurveyClick}
+						onClick={() => handleSurveyClick(survey)}
 						contents={
 							<ListRow.Texts
 								type="3RowTypeC"
@@ -74,7 +81,6 @@ export const CustomSurveyList = ({
 										src={survey.iconSrc || ""}
 										shape="original"
 										className="w-8"
-										onClick={handleSurveyClick}
 									/>
 								</div>
 							) : (
