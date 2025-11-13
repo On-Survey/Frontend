@@ -1,4 +1,4 @@
-import { BottomSheet, FixedBottomCTA } from "@toss/tds-mobile";
+import { BottomSheet } from "@toss/tds-mobile";
 import type { Estimate } from "../../../contexts/PaymentContext";
 import { usePaymentEstimate } from "../../../contexts/PaymentContext";
 
