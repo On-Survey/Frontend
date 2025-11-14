@@ -52,7 +52,6 @@ export const MySurvey = () => {
 						id: survey.surveyId,
 						title: survey.title,
 						description: survey.description,
-						memberId: survey.memberId,
 					}));
 
 				// 노출 중
@@ -66,7 +65,6 @@ export const MySurvey = () => {
 						id: survey.surveyId,
 						title: survey.title,
 						description: survey.description,
-						memberId: survey.memberId,
 						deadline: survey.deadLine,
 						progress: survey.currentCount,
 						total: survey.dueCount,
@@ -79,7 +77,6 @@ export const MySurvey = () => {
 						id: survey.surveyId,
 						title: survey.title,
 						description: survey.description,
-						memberId: survey.memberId,
 						closedAt: survey.deadLine,
 					}));
 
