@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { useImagePicker } from "../hooks/useImagePicker";
+import { getMemberInfo } from "../service/userInfo";
 import type { MypageData } from "../types/mypage";
 
 export const Mypage = () => {
 	const navigate = useNavigate();
 	const [mypageData, setMypageData] = useState<MypageData | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const {
 		selectedImage: profileImage,
 		fileInputRef,
@@ -18,14 +21,29 @@ export const Mypage = () => {
 	} = useImagePicker(mypageData?.profileImage);
 
 	useEffect(() => {
-		// mock
-		const mockMypageData: MypageData = {
-			profileImage: "https://static.toss.im/illusts/img-profile-03.png",
-			chargeCash: 0,
-			points: 3200,
+		const fetchMemberInfo = async () => {
+			try {
+				setIsLoading(true);
+				setError(null);
+				const memberInfo = await getMemberInfo();
+				const mypageData: MypageData = {
+					profileImage:
+						memberInfo.profileUrl ||
+						"https://static.toss.im/illusts/img-profile-03.png",
+					chargeCash: memberInfo.coin,
+					points: memberInfo.promotionPoint,
+				};
+				setMypageData(mypageData);
+				setSelectedImage(mypageData.profileImage);
+			} catch (err) {
+				console.error("회원 정보 조회 실패:", err);
+				setError("회원 정보를 불러오지 못했습니다.");
+			} finally {
+				setIsLoading(false);
+			}
 		};
-		setMypageData(mockMypageData);
-		setSelectedImage(mockMypageData.profileImage);
+
+		void fetchMemberInfo();
 	}, [setSelectedImage]);
 
 	const handleHome = () => {
@@ -44,8 +62,28 @@ export const Mypage = () => {
 		navigate("/mypage/refundPolicy");
 	};
 
-	if (!mypageData) {
-		return null;
+	if (isLoading) {
+		return (
+			<div className="flex flex-col w-full h-screen">
+				<div className="flex-1 flex items-center justify-center">
+					<Text color={adaptive.grey600} typography="t7">
+						회원 정보를 불러오는 중입니다...
+					</Text>
+				</div>
+			</div>
+		);
+	}
+
+	if (error || !mypageData) {
+		return (
+			<div className="flex flex-col w-full h-screen">
+				<div className="flex-1 flex items-center justify-center">
+					<Text color={adaptive.red500} typography="t7">
+						{error || "회원 정보를 불러올 수 없습니다."}
+					</Text>
+				</div>
+			</div>
+		);
 	}
 
 	return (

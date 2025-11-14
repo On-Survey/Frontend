@@ -5,6 +5,7 @@ import axios, {
 	type InternalAxiosRequestConfig,
 } from "axios";
 
+import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
 
 /**
@@ -22,6 +23,32 @@ const API_CONFIG = {
 // 환경별 API 서버 URL 설정
 export const getApiBaseUrl = (): string => {
 	return import.meta.env.VITE_API_BASE_URL || "";
+};
+
+/**
+ * API 호출 헬퍼 함수
+ * 토큰을 자동으로 헤더에 추가하고, 응답에서 result 필드를 추출합니다.
+ */
+export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
+	// 요청 전에 토큰 자동 주입
+	if (typeof window !== "undefined") {
+		const token = await getAccessToken();
+		if (token) {
+			config.headers = {
+				...(config.headers || {}),
+				Authorization: `Bearer ${token}`,
+			};
+		}
+	}
+
+	const response = await apiClient.request<{ result: T }>(config);
+	const payload = response.data?.result;
+
+	if (payload === undefined) {
+		throw new Error("API 응답에 result 값이 없습니다.");
+	}
+
+	return payload;
 };
 
 /**
