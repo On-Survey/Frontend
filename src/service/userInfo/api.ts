@@ -11,3 +11,17 @@ export const getMemberInfo = async (): Promise<MemberInfo> => {
 		url: "/v1/members",
 	});
 };
+
+/**
+ * 프로필 이미지 URL을 설정합니다.
+ * PATCH /v1/members/profile-image
+ */
+export const updateProfileImage = async (
+	profileUrl: string,
+): Promise<string> => {
+	return apiCall<string>({
+		method: "PATCH",
+		url: "/v1/members/profile-image",
+		data: { profileUrl },
+	});
+};

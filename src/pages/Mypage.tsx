@@ -1,10 +1,10 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, List, ListRow, Text } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { useImagePicker } from "../hooks/useImagePicker";
-import { getMemberInfo } from "../service/userInfo";
+import { getMemberInfo, updateProfileImage } from "../service/userInfo";
 import type { MypageData } from "../types/mypage";
 
 export const Mypage = () => {
@@ -12,13 +12,33 @@ export const Mypage = () => {
 	const [mypageData, setMypageData] = useState<MypageData | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const handleImageUploaded = useCallback(
+		async (url: string) => {
+			const updatedUrl = await updateProfileImage(url);
+			if (mypageData) {
+				setMypageData({
+					...mypageData,
+					profileImage: updatedUrl || url,
+				});
+			}
+		},
+		[mypageData],
+	);
+
 	const {
 		selectedImage: profileImage,
 		fileInputRef,
 		handleImageClick,
 		handleFileChange,
 		setSelectedImage,
-	} = useImagePicker(mypageData?.profileImage);
+		isUploading: isUpdatingImage,
+	} = useImagePicker({
+		defaultImage: mypageData?.profileImage,
+		onImageUploaded: handleImageUploaded,
+		autoUpload: true,
+		originalImageUrl: mypageData?.profileImage,
+	});
 
 	useEffect(() => {
 		const fetchMemberInfo = async () => {
@@ -94,7 +114,8 @@ export const Mypage = () => {
 						<button
 							type="button"
 							onClick={handleImageClick}
-							className="cursor-pointer relative"
+							disabled={isUpdatingImage}
+							className="cursor-pointer relative disabled:opacity-50 disabled:cursor-not-allowed"
 							aria-label="프로필 이미지 변경"
 						>
 							<img
@@ -112,6 +133,13 @@ export const Mypage = () => {
 									aria-hidden={true}
 								/>
 							</div>
+							{isUpdatingImage && (
+								<div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full">
+									<Text color="white" typography="t7">
+										업데이트 중...
+									</Text>
+								</div>
+							)}
 						</button>
 						<input
 							ref={fileInputRef}

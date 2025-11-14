@@ -3,12 +3,26 @@ import {
 	fetchAlbumPhotos,
 	getOperationalEnvironment,
 } from "@apps-in-toss/web-framework";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { base64ToFile, uploadImage } from "../service/userInfo";
 
-export const useImagePicker = (defaultImage?: string) => {
+interface UseImagePickerOptions {
+	defaultImage?: string;
+	onImageUploaded?: (url: string) => Promise<void> | void;
+	autoUpload?: boolean;
+	originalImageUrl?: string;
+}
+
+export const useImagePicker = ({
+	defaultImage,
+	onImageUploaded,
+	autoUpload = false,
+	originalImageUrl,
+}: UseImagePickerOptions = {}) => {
 	const [selectedImage, setSelectedImage] = useState<string | null>(
 		defaultImage || null,
 	);
+	const [isUploading, setIsUploading] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const isWebEnvironment = () => {
@@ -31,7 +45,11 @@ export const useImagePicker = (defaultImage?: string) => {
 			});
 
 			if (images && images.length > 0) {
-				const selectedImage = images[0] as { uri?: string; base64?: string };
+				const selectedImage = images[0] as {
+					uri?: string;
+					base64?: string;
+					id?: string;
+				};
 				// base64가 있으면 base64 data URL 사용, 없으면 uri 사용
 				if (selectedImage.base64) {
 					setSelectedImage(`data:image/jpeg;base64,${selectedImage.base64}`);
@@ -65,11 +83,93 @@ export const useImagePicker = (defaultImage?: string) => {
 		}
 	};
 
+	const handleImageUpload = useCallback(
+		async (image: string) => {
+			if (!image || image === originalImageUrl) {
+				return;
+			}
+
+			let imageUrl = image;
+
+			// base64나 blob인 경우 먼저 업로드
+			if (image.startsWith("data:")) {
+				try {
+					setIsUploading(true);
+					const file = base64ToFile(image);
+					imageUrl = await uploadImage(file);
+				} catch (err) {
+					console.error("이미지 업로드 실패:", err);
+					if (originalImageUrl) {
+						setSelectedImage(originalImageUrl);
+					}
+					setIsUploading(false);
+					throw err;
+				}
+			} else if (image.startsWith("blob:")) {
+				try {
+					setIsUploading(true);
+					const response = await fetch(image);
+					const blob = await response.blob();
+					const file = new File([blob], "image.jpg", { type: blob.type });
+					imageUrl = await uploadImage(file);
+				} catch (err) {
+					console.error("이미지 업로드 실패:", err);
+					if (originalImageUrl) {
+						setSelectedImage(originalImageUrl);
+					}
+					setIsUploading(false);
+					throw err;
+				}
+			}
+
+			// 업로드 후 콜백 실행
+			if (onImageUploaded) {
+				try {
+					await onImageUploaded(imageUrl);
+					setSelectedImage(imageUrl);
+				} catch (err) {
+					console.error("이미지 업로드 후 처리 실패:", err);
+					if (originalImageUrl) {
+						setSelectedImage(originalImageUrl);
+					}
+					throw err;
+				} finally {
+					setIsUploading(false);
+				}
+			} else {
+				setIsUploading(false);
+			}
+
+			return imageUrl;
+		},
+		[onImageUploaded, originalImageUrl],
+	);
+
+	// 자동 업로드가 활성화된 경우 이미지 변경 시 업로드
+	useEffect(() => {
+		if (
+			autoUpload &&
+			selectedImage &&
+			selectedImage !== originalImageUrl &&
+			!isUploading
+		) {
+			void handleImageUpload(selectedImage);
+		}
+	}, [
+		selectedImage,
+		autoUpload,
+		originalImageUrl,
+		isUploading,
+		handleImageUpload,
+	]);
+
 	return {
 		selectedImage,
 		fileInputRef,
 		handleImageClick,
 		handleFileChange,
 		setSelectedImage,
+		isUploading,
+		handleImageUpload,
 	};
 };
