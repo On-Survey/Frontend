@@ -1,7 +1,7 @@
 import { closeView, graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mainBanner from "../assets/mainBanner.svg";
 import { BottomNavigation } from "../components/BottomNavigation";
@@ -9,10 +9,8 @@ import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
 import { CustomSurveyList } from "../components/surveyList/CustomSurveyList";
 import { UrgentSurveyList } from "../components/surveyList/UrgentSurveyList";
 import { useModal } from "../hooks/UseToggle";
+import { getMemberInfo } from "../service/userInfo";
 import type { SurveyListItem } from "../types/surveyList";
-
-// Mock user data
-const USER_NAME = "온서베이";
 
 const MOCK_SURVEYS: SurveyListItem[] = [
 	{
@@ -41,6 +39,22 @@ const MOCK_SURVEYS: SurveyListItem[] = [
 
 export const Home = () => {
 	const navigate = useNavigate();
+	const [userName, setUserName] = useState<string>("");
+
+	useEffect(() => {
+		const fetchMemberInfo = async () => {
+			try {
+				const memberInfo = await getMemberInfo();
+				setUserName(memberInfo.name);
+			} catch (err) {
+				console.error("회원 정보 조회 실패:", err);
+				// 에러 시 기본값 사용
+				setUserName("온서베이");
+			}
+		};
+
+		void fetchMemberInfo();
+	}, []);
 
 	const handleMySurvey = () => {
 		navigate("/mysurvey");
@@ -78,16 +92,27 @@ export const Home = () => {
 	};
 
 	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				handleConfirmDialogOpen();
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
+		// 웹뷰 환경에서만 graniteEvent 사용
+		if (
+			typeof window !== "undefined" &&
+			(window as { __GRANITE_NATIVE_EMITTER?: unknown })
+				.__GRANITE_NATIVE_EMITTER
+		) {
+			try {
+				const unsubscription = graniteEvent.addEventListener("backEvent", {
+					onEvent: () => {
+						handleConfirmDialogOpen();
+					},
+					onError: (error) => {
+						console.error("Granite event error:", error);
+					},
+				});
 
-		return unsubscription;
+				return unsubscription;
+			} catch (error) {
+				console.error("Failed to add granite event listener:", error);
+			}
+		}
 	}, [handleConfirmDialogOpen]);
 
 	return (
@@ -196,7 +221,7 @@ export const Home = () => {
 
 				<CustomSurveyList
 					surveys={MOCK_SURVEYS}
-					userName={USER_NAME}
+					userName={userName || "온서베이"}
 					onViewAll={handleViewAllSurveys}
 				/>
 
