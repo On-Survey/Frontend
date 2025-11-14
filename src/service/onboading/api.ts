@@ -8,7 +8,6 @@ export const OnboardingApi = async ({
 	residence: string;
 	interests: string[];
 }) => {
-	console.log(residence, interests);
 	const response = await api.patch<
 		OnboardingResponse,
 		{ residence: string; interests: string[] }

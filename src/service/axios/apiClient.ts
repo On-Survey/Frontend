@@ -4,6 +4,7 @@ import axios, {
 	type AxiosResponse,
 	type InternalAxiosRequestConfig,
 } from "axios";
+import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
 
 /**
@@ -32,7 +33,11 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  * 요청 인터셉터
  */
 apiClient.interceptors.request.use(
-	(config: InternalAxiosRequestConfig) => {
+	async (config: InternalAxiosRequestConfig) => {
+		const token = await getAccessToken();
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {
 			console.log(
