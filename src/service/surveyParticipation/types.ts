@@ -114,3 +114,21 @@ export interface SubmitSurveyParticipationAnswer {
 export interface SubmitSurveyParticipationPayload {
 	infoList: SubmitSurveyParticipationAnswer[];
 }
+
+// 스크리닝 설문 관련 타입
+export interface ScreeningQuestion {
+	screeningId: number;
+	surveyId: number;
+	content: string;
+	answer: boolean; // true: O, false: X
+}
+
+export interface ScreeningResponse {
+	data: ScreeningQuestion[];
+	hasNext: boolean;
+}
+
+export interface GetScreeningsParams {
+	lastSurveyId?: number;
+	size?: number;
+}

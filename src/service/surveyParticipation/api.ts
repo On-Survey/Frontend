@@ -1,6 +1,8 @@
 import { apiCall } from "../axios/apiClient";
 import {
+	type GetScreeningsParams,
 	mapBackendQuestionType,
+	type ScreeningResponse,
 	type SubmitSurveyParticipationPayload,
 	type SurveyParticipationInfo,
 	type TransformedSurveyQuestion,
@@ -75,4 +77,26 @@ export const submitSurveyParticipation = async (
 		url: `/v1/survey-participation/surveys/${surveyId}`,
 		data: { infoList },
 	});
+};
+
+/**
+ * 관심사에 일치하는 설문의 스크리닝 문항 조회
+ * GET /v1/survey-participation/surveys/screenings
+ * Query params: lastSurveyId (default: 0), size (default: 5)
+ */
+export const getScreenings = async (
+	params?: GetScreeningsParams,
+): Promise<ScreeningResponse> => {
+	const queryParams = {
+		lastSurveyId: params?.lastSurveyId ?? 0,
+		size: params?.size ?? 5,
+	};
+
+	const result = await apiCall<ScreeningResponse>({
+		method: "GET",
+		url: "/v1/survey-participation/surveys/screenings",
+		params: queryParams,
+	});
+
+	return result;
 };
