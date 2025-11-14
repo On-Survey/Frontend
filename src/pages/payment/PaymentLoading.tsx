@@ -1,3 +1,4 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
 import { useEffect } from "react";
@@ -13,6 +14,17 @@ export const PaymentLoading = () => {
 		}, 3000);
 		return () => clearTimeout(timer);
 	}, [goNextPayment]);
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {},
+			onError: (error) => {
+				alert(`에러가 발생했어요: ${error}`);
+			},
+		});
+
+		return unsubscription;
+	}, []);
 
 	return (
 		<>
