@@ -41,6 +41,14 @@ export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
 		}
 	}
 
+	// FormData 사용 시 Content-Type을 제거하여 브라우저가 자동으로 multipart/form-data로 설정
+	if (config.data instanceof FormData) {
+		config.headers = {
+			...config.headers,
+			"Content-Type": undefined,
+		};
+	}
+
 	const response = await apiClient.request<{ result: T }>(config);
 	const payload = response.data?.result;
 
