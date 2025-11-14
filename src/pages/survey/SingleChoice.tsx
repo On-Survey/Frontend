@@ -8,96 +8,34 @@ import {
 	ProgressBar,
 	Top,
 } from "@toss/tds-mobile";
-import { useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-import {
-	type SurveyParticipationQuestion,
-	submitSurveyParticipation,
-} from "../../service/surveyParticipation";
-import type { SurveyListItem } from "../../types/surveyList";
+import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveySingleChoice = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const locationState = location.state as
-		| {
-				surveyId?: string | null;
-				survey?: SurveyListItem;
-				questions?: SurveyParticipationQuestion[];
-		  }
-		| undefined;
-	const surveyId = useMemo(() => {
-		const rawSurveyId = locationState?.surveyId ?? locationState?.survey?.id;
-		return rawSurveyId ? Number(rawSurveyId) : null;
-	}, [locationState?.survey?.id, locationState?.surveyId]);
+	const {
+		currentQuestion,
+		currentAnswer,
+		answers,
+		updateAnswer,
+		progress,
+		totalQuestions,
+		currentQuestionIndex,
+		submitting,
+		handlePrev,
+		handleNext,
+	} = useSurveyNavigation({
+		questionType: "multipleChoice",
+		validateAnswer: (answer) => answer.trim().length > 0,
+	});
 
-	const questions =
-		locationState?.questions?.filter(
-			(question) => question.type === "multipleChoice",
-		) ?? [];
-	const totalQuestions = questions.length;
+	if (!currentQuestion) {
+		return null;
+	}
 
-	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [answers, setAnswers] = useState<Record<number, string>>({});
-	const [submitting, setSubmitting] = useState(false);
-	const currentQuestion = questions[currentQuestionIndex];
-	const progress =
-		totalQuestions > 0 ? (currentQuestionIndex + 1) / totalQuestions : 0;
-
-	const handleOptionSelect = (questionId: number, optionContent: string) => {
-		setAnswers((prev) => ({
-			...prev,
-			[questionId]: optionContent,
-		}));
+	const handleOptionSelect = (optionContent: string) => {
+		updateAnswer(currentQuestion.questionId, optionContent);
 	};
 
-	const handlePrev = () => {
-		if (currentQuestionIndex === 0) {
-			navigate(-1);
-			return;
-		}
-		setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
-	};
-
-	const handleNext = async () => {
-		if (!currentQuestion) {
-			return;
-		}
-
-		const answerContent = answers[currentQuestion.questionId];
-		if (!answerContent) {
-			return;
-		}
-
-		if (currentQuestionIndex < totalQuestions - 1) {
-			setCurrentQuestionIndex((prev) => Math.min(prev + 1, totalQuestions - 1));
-			return;
-		}
-
-		if (!surveyId) {
-			console.warn("surveyId가 없어 응답을 제출할 수 없습니다.");
-			return;
-		}
-
-		try {
-			setSubmitting(true);
-			const payload = questions.map((question) => ({
-				questionId: question.questionId,
-				content: answers[question.questionId] ?? "",
-			}));
-			await submitSurveyParticipation(surveyId, payload);
-			navigate("/survey/complete", { replace: true });
-		} catch (error) {
-			console.error("설문 응답 제출 실패:", error);
-		} finally {
-			setSubmitting(false);
-		}
-	};
-
-	const isCurrentAnswered = currentQuestion
-		? Boolean(answers[currentQuestion.questionId])
-		: false;
+	const isCurrentAnswered = Boolean(currentAnswer);
 
 	return (
 		<div className="flex flex-col w-full h-screen">
@@ -127,16 +65,14 @@ export const SurveySingleChoice = () => {
 
 			<div className="px-2 flex-1 overflow-y-auto pb-28">
 				<List role="radiogroup">
-					{currentQuestion?.option?.map((choice) => (
+					{currentQuestion?.options?.map((choice) => (
 						<ListRow
-							key={choice.order}
+							key={choice.optionId}
 							role="radio"
 							aria-checked={
 								answers[currentQuestion.questionId] === choice.content
 							}
-							onClick={() =>
-								handleOptionSelect(currentQuestion.questionId, choice.content)
-							}
+							onClick={() => handleOptionSelect(choice.content)}
 							contents={
 								<ListRow.Texts
 									type="1RowTypeA"

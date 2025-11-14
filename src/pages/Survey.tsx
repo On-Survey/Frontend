@@ -4,9 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { topics } from "../constants/topics";
-import type { SurveyParticipationQuestion } from "../service/surveyParticipation";
+import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
+import { getQuestionTypeRoute } from "../utils/questionRoute";
 
 export const Survey = () => {
 	const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const Survey = () => {
 	const surveyIdFromQuery = searchParams.get("surveyId");
 	const surveyId = surveyIdFromQuery ?? surveyIdFromState ?? null;
 
-	const [questions, setQuestions] = useState<SurveyParticipationQuestion[]>([]);
+	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -89,8 +90,20 @@ export const Survey = () => {
 	const remainingTimeText = surveyFromState?.remainingTimeText;
 
 	const handleStart = () => {
-		navigate("/survey/singleChoice", {
-			state: { surveyId, questions: sortedQuestions },
+		if (sortedQuestions.length === 0) {
+			return;
+		}
+
+		const firstQuestion = sortedQuestions[0];
+		const questionTypeRoute = getQuestionTypeRoute(firstQuestion.type);
+
+		navigate(questionTypeRoute, {
+			state: {
+				surveyId,
+				questions: sortedQuestions,
+				currentQuestionIndex: 0,
+				answers: {},
+			},
 		});
 	};
 
