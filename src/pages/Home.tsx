@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
@@ -31,15 +30,13 @@ export const Home = () => {
 
 	const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
-	// ... 위쪽 imports, state, mapToSurveyListItem 동일 ...
-
 	useEffect(() => {
 		const fetch = async () => {
 			setIsLoading(true);
 			setError(null);
 
 			try {
-				const result = await getOngoingSurveys(); // { recommended, impending, hasNext }
+				const result = await getOngoingSurveys();
 				console.log("노출 중 설문 (recommended):", result.recommended);
 				console.log("노출 중 설문 (impending):", result.impending);
 
@@ -79,8 +76,6 @@ export const Home = () => {
 	}, []);
 
 	const customSurveysToShow = recommended;
-
-	// UrgentSurveyList에는 임박 설문을 그대로 전달
 	const urgentSurveysToShow = impending;
 
 	return (
