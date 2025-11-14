@@ -20,11 +20,17 @@ export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
 		}
 	}
 	const response = await apiClient.request<{ result: T }>(config);
-	const payload = response.data?.result;
-	if (payload === undefined) {
-		throw new Error("API 응답에 result 값이 없습니다.");
-	}
 
+	// 백엔드 응답 형식: { code: number, message: string, result: T, success: boolean }
+	if (!response.data) {
+		throw new Error("API 응답에 데이터가 없습니다.");
+	}
+	const payload = response.data.result;
+
+	// result가 null이거나 undefined인 경우 void 응답으로 처리
+	if (payload === null || payload === undefined) {
+		return undefined as T;
+	}
 	return payload;
 };
 

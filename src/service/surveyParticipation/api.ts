@@ -64,12 +64,13 @@ export const getSurveyParticipation = async (
 /**
  * 설문에 대한 응답 생성
  * POST /v1/survey-participation/surveys/{surveyId}
+ * Request body: { "infoList": [{ "questionId": number, "content": string }] }
  */
 export const submitSurveyParticipation = async (
 	surveyId: number,
 	infoList: SubmitSurveyParticipationPayload["infoList"],
 ): Promise<void> => {
-	await apiCall<void>({
+	await apiCall<null>({
 		method: "POST",
 		url: `/v1/survey-participation/surveys/${surveyId}`,
 		data: { infoList },
