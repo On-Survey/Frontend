@@ -3,6 +3,7 @@ import type {
 	OngoingSurveyResult,
 	ScreeningQuestionResult,
 	SubmitSurveyResponsePayload,
+	SurveyAnswerDetailResult,
 	SurveyDetailResult,
 } from "./types";
 
@@ -76,5 +77,16 @@ export const getUserSurveys = async (): Promise<UserSurveyResponse> => {
 	return apiCall<UserSurveyResponse>({
 		method: "GET",
 		url: "/v1/survey-management/surveys",
+	});
+};
+
+// 사용자가 관리할 설문 상세 조회
+export const getSurveyAnswerDetail = async (
+	surveyId: number,
+): Promise<SurveyAnswerDetailResult> => {
+	return apiCall<SurveyAnswerDetailResult>({
+		method: "GET",
+		url: "/v1/survey-management/surveys/answers",
+		params: { surveyId },
 	});
 };

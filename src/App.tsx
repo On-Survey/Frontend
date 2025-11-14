@@ -79,13 +79,10 @@ export const App = () => {
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route path="/survey/complete" element={<SurveyComplete />} />
+				<Route path="/result/shortAnswer" element={<ShortAnswerResultPage />} />
+				<Route path="/result/longAnswer" element={<LongAnswerResultPage />} />
 				<Route
-					path="/result/short-answer"
-					element={<ShortAnswerResultPage />}
-				/>
-				<Route path="/result/long-answer" element={<LongAnswerResultPage />} />
-				<Route
-					path="/result/multiple-choice"
+					path="/result/multipleChoice"
 					element={<MultipleChoiceResultPage />}
 				/>
 				<Route path="/result/rating" element={<RatingResultPage />} />

@@ -67,3 +67,27 @@ export interface SubmitSurveyResponsePayload {
 export interface SubmitSurveyResponse extends BaseResponse {
 	result: boolean;
 }
+
+// 사용자가 관리할 설문 상세 조회
+export interface SurveyAnswerDetailInfo {
+	questionId: number;
+	order: number;
+	type: string;
+	title: string;
+	description: string;
+	isRequired: boolean;
+	answerMap: Record<string, number>;
+	answerList: string[];
+}
+
+export interface SurveyAnswerDetailResult {
+	surveyId: number;
+	memberId: number;
+	status: string;
+	currentCount: number;
+	detailInfoList: SurveyAnswerDetailInfo[];
+}
+
+export interface SurveyAnswerDetailResponse extends BaseResponse {
+	result: SurveyAnswerDetailResult;
+}
