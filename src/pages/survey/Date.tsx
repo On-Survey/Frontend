@@ -1,61 +1,96 @@
 import { colors } from "@toss/tds-colors";
 import {
+	CTAButton,
 	FixedBottomCTA,
 	ProgressBar,
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
+
 export const SurveyDate = () => {
-	type Question = {
-		id: number;
-		title: string;
-		required: boolean;
+	const {
+		currentQuestion,
+		currentAnswer,
+		updateAnswer,
+		progress,
+		totalQuestions,
+		currentQuestionIndex,
+		isInvalid,
+		submitting,
+		handlePrev,
+		handleNext,
+	} = useSurveyNavigation({
+		questionType: "date",
+		validateAnswer: (answer) => answer.trim().length > 0,
+	});
+
+	if (!currentQuestion) {
+		return null;
+	}
+
+	const date = currentAnswer ? new Date(currentAnswer) : undefined;
+
+	const handleDateChange = (selectedDate: Date | undefined) => {
+		updateAnswer(currentQuestion.questionId, selectedDate?.toISOString() ?? "");
 	};
 
-	const [question, setQuestion] = useState<Question | null>(null);
-	const [date, setDate] = useState<Date | undefined>(undefined);
-
-	useEffect(() => {
-		const mock: Question = {
-			id: 701,
-			title: "추석 당일, 오늘의 날씨 몇 도일까요?",
-			required: true,
-		};
-		setQuestion(mock);
-	}, []);
-
-	const navigate = useNavigate();
-	const handleComplete = () => {
-		navigate("/survey/complete");
-	};
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
+			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
 
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={colors.grey900}>
-						{question?.title ?? ""}
+						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
+				subtitleTop={
+					currentQuestion.isRequired ? (
+						<Top.SubtitleBadges
+							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
+						/>
+					) : undefined
+				}
 				subtitleBottom={
-					<Top.SubtitleParagraph size={15}>문항 설명</Top.SubtitleParagraph>
+					currentQuestion.description ? (
+						<Top.SubtitleParagraph size={15}>
+							{currentQuestion.description}
+						</Top.SubtitleParagraph>
+					) : undefined
 				}
 			/>
 
 			<WheelDatePicker
 				title="날짜를 선택해 주세요"
 				value={date}
-				onChange={(date) => setDate(date)}
+				onChange={handleDateChange}
 				triggerLabel="날짜"
 				buttonText="선택하기"
 			/>
 
-			<FixedBottomCTA loading={false} onClick={handleComplete}>
-				확인
-			</FixedBottomCTA>
+			<FixedBottomCTA.Double
+				leftButton={
+					<CTAButton
+						color="dark"
+						variant="weak"
+						display="block"
+						onClick={handlePrev}
+					>
+						이전
+					</CTAButton>
+				}
+				rightButton={
+					<CTAButton
+						display="block"
+						disabled={isInvalid || submitting}
+						loading={submitting}
+						onClick={handleNext}
+					>
+						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
+					</CTAButton>
+				}
+			/>
 		</div>
 	);
 };

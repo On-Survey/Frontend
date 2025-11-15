@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { List, ListRow } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
 import { topics } from "../../constants/topics";
 import type { SurveyListItem } from "../../types/surveyList";
 
@@ -31,6 +32,19 @@ interface SurveyListProps {
 }
 
 export const SurveyList = ({ surveys }: SurveyListProps) => {
+	const navigate = useNavigate();
+
+	const handleSurveyClick = (survey: SurveyListItem) => {
+		const searchParams = new URLSearchParams({ surveyId: survey.id });
+		navigate(
+			{
+				pathname: "/survey",
+				search: `?${searchParams.toString()}`,
+			},
+			{ state: { surveyId: survey.id, survey } },
+		);
+	};
+
 	return (
 		<List>
 			{surveys.map((survey) => {
@@ -38,6 +52,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 				return (
 					<ListRow
 						key={survey.id}
+						onClick={() => handleSurveyClick(survey)}
 						contents={
 							<ListRow.Texts
 								type="3RowTypeC"

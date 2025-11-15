@@ -21,9 +21,26 @@ export const CustomSurveyList = ({
 	onViewAll,
 }: CustomSurveyListProps) => {
 	const navigate = useNavigate();
+	const fallbackSurveys: SurveyListItem[] = [
+		{
+			id: "mock-custom-1",
+			topicId: "DAILY_LIFE",
+			title: "추천 설문이 곧 도착할 예정이에요",
+			iconType: "image",
+			iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F389.png",
+		},
+	];
+	const displaySurveys = surveys.length > 0 ? surveys : fallbackSurveys;
 
-	const handleSurveyClick = () => {
-		navigate("/survey");
+	const handleSurveyClick = (survey: SurveyListItem) => {
+		const searchParams = new URLSearchParams({ surveyId: survey.id });
+		navigate(
+			{
+				pathname: "/survey",
+				search: `?${searchParams.toString()}`,
+			},
+			{ state: { surveyId: survey.id, survey } },
+		);
 	};
 
 	return (
@@ -42,10 +59,10 @@ export const CustomSurveyList = ({
 			</div>
 
 			<List>
-				{surveys.map((survey) => (
+				{displaySurveys.map((survey) => (
 					<ListRow
 						key={survey.id}
-						onClick={handleSurveyClick}
+						onClick={() => handleSurveyClick(survey)}
 						contents={
 							<ListRow.Texts
 								type="3RowTypeC"
@@ -64,7 +81,6 @@ export const CustomSurveyList = ({
 										src={survey.iconSrc || ""}
 										shape="original"
 										className="w-8"
-										onClick={handleSurveyClick}
 									/>
 								</div>
 							) : (

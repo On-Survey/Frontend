@@ -22,6 +22,17 @@ export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
 
 	const config = badgeConfig[type];
 
+	const isActiveCard = type === "active";
+	const activeSurvey = isActiveCard ? (survey as ActiveSurvey) : null;
+	const hasProgress =
+		isActiveCard &&
+		typeof activeSurvey?.progress === "number" &&
+		typeof activeSurvey?.total === "number" &&
+		activeSurvey.total !== 0;
+	const activeDescription = isActiveCard
+		? activeSurvey?.description
+		: undefined;
+
 	const handleDetailClick = () => {
 		if (type !== "draft") {
 			navigate(`/mysurvey/${survey.id}`);
@@ -60,21 +71,23 @@ export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
 				{survey.title}
 			</Text>
 
-			{type === "active" && "progress" in survey && (
+			{type === "active" && hasProgress && activeSurvey && (
 				<>
 					<div className="flex items-center justify-between mb-2">
 						<Text color={colors.grey700} typography="t7" fontWeight="medium">
-							{survey.progress}/{survey.total}
+							{activeSurvey.progress}/{activeSurvey.total}
 						</Text>
 						<Text color={colors.grey700} typography="t7" fontWeight="medium">
-							{survey.deadline}
+							{activeSurvey.deadline ?? ""}
 						</Text>
 					</div>
 					<div className="mb-4">
 						<ProgressBar
 							size="normal"
 							color={colors.blue500}
-							progress={survey.progress / survey.total}
+							progress={
+								(activeSurvey.progress ?? 0) / (activeSurvey.total ?? 1)
+							}
 						/>
 					</div>
 					<div className="h-4" />
@@ -82,6 +95,11 @@ export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
 						친구에게 공유하기
 					</Button>
 				</>
+			)}
+			{type === "active" && !hasProgress && activeDescription && (
+				<Text color={colors.grey700} typography="t7">
+					{activeDescription}
+				</Text>
 			)}
 		</div>
 	);

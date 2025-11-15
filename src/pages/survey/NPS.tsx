@@ -1,56 +1,58 @@
 import { colors } from "@toss/tds-colors";
 import { CTAButton, FixedBottomCTA, ProgressBar, Top } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveyNPS = () => {
-	type Question = {
-		id: number;
-		title: string;
-		required: boolean;
-		description?: string;
+	const {
+		currentQuestion,
+		currentAnswer,
+		updateAnswer,
+		progress,
+		totalQuestions,
+		currentQuestionIndex,
+		isInvalid,
+		submitting,
+		handlePrev,
+		handleNext,
+	} = useSurveyNavigation({
+		questionType: "nps",
+		validateAnswer: (answer) => {
+			const score = Number(answer);
+			return !Number.isNaN(score) && score > 0;
+		},
+	});
+
+	if (!currentQuestion) {
+		return null;
+	}
+
+	const score = currentAnswer ? Number(currentAnswer) : null;
+
+	const handleScoreChange = (value: number) => {
+		updateAnswer(currentQuestion.questionId, value.toString());
 	};
 
-	const navigate = useNavigate();
-	const [question, setQuestion] = useState<Question | null>(null);
-	const [score, setScore] = useState<number | null>(null);
-
-	useEffect(() => {
-		const mock: Question = {
-			id: 501,
-			title: "온서베이를 지인에게 추천할 의향이 얼마나 되시나요?",
-			required: true,
-			description: "0 ~ 10점 중 선택",
-		};
-		setQuestion(mock);
-	}, []);
-
-	const isInvalid = (question?.required ?? false) && score === null;
-
-	const handleNext = () => {
-		navigate("/survey/number");
-	};
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
+			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
 
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={colors.grey900}>
-						{question?.title ?? ""}
+						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
-					question?.required ? (
+					currentQuestion.isRequired ? (
 						<Top.SubtitleBadges
 							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
 						/>
 					) : undefined
 				}
 				subtitleBottom={
-					question?.description ? (
+					currentQuestion.description ? (
 						<Top.SubtitleParagraph size={15}>
-							{question.description}
+							{currentQuestion.description}
 						</Top.SubtitleParagraph>
 					) : undefined
 				}
@@ -67,7 +69,7 @@ export const SurveyNPS = () => {
 									type="button"
 									className={`w-6 h-6 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
 									aria-label={`${v}점`}
-									onClick={() => setScore(v)}
+									onClick={() => handleScoreChange(v)}
 								/>
 								<span
 									className="text-[14px] font-medium"
@@ -87,14 +89,19 @@ export const SurveyNPS = () => {
 						color="dark"
 						variant="weak"
 						display="block"
-						onClick={() => navigate(-1)}
+						onClick={handlePrev}
 					>
 						이전
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" disabled={isInvalid} onClick={handleNext}>
-						다음
+					<CTAButton
+						display="block"
+						disabled={isInvalid || submitting}
+						loading={submitting}
+						onClick={handleNext}
+					>
+						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
 					</CTAButton>
 				}
 			/>
