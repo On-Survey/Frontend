@@ -1,6 +1,5 @@
-import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { Button } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { SurveyTabNavigation } from "../../components/SurveyTabNavigation";
@@ -9,26 +8,6 @@ import { ActiveTab, AllTab, ClosedTab, DraftTab } from "./components";
 export const MySurvey = () => {
 	const navigate = useNavigate();
 	const [selectedTab, setSelectedTab] = useState(0); // 0: 전체, 1: 작성중, 2: 노출중, 3: 마감
-
-	useEffect(() => {
-		partner.addAccessoryButton({
-			id: "heart",
-			title: "하트",
-			icon: {
-				name: "icon-heart-mono",
-			},
-		});
-
-		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
-			onEvent: ({ id }) => {
-				if (id === "heart") {
-					navigate("/estimate");
-				}
-			},
-		});
-
-		return cleanup;
-	}, [navigate]);
 
 	const handleAddSurvey = () => {
 		navigate("/createForm");
