@@ -26,6 +26,8 @@ type PaymentEstimateContextValue = {
 	handleEstimateChange: (next: Estimate) => void;
 	selectedCoinAmount: SelectedCoinAmount | null;
 	handleSelectedCoinAmountChange: (amount: SelectedCoinAmount) => void;
+	totalPrice: number;
+	handleTotalPriceChange: (price: number) => void;
 };
 
 const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
@@ -44,6 +46,8 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 	const [selectedCoinAmount, setSelectedCoinAmount] =
 		useState<SelectedCoinAmount | null>(null);
 
+	const [totalPrice, setTotalPrice] = useState<number>(0);
+
 	const handleEstimateChange = useCallback((next: Estimate) => {
 		setEstimate(next);
 	}, []);
@@ -59,18 +63,26 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 		[],
 	);
 
+	const handleTotalPriceChange = useCallback((price: number) => {
+		setTotalPrice(price);
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			estimate,
 			handleEstimateChange,
 			selectedCoinAmount,
 			handleSelectedCoinAmountChange,
+			totalPrice,
+			handleTotalPriceChange,
 		}),
 		[
 			estimate,
 			handleEstimateChange,
 			selectedCoinAmount,
 			handleSelectedCoinAmountChange,
+			totalPrice,
+			handleTotalPriceChange,
 		],
 	);
 

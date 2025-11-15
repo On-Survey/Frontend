@@ -116,3 +116,17 @@ export const formatPrice = (price: number): string => {
 export const formatPriceAsCoin = (price: number): string => {
 	return `${price.toLocaleString("ko-KR")}코인`;
 };
+
+/**
+ * 충전이 필요한 금액을 계산
+ * @param currentCoin 현재 보유 코인
+ * @param requiredPrice 결제에 필요한 금액 (코인)
+ * @returns 충전이 필요한 금액. 보유 코인이 충분하면 0을 반환
+ */
+export const calculateRequiredCoinAmount = (
+	currentCoin: number,
+	requiredPrice: number,
+): number => {
+	const shortage = requiredPrice - currentCoin;
+	return shortage > 0 ? shortage : 0;
+};

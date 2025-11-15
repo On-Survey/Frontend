@@ -107,7 +107,7 @@ export const api = {
 	get: <T>(
 		url: string,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<AxiosResponse<T>> => {
 		return apiClient.get(url, config);
 	},
 

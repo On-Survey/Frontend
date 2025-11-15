@@ -12,18 +12,26 @@ import {
 	Paragraph,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { type createUserResponse, getUserInfo } from "../../service/user";
+import { calculateRequiredCoinAmount } from "../../utils/paymentCalculator";
 
 export const PaymentProductPage = () => {
 	const { goNextPayment, goPrevPayment } = useMultiStep();
-	const { selectedCoinAmount, handleSelectedCoinAmountChange } =
+	const { selectedCoinAmount, handleSelectedCoinAmountChange, totalPrice } =
 		usePaymentEstimate();
 
 	const [products, setProducts] = useState<IapProductListItem[]>([]);
+	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
 
-	const displayAmount = selectedCoinAmount ?? 30000;
+	const displayAmount = useMemo(() => {
+		if (!userInfo) {
+			return totalPrice;
+		}
+		return calculateRequiredCoinAmount(userInfo.result.coin, totalPrice);
+	}, [userInfo, totalPrice]);
 
 	const handleNext = () => {
 		goNextPayment();
@@ -34,6 +42,8 @@ export const PaymentProductPage = () => {
 			try {
 				const response = await IAP.getProductItemList();
 				setProducts(response?.products ?? []);
+				const userInfoResult = await getUserInfo();
+				setUserInfo(userInfoResult);
 			} catch (error) {
 				console.error("상품 목록을 가져오는 데 실패했어요:", error);
 			}
@@ -63,7 +73,7 @@ export const PaymentProductPage = () => {
 						type="2RowTypeA"
 						top="현재 보유 코인"
 						topProps={{ color: adaptive.grey700, fontWeight: `bold` }}
-						bottom="10000코인"
+						bottom={`${userInfo?.result.coin ?? 0}코인`}
 						bottomProps={{ color: adaptive.grey600 }}
 					/>
 				}

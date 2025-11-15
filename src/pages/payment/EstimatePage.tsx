@@ -23,7 +23,8 @@ import {
 } from "../../utils/paymentCalculator";
 
 export const EstimatePage = () => {
-	const { estimate, handleEstimateChange } = usePaymentEstimate();
+	const { estimate, handleEstimateChange, handleTotalPriceChange } =
+		usePaymentEstimate();
 	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
 
@@ -55,6 +56,10 @@ export const EstimatePage = () => {
 	const totalPrice = useMemo(() => {
 		return calculateTotalPrice(estimate);
 	}, [estimate]);
+
+	useEffect(() => {
+		handleTotalPriceChange(totalPrice);
+	}, [totalPrice, handleTotalPriceChange]);
 
 	const handleReturn = () => {
 		switch (type) {
