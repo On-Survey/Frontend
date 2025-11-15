@@ -13,6 +13,7 @@ export type Estimate = {
 	age: string;
 	gender: string;
 	desiredParticipants: string;
+	questionCount: string;
 };
 
 type PaymentEstimateContextValue = {
@@ -33,6 +34,7 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 		age: "",
 		gender: "",
 		desiredParticipants: "",
+		questionCount: "",
 	});
 
 	const [selectedCoinAmount, setSelectedCoinAmount] = useState<number | null>(

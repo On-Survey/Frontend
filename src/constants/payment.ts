@@ -1,3 +1,11 @@
+export const QUESTION_COUNT = [
+	{ name: "1~10개", value: "1~10", hideUnCheckedCheckBox: false },
+	{ name: "11~20개", value: "11~20", hideUnCheckedCheckBox: false },
+	{ name: "21~30개", value: "21~30", hideUnCheckedCheckBox: false },
+	{ name: "31~50개", value: "31~50", hideUnCheckedCheckBox: false },
+	{ name: "51~70개", value: "51~70", hideUnCheckedCheckBox: false },
+];
+
 export const DESIRED_PARTICIPANTS = [
 	{ name: "50명", value: "50", hideUnCheckedCheckBox: false },
 	{ name: "100명", value: "100", hideUnCheckedCheckBox: false },
@@ -41,6 +49,7 @@ export const AGE = [
 ];
 
 export enum EstimateField {
+	QuestionCount = "questionCount",
 	Age = "age",
 	Gender = "gender",
 	DesiredParticipants = "desiredParticipants",
