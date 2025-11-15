@@ -143,36 +143,35 @@ export const App = () => {
 									path="/estimateNavigation"
 									element={<EstimateNavigationPage />}
 								/>
-							</Route>
-							<Route
-								path="/createForm/multipleChoice"
-								element={<MultipleChoicePage />}
-							>
-								<Route index element={<MultipleChoiceMain />} />
-								<Route path="questions" element={<QuestionListPage />} />
 								<Route
-									path="questions/:questionId"
-									element={<QuestionOptionsPage />}
+									path="/createForm/multipleChoice"
+									element={<MultipleChoicePage />}
+								>
+									<Route index element={<MultipleChoiceMain />} />
+									<Route path="questions" element={<QuestionListPage />} />
+									<Route
+										path="questions/:questionId"
+										element={<QuestionOptionsPage />}
+									/>
+								</Route>
+								<Route path="/createForm/rating" element={<RatingPage />} />
+								<Route path="/createForm/nps" element={<NPSPage />} />
+								<Route
+									path="/createForm/shortAnswer"
+									element={<ShortAnswerPage />}
+								/>
+								<Route
+									path="/createForm/longAnswer"
+									element={<LongAnswerPage />}
+								/>
+								<Route path="/createForm/date" element={<DatePage />} />
+								<Route path="/createForm/number" element={<NumberPage />} />
+								<Route
+									path="/createForm/:questionType/edit"
+									element={<TitleAndDescriptionEditPage />}
 								/>
 							</Route>
-							<Route path="/createForm/rating" element={<RatingPage />} />
-							<Route path="/createForm/nps" element={<NPSPage />} />
-							<Route
-								path="/createForm/shortAnswer"
-								element={<ShortAnswerPage />}
-							/>
-							<Route
-								path="/createForm/longAnswer"
-								element={<LongAnswerPage />}
-							/>
-							<Route path="/createForm/date" element={<DatePage />} />
-							<Route path="/createForm/number" element={<NumberPage />} />
 						</Route>
-
-						<Route
-							path="/createForm/:questionType/edit"
-							element={<TitleAndDescriptionEditPage />}
-						/>
 					</Route>
 				</Routes>
 			</GlobalNavigationLayout>
