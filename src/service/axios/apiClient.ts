@@ -5,6 +5,7 @@ import axios, {
 	type InternalAxiosRequestConfig,
 } from "axios";
 
+import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
 
 /**
@@ -33,12 +34,12 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  * 요청 인터셉터
  */
 apiClient.interceptors.request.use(
-	(config: InternalAxiosRequestConfig) => {
-		// 인증 토큰 헤더 추가 로직은 세션 방식으로 변경되어 주석 처리
-		// const token = getAuthToken();
-		// if (token) {
-		//   config.headers.Authorization = `Bearer ${token}`;
-		// }
+	async (config: InternalAxiosRequestConfig) => {
+		// 인증 토큰 헤더 추가
+		const token = await getAccessToken();
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
 
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {
