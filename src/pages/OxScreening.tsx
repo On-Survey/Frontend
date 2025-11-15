@@ -8,7 +8,10 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getScreenings } from "../service/surveyParticipation";
+import {
+	getScreenings,
+	submitScreeningResponse,
+} from "../service/surveyParticipation";
 import type { ScreeningQuestion } from "../service/surveyParticipation/types";
 
 export const OxScreening = () => {
@@ -71,7 +74,19 @@ export const OxScreening = () => {
 		}
 	};
 
-	const handleNextQuestion = () => {
+	const handleNextQuestion = async () => {
+		// 스크리닝 응답 제출
+		if (currentQuestion && selectedOption !== null) {
+			try {
+				const content = String(selectedOption);
+				await submitScreeningResponse(currentQuestion.screeningId, {
+					content,
+				});
+			} catch (err) {
+				console.error("스크리닝 응답 제출 실패:", err);
+			}
+		}
+
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
 		// 다음 설문으로 이동

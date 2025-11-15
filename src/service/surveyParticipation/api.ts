@@ -3,6 +3,7 @@ import {
 	type GetScreeningsParams,
 	mapBackendQuestionType,
 	type ScreeningResponse,
+	type SubmitScreeningResponsePayload,
 	type SubmitSurveyParticipationPayload,
 	type SurveyParticipationInfo,
 	type TransformedSurveyQuestion,
@@ -99,4 +100,20 @@ export const getScreenings = async (
 	});
 
 	return result;
+};
+
+/**
+ * 스크리닝 문항에 대한 응답 생성
+ * POST /v1/survey-participation/screenings/{screeningId}
+ * Request body: { "content": string }
+ */
+export const submitScreeningResponse = async (
+	screeningId: number,
+	payload: SubmitScreeningResponsePayload,
+): Promise<void> => {
+	await apiCall<null>({
+		method: "POST",
+		url: `/v1/survey-participation/screenings/${screeningId}`,
+		data: payload,
+	});
 };

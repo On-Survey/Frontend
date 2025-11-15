@@ -132,3 +132,7 @@ export interface GetScreeningsParams {
 	lastSurveyId?: number;
 	size?: number;
 }
+
+export interface SubmitScreeningResponsePayload {
+	content: string;
+}
