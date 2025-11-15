@@ -80,6 +80,17 @@ export const Survey = () => {
 		[questions],
 	);
 
+	const questionCount = sortedQuestions.length;
+	const estimatedTime = useMemo(() => {
+		if (questionCount <= 10) {
+			return 2;
+		} else if (questionCount <= 20) {
+			return 4;
+		}
+		// 20개 초과인 경우 기본값
+		return 4;
+	}, [questionCount]);
+
 	const surveyTitle = surveyFromState?.title ?? "설문 제목";
 	const surveyDescription =
 		surveyFromState?.description ??
@@ -144,11 +155,11 @@ export const Survey = () => {
 				<div className="px-4">
 					<div className="w-full rounded-2xl border border-blue-500 p-5 shadow-sm">
 						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							참여 보상 : 400원
+							참여 보상 : 300원
 						</Text>
 						<div className="h-2" />
 						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							소요 시간 : 3분
+							소요 시간 : {estimatedTime}분
 						</Text>
 						{remainingTimeText ? (
 							<>
