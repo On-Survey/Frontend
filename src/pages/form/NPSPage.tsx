@@ -3,6 +3,7 @@ import { FixedBottomCTA, SegmentedControl, Text, Top } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { createSurveyQuestion } from "../../service/form";
 import { isNPSQuestion } from "../../types/survey";
 
 export const NPSPage = () => {
@@ -42,8 +43,19 @@ export const NPSPage = () => {
 		navigate(`/createForm/nps/edit`);
 	};
 
-	const handleConfirm = () => {
-		navigate(-1);
+	const handleConfirm = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			questionInfo: {
+				questionType: "NPS",
+				title: title ?? "",
+				description: description ?? "",
+			},
+		});
+
+		if (result.success) {
+			navigate(-1);
+		}
 	};
 
 	return (

@@ -51,14 +51,6 @@ export type CoinOption = {
 	price: string;
 };
 
-export const COIN_OPTIONS: CoinOption[] = [
-	{ amount: 10000, price: "10,000원" },
-	{ amount: 20000, price: "20,000원" },
-	{ amount: 30000, price: "30,000원" },
-	{ amount: 40000, price: "40,000원" },
-	{ amount: 50000, price: "50,000원" },
-];
-
 export const REGIONS_NO_SURCHARGE = ["전체"];
 export const REGIONS_5_PERCENT_SURCHARGE = ["서울", "경기"];
 export const REGIONS_10_PERCENT_SURCHARGE = [

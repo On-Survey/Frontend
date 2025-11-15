@@ -1,3 +1,5 @@
+import { Interest } from "../service/form";
+
 // 주제 데이터 타입 정의
 export interface TopicData {
 	id: string;
@@ -8,6 +10,7 @@ export interface TopicData {
 		src?: string;
 		name?: string;
 	};
+	value: Interest;
 }
 
 // 주제 데이터 배열
@@ -20,6 +23,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F9F3.png",
 		},
+		value: Interest.CAREER,
 	},
 	{
 		id: "business_tech",
@@ -29,6 +33,7 @@ export const topics: TopicData[] = [
 			type: "icon",
 			name: "icon-it",
 		},
+		value: Interest.BUSINESS,
 	},
 	{
 		id: "finance_consumption",
@@ -38,6 +43,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F4B8.png",
 		},
+		value: Interest.FINANCE,
 	},
 	{
 		id: "health_lifestyle",
@@ -47,6 +53,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
 		},
+		value: Interest.HEALTH,
 	},
 	{
 		id: "culture_hobby",
@@ -56,6 +63,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
 		},
+		value: Interest.CULTURE,
 	},
 	{
 		id: "fashion_beauty",
@@ -65,6 +73,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F576.png",
 		},
+		value: Interest.FASHION,
 	},
 	{
 		id: "social_issues",
@@ -74,6 +83,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F310.png",
 		},
+		value: Interest.SOCIETY,
 	},
 	{
 		id: "self_development_education",
@@ -83,6 +93,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F58B.png",
 		},
+		value: Interest.SELF_IMPROVEMENT,
 	},
 	{
 		id: "daily_relationships",
@@ -92,5 +103,6 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
 		},
+		value: Interest.DAILY_LIFE,
 	},
 ];

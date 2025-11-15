@@ -11,6 +11,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { createSurveyQuestion } from "../../service/form";
 import { isRatingQuestion } from "../../types/survey";
 
 export const RatingPage = () => {
@@ -97,8 +98,19 @@ export const RatingPage = () => {
 		navigate(`/createForm/rating/edit`);
 	};
 
-	const handleConfirm = () => {
-		navigate(-1);
+	const handleConfirm = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			questionInfo: {
+				questionType: "RATING",
+				title: title ?? "",
+				description: description ?? "",
+			},
+		});
+
+		if (result.success) {
+			navigate(-1);
+		}
 	};
 
 	return (

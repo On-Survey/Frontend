@@ -178,11 +178,11 @@ export const QuestionHome = () => {
 						}
 						right={
 							<IconButton
-								src="https://static.toss.im/icons/png/4x/icon-fill-three-dots-mono.png"
+								src="https://static.toss.im/icons/png/4x/icon-bin-mono.png"
 								variant="clear"
 								color={adaptive.grey600}
 								aria-label="더보기"
-								iconSize={16}
+								iconSize={20}
 								onClick={(e) => {
 									e.stopPropagation();
 									deleteQuestion(question.questionId.toString());

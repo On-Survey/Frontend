@@ -11,6 +11,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { QuestionTitleEditBottomSheet } from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { createSurveyQuestion } from "../../service/form";
 import { isShortAnswerQuestion } from "../../types/survey";
 
 export const ShortAnswerPage = () => {
@@ -43,6 +44,7 @@ export const ShortAnswerPage = () => {
 	const questionId = question?.questionId.toString();
 	const isRequired = question?.isRequired ?? false;
 	const title = question?.title;
+	const description = question?.description;
 
 	const handleRequiredChange = (checked: boolean) => {
 		if (questionId) {
@@ -52,8 +54,19 @@ export const ShortAnswerPage = () => {
 		}
 	};
 
-	const handleConfirm = () => {
-		navigate(-1);
+	const handleConfirm = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			questionInfo: {
+				questionType: "SHORT",
+				title: title ?? "",
+				description: description ?? "",
+			},
+		});
+
+		if (result.success) {
+			navigate(-1);
+		}
 	};
 
 	return (
@@ -65,9 +78,7 @@ export const ShortAnswerPage = () => {
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={
-					<Top.SubtitleParagraph>
-						보조설명은 이런식으로 들어갈 것 같아요
-					</Top.SubtitleParagraph>
+					<Top.SubtitleParagraph>{description}</Top.SubtitleParagraph>
 				}
 				lower={
 					<Top.LowerButton

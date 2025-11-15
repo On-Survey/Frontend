@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { topics } from "../../constants/topics";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { createSurveyInterests } from "../../service/form";
 
 export const InterestPage = () => {
 	const { handleStepChange } = useMultiStep();
@@ -20,7 +21,7 @@ export const InterestPage = () => {
 		if (isSelected) {
 			removeTopic(topicId);
 		} else {
-			addTopic({ id: topic.id, name: topic.name });
+			addTopic({ id: topic.id, name: topic.name, value: topic.value });
 		}
 	};
 
@@ -41,8 +42,16 @@ export const InterestPage = () => {
 		return unsubscription;
 	}, [handleStepChange, state.screening.enabled]);
 
-	const handleNext = () => {
-		handleStepChange(4);
+	const handleNext = async () => {
+		const interests = selectedTopics.map((topic) => topic.value);
+		if (interests.length === 0) return;
+		const response = await createSurveyInterests({
+			surveyId: state.surveyId ?? 0,
+			interests: interests,
+		});
+		if (response.success) {
+			handleStepChange(4);
+		}
 	};
 
 	return (

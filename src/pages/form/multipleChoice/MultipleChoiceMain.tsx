@@ -14,6 +14,7 @@ import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleC
 import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
+import { createSurveyQuestion } from "../../../service/form";
 import { isMultipleChoiceQuestion } from "../../../types/survey";
 
 export const MultipleChoiceMain = () => {
@@ -87,8 +88,18 @@ export const MultipleChoiceMain = () => {
 		}
 	};
 
-	const handleConfirm = () => {
-		navigate(-1);
+	const handleConfirm = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			questionInfo: {
+				questionType: "CHOICE",
+				title: question?.title ?? "",
+				description: question?.description ?? "",
+			},
+		});
+		if (result.success) {
+			navigate(-1);
+		}
 	};
 
 	return (

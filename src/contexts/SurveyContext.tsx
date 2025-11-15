@@ -19,6 +19,7 @@ import type {
 
 // 초기 상태
 const initialState: SurveyFormState = {
+	surveyId: null,
 	survey: {
 		title: "",
 		description: "",
@@ -196,7 +197,6 @@ function surveyFormReducer(
 				topics: state.topics.filter((topic) => topic.id !== action.payload),
 				isDirty: true,
 			};
-
 		case "RESET_FORM":
 			return initialState;
 
@@ -206,6 +206,12 @@ function surveyFormReducer(
 				survey: action.payload,
 				isDirty: false,
 				error: null,
+			};
+
+		case "SET_SURVEY_ID":
+			return {
+				...state,
+				surveyId: action.payload,
 			};
 
 		default:
@@ -304,6 +310,10 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		dispatch({ type: "LOAD_SURVEY", payload: survey });
 	}, []);
 
+	const setSurveyId = useCallback((surveyId: number) => {
+		dispatch({ type: "SET_SURVEY_ID", payload: surveyId });
+	}, []);
+
 	const contextValue: SurveyContextType = {
 		state,
 		dispatch,
@@ -323,6 +333,7 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		removeTopic,
 		resetForm,
 		loadSurvey,
+		setSurveyId,
 	};
 
 	return (
