@@ -11,8 +11,32 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getSurveyDetail } from "../../service/order";
 import type { OrderDetail as OrderDetailType } from "../../types/order";
+import { mapSurveyDetailToOrderDetail } from "../../utils/orderUtils";
 import { OrderCancelBottomSheet } from "./components/OrderCancelBottomSheet";
+
+// Mock 데이터 - 추후 삭제 예정
+const getMockOrderDetail = (orderId: string | undefined): OrderDetailType => ({
+	id: Number(orderId) || 1,
+	title: "반려동물 외모 취향에 관한 설문",
+	status: "active",
+	orderDate: "2024 . 10. 21",
+	paymentInfo: {
+		responseCount: 50,
+		responseCountPrice: 200,
+		gender: "단일",
+		genderPrice: 200,
+		ageRange: "10대",
+		ageRangePrice: 700,
+		location: "서울(쉬움)",
+		locationPrice: 70,
+	},
+	totalPrice: "23,400원",
+	approvalNumber: "303503544",
+	paymentStatus: "승인",
+	paymentDateTime: "2020년 7월 29일 15:14",
+});
 
 export const OrderDetail = () => {
 	const navigate = useNavigate();
@@ -24,28 +48,24 @@ export const OrderDetail = () => {
 	const { openToast } = useToast();
 
 	useEffect(() => {
-		// mock
-		const mockOrderDetail: OrderDetailType = {
-			id: Number(orderId) || 1,
-			title: "반려동물 외모 취향에 관한 설문",
-			status: "active",
-			orderDate: "2024 . 10. 21",
-			paymentInfo: {
-				responseCount: 50,
-				responseCountPrice: 200,
-				gender: "단일",
-				genderPrice: 200,
-				ageRange: "10대",
-				ageRangePrice: 700,
-				location: "서울(쉬움)",
-				locationPrice: 70,
-			},
-			totalPrice: "23,400원",
-			approvalNumber: "303503544",
-			paymentStatus: "승인",
-			paymentDateTime: "2020년 7월 29일 15:14",
+		const fetchOrderDetail = async () => {
+			try {
+				const surveyId = Number(orderId);
+				if (!surveyId) {
+					setOrderDetail(getMockOrderDetail(orderId));
+					return;
+				}
+
+				const data = await getSurveyDetail(surveyId);
+				const orderDetail = mapSurveyDetailToOrderDetail(data);
+				setOrderDetail(orderDetail);
+			} catch (error) {
+				console.error("설문 상세 조회 실패:", error);
+				setOrderDetail(getMockOrderDetail(orderId));
+			}
 		};
-		setOrderDetail(mockOrderDetail);
+
+		fetchOrderDetail();
 	}, [orderId]);
 
 	if (!orderDetail) {
