@@ -3,9 +3,11 @@ import { api } from "../axios";
 import type {
 	CreateFormResponse,
 	CreateScreeningsResponse,
+	CreateSurveyInterestsResponse,
 	CreateSurveyQuestionResponse,
 	CreateSurveyResponse,
 	createSurveyQuestionRequest,
+	Interest,
 	ServerQuestionRequest,
 } from "./types";
 
@@ -94,10 +96,23 @@ export const saveQuestions = async ({
 	surveyId: number;
 	questions: ServerQuestionRequest;
 }): Promise<CreateSurveyQuestionResponse> => {
-	console.log("questions", questions);
 	const { data } = await api.put<
 		CreateSurveyQuestionResponse,
 		ServerQuestionRequest
 	>(`/v1/survey-form/surveys/${surveyId}/questions`, questions);
+	return data;
+};
+
+export const createSurveyInterests = async ({
+	surveyId,
+	interests,
+}: {
+	surveyId: number;
+	interests: Interest[];
+}): Promise<CreateSurveyInterestsResponse> => {
+	const { data } = await api.patch<
+		CreateSurveyInterestsResponse,
+		{ interests: Interest[] }
+	>(`/v1/survey-form/surveys/${surveyId}/interests`, { interests: interests });
 	return data;
 };

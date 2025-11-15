@@ -140,3 +140,23 @@ export interface SaveAsDraftResponse extends BaseResponse {
 		| boolean;
 	success: boolean;
 }
+
+export enum Interest {
+	CAREER = "CAREER",
+	BUSINESS = "BUSINESS",
+	FINANCE = "FINANCE",
+	HEALTH = "HEALTH",
+	CULTURE = "CULTURE",
+	FASHION = "FASHION",
+	SOCIETY = "SOCIETY",
+	SELF_IMPROVEMENT = "SELF_IMPROVEMENT",
+	DAILY_LIFE = "DAILY_LIFE",
+}
+
+export interface CreateSurveyInterestsResponse extends BaseResponse {
+	result: {
+		surveyId: number;
+		interests: Interest[];
+	};
+	success: boolean;
+}

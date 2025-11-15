@@ -1,3 +1,5 @@
+import type { Interest } from "../service/form";
+
 // 설문 문항 타입 정의
 export type QuestionType =
 	| "multipleChoice" // 객관식
@@ -113,6 +115,7 @@ export interface ScreeningInfo {
 export interface TopicInfo {
 	id: string;
 	name: string;
+	value: Interest;
 }
 
 // 설문 폼 상태 인터페이스

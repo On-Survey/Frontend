@@ -1,3 +1,5 @@
+import { Interest } from "../service/form";
+
 // 주제 데이터 타입 정의
 export interface TopicData {
 	id: string;
@@ -8,7 +10,7 @@ export interface TopicData {
 		src?: string;
 		name?: string;
 	};
-	value: string;
+	value: Interest;
 }
 
 // 주제 데이터 배열
@@ -21,7 +23,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F9F3.png",
 		},
-		value: "CAREER",
+		value: Interest.CAREER,
 	},
 	{
 		id: "business_tech",
@@ -31,7 +33,7 @@ export const topics: TopicData[] = [
 			type: "icon",
 			name: "icon-it",
 		},
-		value: "BUSINESS",
+		value: Interest.BUSINESS,
 	},
 	{
 		id: "finance_consumption",
@@ -41,7 +43,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F4B8.png",
 		},
-		value: "FINANCE",
+		value: Interest.FINANCE,
 	},
 	{
 		id: "health_lifestyle",
@@ -51,7 +53,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
 		},
-		value: "HEALTH",
+		value: Interest.HEALTH,
 	},
 	{
 		id: "culture_hobby",
@@ -61,7 +63,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
 		},
-		value: "CULTURE",
+		value: Interest.CULTURE,
 	},
 	{
 		id: "fashion_beauty",
@@ -71,7 +73,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F576.png",
 		},
-		value: "FASHION",
+		value: Interest.FASHION,
 	},
 	{
 		id: "social_issues",
@@ -81,7 +83,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F310.png",
 		},
-		value: "SOCIETY",
+		value: Interest.SOCIETY,
 	},
 	{
 		id: "self_development_education",
@@ -91,7 +93,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F58B.png",
 		},
-		value: "SELF_IMPROVEMENT",
+		value: Interest.SELF_IMPROVEMENT,
 	},
 	{
 		id: "daily_relationships",
@@ -101,6 +103,6 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
 		},
-		value: "DAILY_LIFE",
+		value: Interest.DAILY_LIFE,
 	},
 ];
