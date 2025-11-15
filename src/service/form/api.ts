@@ -5,6 +5,7 @@ import type {
 	CreateScreeningsResponse,
 	CreateSurveyQuestionResponse,
 	CreateSurveyResponse,
+	createSurveyQuestionRequest,
 } from "./types";
 
 export const createSurvey = async ({
@@ -25,16 +26,19 @@ export const createSurvey = async ({
 	return data;
 };
 
-export const createSurveyQuestion = async (
-	questionInfo: QuestionInfo,
-): Promise<CreateSurveyQuestionResponse> => {
+export const createSurveyQuestion = async ({
+	questionInfo,
+	surveyId,
+}: {
+	questionInfo: createSurveyQuestionRequest;
+	surveyId: number;
+}): Promise<CreateSurveyQuestionResponse> => {
 	const { data } = await api.post<
 		CreateSurveyQuestionResponse,
-		QuestionInfo["info"]
-	>(
-		`/v1/survey-form/surveys/${questionInfo.surveyId}/questions`,
-		questionInfo.info,
-	);
+		{ questions: createSurveyQuestionRequest[] }
+	>(`/v1/survey-form/surveys/${surveyId}/questions`, {
+		questions: [questionInfo],
+	});
 	return data;
 };
 
