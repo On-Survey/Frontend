@@ -32,9 +32,13 @@ import {
 	TitleAndDescriptionEditPage,
 } from "./pages";
 import { Mypage } from "./pages/Mypage";
+import BusinessInfo from "./pages/mypage/BusinessInfo";
 import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
+import PrivacyPolicy from "./pages/mypage/PrivacyPolicy";
+import PromotionNotice from "./pages/mypage/PromotionNotice";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
+import TermsOfService from "./pages/mypage/TermsOfService";
 import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { OxScreening } from "./pages/OxScreening";
 import DateResultPage from "./pages/result/DateResultPage";
@@ -68,6 +72,10 @@ export const App = () => {
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
 				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
+				<Route path="/mypage/privacyPolicy" element={<PrivacyPolicy />} />
+				<Route path="/mypage/termsOfService" element={<TermsOfService />} />
+				<Route path="/mypage/businessInfo" element={<BusinessInfo />} />
+				<Route path="/mypage/promotionNotice" element={<PromotionNotice />} />
 				<Route path="/oxScreening" element={<OxScreening />} />
 				<Route path="/survey" element={<Survey />} />
 				<Route path="/surveyList" element={<SurveyListPage />} />
