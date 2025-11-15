@@ -7,31 +7,12 @@ import {
 import type { Estimate } from "../contexts/PaymentContext";
 
 export interface PriceBreakdown {
-	questionCount: { label: string; price: number };
 	desiredParticipants: { label: string; price: number };
 	gender: { label: string; price: number };
 	age: { label: string; price: number };
 	location: { label: string; price: number };
 	total: number;
 }
-
-// 문항 수 가격 계산
-const getQuestionCountPrice = (questionCount: string): number => {
-	switch (questionCount) {
-		case "1~10":
-			return 500;
-		case "11~20":
-			return 700;
-		case "21~30":
-			return 1000;
-		case "31~50":
-			return 1500;
-		case "51~70":
-			return 2000;
-		default:
-			return 0;
-	}
-};
 
 /**
  * 희망 응답자 수에 따른 기본가 계산
@@ -135,7 +116,6 @@ const getLocationDifficulty = (location: string): string => {
 };
 
 export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {
-	const questionCountPrice = getQuestionCountPrice(estimate.questionCount);
 	const basePrice = getBasePrice(estimate.desiredParticipants);
 	const ageSurcharge = getAgeSurcharge(
 		estimate.age,
@@ -150,20 +130,9 @@ export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {
 		estimate.desiredParticipants,
 	);
 
-	const total =
-		questionCountPrice +
-		basePrice +
-		ageSurcharge +
-		locationSurcharge +
-		genderSurcharge;
+	const total = basePrice + ageSurcharge + locationSurcharge + genderSurcharge;
 
 	return {
-		questionCount: {
-			label: estimate.questionCount
-				? `${estimate.questionCount}개`
-				: "선택 안함",
-			price: questionCountPrice,
-		},
 		desiredParticipants: {
 			label: estimate.desiredParticipants
 				? `${estimate.desiredParticipants}명`
@@ -175,7 +144,19 @@ export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {
 			price: genderSurcharge,
 		},
 		age: {
-			label: estimate.age || "선택 안함",
+			label:
+				estimate.age === "전체"
+					? "전체"
+					: estimate.age
+						? estimate.age
+								.split(", ")
+								.map((age) => {
+									// "20대(20세~29세)" 형식에서 "20대"만 추출
+									const match = age.match(/^(\d+대)/);
+									return match ? match[1] : age;
+								})
+								.join(", ")
+						: "선택 안함",
 			price: ageSurcharge,
 		},
 		location: {

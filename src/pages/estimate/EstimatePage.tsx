@@ -3,18 +3,19 @@ import { Asset, FixedBottomCTA, TextField, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+	AgeSelectBottomSheet,
 	EstimateDetailBottomSheet,
-	PaymentBottomSheet,
-} from "../../components/payment";
+} from "../../components/estimate";
+import { PaymentBottomSheet } from "../../components/payment";
 import {
 	AGE,
 	DESIRED_PARTICIPANTS,
 	EstimateField,
 	GENDER,
-	QUESTION_COUNT,
 } from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
+import { calculateTotalPrice, formatPrice } from "../../utils/estimatePrice";
 
 const { frameShape: assetFrameShape } = Asset;
 
@@ -32,6 +33,12 @@ const EstimatePageContent = () => {
 	} = useModal(false);
 
 	const {
+		isOpen: isAgeBottomSheetOpen,
+		handleOpen: handleAgeBottomSheetOpen,
+		handleClose: handleAgeBottomSheetClose,
+	} = useModal(false);
+
+	const {
 		isOpen: isDetailBottomSheetOpen,
 		handleOpen: handleDetailBottomSheetOpen,
 		handleClose: handleDetailBottomSheetClose,
@@ -41,7 +48,6 @@ const EstimatePageContent = () => {
 		if (!estimate.desiredParticipants) {
 			handleEstimateChange({
 				...estimate,
-				questionCount: "1~10",
 				desiredParticipants: "50",
 				gender: "전체",
 				age: "전체",
@@ -51,19 +57,16 @@ const EstimatePageContent = () => {
 	}, [estimate, handleEstimateChange]);
 
 	const handleTypeChange = (fieldType: EstimateField) => {
-		setType(fieldType);
-		handleBottomSheetOpen();
+		if (fieldType === EstimateField.Age) {
+			handleAgeBottomSheetOpen();
+		} else {
+			setType(fieldType);
+			handleBottomSheetOpen();
+		}
 	};
 
 	const handleReturn = () => {
 		switch (type) {
-			case EstimateField.QuestionCount:
-				return {
-					value: estimate.questionCount,
-					title: "문항 수를 선택해주세요",
-					options: QUESTION_COUNT,
-					field: EstimateField.QuestionCount,
-				};
 			case EstimateField.Age:
 				return {
 					value: estimate.age,
@@ -106,6 +109,11 @@ const EstimatePageContent = () => {
 				field={handleReturn().field}
 			/>
 
+			<AgeSelectBottomSheet
+				isOpen={isAgeBottomSheetOpen}
+				handleClose={handleAgeBottomSheetClose}
+			/>
+
 			<EstimateDetailBottomSheet
 				isOpen={isDetailBottomSheetOpen}
 				handleClose={handleDetailBottomSheetClose}
@@ -127,24 +135,6 @@ const EstimatePageContent = () => {
 				/>
 
 				<div className="flex-1 px-2">
-					<TextField.Button
-						variant="line"
-						hasError={false}
-						label="문항 수"
-						labelOption="sustain"
-						value={estimate.questionCount}
-						placeholder="문항 수를 선택해주세요"
-						right={
-							<Asset.Icon
-								frameShape={assetFrameShape.CleanW24}
-								name="icon-arrow-down-mono"
-								color={adaptive.grey400}
-								aria-hidden={true}
-							/>
-						}
-						onClick={() => handleTypeChange(EstimateField.QuestionCount)}
-					/>
-
 					<TextField.Button
 						variant="line"
 						hasError={false}
@@ -188,7 +178,20 @@ const EstimatePageContent = () => {
 						label="연령대"
 						labelOption="sustain"
 						help="복수 선택 시 추가 요금이 부과되고, 전체 선택 시는 제외돼요."
-						value={estimate.age}
+						value={
+							estimate.age === "전체"
+								? "전체"
+								: estimate.age
+									? estimate.age
+											.split(", ")
+											.map((age) => {
+												// "20대(20세~29세)" 형식에서 "20대"만 추출
+												const match = age.match(/^(\d+대)/);
+												return match ? match[1] : age;
+											})
+											.join(", ")
+									: ""
+						}
 						placeholder="연령대를 선택해주세요"
 						right={
 							<Asset.Icon
@@ -223,7 +226,7 @@ const EstimatePageContent = () => {
 				</div>
 
 				<FixedBottomCTA loading={false} onClick={handleDetailBottomSheetOpen}>
-					상세 내역 보기
+					{formatPrice(calculateTotalPrice(estimate))} 상세 내역 보기
 				</FixedBottomCTA>
 			</div>
 		</>

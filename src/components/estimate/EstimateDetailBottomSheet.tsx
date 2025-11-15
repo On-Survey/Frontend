@@ -1,7 +1,7 @@
 import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, Text } from "@toss/tds-mobile";
-import type { Estimate } from "../../../contexts/PaymentContext";
-import { calculateEstimatePrice } from "../../../utils/estimatePrice";
+import type { Estimate } from "../../contexts/PaymentContext";
+import { calculateEstimatePrice } from "../../utils/estimatePrice";
 
 interface EstimateDetailBottomSheetProps {
 	isOpen: boolean;
@@ -18,12 +18,6 @@ export const EstimateDetailBottomSheet = ({
 
 	const items = [
 		{
-			label: "문항 수",
-			value: breakdown.questionCount.label,
-			price: breakdown.questionCount.price,
-			showCondition: breakdown.questionCount.price > 0,
-		},
-		{
 			label: "희망 응답자 수",
 			value: breakdown.desiredParticipants.label,
 			price: breakdown.desiredParticipants.price,
@@ -39,7 +33,7 @@ export const EstimateDetailBottomSheet = ({
 			label: "연령대",
 			value: breakdown.age.label,
 			price: breakdown.age.price,
-			showCondition: breakdown.age.price > 0,
+			showCondition: true,
 		},
 		{
 			label: "거주지",
@@ -51,7 +45,6 @@ export const EstimateDetailBottomSheet = ({
 
 	return (
 		<BottomSheet
-			header={<BottomSheet.Header>상세 내역</BottomSheet.Header>}
 			open={isOpen}
 			onClose={handleClose}
 			cta={
