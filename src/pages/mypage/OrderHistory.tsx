@@ -55,11 +55,6 @@ export const OrderHistory = () => {
 		"refund_completed",
 	];
 
-	const filteredOrders =
-		activeTab === "all"
-			? orders
-			: orders.filter((order) => refundStatuses.includes(order.status));
-
 	const tabs: OrderHistoryTab[] = [
 		{
 			id: "all",
@@ -67,12 +62,19 @@ export const OrderHistory = () => {
 			count: orders.length,
 		},
 		{
-			id: "cancelled",
-			label: "주문취소",
+			id: "refund",
+			label: "환불",
 			count: orders.filter((order) => refundStatuses.includes(order.status))
 				.length,
 		},
 	];
+
+	const filteredOrders =
+		activeTab === "all"
+			? orders
+			: activeTab === "refund"
+				? orders.filter((order) => refundStatuses.includes(order.status))
+				: orders;
 
 	return (
 		<div className="flex flex-col w-full h-screen">

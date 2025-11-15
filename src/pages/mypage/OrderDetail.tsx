@@ -1,6 +1,14 @@
 import { getPlatformOS } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
-import { Button, Text, Top, useToast } from "@toss/tds-mobile";
+import {
+	Asset,
+	BottomSheet,
+	Button,
+	FixedBottomCTA,
+	Text,
+	Top,
+	useToast,
+} from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { OrderDetail as OrderDetailType } from "../../types/order";
@@ -11,6 +19,7 @@ export const OrderDetail = () => {
 	const { orderId } = useParams<{ orderId: string }>();
 	const [orderDetail, setOrderDetail] = useState<OrderDetailType | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+	const [isCancelBottomSheetOpen, setIsCancelBottomSheetOpen] = useState(false);
 	const platform = getPlatformOS();
 	const { openToast } = useToast();
 
@@ -63,6 +72,23 @@ export const OrderDetail = () => {
 		setIsBottomSheetOpen(false);
 	};
 
+	const handleCancelSurveyClick = () => {
+		setIsCancelBottomSheetOpen(true);
+	};
+
+	const handleCancelSurveyConfirm = () => {
+		setIsCancelBottomSheetOpen(false);
+		openToast("설문 취소가 완료됐어요.", {
+			type: "bottom",
+			lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+			higherThanCTA: true,
+		});
+	};
+
+	const handleCancelSurveyClose = () => {
+		setIsCancelBottomSheetOpen(false);
+	};
+
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<Top
@@ -92,55 +118,14 @@ export const OrderDetail = () => {
 					{platform === "ios" ? "앱스토어에서 환불 신청" : "환불 받기"}
 				</Button>
 			</div>
-			<div className="flex-1 px-6 overflow-y-auto">
-				{[
-					{
-						label: "승인번호",
-						value: orderDetail.approvalNumber || "",
-					},
-					{
-						label: "결제상태",
-						value: orderDetail.paymentStatus || "",
-					},
-					{
-						label: "결제일시",
-						value: orderDetail.paymentDateTime || "",
-					},
-					{
-						label: "최종 결제 금액",
-						value: orderDetail.totalPrice,
-					},
-				].map((item) => (
-					<div
-						key={item.label}
-						className="flex justify-between items-center mb-5"
-					>
-						<Text
-							display="block"
-							color={adaptive.grey600}
-							typography="st8"
-							fontWeight="medium"
-						>
-							{item.label}
-						</Text>
-						<Text
-							display="block"
-							color={adaptive.grey900}
-							typography="st8"
-							fontWeight="medium"
-						>
-							{item.value}
-						</Text>
-					</div>
-				))}
-
+			<div className="flex-1 px-6 overflow-y-auto pb-24">
 				<Text
 					display="block"
 					color={adaptive.grey600}
-					typography="st8"
+					typography="t6"
 					fontWeight="medium"
 				>
-					결제정보
+					코인 결제정보
 				</Text>
 
 				<div className="mt-4 bg-gray-50 rounded-2xl p-4">
@@ -192,12 +177,59 @@ export const OrderDetail = () => {
 				</div>
 			</div>
 
+			<FixedBottomCTA
+				color="danger"
+				loading={false}
+				onClick={handleCancelSurveyClick}
+			>
+				설문 취소하기
+			</FixedBottomCTA>
+
 			<OrderCancelBottomSheet
 				open={isBottomSheetOpen}
 				onClose={handleCloseBottomSheet}
 				onConfirm={handleCancelOrder}
 				platform={platform}
 			/>
+
+			<BottomSheet
+				header={
+					<BottomSheet.Header>정말 설문을 취소하시나요?</BottomSheet.Header>
+				}
+				headerDescription={
+					<BottomSheet.HeaderDescription>
+						취소할 시 다시 복구할 수 없고, 코인이 즉시 환불돼요
+					</BottomSheet.HeaderDescription>
+				}
+				open={isCancelBottomSheetOpen}
+				onClose={handleCancelSurveyClose}
+				cta={
+					<BottomSheet.DoubleCTA
+						leftButton={
+							<Button
+								color="dark"
+								variant="weak"
+								onClick={handleCancelSurveyClose}
+							>
+								닫기
+							</Button>
+						}
+						rightButton={
+							<Button color="danger" onClick={handleCancelSurveyConfirm}>
+								확인
+							</Button>
+						}
+					/>
+				}
+			>
+				<div className="flex justify-center items-center">
+					<Asset.Icon
+						frameShape={{ width: 100 }}
+						name="icon-loudspeaker-1-fill"
+						aria-hidden={true}
+					/>
+				</div>
+			</BottomSheet>
 		</div>
 	);
 };

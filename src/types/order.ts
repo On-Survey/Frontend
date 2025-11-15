@@ -37,7 +37,7 @@ export interface OrderDetail {
 	paymentDateTime?: string;
 }
 
-export type OrderHistoryTabId = "all" | "cancelled";
+export type OrderHistoryTabId = "all" | "refund";
 
 export interface OrderHistoryTab {
 	id: OrderHistoryTabId;
