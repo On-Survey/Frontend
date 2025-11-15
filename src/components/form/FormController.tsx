@@ -10,16 +10,8 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
-import { createSurveyQuestion, saveAsDraft } from "../../service/form";
-import {
-	isDateQuestion,
-	isLongAnswerQuestion,
-	isMultipleChoiceQuestion,
-	isNPSQuestion,
-	isNumberQuestion,
-	isRatingQuestion,
-	isShortAnswerQuestion,
-} from "../../types/survey";
+import { saveQuestions } from "../../service/form";
+import { convertQuestionsToServerFormat } from "../../utils/questionConverter";
 import { QuestionController } from "./QuestionController";
 
 export const FormController = () => {
@@ -45,22 +37,21 @@ export const FormController = () => {
 			});
 			return;
 		}
-		const result = await createSurveyQuestion({
-			surveyId: state.surveyId ?? 0,
-			info: {
-				multipleChoice: state.survey.question.filter(isMultipleChoiceQuestion),
-				rating: state.survey.question.filter(isRatingQuestion),
-				nps: state.survey.question.filter(isNPSQuestion),
-				shortAnswer: state.survey.question.filter(isShortAnswerQuestion),
-				longAnswer: state.survey.question.filter(isLongAnswerQuestion),
-				date: state.survey.question.filter(isDateQuestion),
-				number: state.survey.question.filter(isNumberQuestion),
+		const surveyId = state.surveyId ?? 0;
+		const serverQuestions = convertQuestionsToServerFormat(
+			state.survey.question,
+			surveyId,
+		);
+
+		const result = await saveQuestions({
+			surveyId,
+			questions: {
+				questions: serverQuestions,
 			},
 		});
 		if (result.success) {
 			handleConfirmDialogOpen();
 		}
-		// handleConfirmDialogOpen();
 	};
 
 	const handleOpen = () => {
@@ -72,18 +63,19 @@ export const FormController = () => {
 	};
 
 	const handleSave = async () => {
-		const result = await saveAsDraft({
-			surveyId: state.surveyId ?? 0,
-			info: {
-				multipleChoice: state.survey.question.filter(isMultipleChoiceQuestion),
-				rating: state.survey.question.filter(isRatingQuestion),
-				nps: state.survey.question.filter(isNPSQuestion),
-				shortAnswer: state.survey.question.filter(isShortAnswerQuestion),
-				longAnswer: state.survey.question.filter(isLongAnswerQuestion),
-				date: state.survey.question.filter(isDateQuestion),
-				number: state.survey.question.filter(isNumberQuestion),
+		const surveyId = state.surveyId ?? 0;
+		const serverQuestions = convertQuestionsToServerFormat(
+			state.survey.question,
+			surveyId,
+		);
+
+		const result = await saveQuestions({
+			surveyId,
+			questions: {
+				questions: serverQuestions,
 			},
 		});
+
 		if (result.success) {
 			openToast("임시 저장됐어요.", {
 				type: "bottom",

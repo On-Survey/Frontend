@@ -6,6 +6,7 @@ import type {
 	CreateSurveyQuestionResponse,
 	CreateSurveyResponse,
 	createSurveyQuestionRequest,
+	ServerQuestionRequest,
 } from "./types";
 
 export const createSurvey = async ({
@@ -80,5 +81,23 @@ export const saveAsDraft = async (
 		`/v1/survey-form/surveys/${questionInfo.surveyId}/questions`,
 		questionInfo.info,
 	);
+	return data;
+};
+
+/**
+ * 질문들을 서버 형식으로 변환하여 저장
+ */
+export const saveQuestions = async ({
+	surveyId,
+	questions,
+}: {
+	surveyId: number;
+	questions: ServerQuestionRequest;
+}): Promise<CreateSurveyQuestionResponse> => {
+	console.log("questions", questions);
+	const { data } = await api.put<
+		CreateSurveyQuestionResponse,
+		ServerQuestionRequest
+	>(`/v1/survey-form/surveys/${surveyId}/questions`, questions);
 	return data;
 };

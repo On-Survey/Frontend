@@ -1,5 +1,75 @@
 import type { QuestionInfo } from "../../types/survey";
 
+export interface createSurveyQuestionRequest {
+	questionType:
+		| "CHOICE"
+		| "RATING"
+		| "NPS"
+		| "SHORT"
+		| "LONG"
+		| "DATE"
+		| "NUMBER";
+	title: string;
+	description: string;
+}
+
+// 서버 요청용 질문 옵션
+export interface ServerQuestionOption {
+	optionId: number;
+	content: string;
+	nextQuestionId: number;
+}
+
+// 서버 요청용 질문 타입 (공통 필드)
+interface BaseServerQuestion {
+	questionType:
+		| "CHOICE"
+		| "RATING"
+		| "NPS"
+		| "SHORT"
+		| "LONG"
+		| "DATE"
+		| "NUMBER";
+	questionId: number;
+	surveyId: number;
+	title: string;
+	description: string;
+	isRequired: boolean;
+	questionOrder: number;
+}
+
+// 서버 요청용 CHOICE 질문
+export interface ServerChoiceQuestion extends BaseServerQuestion {
+	questionType: "CHOICE";
+	maxChoice: number;
+	hasNoneOption: boolean;
+	hasCustomInput: boolean;
+	options: ServerQuestionOption[];
+}
+
+// 서버 요청용 RATING 질문
+export interface ServerRatingQuestion extends BaseServerQuestion {
+	questionType: "RATING";
+	minValue: string;
+	maxValue: string;
+}
+
+// 서버 요청용 기타 질문 (SHORT, LONG, DATE, NUMBER, NPS)
+export type ServerOtherQuestion = BaseServerQuestion & {
+	questionType: "SHORT" | "LONG" | "DATE" | "NUMBER" | "NPS";
+};
+
+// 서버 요청용 질문 유니온
+export type ServerQuestion =
+	| ServerChoiceQuestion
+	| ServerRatingQuestion
+	| ServerOtherQuestion;
+
+// 서버 요청용 질문 리스트
+export interface ServerQuestionRequest {
+	questions: ServerQuestion[];
+}
+
 interface BaseResponse {
 	code: number;
 	message: string;

@@ -11,7 +11,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createSurveyQuestion } from "../../service/form";
 import { isLongAnswerQuestion } from "../../types/survey";
-import { mapQuestionTypeToServerFormat } from "../../utils/questionTypeUtils";
 
 export const LongAnswerPage = () => {
 	const { state, updateQuestion } = useSurvey();
