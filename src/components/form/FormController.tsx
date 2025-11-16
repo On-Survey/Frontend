@@ -14,7 +14,15 @@ import { saveQuestions } from "../../service/form";
 import { convertQuestionsToServerFormat } from "../../utils/questionConverter";
 import { QuestionController } from "./QuestionController";
 
-export const FormController = () => {
+interface FormControllerProps {
+	isReorderMode?: boolean;
+	onReorderModeChange?: (isReorderMode: boolean) => void;
+}
+
+export const FormController = ({
+	isReorderMode = false,
+	onReorderModeChange,
+}: FormControllerProps) => {
 	const { handleStepChange } = useMultiStep();
 	const { setScreeningEnabled, state } = useSurvey();
 
@@ -90,7 +98,9 @@ export const FormController = () => {
 	};
 
 	const handleReorderQuestion = () => {
-		console.log("순서 변경");
+		if (onReorderModeChange) {
+			onReorderModeChange(!isReorderMode);
+		}
 	};
 
 	const handleNext = () => {
@@ -170,30 +180,44 @@ export const FormController = () => {
 								<div className="animate-slide-in-right">
 									<div className="flex items-center gap-2 w-full justify-between">
 										<div className="flex items-center gap-10 bg-white rounded-full p-2 w-full justify-center">
-											{MAIN_CONTROLS.map((control) => (
-												<button
-													key={control.id}
-													className={BUTTON_STYLES.mainControl}
-													onClick={actionHandlers[control.action]}
-													type="button"
-												>
-													<Asset.Icon
-														frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
-														backgroundColor={ICON_PROPS.backgroundColor}
-														name={control.icon}
-														color={adaptive.grey600}
-														aria-hidden={ICON_PROPS.ariaHidden}
-														ratio={ICON_PROPS.ratio}
-													/>
-													<Text
-														color={adaptive.grey700}
-														typography={TEXT_PROPS.typography}
-														fontWeight={TEXT_PROPS.fontWeight}
+											{MAIN_CONTROLS.map((control) => {
+												const isReorderControl = control.id === "reorder";
+												const displayLabel =
+													isReorderControl && isReorderMode
+														? "변경 완료"
+														: control.label;
+												const displayIcon =
+													isReorderControl && isReorderMode
+														? "icon-check-mono"
+														: control.icon;
+
+												return (
+													<button
+														key={control.id}
+														className={BUTTON_STYLES.mainControl}
+														onClick={actionHandlers[control.action]}
+														type="button"
 													>
-														{control.label}
-													</Text>
-												</button>
-											))}
+														<Asset.Icon
+															frameShape={
+																Asset.frameShape[ICON_PROPS.frameShape]
+															}
+															backgroundColor={ICON_PROPS.backgroundColor}
+															name={displayIcon}
+															color={adaptive.grey600}
+															aria-hidden={ICON_PROPS.ariaHidden}
+															ratio={ICON_PROPS.ratio}
+														/>
+														<Text
+															color={adaptive.grey700}
+															typography={TEXT_PROPS.typography}
+															fontWeight={TEXT_PROPS.fontWeight}
+														>
+															{displayLabel}
+														</Text>
+													</button>
+												);
+											})}
 										</div>
 										<button
 											className={BUTTON_STYLES.nextButton}

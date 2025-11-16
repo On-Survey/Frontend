@@ -9,7 +9,7 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormController } from "../../components/form/FormController";
 import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
@@ -22,7 +22,8 @@ import {
 } from "../../utils/questionFactory";
 
 export const QuestionHome = () => {
-	const { state, deleteQuestion } = useSurvey();
+	const [isReorderMode, setIsReorderMode] = useState(false);
+	const { state, deleteQuestion, reorderQuestions } = useSurvey();
 	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
 
@@ -55,6 +56,40 @@ export const QuestionHome = () => {
 		if (route) {
 			navigate(`${route}?questionId=${questionId}`);
 		}
+	};
+
+	const handleMoveUp = (e: React.MouseEvent, currentIndex: number) => {
+		e.stopPropagation();
+		if (currentIndex === 0) return;
+
+		const newQuestions = [...sortedQuestions];
+		const temp = newQuestions[currentIndex];
+		newQuestions[currentIndex] = newQuestions[currentIndex - 1];
+		newQuestions[currentIndex - 1] = temp;
+
+		const updatedQuestions = newQuestions.map((question, index) => ({
+			...question,
+			questionOrder: index,
+		}));
+
+		reorderQuestions(updatedQuestions);
+	};
+
+	const handleMoveDown = (e: React.MouseEvent, currentIndex: number) => {
+		e.stopPropagation();
+		if (currentIndex === sortedQuestions.length - 1) return;
+
+		const newQuestions = [...sortedQuestions];
+		const temp = newQuestions[currentIndex];
+		newQuestions[currentIndex] = newQuestions[currentIndex + 1];
+		newQuestions[currentIndex + 1] = temp;
+
+		const updatedQuestions = newQuestions.map((question, index) => ({
+			...question,
+			questionOrder: index,
+		}));
+
+		reorderQuestions(updatedQuestions);
 	};
 
 	useEffect(() => {
@@ -121,7 +156,7 @@ export const QuestionHome = () => {
 			/>
 			<Border variant="height16" />
 			<List>
-				{sortedQuestions.map((question) => (
+				{sortedQuestions.map((question, index) => (
 					<ListRow
 						key={question.questionId}
 						onClick={() =>
@@ -177,24 +212,53 @@ export const QuestionHome = () => {
 							</div>
 						}
 						right={
-							<IconButton
-								src="https://static.toss.im/icons/png/4x/icon-bin-mono.png"
-								variant="clear"
-								color={adaptive.grey600}
-								aria-label="더보기"
-								iconSize={20}
-								onClick={(e) => {
-									e.stopPropagation();
-									deleteQuestion(question.questionId.toString());
-								}}
-							/>
+							<div className="flex items-center">
+								{isReorderMode && (
+									<>
+										<IconButton
+											src="https://static.toss.im/icons/png/4x/icon-chip-arrow-up-mono.png"
+											variant="clear"
+											color={adaptive.grey600}
+											aria-label="위로 이동"
+											iconSize={20}
+											onClick={(e) => handleMoveUp(e, index)}
+											disabled={index === 0}
+										/>
+										<IconButton
+											src="https://static.toss.im/icons/png/4x/icon-chip-arrow-down-mono.png"
+											variant="clear"
+											color={adaptive.grey600}
+											aria-label="아래로 이동"
+											iconSize={20}
+											onClick={(e) => handleMoveDown(e, index)}
+											disabled={index === sortedQuestions.length - 1}
+										/>
+									</>
+								)}
+								{!isReorderMode && (
+									<IconButton
+										src="https://static.toss.im/icons/png/4x/icon-fill-three-dots-mono.png"
+										variant="clear"
+										color={adaptive.grey600}
+										aria-label="더보기"
+										iconSize={16}
+										onClick={(e) => {
+											e.stopPropagation();
+											deleteQuestion(question.questionId.toString());
+										}}
+									/>
+								)}
+							</div>
 						}
 						verticalPadding="large"
 					/>
 				))}
 			</List>
 			<div className="h-25"></div>
-			<FormController />
+			<FormController
+				isReorderMode={isReorderMode}
+				onReorderModeChange={setIsReorderMode}
+			/>
 		</>
 	);
 };
