@@ -50,15 +50,24 @@ const formatGender = (gender: SurveyInfo["gender"]): string => {
  * API 응답을 Order 타입으로 변환
  */
 export const mapSurveyToOrder = (
-	survey: Pick<Survey, "surveyId" | "title" | "totalCoin" | "createdDate">,
+	survey: Pick<
+		Survey,
+		"surveyId" | "title" | "totalCoin" | "createdDate" | "deadline"
+	>,
 	status: Order["status"],
 ): Order => {
+	const now = new Date();
+	const deadline = new Date(survey.deadline);
+	const isDeadlinePassed = !Number.isNaN(deadline.getTime()) && deadline < now;
+	const computedStatus: Order["status"] =
+		status === "active" && isDeadlinePassed ? "closed" : status;
+
 	return {
 		id: survey.surveyId,
 		date: formatDate(survey.createdDate),
 		title: survey.title,
 		price: formatPrice(survey.totalCoin),
-		status,
+		status: computedStatus,
 	};
 };
 

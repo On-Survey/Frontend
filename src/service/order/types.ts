@@ -12,6 +12,7 @@ export interface Survey {
 	status: SurveyStatus;
 	totalCoin: number;
 	createdDate: string;
+	deadline: string;
 }
 
 /**
