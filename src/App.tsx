@@ -23,6 +23,7 @@ import {
 	NPSPage,
 	NumberPage,
 	Onboarding,
+	PaymentMain,
 	QuestionListPage,
 	QuestionOptionsPage,
 	RatingPage,
@@ -72,7 +73,11 @@ export const App = () => {
 					</Route>
 				</Route>
 				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
-				<Route path="/mypage" element={<Mypage />} />
+				<Route element={<MultiStepProviderWrapper />}>
+					<Route element={<PaymentProviderLayout />}>
+						<Route path="/mypage" element={<Mypage />} />
+					</Route>
+				</Route>
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
 				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
@@ -110,6 +115,7 @@ export const App = () => {
 								path="/payment/location"
 								element={<LocationSelectPage />}
 							/>
+							<Route path="/payment/charge" element={<PaymentMain />} />
 						</Route>
 						<Route
 							path="/createForm/multipleChoice"
