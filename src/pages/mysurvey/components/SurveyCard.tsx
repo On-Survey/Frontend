@@ -1,6 +1,7 @@
 import { colors } from "@toss/tds-colors";
 import { Asset, Badge, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
+import { formatDateDisplay } from "../../../utils/FormatDate";
 import type { ActiveSurvey, ClosedSurvey, DraftSurvey } from "./types";
 
 type SurveyState = "draft" | "active" | "closed";
@@ -33,6 +34,11 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	const activeDescription = isActiveCard
 		? activeSurvey?.description
 		: undefined;
+
+	const deadlineText =
+		isActiveCard && activeSurvey?.deadline
+			? `${formatDateDisplay(activeSurvey.deadline)}까지`
+			: "";
 
 	const handleDetailClick = () => {
 		if (type === "draft") {
@@ -85,7 +91,7 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 							{activeSurvey.progress}/{activeSurvey.total}
 						</Text>
 						<Text color={colors.grey700} typography="t7" fontWeight="medium">
-							{activeSurvey.deadline ?? ""}
+							{deadlineText}
 						</Text>
 					</div>
 					<div className="mb-4">

@@ -59,6 +59,7 @@ export const MySurvey = () => {
 				const activeStatuses = new Set(["ACTIVE", "ONGOING"]);
 				let active: ActiveSurvey[] = userSurveys
 					.filter((survey) => {
+						if (!survey.deadLine) return false;
 						const deadline = new Date(survey.deadLine);
 						return activeStatuses.has(survey.status) && deadline > now;
 					})
@@ -71,9 +72,15 @@ export const MySurvey = () => {
 						total: survey.dueCount,
 					}));
 
-				// 마감
+				// 마감: 마감일이 있고, 이미 지난 설문만 (작성중/DRAFT는 제외)
 				let closed: ClosedSurvey[] = userSurveys
-					.filter((survey) => new Date(survey.deadLine) <= now)
+					.filter((survey) => {
+						if (!survey.deadLine) return false;
+						// 작성 중인 설문은 마감 리스트에서 제외
+						if (draftStatuses.has(survey.status)) return false;
+						const deadline = new Date(survey.deadLine);
+						return deadline <= now;
+					})
 					.map((survey) => ({
 						id: survey.surveyId,
 						title: survey.title,
