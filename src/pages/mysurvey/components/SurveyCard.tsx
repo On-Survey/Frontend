@@ -2,6 +2,7 @@ import { colors } from "@toss/tds-colors";
 import { Asset, Badge, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { formatDateDisplay } from "../../../utils/FormatDate";
+import { shareSurveyById } from "../../../utils/shareSurvey";
 import type { ActiveSurvey, ClosedSurvey, DraftSurvey } from "./types";
 
 type SurveyState = "draft" | "active" | "closed";
@@ -39,6 +40,12 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 		isActiveCard && activeSurvey?.deadline
 			? `${formatDateDisplay(activeSurvey.deadline)}까지`
 			: "";
+
+	const handleShareClick = async () => {
+		if (!isActiveCard) return;
+
+		await shareSurveyById(survey.id);
+	};
 
 	const handleDetailClick = () => {
 		if (type === "draft") {
@@ -104,7 +111,12 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 						/>
 					</div>
 					<div className="h-4" />
-					<Button size="medium" variant="weak" display="block">
+					<Button
+						size="medium"
+						variant="weak"
+						display="block"
+						onClick={handleShareClick}
+					>
 						친구에게 공유하기
 					</Button>
 				</>
