@@ -27,6 +27,14 @@ export default defineConfig({
 			build: "tsc -b && vite build",
 		},
 	},
+	// Provide safe defaults for plugin hooks to avoid undefined access during build
+	// @ts-expect-error: pluginHooks may not be typed in current version but used at runtime
+	pluginHooks: {
+		preHandlers: [],
+		devServer: {
+			preHandlers: [],
+		},
+	},
 	permissions: [],
 	outdir: "dist",
 });
