@@ -1,7 +1,7 @@
 import { graniteEvent, Storage } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, TextField } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	DateSelectBottomSheet,
@@ -17,9 +17,14 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
+import {
+	calculateTotalPrice,
+	formatPriceAsCoin,
+} from "../../utils/paymentCalculator";
 
 export const EstimatePage = () => {
-	const { estimate, handleEstimateChange } = usePaymentEstimate();
+	const { estimate, handleEstimateChange, handleTotalPriceChange } =
+		usePaymentEstimate();
 	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
 
@@ -47,6 +52,14 @@ export const EstimatePage = () => {
 		setType(type);
 		handleBottomSheetOpen();
 	};
+
+	const totalPrice = useMemo(() => {
+		return calculateTotalPrice(estimate);
+	}, [estimate]);
+
+	useEffect(() => {
+		handleTotalPriceChange(totalPrice);
+	}, [totalPrice, handleTotalPriceChange]);
 
 	const handleReturn = () => {
 		switch (type) {
@@ -167,7 +180,6 @@ export const EstimatePage = () => {
 				label="희망 응답자 수"
 				value={estimate.desiredParticipants}
 				placeholder="희망 응답자 수"
-				autoFocus={true}
 				right={
 					<Asset.Icon
 						frameShape={Asset.frameShape.CleanW24}
@@ -179,7 +191,7 @@ export const EstimatePage = () => {
 				onClick={() => handleTypeChange(EstimateField.DesiredParticipants)}
 			/>
 			<FixedBottomCTA loading={false} onClick={handleCoinBottomSheetOpen}>
-				56,500원 결제하기
+				{formatPriceAsCoin(totalPrice)} 결제하기
 			</FixedBottomCTA>
 		</>
 	);
