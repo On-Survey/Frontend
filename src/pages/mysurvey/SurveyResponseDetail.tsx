@@ -13,6 +13,7 @@ import {
 	getSurveyAnswerDetail,
 	getUserSurveys,
 } from "../../service/mysurvey/api";
+import type { SurveyAnswerDetailResult } from "../../service/mysurvey/types";
 import type { QuestionType } from "../../types/survey";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../../types/surveyResponse";
 import { mapApiQuestionTypeToComponentType } from "../../utils/questionFactory";
@@ -25,6 +26,8 @@ export const SurveyResponseDetail = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [surveyResponse, setSurveyResponse] =
 		useState<SurveyResponseDetailType | null>(null);
+	const [answerDetails, setAnswerDetails] =
+		useState<SurveyAnswerDetailResult | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -58,6 +61,9 @@ export const SurveyResponseDetail = () => {
 					getSurveyAnswerDetail(Number(id)),
 					getUserSurveys(),
 				]);
+
+				// API 응답 전체 저장
+				setAnswerDetails(result);
 
 				// 설문 목록에서 해당 설문의 제목 찾기
 				const survey = userSurveysResult.infoList.find(
@@ -125,9 +131,34 @@ export const SurveyResponseDetail = () => {
 		return `${requiredLabel} / ${typeLabel}`;
 	};
 
-	const handleResultNavigation = (type: QuestionType) => {
+	const handleResultNavigation = (type: QuestionType, questionId: string) => {
+		if (!answerDetails) return;
+
+		// 해당 질문의 응답 데이터 찾기
+		const questionDetail = answerDetails.detailInfoList.find(
+			(detail) => String(detail.questionId) === questionId,
+		);
+
+		if (!questionDetail) return;
+
 		const path = getQuestionResultRoute(type);
-		navigate(path);
+		navigate(path, {
+			state: {
+				question: {
+					id: questionDetail.questionId,
+					title: questionDetail.title,
+					description: questionDetail.description,
+					type,
+					isRequired: questionDetail.isRequired,
+					order: questionDetail.order,
+				},
+				answerMap: questionDetail.answerMap,
+				answerList: questionDetail.answerList,
+				surveyTitle: surveyResponse?.title || "",
+				surveyStatus: surveyResponse?.status || "active",
+				responseCount: questionDetail.answerList?.length || 0,
+			},
+		});
 	};
 
 	return (
@@ -205,7 +236,9 @@ export const SurveyResponseDetail = () => {
 								<Button
 									size="medium"
 									variant="weak"
-									onClick={() => handleResultNavigation(question.type)}
+									onClick={() =>
+										handleResultNavigation(question.type, question.id)
+									}
 								>
 									{question.responseCount}명
 								</Button>
