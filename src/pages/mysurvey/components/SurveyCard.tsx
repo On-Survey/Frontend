@@ -48,8 +48,18 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	};
 
 	const handleDetailClick = () => {
+		console.log("SurveyCard handleDetailClick called", {
+			type,
+			surveyId: survey.id,
+			hasOnClick: !!onClick,
+		});
 		if (type === "draft") {
-			onClick?.(survey.id);
+			if (onClick) {
+				console.log("Calling onClick with surveyId:", survey.id);
+				onClick(survey.id);
+			} else {
+				console.warn("onClick is not provided for draft survey");
+			}
 			return;
 		}
 		navigate(`/mysurvey/${survey.id}`);

@@ -1,5 +1,6 @@
 import { colors } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
+import { useDraftSurvey } from "../../../hooks/useDraftSurvey";
 import { SurveyCard } from "./SurveyCard";
 import type { ActiveSurvey, ClosedSurvey, DraftSurvey } from "./types";
 
@@ -14,6 +15,8 @@ export const AllTab = ({
 	activeSurveys,
 	closedSurveys,
 }: AllTabProps) => {
+	const { handleDraftClick } = useDraftSurvey();
+
 	return (
 		<div className="space-y-4">
 			{/* 작성중 */}
@@ -23,7 +26,12 @@ export const AllTab = ({
 				</Text>
 			) : (
 				draftSurveys.map((survey) => (
-					<SurveyCard key={`draft-${survey.id}`} survey={survey} type="draft" />
+					<SurveyCard
+						key={`draft-${survey.id}`}
+						survey={survey}
+						type="draft"
+						onClick={(id) => handleDraftClick(id, draftSurveys)}
+					/>
 				))
 			)}
 			{/* 노출중 */}

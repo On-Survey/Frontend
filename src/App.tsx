@@ -66,7 +66,11 @@ export const App = () => {
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
 				<Route path="/createFormStart" element={<CreateFormStart />} />
-				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route element={<SurveyProviderLayout />}>
+					<Route element={<MultiStepProviderWrapper />}>
+						<Route path="/mysurvey" element={<MySurvey />} />
+					</Route>
+				</Route>
 				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
 				<Route path="/mypage" element={<Mypage />} />
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
