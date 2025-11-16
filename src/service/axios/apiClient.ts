@@ -7,22 +7,6 @@ import axios, {
 import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
 
-export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
-	const response = await apiClient.request<{ result: T }>(config);
-
-	// 백엔드 응답 형식: { code: number, message: string, result: T, success: boolean }
-	if (!response.data) {
-		throw new Error("API 응답에 데이터가 없습니다.");
-	}
-	const payload = response.data.result;
-
-	// result가 null이거나 undefined인 경우 void 응답으로 처리
-	if (payload === null || payload === undefined) {
-		return undefined as T;
-	}
-	return payload;
-};
-
 /**
  * API 기본 설정
  */
@@ -38,6 +22,29 @@ const API_CONFIG = {
 // 환경별 API 서버 URL 설정
 export const getApiBaseUrl = (): string => {
 	return import.meta.env.VITE_API_BASE_URL || "";
+};
+
+/**
+ * API 호출 헬퍼 함수
+ * 응답에서 result 필드를 추출합니다.
+ */
+export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
+	// FormData 사용 시 Content-Type을 제거하여 브라우저가 자동으로 multipart/form-data로 설정
+	if (config.data instanceof FormData) {
+		config.headers = {
+			...config.headers,
+			"Content-Type": undefined,
+		};
+	}
+
+	const response = await apiClient.request<{ result: T }>(config);
+	const payload = response.data?.result;
+
+	if (payload === undefined) {
+		throw new Error("API 응답에 result 값이 없습니다.");
+	}
+
+	return payload;
 };
 
 /**

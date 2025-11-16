@@ -13,12 +13,27 @@ import { topics } from "../constants/topics";
 import { useModal } from "../hooks/UseToggle";
 import { getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
+import { getMemberInfo } from "../service/userInfo";
 import type { SurveyListItem } from "../types/surveyList";
-
-const USER_NAME = "온서베이";
 
 export const Home = () => {
 	const navigate = useNavigate();
+	const [userName, setUserName] = useState<string>("");
+
+	useEffect(() => {
+		const fetchMemberInfo = async () => {
+			try {
+				const memberInfo = await getMemberInfo();
+				setUserName(memberInfo.name);
+			} catch (err) {
+				console.error("회원 정보 조회 실패:", err);
+				// 에러 시 기본값 사용
+				setUserName("온서베이");
+			}
+		};
+
+		void fetchMemberInfo();
+	}, []);
 
 	const [recommended, setRecommended] = useState<SurveyListItem[]>([]);
 	const [impending, setImpending] = useState<SurveyListItem[]>([]);
@@ -97,16 +112,27 @@ export const Home = () => {
 	};
 
 	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				handleConfirmDialogOpen();
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
+		// 웹뷰 환경에서만 graniteEvent 사용
+		if (
+			typeof window !== "undefined" &&
+			(window as { __GRANITE_NATIVE_EMITTER?: unknown })
+				.__GRANITE_NATIVE_EMITTER
+		) {
+			try {
+				const unsubscription = graniteEvent.addEventListener("backEvent", {
+					onEvent: () => {
+						handleConfirmDialogOpen();
+					},
+					onError: (error) => {
+						console.error("Granite event error:", error);
+					},
+				});
 
-		return unsubscription;
+				return unsubscription;
+			} catch (error) {
+				console.error("Failed to add granite event listener:", error);
+			}
+		}
 	}, [handleConfirmDialogOpen]);
 
 	return (
@@ -227,7 +253,7 @@ export const Home = () => {
 
 				<CustomSurveyList
 					surveys={customSurveysToShow}
-					userName={USER_NAME}
+					userName={userName || "온서베이"}
 					onViewAll={handleViewAllSurveys}
 				/>
 
