@@ -25,6 +25,29 @@ export const getApiBaseUrl = (): string => {
 };
 
 /**
+ * API 호출 헬퍼 함수
+ * 응답에서 result 필드를 추출합니다.
+ */
+export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
+	// FormData 사용 시 Content-Type을 제거하여 브라우저가 자동으로 multipart/form-data로 설정
+	if (config.data instanceof FormData) {
+		config.headers = {
+			...config.headers,
+			"Content-Type": undefined,
+		};
+	}
+
+	const response = await apiClient.request<{ result: T }>(config);
+	const payload = response.data?.result;
+
+	if (payload === undefined) {
+		throw new Error("API 응답에 result 값이 없습니다.");
+	}
+
+	return payload;
+};
+
+/**
  * 서버 사이드에서 사용하는 일반 Axios 클라이언트 (캐싱 미지원)
  */
 export const apiClient: AxiosInstance = axios.create(API_CONFIG);
