@@ -44,6 +44,22 @@ export const Mypage = () => {
 		navigate("/mypage/refundPolicy");
 	};
 
+	const handlePrivacyPolicy = () => {
+		navigate("/mypage/privacyPolicy");
+	};
+
+	const handleTermsOfService = () => {
+		navigate("/mypage/termsOfService");
+	};
+
+	const handleBusinessInfo = () => {
+		navigate("/mypage/businessInfo");
+	};
+
+	const handlePromotionNotice = () => {
+		navigate("/mypage/promotionNotice");
+	};
+
 	if (!mypageData) {
 		return null;
 	}
@@ -147,6 +163,17 @@ export const Mypage = () => {
 						contents={
 							<ListRow.Texts
 								type="1RowTypeA"
+								top="프로모션 안내 및 유의사항"
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						arrowType="right"
+						onClick={handlePromotionNotice}
+					/>
+					<ListRow
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
 								top="환불 정책"
 								topProps={{ color: adaptive.grey700 }}
 							/>
@@ -163,6 +190,7 @@ export const Mypage = () => {
 							/>
 						}
 						arrowType="right"
+						onClick={handleTermsOfService}
 					/>
 					<ListRow
 						contents={
@@ -173,6 +201,7 @@ export const Mypage = () => {
 							/>
 						}
 						arrowType="right"
+						onClick={handlePrivacyPolicy}
 					/>
 					<ListRow
 						contents={
@@ -183,6 +212,7 @@ export const Mypage = () => {
 							/>
 						}
 						arrowType="right"
+						onClick={handleBusinessInfo}
 					/>
 				</List>
 			</div>

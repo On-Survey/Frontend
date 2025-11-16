@@ -21,7 +21,7 @@ export const CreateForm = () => {
 					</ProgressStepper>
 				)}
 			</div>
-			<div className="flex flex-col w-full px-1 gap-4 mt-3 flex-1 overflow-y-auto">
+			<div className="flex flex-col w-full px-1 gap-4 mt-3 flex-1">
 				{activeStep === 0 && <FormTitleStep />}
 				{activeStep === 1 && <QuestionHome />}
 				{activeStep === 2 && <ScreeningMain />}

@@ -1,3 +1,5 @@
+import { Interest } from "../service/form";
+
 // 주제 데이터 타입 정의
 export type InterestId =
 	| "CAREER"
@@ -19,6 +21,7 @@ export interface TopicData {
 		src?: string;
 		name?: string;
 	};
+	value: Interest;
 }
 
 // 주제 데이터 배열
@@ -31,6 +34,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F9F3.png",
 		},
+		value: Interest.CAREER,
 	},
 	{
 		id: "BUSINESS",
@@ -40,6 +44,7 @@ export const topics: TopicData[] = [
 			type: "icon",
 			name: "icon-it",
 		},
+		value: Interest.BUSINESS,
 	},
 	{
 		id: "FINANCE",
@@ -49,6 +54,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F4B8.png",
 		},
+		value: Interest.FINANCE,
 	},
 	{
 		id: "HEALTH",
@@ -58,6 +64,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
 		},
+		value: Interest.HEALTH,
 	},
 	{
 		id: "CULTURE",
@@ -67,6 +74,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
 		},
+		value: Interest.CULTURE,
 	},
 	{
 		id: "FASHION",
@@ -76,6 +84,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F576.png",
 		},
+		value: Interest.FASHION,
 	},
 	{
 		id: "SOCIETY",
@@ -85,6 +94,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F310.png",
 		},
+		value: Interest.SOCIETY,
 	},
 	{
 		id: "SELF_IMPROVEMENT",
@@ -94,6 +104,7 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F58B.png",
 		},
+		value: Interest.SELF_IMPROVEMENT,
 	},
 	{
 		id: "DAILY_LIFE",
@@ -103,5 +114,6 @@ export const topics: TopicData[] = [
 			type: "image",
 			src: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
 		},
+		value: Interest.DAILY_LIFE,
 	},
 ];
