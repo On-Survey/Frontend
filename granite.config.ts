@@ -31,8 +31,10 @@ export default defineConfig({
 	// @ts-expect-error: pluginHooks may not be typed in current version but used at runtime
 	pluginHooks: {
 		preHandlers: [],
+		postHandlers: [],
 		devServer: {
 			preHandlers: [],
+			postHandlers: [],
 		},
 	},
 	permissions: [],
