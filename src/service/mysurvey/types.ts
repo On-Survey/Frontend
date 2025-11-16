@@ -91,3 +91,47 @@ export interface SurveyAnswerDetailResult {
 export interface SurveyAnswerDetailResponse extends BaseResponse {
 	result: SurveyAnswerDetailResult;
 }
+
+// 작성 중인 설문 조회
+export type WritingQuestionType =
+	| "CHOICE"
+	| "DATE"
+	| "NUMBER"
+	| "TEXT"
+	| string;
+
+export interface WritingQuestionOption {
+	optionId: number;
+	content: string;
+	nextQuestionId?: number;
+}
+
+export interface WritingQuestion {
+	questionId: number;
+	surveyId: number;
+	questionType: WritingQuestionType;
+	title: string;
+	description: string;
+	isRequired: boolean;
+	questionOrder: number;
+	// 선택형 확장 필드
+	choice?: boolean;
+	maxChoice?: number;
+	hasNoneOption?: boolean;
+	hasCustomInput?: boolean;
+	options?: WritingQuestionOption[];
+	// 날짜형 확장 필드
+	date?: string;
+	// 숫자형 확장 필드
+	minValue?: string | number;
+	maxValue?: string | number;
+}
+
+export interface WritingSurveyResult {
+	surveyId: number;
+	questions: WritingQuestion[];
+}
+
+export interface WritingSurveyResponse extends BaseResponse {
+	result: WritingSurveyResult;
+}

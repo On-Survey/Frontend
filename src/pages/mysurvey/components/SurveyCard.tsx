@@ -9,9 +9,10 @@ type BadgeColor = "green" | "blue" | "elephant";
 interface SurveyCardProps {
 	survey: DraftSurvey | ActiveSurvey | ClosedSurvey;
 	type: SurveyState;
+	onClick?: (id: number) => void;
 }
 
-export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
+export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	const navigate = useNavigate();
 	const badgeConfig: Record<SurveyState, { color: BadgeColor; label: string }> =
 		{
@@ -34,13 +35,20 @@ export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
 		: undefined;
 
 	const handleDetailClick = () => {
-		if (type !== "draft") {
-			navigate(`/mysurvey/${survey.id}`);
+		if (type === "draft") {
+			onClick?.(survey.id);
+			return;
 		}
+		navigate(`/mysurvey/${survey.id}`);
 	};
 
+	const cardProps =
+		type === "draft"
+			? { role: "button" as const, onClick: handleDetailClick }
+			: {};
+
 	return (
-		<div className="bg-gray-50 rounded-xl p-4 relative">
+		<div className="bg-gray-50 rounded-xl p-4 relative" {...cardProps}>
 			<div className="flex items-start justify-between mb-2">
 				<Badge variant="weak" color={config.color} size="small">
 					{config.label}
@@ -50,7 +58,6 @@ export const SurveyCard = ({ survey, type }: SurveyCardProps) => {
 					className="cursor-pointer"
 					aria-label="더보기"
 					onClick={handleDetailClick}
-					disabled={type === "draft"}
 				>
 					<Asset.Icon
 						frameShape={{ width: 24, height: 24 }}

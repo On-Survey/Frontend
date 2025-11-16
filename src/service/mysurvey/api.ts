@@ -5,6 +5,7 @@ import type {
 	SubmitSurveyResponsePayload,
 	SurveyAnswerDetailResult,
 	SurveyDetailResult,
+	WritingSurveyResult,
 } from "./types";
 
 const DEFAULT_ONGOING_PARAMS = { lastSurveyId: 0, size: 15 };
@@ -87,6 +88,17 @@ export const getSurveyAnswerDetail = async (
 	return apiCall<SurveyAnswerDetailResult>({
 		method: "GET",
 		url: "/v1/survey-management/surveys/answers",
+		params: { surveyId },
+	});
+};
+
+// 작성 중인 설문 조회
+export const getWritingSurvey = async (
+	surveyId: number,
+): Promise<WritingSurveyResult> => {
+	return apiCall<WritingSurveyResult>({
+		method: "GET",
+		url: "/v1/survey-management/writing",
 		params: { surveyId },
 	});
 };
