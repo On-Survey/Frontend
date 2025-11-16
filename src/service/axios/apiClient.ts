@@ -4,7 +4,7 @@ import axios, {
 	type AxiosResponse,
 	type InternalAxiosRequestConfig,
 } from "axios";
-
+import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
 
 /**
@@ -33,13 +33,11 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  * 요청 인터셉터
  */
 apiClient.interceptors.request.use(
-	(config: InternalAxiosRequestConfig) => {
-		// 인증 토큰 헤더 추가 로직은 세션 방식으로 변경되어 주석 처리
-		// const token = getAuthToken();
-		// if (token) {
-		//   config.headers.Authorization = `Bearer ${token}`;
-		// }
-
+	async (config: InternalAxiosRequestConfig) => {
+		const token = await getAccessToken();
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {
 			console.log(
@@ -67,15 +65,25 @@ apiClient.interceptors.response.use(
 
 		return response;
 	},
-	(error) => {
+	async (error) => {
 		// 에러 처리
 		if (error.response) {
 			const { status, data } = error.response;
 
-			// 인증 에러 처리
-			if (status === 401) {
-				handleAuthError();
-			}
+			// // 인증 에러 처리
+			// if (status === 401) {
+			// 	const refreshToken = await getRefreshToken();
+
+			// 	if (!refreshToken) {
+			// 		throw new Error("리프레시 토큰이 없습니다.");
+			// 	}
+
+			// 	const newRefreshToken = await reissueToken(refreshToken);
+			// 	if (newRefreshToken) {
+			// 		apiClient.defaults.headers.common["x-refresh-token"] =
+			// 			`Bearer ${newRefreshToken}`;
+			// 	}
+			// }
 
 			// 에러 로깅
 			console.error(`❌ API Error: ${status}`, data);
@@ -90,28 +98,6 @@ apiClient.interceptors.response.use(
 );
 
 /**
- * 인증 토큰 가져오기 (구현 필요)
- */
-// function getAuthToken(): string | null {
-//   // 쿠키, 로컬스토리지, 세션스토리지 등에서 토큰 가져오기
-//   if (typeof window !== "undefined") {
-//     return localStorage.getItem("authToken");
-//   }
-//   return null;
-// }
-
-/**
- * 인증 에러 처리 (구현 필요)
- */
-function handleAuthError(): void {
-	// 세션 방식에서는 토큰 제거 불필요, 필요시 로그인 페이지로 리다이렉트만 사용
-	// if (typeof window !== "undefined") {
-	//   localStorage.removeItem("authToken");
-	//   // window.location.href = '/login';
-	// }
-}
-
-/**
  * API 요청 헬퍼 함수들
  */
 export const api = {
@@ -121,40 +107,40 @@ export const api = {
 	get: <T>(
 		url: string,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<AxiosResponse<T>> => {
 		return apiClient.get(url, config);
 	},
 
 	/**
 	 * POST 요청
 	 */
-	post: <T>(
+	post: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.post(url, data, config);
 	},
 
 	/**
 	 * PUT 요청
 	 */
-	put: <T>(
+	put: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.put(url, data, config);
 	},
 
 	/**
 	 * PATCH 요청
 	 */
-	patch: <T>(
+	patch: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.patch(url, data, config);
 	},
 
@@ -164,7 +150,7 @@ export const api = {
 	delete: <T>(
 		url: string,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.delete(url, config);
 	},
 };

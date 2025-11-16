@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { Asset, ConfirmDialog, Text } from "@toss/tds-mobile";
+import { Asset, ConfirmDialog, Text, useToast } from "@toss/tds-mobile";
 import { useState } from "react";
 import {
 	BUTTON_STYLES,
@@ -10,6 +10,8 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { saveQuestions } from "../../service/form";
+import { convertQuestionsToServerFormat } from "../../utils/questionConverter";
 import { QuestionController } from "./QuestionController";
 
 interface FormControllerProps {
@@ -22,15 +24,43 @@ export const FormController = ({
 	onReorderModeChange,
 }: FormControllerProps) => {
 	const { handleStepChange } = useMultiStep();
-	const { setScreeningEnabled } = useSurvey();
+	const { setScreeningEnabled, state } = useSurvey();
 
 	const [isOpen, setIsOpen] = useState(false);
+
+	const { openToast } = useToast();
 
 	const {
 		isOpen: isConfirmDialogOpen,
 		handleOpen: handleConfirmDialogOpen,
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
+
+	const handleSaveAndIsConfirmDialogOpen = async () => {
+		if (state.survey.question.length === 0) {
+			openToast("문항을 추가해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
+		const surveyId = state.surveyId ?? 0;
+		const serverQuestions = convertQuestionsToServerFormat(
+			state.survey.question,
+			surveyId,
+		);
+
+		const result = await saveQuestions({
+			surveyId,
+			questions: {
+				questions: serverQuestions,
+			},
+		});
+		if (result.success) {
+			handleConfirmDialogOpen();
+		}
+	};
 
 	const handleOpen = () => {
 		setIsOpen(true);
@@ -40,8 +70,27 @@ export const FormController = ({
 		setIsOpen(false);
 	};
 
-	const handleSave = () => {
-		console.log("임시 저장");
+	const handleSave = async () => {
+		const surveyId = state.surveyId ?? 0;
+		const serverQuestions = convertQuestionsToServerFormat(
+			state.survey.question,
+			surveyId,
+		);
+
+		const result = await saveQuestions({
+			surveyId,
+			questions: {
+				questions: serverQuestions,
+			},
+		});
+
+		if (result.success) {
+			openToast("임시 저장됐어요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+		}
 	};
 
 	const handleAddQuestion = () => {
@@ -173,7 +222,7 @@ export const FormController = ({
 										<button
 											className={BUTTON_STYLES.nextButton}
 											type="button"
-											onClick={handleConfirmDialogOpen}
+											onClick={handleSaveAndIsConfirmDialogOpen}
 										>
 											<Asset.Icon
 												frameShape={Asset.frameShape[ICON_PROPS.frameShape]}

@@ -8,6 +8,7 @@ import {
 } from "@toss/tds-mobile";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { createSurveyQuestion } from "../../service/form";
 import { isDateQuestion } from "../../types/survey";
 
 export const DatePage = () => {
@@ -54,8 +55,19 @@ export const DatePage = () => {
 		navigate(`/createForm/date/edit`);
 	};
 
-	const handleSubmit = () => {
-		navigate(-1);
+	const handleSubmit = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			questionInfo: {
+				questionType: "DATE",
+				title: title ?? "",
+				description: description ?? "",
+			},
+		});
+
+		if (result.success) {
+			navigate(-1);
+		}
 	};
 
 	return (
