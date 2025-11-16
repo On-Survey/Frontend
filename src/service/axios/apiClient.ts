@@ -26,20 +26,9 @@ export const getApiBaseUrl = (): string => {
 
 /**
  * API 호출 헬퍼 함수
- * 토큰을 자동으로 헤더에 추가하고, 응답에서 result 필드를 추출합니다.
+ * 응답에서 result 필드를 추출합니다.
  */
 export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
-	// 요청 전에 토큰 자동 주입
-	if (typeof window !== "undefined") {
-		const token = await getAccessToken();
-		if (token) {
-			config.headers = {
-				...(config.headers || {}),
-				Authorization: `Bearer ${token}`,
-			};
-		}
-	}
-
 	// FormData 사용 시 Content-Type을 제거하여 브라우저가 자동으로 multipart/form-data로 설정
 	if (config.data instanceof FormData) {
 		config.headers = {
