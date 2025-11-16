@@ -32,6 +32,8 @@ import {
 	TitleAndDescriptionEditPage,
 } from "./pages";
 import { Mypage } from "./pages/Mypage";
+import CoinDetail from "./pages/mypage/CoinDetail";
+import CoinHistory from "./pages/mypage/CoinHistory";
 import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
@@ -67,6 +69,8 @@ export const App = () => {
 				<Route path="/mypage" element={<Mypage />} />
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
+				<Route path="/mypage/coinHistory" element={<CoinHistory />} />
+				<Route path="/mypage/coinHistory/:coinId" element={<CoinDetail />} />
 				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
 				<Route path="/oxScreening" element={<OxScreening />} />
 				<Route path="/survey" element={<Survey />} />

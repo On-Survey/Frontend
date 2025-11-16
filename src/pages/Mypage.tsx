@@ -44,6 +44,10 @@ export const Mypage = () => {
 		navigate("/mypage/refundPolicy");
 	};
 
+	const handleCoinHistory = () => {
+		navigate("/mypage/coinHistory");
+	};
+
 	if (!mypageData) {
 		return null;
 	}
@@ -142,6 +146,17 @@ export const Mypage = () => {
 						}
 						arrowType="right"
 						onClick={handleOrderHistory}
+					/>
+					<ListRow
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
+								top="코인 사용 내역"
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						arrowType="right"
+						onClick={handleCoinHistory}
 					/>
 					<ListRow
 						contents={

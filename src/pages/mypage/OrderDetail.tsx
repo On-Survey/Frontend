@@ -11,7 +11,7 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getSurveyDetail } from "../../service/order";
+import { getSurveyDetail, refundSurvey } from "../../service/order";
 import type { OrderDetail as OrderDetailType } from "../../types/order";
 import { mapSurveyDetailToOrderDetail } from "../../utils/orderUtils";
 import { OrderCancelBottomSheet } from "./components/OrderCancelBottomSheet";
@@ -44,6 +44,7 @@ export const OrderDetail = () => {
 	const [orderDetail, setOrderDetail] = useState<OrderDetailType | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 	const [isCancelBottomSheetOpen, setIsCancelBottomSheetOpen] = useState(false);
+	const [isSurveyCancelled, setIsSurveyCancelled] = useState(false);
 	const platform = getPlatformOS();
 	const { openToast } = useToast();
 
@@ -72,20 +73,30 @@ export const OrderDetail = () => {
 		return null;
 	}
 
-	const handleCancelOrderClick = () => {
-		setIsBottomSheetOpen(true);
-	};
-
-	const handleCancelOrder = () => {
+	const handleCancelOrder = async () => {
 		setIsBottomSheetOpen(false);
-		if (platform === "android") {
-			openToast("환불접수가 완료됐어요.", {
+		try {
+			const surveyId = Number(orderId);
+			if (Number.isNaN(surveyId) || surveyId <= 0) {
+				throw new Error("잘못된 설문 ID 입니다.");
+			}
+			// 코인 환불 API 호출
+			await refundSurvey(surveyId);
+			openToast("설문 취소가 완료됐어요.", {
 				type: "bottom",
 				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
-				higherThanCTA: false,
+				higherThanCTA: true,
 			});
+			// 환불 완료 후 목록으로 이동
+			navigate("/mypage/orderHistory");
+		} catch (error) {
+			openToast("환불 처리에 실패했어요. 잠시 후 다시 시도해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/warning.json",
+				higherThanCTA: true,
+			});
+			console.error(error);
 		}
-		navigate("/mypage/orderHistory");
 	};
 
 	const handleCloseBottomSheet = () => {
@@ -96,13 +107,28 @@ export const OrderDetail = () => {
 		setIsCancelBottomSheetOpen(true);
 	};
 
-	const handleCancelSurveyConfirm = () => {
+	const handleCancelSurveyConfirm = async () => {
 		setIsCancelBottomSheetOpen(false);
-		openToast("설문 취소가 완료됐어요.", {
-			type: "bottom",
-			lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
-			higherThanCTA: true,
-		});
+		try {
+			const surveyId = Number(orderId);
+			if (Number.isNaN(surveyId) || surveyId <= 0) {
+				throw new Error("잘못된 설문 ID 입니다.");
+			}
+			await refundSurvey(surveyId);
+			openToast("설문 취소가 완료됐어요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+			setIsSurveyCancelled(true);
+			navigate("/mypage/orderHistory");
+		} catch (error) {
+			openToast("환불 처리에 실패했어요. 잠시 후 다시 시도해주세요.", {
+				type: "bottom",
+				higherThanCTA: true,
+			});
+			console.error(error);
+		}
 	};
 
 	const handleCancelSurveyClose = () => {
@@ -128,16 +154,6 @@ export const OrderDetail = () => {
 					</Top.SubtitleParagraph>
 				}
 			/>
-			<div className="p-4">
-				<Button
-					size="medium"
-					color="dark"
-					variant="weak"
-					onClick={handleCancelOrderClick}
-				>
-					{platform === "ios" ? "앱스토어에서 환불 신청" : "환불 받기"}
-				</Button>
-			</div>
 			<div className="flex-1 px-6 overflow-y-auto pb-24">
 				<Text
 					display="block"
@@ -200,9 +216,10 @@ export const OrderDetail = () => {
 			<FixedBottomCTA
 				color="danger"
 				loading={false}
-				onClick={handleCancelSurveyClick}
+				disabled={isSurveyCancelled}
+				onClick={isSurveyCancelled ? undefined : handleCancelSurveyClick}
 			>
-				설문 취소하기
+				{isSurveyCancelled ? "설문 취소 완료" : "설문 취소하기"}
 			</FixedBottomCTA>
 
 			<OrderCancelBottomSheet
