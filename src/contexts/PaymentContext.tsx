@@ -15,11 +15,19 @@ export type Estimate = {
 	desiredParticipants: string;
 };
 
+export type SelectedCoinAmount = {
+	sku: string;
+	displayName: string;
+	displayAmount: string;
+};
+
 type PaymentEstimateContextValue = {
 	estimate: Estimate;
 	handleEstimateChange: (next: Estimate) => void;
-	selectedCoinAmount: number | null;
-	handleSelectedCoinAmountChange: (amount: number | null) => void;
+	selectedCoinAmount: SelectedCoinAmount | null;
+	handleSelectedCoinAmountChange: (amount: SelectedCoinAmount) => void;
+	totalPrice: number;
+	handleTotalPriceChange: (price: number) => void;
 };
 
 const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
@@ -28,27 +36,36 @@ const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
 
 export const PaymentProvider = ({ children }: PropsWithChildren) => {
 	const [estimate, setEstimate] = useState<Estimate>({
-		date: null,
-		location: "",
-		age: "",
-		gender: "",
-		desiredParticipants: "",
+		date: new Date(),
+		location: "전체",
+		age: "전체",
+		gender: "전체",
+		desiredParticipants: "50명",
 	});
 
-	const [selectedCoinAmount, setSelectedCoinAmount] = useState<number | null>(
-		null,
-	);
+	const [selectedCoinAmount, setSelectedCoinAmount] =
+		useState<SelectedCoinAmount | null>(null);
+
+	const [totalPrice, setTotalPrice] = useState<number>(0);
 
 	const handleEstimateChange = useCallback((next: Estimate) => {
 		setEstimate(next);
 	}, []);
 
 	const handleSelectedCoinAmountChange = useCallback(
-		(amount: number | null) => {
-			setSelectedCoinAmount(amount);
+		(amount: SelectedCoinAmount) => {
+			setSelectedCoinAmount({
+				sku: amount.sku,
+				displayName: amount.displayName,
+				displayAmount: amount.displayAmount,
+			});
 		},
 		[],
 	);
+
+	const handleTotalPriceChange = useCallback((price: number) => {
+		setTotalPrice(price);
+	}, []);
 
 	const value = useMemo(
 		() => ({
@@ -56,12 +73,16 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 			handleEstimateChange,
 			selectedCoinAmount,
 			handleSelectedCoinAmountChange,
+			totalPrice,
+			handleTotalPriceChange,
 		}),
 		[
 			estimate,
 			handleEstimateChange,
 			selectedCoinAmount,
 			handleSelectedCoinAmountChange,
+			totalPrice,
+			handleTotalPriceChange,
 		],
 	);
 
