@@ -60,7 +60,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 								topProps={{ color: adaptive.blue500 }}
 								middle={survey.title}
 								middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
-								bottom="3분이면 400원 획득"
+								bottom="3분이면 300원 획득"
 								bottomProps={{ color: adaptive.grey600 }}
 							/>
 						}

@@ -87,7 +87,6 @@ export const Survey = () => {
 		} else if (questionCount <= 20) {
 			return 4;
 		}
-		// 20개 초과인 경우 기본값
 		return 4;
 	}, [questionCount]);
 

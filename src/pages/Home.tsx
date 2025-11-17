@@ -15,6 +15,7 @@ import { getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import { getMemberInfo } from "../service/userInfo";
 import type { SurveyListItem } from "../types/surveyList";
+import { formatRemainingTime } from "../utils/FormatDate";
 
 export const Home = () => {
 	const navigate = useNavigate();
@@ -57,19 +58,24 @@ export const Home = () => {
 				const mapSurveyToItem = (
 					survey: OngoingSurveySummary,
 				): SurveyListItem => {
-					const topicId = survey.interest ?? DEFAULT_TOPIC;
+					// interests 배열이 오면 첫 번째 값을 사용, 없으면 interest 단수 값 사용
+					const topicId =
+						(survey.interests && survey.interests.length > 0
+							? survey.interests[0]
+							: survey.interest) ?? DEFAULT_TOPIC;
 					const topic = topics.find((t) => t.id === topicId);
 					const iconSrc =
 						topic?.icon.type === "image" ? topic.icon.src : undefined;
 
 					return {
 						id: String(survey.surveyId),
-						topicId,
+						topicId: topicId as SurveyListItem["topicId"],
 						title: survey.title,
 						iconType: iconSrc ? "image" : "icon",
 						iconSrc,
 						iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
 						description: survey.description,
+						remainingTimeText: formatRemainingTime(survey.deadline),
 					};
 				};
 
