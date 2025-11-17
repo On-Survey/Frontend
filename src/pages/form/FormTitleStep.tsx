@@ -2,10 +2,16 @@ import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { createSurvey } from "../../service/form";
 
 export const FormTitleStep = () => {
-	const { state, setTitle, setDescription, setTitleStepCompleted } =
-		useSurvey();
+	const {
+		state,
+		setTitle,
+		setDescription,
+		setTitleStepCompleted,
+		setSurveyId,
+	} = useSurvey();
 	const { handleStepChange } = useMultiStep();
 
 	const step = state.titleStepCompleted;
@@ -22,8 +28,17 @@ export const FormTitleStep = () => {
 	const handleNext = () => {
 		setTitleStepCompleted(true);
 	};
-	const handleNextPage = () => {
-		handleStepChange(1);
+	const handleNextPage = async () => {
+		const result = await createSurvey({
+			title: state.survey.title,
+			description: state.survey.description,
+		});
+
+		if (result.success) {
+			const { surveyId } = result.result;
+			setSurveyId(surveyId);
+			handleStepChange(1);
+		}
 	};
 
 	return (

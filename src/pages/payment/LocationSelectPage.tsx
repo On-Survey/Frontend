@@ -12,6 +12,7 @@ import {
 	REGIONS_10_PERCENT_SURCHARGE,
 	REGIONS_15_PERCENT_SURCHARGE,
 	REGIONS_NO_SURCHARGE,
+	type RegionCode,
 } from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
@@ -20,11 +21,11 @@ export const LocationSelectPage = () => {
 
 	const navigate = useNavigate();
 
-	const setLocation = (value: string) => {
+	const setLocation = (value: RegionCode) => {
 		handleEstimateChange({ ...estimate, location: value });
 	};
 
-	const isChecked = (value: string) => estimate.location === value;
+	const isChecked = (value: RegionCode) => estimate.location === value;
 
 	return (
 		<>
@@ -49,19 +50,22 @@ export const LocationSelectPage = () => {
 			/>
 			{REGIONS_NO_SURCHARGE.map((region) => (
 				<ListRow
-					key={region}
+					key={region.value}
 					role="checkbox"
-					aria-checked={isChecked(region)}
-					onClick={() => setLocation(region)}
+					aria-checked={isChecked(region.value)}
+					onClick={() => setLocation(region.value)}
 					contents={
 						<ListRow.Texts
 							type="1RowTypeA"
-							top={region}
+							top={region.label}
 							topProps={{ color: adaptive.grey700 }}
 						/>
 					}
 					right={
-						<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
+						<Checkbox.Line
+							checked={isChecked(region.value)}
+							aria-hidden={true}
+						/>
 					}
 				/>
 			))}
@@ -80,19 +84,22 @@ export const LocationSelectPage = () => {
 			<div>
 				{REGIONS_5_PERCENT_SURCHARGE.map((region) => (
 					<ListRow
-						key={region}
+						key={region.value}
 						role="checkbox"
-						aria-checked={isChecked(region)}
-						onClick={() => setLocation(region)}
+						aria-checked={isChecked(region.value)}
+						onClick={() => setLocation(region.value)}
 						contents={
 							<ListRow.Texts
 								type="1RowTypeA"
-								top={region}
+								top={region.label}
 								topProps={{ color: adaptive.grey700 }}
 							/>
 						}
 						right={
-							<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
+							<Checkbox.Line
+								checked={isChecked(region.value)}
+								aria-hidden={true}
+							/>
 						}
 					/>
 				))}
@@ -112,19 +119,22 @@ export const LocationSelectPage = () => {
 			<div>
 				{REGIONS_10_PERCENT_SURCHARGE.map((region) => (
 					<ListRow
-						key={region}
+						key={region.value}
 						role="checkbox"
-						aria-checked={isChecked(region)}
-						onClick={() => setLocation(region)}
+						aria-checked={isChecked(region.value)}
+						onClick={() => setLocation(region.value)}
 						contents={
 							<ListRow.Texts
 								type="1RowTypeA"
-								top={region}
+								top={region.label}
 								topProps={{ color: adaptive.grey700 }}
 							/>
 						}
 						right={
-							<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
+							<Checkbox.Line
+								checked={isChecked(region.value)}
+								aria-hidden={true}
+							/>
 						}
 					/>
 				))}
@@ -144,19 +154,22 @@ export const LocationSelectPage = () => {
 			<div>
 				{REGIONS_15_PERCENT_SURCHARGE.map((region) => (
 					<ListRow
-						key={region}
+						key={region.value}
 						role="checkbox"
-						aria-checked={isChecked(region)}
-						onClick={() => setLocation(region)}
+						aria-checked={isChecked(region.value)}
+						onClick={() => setLocation(region.value)}
 						contents={
 							<ListRow.Texts
 								type="1RowTypeA"
-								top={region}
+								top={region.label}
 								topProps={{ color: adaptive.grey700 }}
 							/>
 						}
 						right={
-							<Checkbox.Line checked={isChecked(region)} aria-hidden={true} />
+							<Checkbox.Line
+								checked={isChecked(region.value)}
+								aria-hidden={true}
+							/>
 						}
 					/>
 				))}

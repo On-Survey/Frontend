@@ -1,32 +1,47 @@
 import { adaptive } from "@toss/tds-colors";
 import { TextArea, Top } from "@toss/tds-mobile";
+import {
+	SURVEY_BADGE_CONFIG,
+	SURVEY_STATUS_LABELS,
+} from "../../constants/survey";
+import { useResultPageData } from "../../hooks/useResultPageData";
 import { formatDateDisplay } from "../../utils/FormatDate";
 
-const dateResponses = [
-	{ id: "date-01", value: "2025-02-17" },
-	{ id: "date-02", value: "2025-02-18" },
-	{ id: "date-03", value: "2025-02-19" },
-	{ id: "date-04", value: "2025-02-19" },
-	{ id: "date-05", value: "2025-02-21" },
-	{ id: "date-06", value: "2025-02-22" },
-];
-
 export const DateResultPage = () => {
+	const {
+		question,
+		answerList,
+		surveyTitle,
+		surveyStatus,
+		responseCount,
+		requiredLabel,
+	} = useResultPageData();
+
+	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+
 	return (
 		<div className="min-h-screen">
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						반려동물 외모 취향에 관한 설문
+						{question?.title || surveyTitle}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
 					<Top.SubtitleBadges
-						badges={[{ text: "노출중", color: "blue", variant: "weak" }]}
+						badges={[
+							{
+								text: SURVEY_STATUS_LABELS[surveyStatus],
+								color: badge.color,
+								variant: "weak",
+							},
+						]}
 					/>
 				}
 				subtitleBottom={
-					<Top.SubtitleParagraph size={15}>필수 / 날짜형</Top.SubtitleParagraph>
+					<Top.SubtitleParagraph size={15}>
+						{requiredLabel} / 날짜형
+					</Top.SubtitleParagraph>
 				}
 				lower={
 					<Top.LowerButton
@@ -35,23 +50,29 @@ export const DateResultPage = () => {
 						variant="weak"
 						display="inline"
 					>
-						{dateResponses.length}명 응답
+						{responseCount}명 응답
 					</Top.LowerButton>
 				}
 			/>
 
 			<div className="pb-12">
-				{dateResponses.map((response) => (
-					<TextArea
-						key={response.id}
-						variant="box"
-						hasError={false}
-						labelOption="sustain"
-						value={formatDateDisplay(response.value)}
-						placeholder=""
-						readOnly={true}
-					/>
-				))}
+				{answerList.length === 0 ? (
+					<div className="px-4 py-8 text-center">
+						<p className="text-gray-500">아직 응답이 없습니다.</p>
+					</div>
+				) : (
+					answerList.map((value) => (
+						<TextArea
+							key={`date-${value}`}
+							variant="box"
+							hasError={false}
+							labelOption="sustain"
+							value={formatDateDisplay(value)}
+							placeholder=""
+							readOnly={true}
+						/>
+					))
+				)}
 			</div>
 		</div>
 	);

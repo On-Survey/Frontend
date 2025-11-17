@@ -42,8 +42,7 @@ export const CoinAlertBottomSheet = ({
 			<div className="flex justify-center items-center">
 				<Asset.Icon
 					frameShape={{ width: 100 }}
-					name="icon-coin-mono"
-					color=""
+					name="icon-coin-yellow"
 					aria-hidden={true}
 				/>
 			</div>

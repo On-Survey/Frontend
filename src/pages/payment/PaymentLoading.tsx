@@ -1,19 +1,94 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
+import { graniteEvent, IAP } from "@apps-in-toss/web-framework";
+
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { useSurvey } from "../../contexts/SurveyContext";
+import { createForm } from "../../service/form";
+import { createPayment } from "../../service/payments";
+import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
+	const { state, resetForm } = useSurvey();
+	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
+	const location = useLocation();
 
-	//TODO: 실제 로딩 시간으로 변경
+	const isChargeFlow = location.pathname === "/payment/charge";
+	const priceBreakdown = useMemo(
+		() => calculatePriceBreakdown(estimate),
+		[estimate],
+	);
+
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			goNextPayment();
-		}, 3000);
-		return () => clearTimeout(timer);
-	}, [goNextPayment]);
+		const buyIapProduct = async () => {
+			if (!selectedCoinAmount?.sku) {
+				throw new Error("상품 정보가 없습니다");
+			}
+			IAP.createOneTimePurchaseOrder({
+				options: {
+					sku: selectedCoinAmount.sku,
+					processProductGrant: async ({ orderId }) => {
+						try {
+							const response = await createPayment({
+								orderId: orderId,
+								price: Number(
+									selectedCoinAmount.displayAmount.replace("원", ""),
+								),
+							});
+
+							if (response.success && state.surveyId) {
+								const formPayload = {
+									surveyId: state.surveyId,
+									deadline: estimate.date?.toISOString() ?? "",
+									gender: estimate.gender,
+									genderPrice: priceBreakdown.genderPrice,
+									age: estimate.age,
+									agePrice: priceBreakdown.agePrice,
+									residence: estimate.location,
+									residencePrice: priceBreakdown.residencePrice,
+									dueCount: priceBreakdown.dueCount,
+									dueCountPrice: priceBreakdown.dueCountPrice,
+									totalCoin: priceBreakdown.totalPrice,
+								};
+								await createForm(formPayload);
+							}
+							return true;
+						} catch (error) {
+							console.error("결제 정보 전송 실패:", error);
+							return false;
+						}
+					},
+				},
+				onEvent: async (event) => {
+					if (event.type === "success") {
+						const { orderId } = event.data;
+						console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+						resetForm();
+						resetEstimate();
+						setTimeout(() => {
+							goNextPayment();
+						}, 3000);
+					}
+				},
+				onError: (error) => {
+					console.error("인앱결제에 실패했어요:", error);
+				},
+			});
+		};
+		buyIapProduct();
+	}, [
+		selectedCoinAmount,
+		goNextPayment,
+		estimate,
+		state.surveyId,
+		priceBreakdown,
+		resetForm,
+		resetEstimate,
+	]);
 
 	useEffect(() => {
 		const unsubscription = graniteEvent.addEventListener("backEvent", {
@@ -31,9 +106,9 @@ export const PaymentLoading = () => {
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						보유 코인으로
-						<br />
-						설문을 등록하고 있어요
+						{isChargeFlow
+							? "코인을 충전하고 있어요"
+							: "보유 코인으로\n설문을 등록하고 있어요"}
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={

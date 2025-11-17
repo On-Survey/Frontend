@@ -14,7 +14,7 @@
 		"deploy": "ait deploy"
 	},
 	"dependencies": {
-		"@apps-in-toss/web-framework": "^1.2.1",
+		"@apps-in-toss/web-framework": "^1.4.7",
 		"@emotion/react": "^11",
 		"@sentry/react": "^10.17.0",
 		"@tailwindcss/vite": "^4.1.14",

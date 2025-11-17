@@ -4,7 +4,6 @@ import axios, {
 	type AxiosResponse,
 	type InternalAxiosRequestConfig,
 } from "axios";
-
 import { getAccessToken } from "../../utils/tokenManager";
 import type { ApiResponse } from "./type";
 
@@ -26,6 +25,29 @@ export const getApiBaseUrl = (): string => {
 };
 
 /**
+ * API 호출 헬퍼 함수
+ * 응답에서 result 필드를 추출합니다.
+ */
+export const apiCall = async <T>(config: AxiosRequestConfig): Promise<T> => {
+	// FormData 사용 시 Content-Type을 제거하여 브라우저가 자동으로 multipart/form-data로 설정
+	if (config.data instanceof FormData) {
+		config.headers = {
+			...config.headers,
+			"Content-Type": undefined,
+		};
+	}
+
+	const response = await apiClient.request<{ result: T }>(config);
+	const payload = response.data?.result;
+
+	if (payload === undefined) {
+		throw new Error("API 응답에 result 값이 없습니다.");
+	}
+
+	return payload;
+};
+
+/**
  * 서버 사이드에서 사용하는 일반 Axios 클라이언트 (캐싱 미지원)
  */
 export const apiClient: AxiosInstance = axios.create(API_CONFIG);
@@ -35,12 +57,16 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  */
 apiClient.interceptors.request.use(
 	async (config: InternalAxiosRequestConfig) => {
-		// 인증 토큰 헤더 추가
-		const token = await getAccessToken();
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`;
-		}
+		// 인증 관련 엔드포인트(/auth/*)에는 액세스 토큰을 붙이지 않는다.
+		const isAuthEndpoint =
+			typeof config.url === "string" && config.url.startsWith("/auth/");
 
+		if (!isAuthEndpoint) {
+			const token = await getAccessToken();
+			if (token) {
+				config.headers.Authorization = `Bearer ${token}`;
+			}
+		}
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {
 			console.log(
@@ -68,15 +94,25 @@ apiClient.interceptors.response.use(
 
 		return response;
 	},
-	(error) => {
+	async (error) => {
 		// 에러 처리
 		if (error.response) {
 			const { status, data } = error.response;
 
-			// 인증 에러 처리
-			if (status === 401) {
-				handleAuthError();
-			}
+			// // 인증 에러 처리
+			// if (status === 401) {
+			// 	const refreshToken = await getRefreshToken();
+
+			// 	if (!refreshToken) {
+			// 		throw new Error("리프레시 토큰이 없습니다.");
+			// 	}
+
+			// 	const newRefreshToken = await reissueToken(refreshToken);
+			// 	if (newRefreshToken) {
+			// 		apiClient.defaults.headers.common["x-refresh-token"] =
+			// 			`Bearer ${newRefreshToken}`;
+			// 	}
+			// }
 
 			// 에러 로깅
 			console.error(`❌ API Error: ${status}`, data);
@@ -91,28 +127,6 @@ apiClient.interceptors.response.use(
 );
 
 /**
- * 인증 토큰 가져오기 (구현 필요)
- */
-// function getAuthToken(): string | null {
-//   // 쿠키, 로컬스토리지, 세션스토리지 등에서 토큰 가져오기
-//   if (typeof window !== "undefined") {
-//     return localStorage.getItem("authToken");
-//   }
-//   return null;
-// }
-
-/**
- * 인증 에러 처리 (구현 필요)
- */
-function handleAuthError(): void {
-	// 세션 방식에서는 토큰 제거 불필요, 필요시 로그인 페이지로 리다이렉트만 사용
-	// if (typeof window !== "undefined") {
-	//   localStorage.removeItem("authToken");
-	//   // window.location.href = '/login';
-	// }
-}
-
-/**
  * API 요청 헬퍼 함수들
  */
 export const api = {
@@ -122,40 +136,40 @@ export const api = {
 	get: <T>(
 		url: string,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<AxiosResponse<T>> => {
 		return apiClient.get(url, config);
 	},
 
 	/**
 	 * POST 요청
 	 */
-	post: <T>(
+	post: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.post(url, data, config);
 	},
 
 	/**
 	 * PUT 요청
 	 */
-	put: <T>(
+	put: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.put(url, data, config);
 	},
 
 	/**
 	 * PATCH 요청
 	 */
-	patch: <T>(
+	patch: <T, R>(
 		url: string,
-		data?: T,
+		data?: R,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.patch(url, data, config);
 	},
 
@@ -165,7 +179,7 @@ export const api = {
 	delete: <T>(
 		url: string,
 		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<ApiResponse<T>>> => {
+	): Promise<ApiResponse<T>> => {
 		return apiClient.delete(url, config);
 	},
 };

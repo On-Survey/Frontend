@@ -8,65 +8,56 @@ import {
 	ProgressBar,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveySingleChoice = () => {
-	type Choice = { id: number; label: string };
-	type Question = {
-		id: number;
-		title: string;
-		required: boolean;
-		multiple: false;
-		choices: Choice[];
-		description?: string;
+	const {
+		currentQuestion,
+		currentAnswer,
+		answers,
+		updateAnswer,
+		progress,
+		totalQuestions,
+		currentQuestionIndex,
+		submitting,
+		handlePrev,
+		handleNext,
+	} = useSurveyNavigation({
+		questionType: "multipleChoice",
+		validateAnswer: (answer) => answer.trim().length > 0,
+	});
+
+	if (!currentQuestion) {
+		return null;
+	}
+
+	const handleOptionSelect = (optionContent: string) => {
+		updateAnswer(currentQuestion.questionId, optionContent);
 	};
 
-	const navigate = useNavigate();
-	const [question, setQuestion] = useState<Question | null>(null);
-	const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null);
-
-	const handleEssay = () => {
-		navigate("/survey/essay");
-	};
-
-	useEffect(() => {
-		const mock: Question = {
-			id: 101,
-			title: "추석 당일, 오늘의 날씨 예측해볼까요?",
-			required: true,
-			multiple: false,
-			choices: [
-				{ id: 1, label: "비온다" },
-				{ id: 2, label: "눈온다" },
-				{ id: 3, label: "물 마시기" },
-			],
-			description: "1개만 선택할 수 있어요",
-		};
-		setQuestion(mock);
-	}, []);
+	const isCurrentAnswered = Boolean(currentAnswer);
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={0.5} />
+			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
 
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={colors.grey900}>
-						{question?.title ?? ""}
+						{currentQuestion?.title ?? ""}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
-					question?.required ? (
+					currentQuestion?.isRequired ? (
 						<Top.SubtitleBadges
 							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
 						/>
 					) : undefined
 				}
 				subtitleBottom={
-					question?.description ? (
+					currentQuestion?.description ? (
 						<Top.SubtitleParagraph size={15}>
-							{question.description}
+							{currentQuestion.description}
 						</Top.SubtitleParagraph>
 					) : undefined
 				}
@@ -74,22 +65,26 @@ export const SurveySingleChoice = () => {
 
 			<div className="px-2 flex-1 overflow-y-auto pb-28">
 				<List role="radiogroup">
-					{question?.choices.map((choice) => (
+					{currentQuestion?.options?.map((choice) => (
 						<ListRow
-							key={choice.id}
+							key={choice.optionId}
 							role="radio"
-							aria-checked={selectedChoiceId === choice.id}
-							onClick={() => setSelectedChoiceId(choice.id)}
+							aria-checked={
+								answers[currentQuestion.questionId] === choice.content
+							}
+							onClick={() => handleOptionSelect(choice.content)}
 							contents={
 								<ListRow.Texts
 									type="1RowTypeA"
-									top={choice.label}
+									top={choice.content}
 									topProps={{ color: colors.grey700 }}
 								/>
 							}
 							right={
 								<Checkbox.Line
-									checked={selectedChoiceId === choice.id}
+									checked={
+										answers[currentQuestion.questionId] === choice.content
+									}
 									aria-hidden={true}
 								/>
 							}
@@ -105,14 +100,19 @@ export const SurveySingleChoice = () => {
 						color="dark"
 						variant="weak"
 						display="block"
-						onClick={() => navigate(-1)}
+						onClick={handlePrev}
 					>
 						이전
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton display="block" onClick={handleEssay}>
-						다음
+					<CTAButton
+						display="block"
+						onClick={handleNext}
+						disabled={!isCurrentAnswered || submitting}
+						loading={submitting}
+					>
+						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
 					</CTAButton>
 				}
 			/>

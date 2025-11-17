@@ -2,20 +2,32 @@ import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text } from "@toss/tds-mobile";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 
 export const PaymentSuccessPage = () => {
-	const navigate = useNavigate();
+	const { resetActiveStep } = useMultiStep();
 
-	//TODO: 실제 네비게이션 로직으로 변경
+	const navigate = useNavigate();
+	const location = useLocation();
+	const isChargeFlow = location.pathname === "/payment/charge";
+
 	const handleNavigate = () => {
-		navigate("/mysurvey");
+		const target = isChargeFlow ? "/mypage" : "/mysurvey";
+		navigate(target);
+		requestAnimationFrame(() => {
+			resetActiveStep();
+		});
 	};
 
 	useEffect(() => {
 		const unsubscription = graniteEvent.addEventListener("backEvent", {
 			onEvent: () => {
-				navigate("/mysurvey");
+				if (isChargeFlow) {
+					navigate("/mypage");
+				} else {
+					navigate("/mysurvey");
+				}
 			},
 			onError: (error) => {
 				alert(`에러가 발생했어요: ${error}`);
@@ -23,7 +35,7 @@ export const PaymentSuccessPage = () => {
 		});
 
 		return unsubscription;
-	}, [navigate]);
+	}, [navigate, isChargeFlow]);
 	return (
 		<>
 			<div className="flex flex-col items-center justify-center gap-3 min-h-screen pb-32">
@@ -34,7 +46,7 @@ export const PaymentSuccessPage = () => {
 				/>
 				<div className="h-3" />
 				<Text color={adaptive.grey800} typography="t2" fontWeight="bold">
-					설문이 잘 등록됐어요
+					{isChargeFlow ? "코인이 충전됐어요" : "설문이 잘 등록됐어요"}
 				</Text>
 				<Text
 					display="block"
@@ -43,9 +55,9 @@ export const PaymentSuccessPage = () => {
 					fontWeight="regular"
 					textAlign="center"
 				>
-					검수는 최대 2일 정도 소요돼요
-					<br />
-					받은 응답은 내 설문 탭에서 확인할 수 있어요.
+					{isChargeFlow
+						? "충전한 코인으로 설문을 등록할 수 있어요."
+						: "검수는 최대 2일 정도 소요돼요\n받은 응답은 내 설문 탭에서 확인할 수 있어요."}
 				</Text>
 			</div>
 			<FixedBottomCTA loading={false} onClick={handleNavigate}>

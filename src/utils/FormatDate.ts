@@ -16,3 +16,22 @@ export const formatDateDisplay = (value: Date | string): string => {
 
 	return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
 };
+
+export const formatRemainingTime = (deadline?: string): string | undefined => {
+	if (!deadline) return undefined;
+
+	try {
+		const deadlineDate = new Date(deadline);
+		const now = new Date();
+		const diffMs = deadlineDate.getTime() - now.getTime();
+		const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+		if (diffDays < 0) return "마감됨";
+		if (diffDays === 0) return "오늘 마감";
+		if (diffDays === 1) return "마감 하루 전";
+		if (diffDays <= 7) return `마감 ${diffDays}일 전`;
+		return `마감 ${Math.ceil(diffDays / 7)}주 전`;
+	} catch {
+		return undefined;
+	}
+};
