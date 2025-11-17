@@ -1,5 +1,5 @@
 import { BottomSheet, Checkbox, List, ListRow } from "@toss/tds-mobile";
-import { AGE } from "../../constants/payment";
+import { AGE, type AgeCode } from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 interface AgeSelectBottomSheetProps {
@@ -30,7 +30,9 @@ export const AgeSelectBottomSheet = ({
 
 			handleEstimateChange({
 				...estimate,
-				age: newSelectedAges.length === 0 ? "ALL" : newSelectedAges.join(", "),
+				age: (newSelectedAges.length === 0
+					? "ALL"
+					: newSelectedAges.join(", ")) as AgeCode,
 			});
 		}
 	};
