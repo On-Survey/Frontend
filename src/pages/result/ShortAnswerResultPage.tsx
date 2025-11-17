@@ -1,36 +1,45 @@
 import { adaptive } from "@toss/tds-colors";
 import { TextArea, Top } from "@toss/tds-mobile";
-
-const shortAnswerResponses = [
-	{ id: "short-01", value: "말티즈" },
-	{ id: "short-02", value: "비숑 프리제" },
-	{ id: "short-03", value: "포메라니안" },
-	{ id: "short-04", value: "믹스견" },
-	{ id: "short-05", value: "요크셔테리어" },
-	{ id: "short-06", value: "골든 리트리버" },
-	{ id: "short-07", value: "푸들" },
-	{ id: "short-08", value: "웰시코기" },
-	{ id: "short-09", value: "시바" },
-	{ id: "short-10", value: "치와와" },
-];
+import {
+	SURVEY_BADGE_CONFIG,
+	SURVEY_STATUS_LABELS,
+} from "../../constants/survey";
+import { useResultPageData } from "../../hooks/useResultPageData";
 
 export const ShortAnswerResultPage = () => {
+	const {
+		question,
+		answerList,
+		surveyTitle,
+		surveyStatus,
+		responseCount,
+		requiredLabel,
+	} = useResultPageData();
+
+	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+
 	return (
 		<div className="min-h-screen">
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						반려동물 외모 취향에 관한 설문
+						{question?.title || surveyTitle}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
 					<Top.SubtitleBadges
-						badges={[{ text: "노출중", color: "blue", variant: "weak" }]}
+						badges={[
+							{
+								text: SURVEY_STATUS_LABELS[surveyStatus],
+								color: badge.color,
+								variant: "weak",
+							},
+						]}
 					/>
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph size={15}>
-						필수 / 주관식 단답형
+						{requiredLabel} / 주관식 단답형
 					</Top.SubtitleParagraph>
 				}
 				lower={
@@ -40,23 +49,29 @@ export const ShortAnswerResultPage = () => {
 						variant="weak"
 						display="inline"
 					>
-						{shortAnswerResponses.length}명 응답
+						{responseCount}명 응답
 					</Top.LowerButton>
 				}
 			/>
 
 			<div className="pb-12">
-				{shortAnswerResponses.map((response) => (
-					<TextArea
-						key={response.id}
-						variant="box"
-						hasError={false}
-						labelOption="sustain"
-						value={response.value}
-						placeholder=""
-						readOnly={true}
-					/>
-				))}
+				{answerList.length === 0 ? (
+					<div className="px-4 py-8 text-center">
+						<p className="text-gray-500">아직 응답이 없습니다.</p>
+					</div>
+				) : (
+					answerList.map((value) => (
+						<TextArea
+							key={`short-${value}`}
+							variant="box"
+							hasError={false}
+							labelOption="sustain"
+							value={value}
+							placeholder=""
+							readOnly={true}
+						/>
+					))
+				)}
 			</div>
 		</div>
 	);

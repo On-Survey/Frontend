@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { Asset, ConfirmDialog, Text } from "@toss/tds-mobile";
+import { Asset, ConfirmDialog, Text, useToast } from "@toss/tds-mobile";
 import { useState } from "react";
 import {
 	BUTTON_STYLES,
@@ -10,19 +10,57 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { saveQuestions } from "../../service/form";
+import { convertQuestionsToServerFormat } from "../../utils/questionConverter";
 import { QuestionController } from "./QuestionController";
 
-export const FormController = () => {
+interface FormControllerProps {
+	isReorderMode?: boolean;
+	onReorderModeChange?: (isReorderMode: boolean) => void;
+}
+
+export const FormController = ({
+	isReorderMode = false,
+	onReorderModeChange,
+}: FormControllerProps) => {
 	const { handleStepChange } = useMultiStep();
-	const { setScreeningEnabled } = useSurvey();
+	const { setScreeningEnabled, state } = useSurvey();
 
 	const [isOpen, setIsOpen] = useState(false);
+
+	const { openToast } = useToast();
 
 	const {
 		isOpen: isConfirmDialogOpen,
 		handleOpen: handleConfirmDialogOpen,
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
+
+	const handleSaveAndIsConfirmDialogOpen = async () => {
+		if (state.survey.question.length === 0) {
+			openToast("문항을 추가해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
+		const surveyId = state.surveyId ?? 0;
+		const serverQuestions = convertQuestionsToServerFormat(
+			state.survey.question,
+			surveyId,
+		);
+
+		const result = await saveQuestions({
+			surveyId,
+			questions: {
+				questions: serverQuestions,
+			},
+		});
+		if (result.success) {
+			handleConfirmDialogOpen();
+		}
+	};
 
 	const handleOpen = () => {
 		setIsOpen(true);
@@ -32,8 +70,27 @@ export const FormController = () => {
 		setIsOpen(false);
 	};
 
-	const handleSave = () => {
-		console.log("임시 저장");
+	const handleSave = async () => {
+		const surveyId = state.surveyId ?? 0;
+		const serverQuestions = convertQuestionsToServerFormat(
+			state.survey.question,
+			surveyId,
+		);
+
+		const result = await saveQuestions({
+			surveyId,
+			questions: {
+				questions: serverQuestions,
+			},
+		});
+
+		if (result.success) {
+			openToast("임시 저장됐어요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				higherThanCTA: true,
+			});
+		}
 	};
 
 	const handleAddQuestion = () => {
@@ -41,7 +98,9 @@ export const FormController = () => {
 	};
 
 	const handleReorderQuestion = () => {
-		console.log("순서 변경");
+		if (onReorderModeChange) {
+			onReorderModeChange(!isReorderMode);
+		}
 	};
 
 	const handleNext = () => {
@@ -121,35 +180,49 @@ export const FormController = () => {
 								<div className="animate-slide-in-right">
 									<div className="flex items-center gap-2 w-full justify-between">
 										<div className="flex items-center gap-10 bg-white rounded-full p-2 w-full justify-center">
-											{MAIN_CONTROLS.map((control) => (
-												<button
-													key={control.id}
-													className={BUTTON_STYLES.mainControl}
-													onClick={actionHandlers[control.action]}
-													type="button"
-												>
-													<Asset.Icon
-														frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
-														backgroundColor={ICON_PROPS.backgroundColor}
-														name={control.icon}
-														color={adaptive.grey600}
-														aria-hidden={ICON_PROPS.ariaHidden}
-														ratio={ICON_PROPS.ratio}
-													/>
-													<Text
-														color={adaptive.grey700}
-														typography={TEXT_PROPS.typography}
-														fontWeight={TEXT_PROPS.fontWeight}
+											{MAIN_CONTROLS.map((control) => {
+												const isReorderControl = control.id === "reorder";
+												const displayLabel =
+													isReorderControl && isReorderMode
+														? "변경 완료"
+														: control.label;
+												const displayIcon =
+													isReorderControl && isReorderMode
+														? "icon-check-mono"
+														: control.icon;
+
+												return (
+													<button
+														key={control.id}
+														className={BUTTON_STYLES.mainControl}
+														onClick={actionHandlers[control.action]}
+														type="button"
 													>
-														{control.label}
-													</Text>
-												</button>
-											))}
+														<Asset.Icon
+															frameShape={
+																Asset.frameShape[ICON_PROPS.frameShape]
+															}
+															backgroundColor={ICON_PROPS.backgroundColor}
+															name={displayIcon}
+															color={adaptive.grey600}
+															aria-hidden={ICON_PROPS.ariaHidden}
+															ratio={ICON_PROPS.ratio}
+														/>
+														<Text
+															color={adaptive.grey700}
+															typography={TEXT_PROPS.typography}
+															fontWeight={TEXT_PROPS.fontWeight}
+														>
+															{displayLabel}
+														</Text>
+													</button>
+												);
+											})}
 										</div>
 										<button
 											className={BUTTON_STYLES.nextButton}
 											type="button"
-											onClick={handleConfirmDialogOpen}
+											onClick={handleSaveAndIsConfirmDialogOpen}
 										>
 											<Asset.Icon
 												frameShape={Asset.frameShape[ICON_PROPS.frameShape]}

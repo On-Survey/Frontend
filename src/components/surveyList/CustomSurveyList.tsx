@@ -22,8 +22,15 @@ export const CustomSurveyList = ({
 }: CustomSurveyListProps) => {
 	const navigate = useNavigate();
 
-	const handleSurveyClick = () => {
-		navigate("/survey");
+	const handleSurveyClick = (survey: SurveyListItem) => {
+		const searchParams = new URLSearchParams({ surveyId: survey.id });
+		navigate(
+			{
+				pathname: "/survey",
+				search: `?${searchParams.toString()}`,
+			},
+			{ state: { surveyId: survey.id, survey } },
+		);
 	};
 
 	return (
@@ -41,41 +48,48 @@ export const CustomSurveyList = ({
 				</div>
 			</div>
 
-			<List>
-				{surveys.map((survey) => (
-					<ListRow
-						key={survey.id}
-						onClick={handleSurveyClick}
-						contents={
-							<ListRow.Texts
-								type="3RowTypeC"
-								top={getTopicTag(survey.topicId)}
-								topProps={{ color: adaptive.blue500 }}
-								middle={survey.title}
-								middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
-								bottom="3분이면 400원 획득"
-								bottomProps={{ color: adaptive.grey600 }}
-							/>
-						}
-						left={
-							survey.iconType === "image" ? (
-								<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
-									<ListRow.AssetImage
-										src={survey.iconSrc || ""}
-										shape="original"
-										className="w-8"
-										onClick={handleSurveyClick}
-									/>
-								</div>
-							) : (
-								<ListRow.AssetIcon name={survey.iconName || ""} />
-							)
-						}
-						verticalPadding="large"
-						arrowType="right"
-					/>
-				))}
-			</List>
+			{surveys.length === 0 ? (
+				<div className="px-4 py-6 text-center">
+					<Text color={adaptive.grey700} typography="t7">
+						맞춤 설문이 없습니다
+					</Text>
+				</div>
+			) : (
+				<List>
+					{surveys.map((survey) => (
+						<ListRow
+							key={survey.id}
+							onClick={() => handleSurveyClick(survey)}
+							contents={
+								<ListRow.Texts
+									type="3RowTypeC"
+									top={getTopicTag(survey.topicId)}
+									topProps={{ color: adaptive.blue500 }}
+									middle={survey.title}
+									middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+									bottom="3분이면 300원 획득"
+									bottomProps={{ color: adaptive.grey600 }}
+								/>
+							}
+							left={
+								survey.iconType === "image" ? (
+									<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+										<ListRow.AssetImage
+											src={survey.iconSrc || ""}
+											shape="original"
+											className="w-8"
+										/>
+									</div>
+								) : (
+									<ListRow.AssetIcon name={survey.iconName || ""} />
+								)
+							}
+							verticalPadding="large"
+							arrowType="right"
+						/>
+					))}
+				</List>
+			)}
 		</>
 	);
 };

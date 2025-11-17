@@ -1,36 +1,46 @@
 import { adaptive } from "@toss/tds-colors";
 import { TextArea, Top } from "@toss/tds-mobile";
-
-const numberResponses = [
-	{ id: "num-01", value: 12 },
-	{ id: "num-02", value: 8 },
-	{ id: "num-03", value: 10 },
-	{ id: "num-04", value: 7 },
-	{ id: "num-05", value: 15 },
-	{ id: "num-06", value: 11 },
-	{ id: "num-07", value: 9 },
-	{ id: "num-08", value: 13 },
-	{ id: "num-09", value: 10 },
-	{ id: "num-10", value: 8 },
-	{ id: "num-11", value: 14 },
-];
+import {
+	SURVEY_BADGE_CONFIG,
+	SURVEY_STATUS_LABELS,
+} from "../../constants/survey";
+import { useResultPageData } from "../../hooks/useResultPageData";
 
 export const NumberResultPage = () => {
+	const {
+		question,
+		answerList,
+		surveyTitle,
+		surveyStatus,
+		responseCount,
+		requiredLabel,
+	} = useResultPageData();
+
+	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+
 	return (
 		<div className="min-h-screen">
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						반려동물 외모 취향에 관한 설문
+						{question?.title || surveyTitle}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
 					<Top.SubtitleBadges
-						badges={[{ text: "노출중", color: "blue", variant: "weak" }]}
+						badges={[
+							{
+								text: SURVEY_STATUS_LABELS[surveyStatus],
+								color: badge.color,
+								variant: "weak",
+							},
+						]}
 					/>
 				}
 				subtitleBottom={
-					<Top.SubtitleParagraph size={15}>필수 / 숫자형</Top.SubtitleParagraph>
+					<Top.SubtitleParagraph size={15}>
+						{requiredLabel} / 숫자형
+					</Top.SubtitleParagraph>
 				}
 				lower={
 					<Top.LowerButton
@@ -39,23 +49,29 @@ export const NumberResultPage = () => {
 						variant="weak"
 						display="inline"
 					>
-						{numberResponses.length}명 응답
+						{responseCount}명 응답
 					</Top.LowerButton>
 				}
 			/>
 
 			<div className="pb-12">
-				{numberResponses.map((response) => (
-					<TextArea
-						key={response.id}
-						variant="box"
-						hasError={false}
-						labelOption="sustain"
-						value={`${response.value}`}
-						placeholder=""
-						readOnly={true}
-					/>
-				))}
+				{answerList.length === 0 ? (
+					<div className="px-4 py-8 text-center">
+						<p className="text-gray-500">아직 응답이 없습니다.</p>
+					</div>
+				) : (
+					answerList.map((value) => (
+						<TextArea
+							key={`num-${value}`}
+							variant="box"
+							hasError={false}
+							labelOption="sustain"
+							value={value}
+							placeholder=""
+							readOnly={true}
+						/>
+					))
+				)}
 			</div>
 		</div>
 	);

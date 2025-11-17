@@ -1,6 +1,7 @@
+import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import {
@@ -8,83 +9,111 @@ import {
 	SURVEY_BADGE_CONFIG,
 	SURVEY_STATUS_LABELS,
 } from "../../constants/survey";
+import {
+	getSurveyAnswerDetail,
+	getUserSurveys,
+} from "../../service/mysurvey/api";
+import type { SurveyAnswerDetailResult } from "../../service/mysurvey/types";
 import type { QuestionType } from "../../types/survey";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../../types/surveyResponse";
+import { mapApiQuestionTypeToComponentType } from "../../utils/questionFactory";
+import { getQuestionResultRoute } from "../../utils/questionRoute";
 import { SurveyFilterBottomSheet } from "./components/SurveyFilterBottomSheet";
 
 export const SurveyResponseDetail = () => {
 	const navigate = useNavigate();
 	const { id } = useParams<{ id: string }>();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	const [surveyResponse, setSurveyResponse] =
+		useState<SurveyResponseDetailType | null>(null);
+	const [answerDetails, setAnswerDetails] =
+		useState<SurveyAnswerDetailResult | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
-	const RESULT_PAGE_PATHS: Record<QuestionType, string> = {
-		shortAnswer: "/result/short-answer",
-		longAnswer: "/result/long-answer",
-		multipleChoice: "/result/multiple-choice",
-		rating: "/result/rating",
-		nps: "/result/nps",
-		date: "/result/date",
-		number: "/result/number",
-	};
+	useEffect(() => {
+		partner.addAccessoryButton({
+			id: "heart",
+			title: "하트",
+			icon: {
+				name: "icon-heart-mono",
+			},
+		});
 
-	// Mock
-	const surveyResponse: SurveyResponseDetailType = {
-		id: Number(id) || 1,
-		title: "반려동물 외모 취향에 관한 설문",
-		status: "active",
-		responseCount: 11,
-		questions: [
-			{
-				id: "1",
-				title: "키우고 계신 견종이 무엇입니까?",
-				type: "shortAnswer",
-				required: true,
-				responseCount: 11,
+		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
+			onEvent: ({ id: buttonId }) => {
+				if (buttonId === "heart") {
+					navigate("/estimate");
+				}
 			},
-			{
-				id: "2",
-				title: "주관식 서술형",
-				type: "longAnswer",
-				required: true,
-				responseCount: 10,
-			},
-			{
-				id: "3",
-				title: "객관식",
-				type: "multipleChoice",
-				required: true,
-				responseCount: 10,
-			},
-			{
-				id: "4",
-				title: "평가형",
-				type: "rating",
-				required: true,
-				responseCount: 10,
-			},
-			{
-				id: "5",
-				title: "nps",
-				type: "nps",
-				required: true,
-				responseCount: 10,
-			},
-			{
-				id: "6",
-				title: "date",
-				type: "date",
-				required: true,
-				responseCount: 10,
-			},
-			{
-				id: "7",
-				title: "number",
-				type: "number",
-				required: true,
-				responseCount: 10,
-			},
-		],
-	};
+		});
+
+		return cleanup;
+	}, [navigate]);
+
+	// 설문 상세 조회
+	useEffect(() => {
+		const fetchSurveyDetail = async () => {
+			if (!id) return;
+
+			try {
+				setIsLoading(true);
+				const [result, userSurveysResult] = await Promise.all([
+					getSurveyAnswerDetail(Number(id)),
+					getUserSurveys(),
+				]);
+
+				// API 응답 전체 저장
+				setAnswerDetails(result);
+
+				// 설문 목록에서 해당 설문의 제목 찾기
+				const survey = userSurveysResult.infoList.find(
+					(s) => s.surveyId === result.surveyId,
+				);
+				const surveyTitle = survey?.title || "";
+
+				// API 응답을 컴포넌트에서 사용하는 형식으로 변환
+				const status: "active" | "closed" =
+					result.status === "ONGOING" || result.status === "ACTIVE"
+						? "active"
+						: "closed";
+
+				const questions = result.detailInfoList.map((detail) => {
+					const questionType = mapApiQuestionTypeToComponentType(detail.type);
+					const responseCount = detail.answerList?.length || 0;
+
+					return {
+						id: String(detail.questionId),
+						title: detail.title,
+						type: questionType,
+						required: detail.isRequired,
+						responseCount,
+					};
+				});
+
+				setSurveyResponse({
+					id: result.surveyId,
+					title: surveyTitle,
+					status,
+					responseCount: result.currentCount,
+					questions,
+				});
+			} catch (error) {
+				console.error("설문 상세 조회 실패:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		void fetchSurveyDetail();
+	}, [id]);
+
+	if (isLoading || !surveyResponse) {
+		return (
+			<div className="flex flex-col w-full h-screen bg-white items-center justify-center">
+				<div>로딩 중...</div>
+			</div>
+		);
+	}
 
 	const badge = SURVEY_BADGE_CONFIG[surveyResponse.status];
 
@@ -102,12 +131,34 @@ export const SurveyResponseDetail = () => {
 		return `${requiredLabel} / ${typeLabel}`;
 	};
 
-	const handleResultNavigation = (type: QuestionType) => {
-		const path = RESULT_PAGE_PATHS[type];
-		if (!path) {
-			return;
-		}
-		navigate(path);
+	const handleResultNavigation = (type: QuestionType, questionId: string) => {
+		if (!answerDetails) return;
+
+		// 해당 질문의 응답 데이터 찾기
+		const questionDetail = answerDetails.detailInfoList.find(
+			(detail) => String(detail.questionId) === questionId,
+		);
+
+		if (!questionDetail) return;
+
+		const path = getQuestionResultRoute(type);
+		navigate(path, {
+			state: {
+				question: {
+					id: questionDetail.questionId,
+					title: questionDetail.title,
+					description: questionDetail.description,
+					type,
+					isRequired: questionDetail.isRequired,
+					order: questionDetail.order,
+				},
+				answerMap: questionDetail.answerMap,
+				answerList: questionDetail.answerList,
+				surveyTitle: surveyResponse?.title || "",
+				surveyStatus: surveyResponse?.status || "active",
+				responseCount: questionDetail.answerList?.length || 0,
+			},
+		});
 	};
 
 	return (
@@ -185,7 +236,9 @@ export const SurveyResponseDetail = () => {
 								<Button
 									size="medium"
 									variant="weak"
-									onClick={() => handleResultNavigation(question.type)}
+									onClick={() =>
+										handleResultNavigation(question.type, question.id)
+									}
 								>
 									{question.responseCount}명
 								</Button>

@@ -27,6 +27,7 @@ import {
 	NPSPage,
 	NumberPage,
 	Onboarding,
+	PaymentMain,
 	QuestionListPage,
 	QuestionOptionsPage,
 	RatingPage,
@@ -38,9 +39,13 @@ import {
 import EstimateNavigationPage from "./pages/estimate/EstimatePage";
 import { LocationSelectPage as EstimateLocationSelectPage } from "./pages/estimate/LocationSelectPage";
 import { Mypage } from "./pages/Mypage";
+import BusinessInfo from "./pages/mypage/BusinessInfo";
 import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
+import PrivacyPolicy from "./pages/mypage/PrivacyPolicy";
+import PromotionNotice from "./pages/mypage/PromotionNotice";
 import RefundPolicy from "./pages/mypage/RefundPolicy";
+import TermsOfService from "./pages/mypage/TermsOfService";
 import { SurveyResponseDetail } from "./pages/mysurvey/SurveyResponseDetail";
 import { OxScreening } from "./pages/OxScreening";
 import DateResultPage from "./pages/result/DateResultPage";
@@ -90,18 +95,30 @@ export const App = () => {
 					<Route path="/onboarding" element={<Onboarding />} />
 					<Route path="/main" element={<Main />} />
 					<Route path="/createFormStart" element={<CreateFormStart />} />
-					<Route path="/mysurvey" element={<MySurvey />} />
+					<Route element={<SurveyProviderLayout />}>
+						<Route element={<MultiStepProviderWrapper />}>
+							<Route path="/mysurvey" element={<MySurvey />} />
+						</Route>
+					</Route>
 					<Route
 						path="/mysurvey/:surveyId"
 						element={<SurveyResponseDetail />}
 					/>
-					<Route path="/mypage" element={<Mypage />} />
+					<Route element={<MultiStepProviderWrapper />}>
+						<Route element={<PaymentProviderLayout />}>
+							<Route path="/mypage" element={<Mypage />} />
+						</Route>
+					</Route>
 					<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 					<Route
 						path="/mypage/orderHistory/:orderId"
 						element={<OrderDetail />}
 					/>
 					<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
+					<Route path="/mypage/privacyPolicy" element={<PrivacyPolicy />} />
+					<Route path="/mypage/termsOfService" element={<TermsOfService />} />
+					<Route path="/mypage/businessInfo" element={<BusinessInfo />} />
+					<Route path="/mypage/promotionNotice" element={<PromotionNotice />} />
 					<Route path="/oxScreening" element={<OxScreening />} />
 					<Route path="/survey" element={<Survey />} />
 					<Route path="/surveyList" element={<SurveyListPage />} />
@@ -143,6 +160,7 @@ export const App = () => {
 									path="/estimateNavigation"
 									element={<EstimateNavigationPage />}
 								/>
+								<Route path="/payment/charge" element={<PaymentMain />} />
 								<Route
 									path="/createForm/multipleChoice"
 									element={<MultipleChoicePage />}

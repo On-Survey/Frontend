@@ -9,6 +9,7 @@ import {
 } from "@toss/tds-mobile";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { createSurveyQuestion } from "../../service/form";
 import { isLongAnswerQuestion } from "../../types/survey";
 
 export const LongAnswerPage = () => {
@@ -45,8 +46,19 @@ export const LongAnswerPage = () => {
 		}
 	};
 
-	const handleSubmit = () => {
-		navigate(-1);
+	const handleSubmit = async () => {
+		const result = await createSurveyQuestion({
+			surveyId: state.surveyId ?? 0,
+			questionInfo: {
+				questionType: "LONG",
+				title: title ?? "",
+				description: description ?? "",
+			},
+		});
+
+		if (result.success) {
+			navigate(-1);
+		}
 	};
 
 	const handleTitleAndDescriptionEdit = () => {
