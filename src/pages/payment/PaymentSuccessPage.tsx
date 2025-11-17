@@ -3,18 +3,21 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text } from "@toss/tds-mobile";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMultiStep } from "../../contexts/MultiStepContext";
 
 export const PaymentSuccessPage = () => {
+	const { resetActiveStep } = useMultiStep();
+
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isChargeFlow = location.pathname === "/payment/charge";
 
 	const handleNavigate = () => {
-		if (isChargeFlow) {
-			navigate("/mypage");
-		} else {
-			navigate("/mysurvey");
-		}
+		const target = isChargeFlow ? "/mypage" : "/mysurvey";
+		navigate(target);
+		requestAnimationFrame(() => {
+			resetActiveStep();
+		});
 	};
 
 	useEffect(() => {

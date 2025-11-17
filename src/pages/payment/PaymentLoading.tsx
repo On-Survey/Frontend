@@ -13,8 +13,8 @@ import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
-	const { state } = useSurvey();
-	const { selectedCoinAmount, estimate } = usePaymentEstimate();
+	const { state, resetForm } = useSurvey();
+	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
 	const location = useLocation();
 
 	const isChargeFlow = location.pathname === "/payment/charge";
@@ -54,7 +54,6 @@ export const PaymentLoading = () => {
 									dueCountPrice: priceBreakdown.dueCountPrice,
 									totalCoin: priceBreakdown.totalPrice,
 								};
-								console.log("formPayload", formPayload);
 								await createForm(formPayload);
 							}
 							return true;
@@ -68,6 +67,8 @@ export const PaymentLoading = () => {
 					if (event.type === "success") {
 						const { orderId } = event.data;
 						console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+						resetForm();
+						resetEstimate();
 						setTimeout(() => {
 							goNextPayment();
 						}, 3000);
@@ -85,6 +86,8 @@ export const PaymentLoading = () => {
 		estimate,
 		state.surveyId,
 		priceBreakdown,
+		resetForm,
+		resetEstimate,
 	]);
 
 	useEffect(() => {

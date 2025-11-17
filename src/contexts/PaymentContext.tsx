@@ -29,6 +29,7 @@ type PaymentEstimateContextValue = {
 	handleSelectedCoinAmountChange: (amount: SelectedCoinAmount) => void;
 	totalPrice: number;
 	handleTotalPriceChange: (price: number) => void;
+	resetEstimate: () => void;
 };
 
 const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
@@ -68,6 +69,16 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 		setTotalPrice(price);
 	}, []);
 
+	const resetEstimate = useCallback(() => {
+		setEstimate({
+			date: new Date(),
+			location: "ALL",
+			age: "ALL",
+			gender: "ALL",
+			desiredParticipants: "50명",
+		});
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			estimate,
@@ -76,6 +87,7 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 			handleSelectedCoinAmountChange,
 			totalPrice,
 			handleTotalPriceChange,
+			resetEstimate,
 		}),
 		[
 			estimate,
@@ -84,6 +96,7 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 			handleSelectedCoinAmountChange,
 			totalPrice,
 			handleTotalPriceChange,
+			resetEstimate,
 		],
 	);
 
