@@ -1,78 +1,133 @@
+import { adaptive } from "@toss/tds-colors";
+import { Text } from "@toss/tds-mobile";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SurveyList } from "../components/surveyList/SurveyList";
+import { topics } from "../constants/topics";
+import { getOngoingSurveys } from "../service/surveyList";
+import type { OngoingSurveySummary } from "../service/surveyList/types";
 import type { SurveyListItem } from "../types/surveyList";
 
-// Mock
-const MOCK_ALL_SURVEYS: SurveyListItem[] = [
-	{
-		id: "1",
-		topicId: "culture_hobby",
-		title: "영화 시청 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F37F.png",
-	},
-	{
-		id: "2",
-		topicId: "health_lifestyle",
-		title: "러닝 경험에 관한 설문",
-		iconType: "image",
-		iconSrc:
-			"https://static.toss.im/2d-emojis/png/4x/u1F3C3_u200D_u2640_uFE0F.png",
-	},
-	{
-		id: "3",
-		topicId: "daily_relationships",
-		title: "반려동물 외모 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F46B.png",
-	},
-	{
-		id: "4",
-		topicId: "career",
-		title: "이직 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F9F3.png",
-	},
-	{
-		id: "5",
-		topicId: "business_tech",
-		title: "AI 사용 경험에 관한 설문",
-		iconType: "icon",
-		iconName: "icon-it",
-	},
-	{
-		id: "6",
-		topicId: "finance_consumption",
-		title: "투자 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F4B8.png",
-	},
-	{
-		id: "7",
-		topicId: "fashion_beauty",
-		title: "패션 스타일링 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F576.png",
-	},
-	{
-		id: "8",
-		topicId: "social_issues",
-		title: "환경 인식에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F310.png",
-	},
-	{
-		id: "9",
-		topicId: "self_development_education",
-		title: "자격증 공부 경험에 관한 설문",
-		iconType: "image",
-		iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F58B.png",
-	},
-];
+const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
 export const SurveyListPage = () => {
+	const [surveys, setSurveys] = useState<SurveyListItem[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [hasNext, setHasNext] = useState(true);
+	const [lastSurveyId, setLastSurveyId] = useState<number>(0);
+	const loadingRef = useRef<HTMLDivElement | null>(null);
+
+	const mapSurveyToItem = useCallback(
+		(survey: OngoingSurveySummary): SurveyListItem => {
+			const topicId =
+				(survey.interests && survey.interests.length > 0
+					? survey.interests[0]
+					: survey.interest) ?? DEFAULT_TOPIC;
+			const topic = topics.find((t) => t.id === topicId);
+			const iconSrc = topic?.icon.type === "image" ? topic.icon.src : undefined;
+
+			return {
+				id: String(survey.surveyId),
+				topicId: topicId as SurveyListItem["topicId"],
+				title: survey.title,
+				iconType: iconSrc ? "image" : "icon",
+				iconSrc,
+				iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
+				description: survey.description,
+			};
+		},
+		[],
+	);
+
+	const fetchSurveys = useCallback(
+		async (reset = false) => {
+			setIsLoading(true);
+
+			try {
+				const currentLastId = reset ? 0 : lastSurveyId;
+				const result = await getOngoingSurveys({
+					lastSurveyId: currentLastId,
+					size: 15,
+				});
+
+				const allSurveys = [
+					...(result.recommended ?? []),
+					...(result.impending ?? []),
+				];
+
+				const mappedSurveys = allSurveys.map(mapSurveyToItem);
+
+				if (reset) {
+					setSurveys(mappedSurveys);
+				} else {
+					setSurveys((prev) => [...prev, ...mappedSurveys]);
+				}
+
+				setHasNext(result.hasNext ?? false);
+
+				// 마지막 surveyId 업데이트
+				if (allSurveys.length > 0) {
+					const lastId = Math.max(...allSurveys.map((s) => s.surveyId));
+					setLastSurveyId(lastId);
+				}
+			} catch (err) {
+				console.error("설문 목록 조회 실패:", err);
+			} finally {
+				setIsLoading(false);
+			}
+		},
+		[lastSurveyId, mapSurveyToItem],
+	);
+
+	useEffect(() => {
+		void fetchSurveys(true);
+	}, [fetchSurveys]);
+
+	useEffect(() => {
+		if (!loadingRef.current || !hasNext || isLoading) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting && hasNext && !isLoading) {
+					void fetchSurveys(false);
+				}
+			},
+			{ threshold: 0.1 },
+		);
+
+		const currentLoadingRef = loadingRef.current;
+		if (currentLoadingRef) {
+			observer.observe(currentLoadingRef);
+		}
+
+		return () => {
+			if (currentLoadingRef) {
+				observer.unobserve(currentLoadingRef);
+			}
+		};
+	}, [hasNext, isLoading, fetchSurveys]);
+
 	return (
 		<div className="flex flex-col w-full min-h-screen bg-white">
-			<SurveyList surveys={MOCK_ALL_SURVEYS} />
+			{surveys.length === 0 && !isLoading ? (
+				<div className="px-4 py-6 text-center">
+					<Text color={adaptive.grey700} typography="t7">
+						설문이 없습니다
+					</Text>
+				</div>
+			) : (
+				<>
+					<SurveyList surveys={surveys} />
+					{hasNext && (
+						<div ref={loadingRef} className="px-4 py-6 text-center">
+							{isLoading && (
+								<Text color={adaptive.grey600} typography="t7">
+									설문을 불러오는 중...
+								</Text>
+							)}
+						</div>
+					)}
+				</>
+			)}
 		</div>
 	);
 };

@@ -23,6 +23,7 @@ import {
 	NPSPage,
 	NumberPage,
 	Onboarding,
+	PaymentMain,
 	QuestionListPage,
 	QuestionOptionsPage,
 	RatingPage,
@@ -66,9 +67,17 @@ export const App = () => {
 				<Route path="/onboarding" element={<Onboarding />} />
 				<Route path="/main" element={<Main />} />
 				<Route path="/createFormStart" element={<CreateFormStart />} />
-				<Route path="/mysurvey" element={<MySurvey />} />
+				<Route element={<SurveyProviderLayout />}>
+					<Route element={<MultiStepProviderWrapper />}>
+						<Route path="/mysurvey" element={<MySurvey />} />
+					</Route>
+				</Route>
 				<Route path="/mysurvey/:surveyId" element={<SurveyResponseDetail />} />
-				<Route path="/mypage" element={<Mypage />} />
+				<Route element={<MultiStepProviderWrapper />}>
+					<Route element={<PaymentProviderLayout />}>
+						<Route path="/mypage" element={<Mypage />} />
+					</Route>
+				</Route>
 				<Route path="/mypage/orderHistory" element={<OrderHistory />} />
 				<Route path="/mypage/orderHistory/:orderId" element={<OrderDetail />} />
 				<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
@@ -87,13 +96,10 @@ export const App = () => {
 				<Route path="/survey/number" element={<SurveyNumber />} />
 				<Route path="/survey/date" element={<SurveyDate />} />
 				<Route path="/survey/complete" element={<SurveyComplete />} />
+				<Route path="/result/shortAnswer" element={<ShortAnswerResultPage />} />
+				<Route path="/result/longAnswer" element={<LongAnswerResultPage />} />
 				<Route
-					path="/result/short-answer"
-					element={<ShortAnswerResultPage />}
-				/>
-				<Route path="/result/long-answer" element={<LongAnswerResultPage />} />
-				<Route
-					path="/result/multiple-choice"
+					path="/result/multipleChoice"
 					element={<MultipleChoiceResultPage />}
 				/>
 				<Route path="/result/rating" element={<RatingResultPage />} />
@@ -109,6 +115,7 @@ export const App = () => {
 								path="/payment/location"
 								element={<LocationSelectPage />}
 							/>
+							<Route path="/payment/charge" element={<PaymentMain />} />
 						</Route>
 						<Route
 							path="/createForm/multipleChoice"

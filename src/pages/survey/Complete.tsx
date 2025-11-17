@@ -6,12 +6,42 @@ import {
 	Text,
 	Toast,
 } from "@toss/tds-mobile";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { issuePromotion } from "../../service/promotion";
+import { getMemberInfo } from "../../service/userInfo/api";
 
 export const SurveyComplete = () => {
 	const navigate = useNavigate();
 	const { isOpen: toastOpen, handleClose } = useModal(true);
+	const { state } = useSurvey();
+	const [userName, setUserName] = useState<string>("");
+
+	// 사용자 정보 가져오기 및 토스포인트 지급
+	useEffect(() => {
+		const fetchUserAndIssuePromotion = async () => {
+			try {
+				const memberInfo = await getMemberInfo();
+				setUserName(memberInfo.name || "");
+				// surveyId가 있으면 토스포인트 지급
+				if (state.surveyId) {
+					try {
+						await issuePromotion({ surveyId: state.surveyId });
+						console.log("토스포인트 지급 완료");
+					} catch (error) {
+						console.error("토스포인트 지급 실패:", error);
+						// 에러가 발생해도 사용자에게는 표시하지 않음
+					}
+				}
+			} catch (error) {
+				console.error("사용자 정보 조회 실패:", error);
+			}
+		};
+
+		void fetchUserAndIssuePromotion();
+	}, [state.surveyId]);
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-white">
@@ -21,7 +51,7 @@ export const SurveyComplete = () => {
 				<Toast
 					position="top"
 					open={toastOpen}
-					text="400원 받았어요."
+					text="300원 받았어요."
 					style={{ top: "350px" }}
 					leftAddon={
 						<div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white ">
@@ -39,7 +69,7 @@ export const SurveyComplete = () => {
 					fontWeight="bold"
 					textAlign="center"
 				>
-					자연님의 소중한 의견 감사합니다!
+					{userName || "회원"}님의 소중한 의견 감사합니다!
 				</Text>
 				<div className="h-6" />
 				<Asset.Icon

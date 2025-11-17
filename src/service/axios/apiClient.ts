@@ -57,9 +57,15 @@ export const apiClient: AxiosInstance = axios.create(API_CONFIG);
  */
 apiClient.interceptors.request.use(
 	async (config: InternalAxiosRequestConfig) => {
-		const token = await getAccessToken();
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`;
+		// 인증 관련 엔드포인트(/auth/*)에는 액세스 토큰을 붙이지 않는다.
+		const isAuthEndpoint =
+			typeof config.url === "string" && config.url.startsWith("/auth/");
+
+		if (!isAuthEndpoint) {
+			const token = await getAccessToken();
+			if (token) {
+				config.headers.Authorization = `Bearer ${token}`;
+			}
 		}
 		// 요청 로깅 (개발 환경에서만)
 		if (import.meta.env.DEV) {

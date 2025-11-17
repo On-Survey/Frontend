@@ -1,3 +1,6 @@
+import { colors } from "@toss/tds-colors";
+import { Text } from "@toss/tds-mobile";
+import { useDraftSurvey } from "../../../hooks/useDraftSurvey";
 import { SurveyCard } from "./SurveyCard";
 import type { ActiveSurvey, ClosedSurvey, DraftSurvey } from "./types";
 
@@ -12,20 +15,53 @@ export const AllTab = ({
 	activeSurveys,
 	closedSurveys,
 }: AllTabProps) => {
+	const { handleDraftClick } = useDraftSurvey();
+
 	return (
 		<div className="space-y-4">
 			{/* 작성중 */}
-			{draftSurveys.map((survey) => (
-				<SurveyCard key={`draft-${survey.id}`} survey={survey} type="draft" />
-			))}
+			{draftSurveys.length === 0 ? (
+				<Text color={colors.grey700} typography="t7">
+					작성 중인 설문이 없습니다.
+				</Text>
+			) : (
+				draftSurveys.map((survey) => (
+					<SurveyCard
+						key={`draft-${survey.id}`}
+						survey={survey}
+						type="draft"
+						onClick={(id) => handleDraftClick(id, draftSurveys)}
+					/>
+				))
+			)}
 			{/* 노출중 */}
-			{activeSurveys.map((survey) => (
-				<SurveyCard key={`active-${survey.id}`} survey={survey} type="active" />
-			))}
+			{activeSurveys.length === 0 ? (
+				<Text color={colors.grey700} typography="t7">
+					노출 중인 설문이 없습니다.
+				</Text>
+			) : (
+				activeSurveys.map((survey) => (
+					<SurveyCard
+						key={`active-${survey.id}`}
+						survey={survey}
+						type="active"
+					/>
+				))
+			)}
 			{/* 마감 */}
-			{closedSurveys.map((survey) => (
-				<SurveyCard key={`closed-${survey.id}`} survey={survey} type="closed" />
-			))}
+			{closedSurveys.length === 0 ? (
+				<Text color={colors.grey700} typography="t7">
+					마감된 설문이 없습니다.
+				</Text>
+			) : (
+				closedSurveys.map((survey) => (
+					<SurveyCard
+						key={`closed-${survey.id}`}
+						survey={survey}
+						type="closed"
+					/>
+				))
+			)}
 		</div>
 	);
 };

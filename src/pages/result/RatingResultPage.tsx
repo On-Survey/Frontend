@@ -1,41 +1,12 @@
 import { adaptive } from "@toss/tds-colors";
 import { Text, Top } from "@toss/tds-mobile";
+import {
+	SURVEY_BADGE_CONFIG,
+	SURVEY_STATUS_LABELS,
+} from "../../constants/survey";
+import { useResultPageData } from "../../hooks/useResultPageData";
 
-const ratingSummary = {
-	responses: 10,
-	average: 7.8,
-	all: [
-		{ id: "rating-01", score: 8 },
-		{ id: "rating-02", score: 7 },
-		{ id: "rating-03", score: 9 },
-		{ id: "rating-04", score: 6 },
-		{ id: "rating-05", score: 8 },
-		{ id: "rating-06", score: 10 },
-		{ id: "rating-07", score: 5 },
-		{ id: "rating-08", score: 9 },
-		{ id: "rating-09", score: 7 },
-		{ id: "rating-10", score: 8 },
-	],
-};
-
-const ratingDistribution = Object.values(
-	ratingSummary.all.reduce<Record<number, { score: number; count: number }>>(
-		(acc, { score }) => {
-			if (!acc[score]) {
-				acc[score] = { score, count: 0 };
-			}
-			acc[score].count += 1;
-			return acc;
-		},
-		{},
-	),
-)
-	.sort((a, b) => b.count - a.count || b.score - a.score)
-	.map((item) => ({ ...item, label: `${item.score}점` }));
-
-const maxCount = ratingDistribution[0]?.count ?? 0;
-
-const getBarHeight = (count: number) => {
+const getBarHeight = (count: number, maxCount: number) => {
 	if (maxCount <= 0) {
 		return "0px";
 	}
@@ -45,21 +16,66 @@ const getBarHeight = (count: number) => {
 };
 
 export const RatingResultPage = () => {
+	const {
+		question,
+		answerList,
+		surveyTitle,
+		surveyStatus,
+		responseCount,
+		requiredLabel,
+	} = useResultPageData();
+
+	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+
+	// answerList에서 숫자 추출 및 분포 계산
+	const scores = answerList
+		.map((answer) => Number(answer))
+		.filter((score) => !Number.isNaN(score));
+
+	const ratingDistribution = Object.values(
+		scores.reduce<Record<number, { score: number; count: number }>>(
+			(acc, score) => {
+				if (!acc[score]) {
+					acc[score] = { score, count: 0 };
+				}
+				acc[score].count += 1;
+				return acc;
+			},
+			{},
+		),
+	)
+		.sort((a, b) => b.count - a.count || b.score - a.score)
+		.map((item) => ({ ...item, label: `${item.score}점` }));
+
+	const maxCount = ratingDistribution[0]?.count ?? 0;
+	const average =
+		scores.length > 0
+			? scores.reduce((sum, score) => sum + score, 0) / scores.length
+			: 0;
+
 	return (
 		<div className="min-h-screen">
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						반려동물 외모 취향에 관한 설문
+						{question?.title || surveyTitle}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
 					<Top.SubtitleBadges
-						badges={[{ text: "노출중", color: "blue", variant: "weak" }]}
+						badges={[
+							{
+								text: SURVEY_STATUS_LABELS[surveyStatus],
+								color: badge.color,
+								variant: "weak",
+							},
+						]}
 					/>
 				}
 				subtitleBottom={
-					<Top.SubtitleParagraph size={15}>필수 / 평가형</Top.SubtitleParagraph>
+					<Top.SubtitleParagraph size={15}>
+						{requiredLabel} / 평가형
+					</Top.SubtitleParagraph>
 				}
 				lower={
 					<Top.LowerButton
@@ -68,47 +84,52 @@ export const RatingResultPage = () => {
 						variant="weak"
 						display="inline"
 					>
-						{ratingSummary.responses}명 응답 · 평균{" "}
-						{ratingSummary.average.toFixed(1)}점
+						{responseCount}명 응답 · 평균 {average.toFixed(1)}점
 					</Top.LowerButton>
 				}
 			/>
 
 			<div className="px-6 pb-12 flex justify-center">
-				<div className="flex items-end gap-4">
-					{ratingDistribution.map((item) => {
-						const isTop = item.count === maxCount;
-						return (
-							<div
-								key={item.score}
-								className="flex flex-col items-center gap-2"
-							>
-								<Text
-									color={isTop ? adaptive.blue500 : adaptive.grey600}
-									typography="t6"
-									fontWeight="semibold"
-								>
-									{item.label}
-								</Text>
+				{ratingDistribution.length === 0 ? (
+					<div className="py-8 text-center">
+						<p className="text-gray-500">아직 응답이 없습니다.</p>
+					</div>
+				) : (
+					<div className="flex items-end gap-4">
+						{ratingDistribution.map((item) => {
+							const isTop = item.count === maxCount && maxCount > 0;
+							return (
 								<div
-									className={`w-8 rounded-full shadow-sm ${
-										isTop
-											? "bg-gradient-to-t from-blue-200 via-blue-400 to-blue-500"
-											: "bg-gradient-to-t from-gray-200 via-gray-300 to-gray-400"
-									}`}
-									style={{ height: getBarHeight(item.count) }}
-								/>
-								<Text
-									color={adaptive.grey700}
-									typography="t7"
-									fontWeight="medium"
+									key={item.score}
+									className="flex flex-col items-center gap-2"
 								>
-									{item.count}명
-								</Text>
-							</div>
-						);
-					})}
-				</div>
+									<Text
+										color={isTop ? adaptive.blue500 : adaptive.grey600}
+										typography="t6"
+										fontWeight="semibold"
+									>
+										{item.label}
+									</Text>
+									<div
+										className={`w-8 rounded-full shadow-sm ${
+											isTop
+												? "bg-linear-to-t from-blue-200 via-blue-400 to-blue-500"
+												: "bg-linear-to-t from-gray-200 via-gray-300 to-gray-400"
+										}`}
+										style={{ height: getBarHeight(item.count, maxCount) }}
+									/>
+									<Text
+										color={adaptive.grey700}
+										typography="t7"
+										fontWeight="medium"
+									>
+										{item.count}명
+									</Text>
+								</div>
+							);
+						})}
+					</div>
+				)}
 			</div>
 		</div>
 	);
