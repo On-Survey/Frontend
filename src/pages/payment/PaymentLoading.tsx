@@ -2,14 +2,29 @@ import { graniteEvent, IAP } from "@apps-in-toss/web-framework";
 
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { useSurvey } from "../../contexts/SurveyContext";
+import { createForm } from "../../service/form";
 import { createPayment } from "../../service/payments";
+import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
+
+const normalizeAllValue = (value?: string | null) => {
+	if (!value) {
+		return "";
+	}
+	return value.trim() === "전체" ? "ALL" : value;
+};
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
-	const { selectedCoinAmount } = usePaymentEstimate();
+	const { state } = useSurvey();
+	const { selectedCoinAmount, estimate } = usePaymentEstimate();
+	const priceBreakdown = useMemo(
+		() => calculatePriceBreakdown(estimate),
+		[estimate],
+	);
 
 	useEffect(() => {
 		const buyIapProduct = async () => {
@@ -21,12 +36,29 @@ export const PaymentLoading = () => {
 					sku: selectedCoinAmount.sku,
 					processProductGrant: async ({ orderId }) => {
 						try {
-							await createPayment({
+							const response = await createPayment({
 								orderId: orderId,
 								price: Number(
 									selectedCoinAmount.displayAmount.replace("원", ""),
 								),
 							});
+							if (response.success && state.surveyId) {
+								const formPayload = {
+									surveyId: state.surveyId,
+									deadline: estimate.date?.toISOString() ?? "",
+									gender: normalizeAllValue(estimate.gender),
+									genderPrice: priceBreakdown.genderPrice,
+									age: normalizeAllValue(estimate.age),
+									agePrice: priceBreakdown.agePrice,
+									residence: normalizeAllValue(estimate.location),
+									residencePrice: priceBreakdown.residencePrice,
+									dueCount: priceBreakdown.dueCount,
+									dueCountPrice: priceBreakdown.dueCountPrice,
+									totalCoin: priceBreakdown.totalPrice,
+								};
+
+								await createForm(formPayload);
+							}
 							return true;
 						} catch (error) {
 							console.error("결제 정보 전송 실패:", error);
@@ -49,7 +81,13 @@ export const PaymentLoading = () => {
 			});
 		};
 		buyIapProduct();
-	}, [selectedCoinAmount, goNextPayment]);
+	}, [
+		selectedCoinAmount,
+		goNextPayment,
+		estimate,
+		state.surveyId,
+		priceBreakdown,
+	]);
 
 	useEffect(() => {
 		const unsubscription = graniteEvent.addEventListener("backEvent", {

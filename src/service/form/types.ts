@@ -128,6 +128,19 @@ export interface CreateFormResponse extends BaseResponse {
 	success: boolean;
 }
 
+export interface CreateFormRequest {
+	deadline: string;
+	gender: string;
+	genderPrice: number;
+	age: string;
+	agePrice: number;
+	residence: string;
+	residencePrice: number;
+	dueCount: number;
+	dueCountPrice: number;
+	totalCoin: number;
+}
+
 export interface SaveAsDraftResponse extends BaseResponse {
 	result:
 		| {

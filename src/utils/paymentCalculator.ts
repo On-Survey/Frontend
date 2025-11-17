@@ -5,11 +5,16 @@ import {
 } from "../constants/payment";
 import type { Estimate } from "../contexts/PaymentContext";
 
+const parseParticipantsCount = (participants: string): number => {
+	const digitsOnly = participants.replace(/[^\d]/g, "");
+	return digitsOnly ? parseInt(digitsOnly, 10) : 0;
+};
+
 /**
  * 희망 응답자 수에 따른 기본가 계산
  */
 const getBasePrice = (participants: string): number => {
-	const count = parseInt(participants.replace("명", ""), 10);
+	const count = parseParticipantsCount(participants);
 	return count * 550; // 건당 550원
 };
 
@@ -21,7 +26,7 @@ const getAgeSurcharge = (age: string, participants: string): number => {
 		return 0;
 	}
 
-	const count = parseInt(participants.replace("명", ""), 10);
+	const count = parseParticipantsCount(participants);
 
 	// 연령대가 하나인지 여러 개인지 확인
 	// "20대", "30대" 등 단일 연령대는 숫자+대 패턴이 하나만 있음
@@ -49,7 +54,7 @@ const getLocationSurcharge = (
 		return 0;
 	}
 
-	const count = parseInt(participants.replace("명", ""), 10);
+	const count = parseParticipantsCount(participants);
 
 	if (REGIONS_5_PERCENT_SURCHARGE.some((region) => location.includes(region))) {
 		// 쉬움 (서울/경기): +5% (건당 35원)
@@ -77,7 +82,7 @@ const getGenderSurcharge = (gender: string, participants: string): number => {
 		return 0;
 	}
 
-	const count = parseInt(participants.replace("명", ""), 10);
+	const count = parseParticipantsCount(participants);
 	// 단일 성별: +10% (건당 70원)
 	return count * 70;
 };
@@ -85,22 +90,41 @@ const getGenderSurcharge = (gender: string, participants: string): number => {
 /**
  * 전체 금액 계산
  */
-export const calculateTotalPrice = (estimate: Estimate): number => {
-	const basePrice = getBasePrice(estimate.desiredParticipants);
-	const ageSurcharge = getAgeSurcharge(
-		estimate.age,
-		estimate.desiredParticipants,
-	);
-	const locationSurcharge = getLocationSurcharge(
+export interface PriceBreakdown {
+	dueCount: number;
+	dueCountPrice: number;
+	agePrice: number;
+	residencePrice: number;
+	genderPrice: number;
+	totalPrice: number;
+}
+
+export const calculatePriceBreakdown = (estimate: Estimate): PriceBreakdown => {
+	const dueCount = parseParticipantsCount(estimate.desiredParticipants);
+	const dueCountPrice = getBasePrice(estimate.desiredParticipants);
+	const agePrice = getAgeSurcharge(estimate.age, estimate.desiredParticipants);
+	const residencePrice = getLocationSurcharge(
 		estimate.location,
 		estimate.desiredParticipants,
 	);
-	const genderSurcharge = getGenderSurcharge(
+	const genderPrice = getGenderSurcharge(
 		estimate.gender,
 		estimate.desiredParticipants,
 	);
+	const totalPrice = dueCountPrice + agePrice + residencePrice + genderPrice;
 
-	return basePrice + ageSurcharge + locationSurcharge + genderSurcharge;
+	return {
+		dueCount,
+		dueCountPrice,
+		agePrice,
+		residencePrice,
+		genderPrice,
+		totalPrice,
+	};
+};
+
+export const calculateTotalPrice = (estimate: Estimate): number => {
+	return calculatePriceBreakdown(estimate).totalPrice;
 };
 
 /**
