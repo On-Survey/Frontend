@@ -1,7 +1,10 @@
 import {
+	type AgeCode,
+	type GenderCode,
 	REGIONS_5_PERCENT_SURCHARGE,
 	REGIONS_10_PERCENT_SURCHARGE,
 	REGIONS_15_PERCENT_SURCHARGE,
+	type RegionCode,
 } from "../constants/payment";
 import type { Estimate } from "../contexts/PaymentContext";
 
@@ -21,51 +24,39 @@ const getBasePrice = (participants: string): number => {
 /**
  * 연령대에 따른 추가금 계산
  */
-const getAgeSurcharge = (age: string, participants: string): number => {
-	if (age === "전체") {
+const getAgeSurcharge = (age: AgeCode, participants: string): number => {
+	if (age === "ALL") {
 		return 0;
 	}
 
 	const count = parseParticipantsCount(participants);
-
-	// 연령대가 하나인지 여러 개인지 확인
-	// "20대", "30대" 등 단일 연령대는 숫자+대 패턴이 하나만 있음
-	// "20, 30대" 등 복수 연령대는 쉼표가 있거나 여러 개가 있음
-	const ageMatches = age.match(/\d+대/g);
-	const isMultipleAges = ageMatches ? ageMatches.length > 1 : false;
-
-	if (isMultipleAges) {
-		// 복수 연령대: +20% (건당 140원)
-		return count * 140;
-	} else {
-		// 단일 연령대: +15% (건당 105원)
-		return count * 105;
-	}
+	// 단일 연령대: +15% (건당 105원)
+	return count * 105;
 };
 
 /**
  * 거주지에 따른 추가금 계산
  */
 const getLocationSurcharge = (
-	location: string,
+	location: RegionCode,
 	participants: string,
 ): number => {
-	if (location === "전체") {
+	if (location === "ALL") {
 		return 0;
 	}
 
 	const count = parseParticipantsCount(participants);
 
-	if (REGIONS_5_PERCENT_SURCHARGE.some((region) => location.includes(region))) {
+	if (REGIONS_5_PERCENT_SURCHARGE.some((region) => region.value === location)) {
 		// 쉬움 (서울/경기): +5% (건당 35원)
 		return count * 35;
 	} else if (
-		REGIONS_10_PERCENT_SURCHARGE.some((region) => location.includes(region))
+		REGIONS_10_PERCENT_SURCHARGE.some((region) => region.value === location)
 	) {
 		// 보통 (광역시): +10% (건당 70원)
 		return count * 70;
 	} else if (
-		REGIONS_15_PERCENT_SURCHARGE.some((region) => location.includes(region))
+		REGIONS_15_PERCENT_SURCHARGE.some((region) => region.value === location)
 	) {
 		// 어려움 (도 단위): +15% (건당 105원)
 		return count * 105;
@@ -77,8 +68,11 @@ const getLocationSurcharge = (
 /**
  * 성별에 따른 추가금 계산
  */
-const getGenderSurcharge = (gender: string, participants: string): number => {
-	if (gender === "전체") {
+const getGenderSurcharge = (
+	gender: GenderCode,
+	participants: string,
+): number => {
+	if (gender === "ALL") {
 		return 0;
 	}
 

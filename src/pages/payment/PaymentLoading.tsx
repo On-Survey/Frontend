@@ -10,13 +10,6 @@ import { createForm } from "../../service/form";
 import { createPayment } from "../../service/payments";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
 
-const normalizeAllValue = (value?: string | null) => {
-	if (!value) {
-		return "";
-	}
-	return value.trim() === "전체" ? "ALL" : value;
-};
-
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
 	const { state } = useSurvey();
@@ -42,21 +35,22 @@ export const PaymentLoading = () => {
 									selectedCoinAmount.displayAmount.replace("원", ""),
 								),
 							});
+
 							if (response.success && state.surveyId) {
 								const formPayload = {
 									surveyId: state.surveyId,
 									deadline: estimate.date?.toISOString() ?? "",
-									gender: normalizeAllValue(estimate.gender),
+									gender: estimate.gender,
 									genderPrice: priceBreakdown.genderPrice,
-									age: normalizeAllValue(estimate.age),
+									age: estimate.age,
 									agePrice: priceBreakdown.agePrice,
-									residence: normalizeAllValue(estimate.location),
+									residence: estimate.location,
 									residencePrice: priceBreakdown.residencePrice,
 									dueCount: priceBreakdown.dueCount,
 									dueCountPrice: priceBreakdown.dueCountPrice,
 									totalCoin: priceBreakdown.totalPrice,
 								};
-
+								console.log("formPayload", formPayload);
 								await createForm(formPayload);
 							}
 							return true;

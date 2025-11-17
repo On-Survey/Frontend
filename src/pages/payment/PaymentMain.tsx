@@ -7,14 +7,6 @@ import {
 	PaymentSuccessPage,
 } from ".";
 
-export type Estimate = {
-	date: string;
-	location: string;
-	age: string;
-	gender: string;
-	desiredParticipants: string;
-};
-
 export const PaymentMain = () => {
 	const { paymentStep } = useMultiStep();
 

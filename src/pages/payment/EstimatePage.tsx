@@ -13,10 +13,14 @@ import {
 	DESIRED_PARTICIPANTS,
 	EstimateField,
 	GENDER,
+	getAgeLabel,
+	getGenderLabel,
+	getRegionLabel,
 } from "../../constants/payment";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
+import { type createUserResponse, getUserInfo } from "../../service/user";
 import {
 	calculateTotalPrice,
 	formatPriceAsCoin,
@@ -25,8 +29,18 @@ import {
 export const EstimatePage = () => {
 	const { estimate, handleEstimateChange, handleTotalPriceChange } =
 		usePaymentEstimate();
-	const { handleStepChange } = useMultiStep();
+	const { handleStepChange, setPaymentStep } = useMultiStep();
 	const navigate = useNavigate();
+
+	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
+
+	useEffect(() => {
+		async function fetchUserInfo() {
+			const userInfoResult = await getUserInfo();
+			setUserInfo(userInfoResult);
+		}
+		fetchUserInfo();
+	}, []);
 
 	const {
 		isOpen: isBottomSheetOpen,
@@ -39,6 +53,14 @@ export const EstimatePage = () => {
 		handleOpen: handleCoinBottomSheetOpen,
 		handleClose: handleCoinBottomSheetClose,
 	} = useModal(false);
+
+	const handleSubmit = () => {
+		if (userInfo && totalPrice > userInfo?.result.coin) {
+			handleCoinBottomSheetOpen();
+		} else {
+			setPaymentStep(3);
+		}
+	};
 
 	const handleDateBottomSheetConfirm = (date: Date) => {
 		handleEstimateChange({ ...estimate, date });
@@ -60,6 +82,10 @@ export const EstimatePage = () => {
 	useEffect(() => {
 		handleTotalPriceChange(totalPrice);
 	}, [totalPrice, handleTotalPriceChange]);
+
+	const genderDisplay = getGenderLabel(estimate.gender);
+	const ageDisplay = getAgeLabel(estimate.age);
+	const locationDisplay = getRegionLabel(estimate.location);
 
 	const handleReturn = () => {
 		switch (type) {
@@ -125,7 +151,7 @@ export const EstimatePage = () => {
 				hasError={false}
 				label="거주지"
 				labelOption="sustain"
-				value={estimate.location}
+				value={locationDisplay}
 				placeholder="거주지를 선택해주세요"
 				right={
 					<Asset.Icon
@@ -145,7 +171,7 @@ export const EstimatePage = () => {
 				hasError={false}
 				label="연령대"
 				labelOption="sustain"
-				value={estimate.age}
+				value={ageDisplay}
 				placeholder="연령대를 선택해주세요"
 				right={
 					<Asset.Icon
@@ -160,9 +186,9 @@ export const EstimatePage = () => {
 			<TextField.Button
 				variant="line"
 				hasError={false}
-				label="전체"
+				label="성별"
 				labelOption="sustain"
-				value={estimate.gender}
+				value={genderDisplay}
 				placeholder="성별을 선택해주세요"
 				right={
 					<Asset.Icon
@@ -190,7 +216,7 @@ export const EstimatePage = () => {
 				}
 				onClick={() => handleTypeChange(EstimateField.DesiredParticipants)}
 			/>
-			<FixedBottomCTA loading={false} onClick={handleCoinBottomSheetOpen}>
+			<FixedBottomCTA loading={false} onClick={handleSubmit}>
 				{formatPriceAsCoin(totalPrice)} 결제하기
 			</FixedBottomCTA>
 		</>
