@@ -89,6 +89,10 @@ export const MultipleChoiceMain = () => {
 	};
 
 	const handleConfirm = async () => {
+		if (!questionId) {
+			return;
+		}
+
 		const result = await createSurveyQuestion({
 			surveyId: state.surveyId ?? 0,
 			questionInfo: {
@@ -97,7 +101,13 @@ export const MultipleChoiceMain = () => {
 				description: question?.description ?? "",
 			},
 		});
-		if (result.success) {
+		if (result.success && typeof result.result !== "string") {
+			updateQuestion(questionId, {
+				surveyId: result.result.surveyId,
+				questionId: result.result.questionId,
+				questionOrder: result.result.order,
+			});
+
 			navigate(-1);
 		}
 	};
