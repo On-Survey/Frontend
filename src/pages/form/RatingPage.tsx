@@ -163,11 +163,11 @@ export const RatingPage = () => {
 			/>
 			<SegmentedControl
 				alignment="fixed"
-				value={isRequired ? "1-선택" : "0-필수"}
+				value={isRequired ? "0-필수" : "1-선택"}
 				disabled={false}
 				size="large"
 				name="SegmentedControl"
-				onChange={(v) => handleRequiredChange(v === "1-선택")}
+				onChange={(v) => handleRequiredChange(v === "0-필수")}
 			>
 				<SegmentedControl.Item value="0-필수">필수</SegmentedControl.Item>
 				<SegmentedControl.Item value="1-선택">선택</SegmentedControl.Item>
