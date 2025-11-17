@@ -8,20 +8,12 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { QuestionTitleEditBottomSheet } from "../../components/form/bottomSheet/QuestionTitleEditBottomSheet";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { useModal } from "../../hooks/UseToggle";
 import { createSurveyQuestion } from "../../service/form";
 import { isShortAnswerQuestion } from "../../types/survey";
 
 export const ShortAnswerPage = () => {
 	const { state, updateQuestion } = useSurvey();
-	const {
-		isOpen: isQuestionTitleEditOpen,
-		handleOpen: handleQuestionTitleEditOpen,
-		handleClose: handleQuestionTitleEditClose,
-	} = useModal(false);
-
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const questionIdFromUrl = searchParams.get("questionId");
@@ -77,6 +69,10 @@ export const ShortAnswerPage = () => {
 		}
 	};
 
+	const handleTitleAndDescriptionEdit = () => {
+		navigate(`/createForm/shortAnswer/edit`);
+	};
+
 	return (
 		<div>
 			<Top
@@ -94,7 +90,7 @@ export const ShortAnswerPage = () => {
 						size="small"
 						variant="weak"
 						display="inline"
-						onClick={handleQuestionTitleEditOpen}
+						onClick={handleTitleAndDescriptionEdit}
 					>
 						문항 제목 및 설명 수정하기
 					</Top.LowerButton>
@@ -131,11 +127,6 @@ export const ShortAnswerPage = () => {
 				}
 				verticalPadding="large"
 			/>
-			<QuestionTitleEditBottomSheet
-				isOpen={isQuestionTitleEditOpen}
-				handleClose={handleQuestionTitleEditClose}
-			/>
-
 			<FixedBottomCTA loading={false} onClick={handleConfirm}>
 				확인
 			</FixedBottomCTA>
