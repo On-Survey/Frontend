@@ -3,6 +3,8 @@ import { Asset, Border, Button, List, ListRow, Text } from "@toss/tds-mobile";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
+import { useMultiStep } from "../contexts/MultiStepContext";
+import { usePaymentEstimate } from "../contexts/PaymentContext";
 import { useImagePicker } from "../hooks/useImagePicker";
 import { getMemberInfo, updateProfileImage } from "../service/userInfo";
 import type { MypageData } from "../types/mypage";
@@ -12,6 +14,8 @@ export const Mypage = () => {
 	const [mypageData, setMypageData] = useState<MypageData | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const { setPaymentStep } = useMultiStep();
+	const { handleTotalPriceChange } = usePaymentEstimate();
 
 	const handleImageUploaded = useCallback(
 		async (url: string) => {
@@ -96,6 +100,13 @@ export const Mypage = () => {
 
 	const handlePromotionNotice = () => {
 		navigate("/mypage/promotionNotice");
+	};
+
+	const handleCharge = () => {
+		// 충전 전용 플로우: totalPrice를 0으로 설정하고 상품 선택 페이지부터 시작
+		handleTotalPriceChange(0);
+		setPaymentStep(1);
+		navigate("/payment/charge");
 	};
 
 	if (isLoading) {
@@ -186,7 +197,9 @@ export const Mypage = () => {
 								>
 									{mypageData.chargeCash.toLocaleString()}원
 								</Text>
-								<Button size="small">충전하기</Button>
+								<Button size="small" onClick={handleCharge}>
+									충전하기
+								</Button>
 							</div>
 						</div>
 						<div className="h-[13px]" />

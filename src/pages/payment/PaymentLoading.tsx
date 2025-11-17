@@ -3,6 +3,7 @@ import { graniteEvent, IAP } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
 import { useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -14,6 +15,9 @@ export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
 	const { state } = useSurvey();
 	const { selectedCoinAmount, estimate } = usePaymentEstimate();
+	const location = useLocation();
+
+	const isChargeFlow = location.pathname === "/payment/charge";
 	const priceBreakdown = useMemo(
 		() => calculatePriceBreakdown(estimate),
 		[estimate],
@@ -99,9 +103,9 @@ export const PaymentLoading = () => {
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						보유 코인으로
-						<br />
-						설문을 등록하고 있어요
+						{isChargeFlow
+							? "코인을 충전하고 있어요"
+							: "보유 코인으로\n설문을 등록하고 있어요"}
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={

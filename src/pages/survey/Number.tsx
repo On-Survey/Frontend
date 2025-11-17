@@ -6,24 +6,29 @@ import {
 	TextField,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 import { validateNumberInput } from "../../utils/validators";
 
 type FormData = {
 	number: string;
 };
 
-type Question = {
-	id: number;
-	title: string;
-	required: boolean;
-};
-
 export const SurveyNumber = () => {
-	const navigate = useNavigate();
-	const [question, setQuestion] = useState<Question | null>(null);
+	const {
+		currentQuestion,
+		currentAnswer,
+		updateAnswer,
+		progress,
+		totalQuestions,
+		currentQuestionIndex,
+		submitting,
+		handlePrev,
+		handleNext,
+	} = useSurveyNavigation({
+		questionType: "number",
+		validateAnswer: (answer) => answer.trim().length > 0,
+	});
 
 	const {
 		control,
@@ -33,47 +38,47 @@ export const SurveyNumber = () => {
 	} = useForm<FormData>({
 		mode: "onChange",
 		defaultValues: {
-			number: "",
+			number: currentAnswer,
 		},
 	});
 
-	useEffect(() => {
-		const mock: Question = {
-			id: 601,
-			title: "추석 당일, 오늘의 날씨 몇 도일까요?",
-			required: true,
-		};
-		setQuestion(mock);
-	}, []);
+	if (!currentQuestion) {
+		return null;
+	}
 
 	const watchedValue = watch("number");
-	const isRequired = question?.required ?? false;
+	const isRequired = currentQuestion.isRequired ?? false;
 	const isInvalid =
 		isRequired && (!watchedValue || watchedValue.trim().length === 0);
 
-	const onSubmit = () => {
-		navigate("/survey/date");
+	const onSubmit = async (data: FormData) => {
+		updateAnswer(currentQuestion.questionId, data.number);
+		await handleNext();
 	};
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={0.25} />
+			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
 
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={colors.grey900}>
-						{question?.title ?? ""}
+						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
 				subtitleTop={
-					question?.required ? (
+					currentQuestion.isRequired ? (
 						<Top.SubtitleBadges
-							badges={[{ text: "선택", color: "blue", variant: "weak" }]}
+							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
 						/>
 					) : undefined
 				}
 				subtitleBottom={
-					<Top.SubtitleParagraph size={15}>문항 설명</Top.SubtitleParagraph>
+					currentQuestion.description ? (
+						<Top.SubtitleParagraph size={15}>
+							{currentQuestion.description}
+						</Top.SubtitleParagraph>
+					) : undefined
 				}
 			/>
 
@@ -117,7 +122,7 @@ export const SurveyNumber = () => {
 						color="dark"
 						variant="weak"
 						display="block"
-						onClick={() => navigate(-1)}
+						onClick={handlePrev}
 					>
 						이전
 					</CTAButton>
@@ -125,10 +130,11 @@ export const SurveyNumber = () => {
 				rightButton={
 					<CTAButton
 						display="block"
-						disabled={isInvalid}
+						disabled={isInvalid || submitting}
+						loading={submitting}
 						onClick={handleSubmit(onSubmit)}
 					>
-						확인
+						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
 					</CTAButton>
 				}
 			/>

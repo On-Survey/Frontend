@@ -15,6 +15,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { type createUserResponse, getUserInfo } from "../../service/user";
@@ -24,6 +25,8 @@ export const PaymentProductPage = () => {
 	const { goNextPayment, goPrevPayment } = useMultiStep();
 	const { selectedCoinAmount, handleSelectedCoinAmountChange, totalPrice } =
 		usePaymentEstimate();
+	const location = useLocation();
+	const isChargeFlow = location.pathname === "/payment/charge";
 
 	const [products, setProducts] = useState<IapProductListItem[]>([]);
 	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
@@ -36,7 +39,13 @@ export const PaymentProductPage = () => {
 	}, [userInfo, totalPrice]);
 
 	const handleNext = () => {
-		goNextPayment();
+		// 충전 플로우면 PaymentConfirmationPage를 건너뛰고 바로 PaymentLoading으로
+		if (isChargeFlow) {
+			// paymentStep을 2로 설정 (PaymentLoading)
+			goNextPayment(); // 1 -> 2
+		} else {
+			goNextPayment(); // 1 -> 2 (PaymentConfirmationPage)
+		}
 	};
 
 	useEffect(() => {
@@ -69,49 +78,99 @@ export const PaymentProductPage = () => {
 
 	return (
 		<div className="flex flex-col h-screen">
-			<Top
-				title={
-					<Top.TitleParagraph size={28}>
-						{displayAmount.toLocaleString()}코인
-					</Top.TitleParagraph>
-				}
-				subtitleTop={
-					<Top.SubtitleParagraph size={13}>충전 필요금액</Top.SubtitleParagraph>
-				}
-				upperGap={40}
-				rightVerticalAlign="end"
-			/>
-			<div className="px-4 flex flex-col gap-2 bg-gray-100 rounded-2xl p-4 mx-6 mb-4">
-				<div className="flex justify-between items-center gap-1">
-					<Text color={adaptive.grey700} typography="t6" fontWeight="regular">
-						총 필요 코인
+			{isChargeFlow ? (
+				<div className="px-4 pt-8 pb-4">
+					<Text
+						display="block"
+						color={adaptive.grey900}
+						typography="st5"
+						fontWeight="bold"
+						className="mb-2"
+					>
+						코인을 얼마나 충전할까요?
 					</Text>
-					<Text color={adaptive.grey700} typography="t5" fontWeight="semibold">
-						{totalPrice.toLocaleString()} 코인
-					</Text>
-				</div>
-				<div className="flex justify-between items-center gap-1">
-					<Text color={adaptive.grey700} typography="t6" fontWeight="regular">
-						현재 보유한 코인
-					</Text>
-					<Text color={adaptive.grey700} typography="t5" fontWeight="semibold">
-						{userInfo?.result.coin.toLocaleString()} 코인
+					<Text
+						display="block"
+						color={adaptive.grey700}
+						typography="t6"
+						fontWeight="regular"
+					>
+						코인은 설문을 등록하는데 현금처럼 사용해요
 					</Text>
 				</div>
-				<div className="flex justify-between items-center gap-1">
-					<Text color={adaptive.grey700} typography="t6" fontWeight="regular">
-						충전 필요 코인
-					</Text>
-					<Text color={adaptive.blue500} typography="t5" fontWeight="semibold">
-						{calculateRequiredCoinAmount(
-							userInfo?.result.coin ?? 0,
-							totalPrice,
-						).toLocaleString()}
-						코인
-					</Text>
-				</div>
-			</div>
-			<Border variant="height16" />
+			) : (
+				<>
+					<Top
+						title={
+							<Top.TitleParagraph size={28}>
+								{displayAmount.toLocaleString()}코인
+							</Top.TitleParagraph>
+						}
+						subtitleTop={
+							<Top.SubtitleParagraph size={13}>
+								충전 필요금액
+							</Top.SubtitleParagraph>
+						}
+						upperGap={40}
+						rightVerticalAlign="end"
+					/>
+					<div className="px-4 flex flex-col gap-2 bg-gray-100 rounded-2xl p-4 mx-6 mb-4">
+						<div className="flex justify-between items-center gap-1">
+							<Text
+								color={adaptive.grey700}
+								typography="t6"
+								fontWeight="regular"
+							>
+								총 필요 코인
+							</Text>
+							<Text
+								color={adaptive.grey700}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								{totalPrice.toLocaleString()} 코인
+							</Text>
+						</div>
+						<div className="flex justify-between items-center gap-1">
+							<Text
+								color={adaptive.grey700}
+								typography="t6"
+								fontWeight="regular"
+							>
+								현재 보유한 코인
+							</Text>
+							<Text
+								color={adaptive.grey700}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								{userInfo?.result.coin.toLocaleString()} 코인
+							</Text>
+						</div>
+						<div className="flex justify-between items-center gap-1">
+							<Text
+								color={adaptive.grey700}
+								typography="t6"
+								fontWeight="regular"
+							>
+								충전 필요 코인
+							</Text>
+							<Text
+								color={adaptive.blue500}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								{calculateRequiredCoinAmount(
+									userInfo?.result.coin ?? 0,
+									totalPrice,
+								).toLocaleString()}
+								코인
+							</Text>
+						</div>
+					</div>
+					<Border variant="height16" />
+				</>
+			)}
 			<div className="flex-1 overflow-y-auto mt-4">
 				<List>
 					{products.map((product) => {

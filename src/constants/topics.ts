@@ -1,8 +1,19 @@
 import { Interest } from "../service/form";
 
 // 주제 데이터 타입 정의
+export type InterestId =
+	| "CAREER"
+	| "BUSINESS"
+	| "FINANCE"
+	| "HEALTH"
+	| "CULTURE"
+	| "FASHION"
+	| "SOCIETY"
+	| "SELF_IMPROVEMENT"
+	| "DAILY_LIFE";
+
 export interface TopicData {
-	id: string;
+	id: InterestId;
 	name: string;
 	description: string;
 	icon: {
@@ -16,7 +27,7 @@ export interface TopicData {
 // 주제 데이터 배열
 export const topics: TopicData[] = [
 	{
-		id: "career",
+		id: "CAREER",
 		name: "커리어",
 		description: "직장, 취업, 이직, 스타트업, 생산성",
 		icon: {
@@ -26,7 +37,7 @@ export const topics: TopicData[] = [
 		value: Interest.CAREER,
 	},
 	{
-		id: "business_tech",
+		id: "BUSINESS",
 		name: "비즈니스 / 테크",
 		description: "데이터, AI, 마케팅, 앱",
 		icon: {
@@ -36,7 +47,7 @@ export const topics: TopicData[] = [
 		value: Interest.BUSINESS,
 	},
 	{
-		id: "finance_consumption",
+		id: "FINANCE",
 		name: "금융 / 소비",
 		description: "재테크, 투자, 금융상품, 소비습관",
 		icon: {
@@ -46,7 +57,7 @@ export const topics: TopicData[] = [
 		value: Interest.FINANCE,
 	},
 	{
-		id: "health_lifestyle",
+		id: "HEALTH",
 		name: "건강 / 라이프스타일",
 		description: "운동, 다이어트, 식습관, 건강관리",
 		icon: {
@@ -56,7 +67,7 @@ export const topics: TopicData[] = [
 		value: Interest.HEALTH,
 	},
 	{
-		id: "culture_hobby",
+		id: "CULTURE",
 		name: "문화 / 취미",
 		description: "영화, 음악, 책, 게임, 여행",
 		icon: {
@@ -66,7 +77,7 @@ export const topics: TopicData[] = [
 		value: Interest.CULTURE,
 	},
 	{
-		id: "fashion_beauty",
+		id: "FASHION",
 		name: "패션 / 뷰티",
 		description: "트렌드, 코디, 스타일링, 화장, 옷",
 		icon: {
@@ -76,7 +87,7 @@ export const topics: TopicData[] = [
 		value: Interest.FASHION,
 	},
 	{
-		id: "social_issues",
+		id: "SOCIETY",
 		name: "사회 / 이슈",
 		description: "환경, 기후, 이슈, 지속가능성",
 		icon: {
@@ -86,7 +97,7 @@ export const topics: TopicData[] = [
 		value: Interest.SOCIETY,
 	},
 	{
-		id: "self_development_education",
+		id: "SELF_IMPROVEMENT",
 		name: "자기계발 / 교육",
 		description: "공부, 강의, 자격증, 외국어 공부",
 		icon: {
@@ -96,7 +107,7 @@ export const topics: TopicData[] = [
 		value: Interest.SELF_IMPROVEMENT,
 	},
 	{
-		id: "daily_relationships",
+		id: "DAILY_LIFE",
 		name: "일상 / 관계",
 		description: "연애, 가족, 친구, 반려동물, 인간관계",
 		icon: {
