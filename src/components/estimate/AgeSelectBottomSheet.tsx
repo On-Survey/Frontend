@@ -1,5 +1,5 @@
 import { BottomSheet, Checkbox, List, ListRow } from "@toss/tds-mobile";
-import { AGE } from "../../constants/payment";
+import { AGE, type AgeCode } from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 
 interface AgeSelectBottomSheetProps {
@@ -15,22 +15,24 @@ export const AgeSelectBottomSheet = ({
 
 	// 연령대 복수 선택 처리
 	const selectedAges =
-		estimate.age === "전체" ? [] : estimate.age.split(", ").filter(Boolean);
+		estimate.age === "ALL" ? [] : estimate.age.split(", ").filter(Boolean);
 
 	const handleAgeToggle = (ageValue: string) => {
-		if (ageValue === "전체") {
+		if (ageValue === "ALL") {
 			// "전체" 선택 시 다른 모든 선택 해제
-			handleEstimateChange({ ...estimate, age: "전체" });
+			handleEstimateChange({ ...estimate, age: "ALL" });
 		} else {
 			// "전체"가 선택된 상태에서 다른 연령대를 선택하면 "전체" 해제
-			const currentAges = estimate.age === "전체" ? [] : selectedAges;
+			const currentAges = estimate.age === "ALL" ? [] : selectedAges;
 			const newSelectedAges = currentAges.includes(ageValue)
 				? currentAges.filter((age) => age !== ageValue)
 				: [...currentAges, ageValue];
 
 			handleEstimateChange({
 				...estimate,
-				age: newSelectedAges.length === 0 ? "전체" : newSelectedAges.join(", "),
+				age: (newSelectedAges.length === 0
+					? "ALL"
+					: newSelectedAges.join(", ")) as AgeCode,
 			});
 		}
 	};
@@ -48,8 +50,8 @@ export const AgeSelectBottomSheet = ({
 				<List>
 					{AGE.map((option) => {
 						const isSelected =
-							option.value === "전체"
-								? estimate.age === "전체"
+							option.value === "ALL"
+								? estimate.age === "ALL"
 								: selectedAges.includes(option.value);
 
 						return (

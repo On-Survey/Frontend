@@ -40,6 +40,8 @@ import EstimateNavigationPage from "./pages/estimate/EstimatePage";
 import { LocationSelectPage as EstimateLocationSelectPage } from "./pages/estimate/LocationSelectPage";
 import { Mypage } from "./pages/Mypage";
 import BusinessInfo from "./pages/mypage/BusinessInfo";
+import CoinDetail from "./pages/mypage/CoinDetail";
+import CoinHistory from "./pages/mypage/CoinHistory";
 import OrderDetail from "./pages/mypage/OrderDetail";
 import OrderHistory from "./pages/mypage/OrderHistory";
 import PrivacyPolicy from "./pages/mypage/PrivacyPolicy";
@@ -114,6 +116,8 @@ export const App = () => {
 						path="/mypage/orderHistory/:orderId"
 						element={<OrderDetail />}
 					/>
+					<Route path="/mypage/coinHistory" element={<CoinHistory />} />
+					<Route path="/mypage/coinHistory/:coinId" element={<CoinDetail />} />
 					<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
 					<Route path="/mypage/privacyPolicy" element={<PrivacyPolicy />} />
 					<Route path="/mypage/termsOfService" element={<TermsOfService />} />

@@ -49,9 +49,9 @@ const EstimatePageContent = () => {
 			handleEstimateChange({
 				...estimate,
 				desiredParticipants: "50",
-				gender: "전체",
-				age: "전체",
-				location: "전체",
+				gender: "ALL",
+				age: "ALL",
+				location: "ALL",
 			});
 		}
 	}, [estimate, handleEstimateChange]);
@@ -179,7 +179,7 @@ const EstimatePageContent = () => {
 						labelOption="sustain"
 						help="복수 선택 시 추가 요금이 부과되고, 전체 선택 시는 제외돼요."
 						value={
-							estimate.age === "전체"
+							estimate.age === "ALL"
 								? "전체"
 								: estimate.age
 									? estimate.age

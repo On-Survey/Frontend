@@ -27,7 +27,7 @@ const getBasePrice = (participants: string): number => {
  * 연령대에 따른 추가금 계산
  */
 const getAgeSurcharge = (age: string, participants: string): number => {
-	if (age === "전체") {
+	if (age === "ALL") {
 		return 0;
 	}
 
@@ -56,23 +56,31 @@ const getLocationSurcharge = (
 	location: string,
 	participants: string,
 ): number => {
-	if (location === "전체") {
+	if (location === "ALL") {
 		return 0;
 	}
 
 	const count = parseInt(participants.replace("명", ""), 10);
 	if (Number.isNaN(count)) return 0;
 
-	if (REGIONS_5_PERCENT_SURCHARGE.some((region) => location.includes(region))) {
+	if (
+		REGIONS_5_PERCENT_SURCHARGE.some((region) =>
+			location.includes(region.value),
+		)
+	) {
 		// 쉬움 (서울/경기): +5% (건당 35원)
 		return count * 35;
 	} else if (
-		REGIONS_10_PERCENT_SURCHARGE.some((region) => location.includes(region))
+		REGIONS_10_PERCENT_SURCHARGE.some((region) =>
+			location.includes(region.value),
+		)
 	) {
 		// 보통 (광역시): +10% (건당 70원)
 		return count * 70;
 	} else if (
-		REGIONS_15_PERCENT_SURCHARGE.some((region) => location.includes(region))
+		REGIONS_15_PERCENT_SURCHARGE.some((region) =>
+			location.includes(region.value),
+		)
 	) {
 		// 어려움 (도 단위): +15% (건당 105원)
 		return count * 105;
@@ -85,7 +93,7 @@ const getLocationSurcharge = (
  * 성별에 따른 추가금 계산
  */
 const getGenderSurcharge = (gender: string, participants: string): number => {
-	if (gender === "전체") {
+	if (gender === "ALL") {
 		return 0;
 	}
 
@@ -97,19 +105,23 @@ const getGenderSurcharge = (gender: string, participants: string): number => {
 
 // 거주지 난이도 표시
 const getLocationDifficulty = (location: string): string => {
-	if (location === "전체") {
+	if (location === "ALL") {
 		return "";
 	}
-	if (REGIONS_NO_SURCHARGE.includes(location)) {
+	if (REGIONS_NO_SURCHARGE.some((region) => region.value === location)) {
 		return "(쉬움)";
 	}
-	if (REGIONS_5_PERCENT_SURCHARGE.includes(location)) {
+	if (REGIONS_5_PERCENT_SURCHARGE.some((region) => region.value === location)) {
 		return "(쉬움)";
 	}
-	if (REGIONS_10_PERCENT_SURCHARGE.includes(location)) {
+	if (
+		REGIONS_10_PERCENT_SURCHARGE.some((region) => region.value === location)
+	) {
 		return "(보통)";
 	}
-	if (REGIONS_15_PERCENT_SURCHARGE.includes(location)) {
+	if (
+		REGIONS_15_PERCENT_SURCHARGE.some((region) => region.value === location)
+	) {
 		return "(어려움)";
 	}
 	return "";
@@ -145,7 +157,7 @@ export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {
 		},
 		age: {
 			label:
-				estimate.age === "전체"
+				estimate.age === "ALL"
 					? "전체"
 					: estimate.age
 						? estimate.age
