@@ -1,6 +1,7 @@
 import type { QuestionInfo } from "../../types/survey";
 import { api } from "../axios";
 import type {
+	CreateFormRequest,
 	CreateFormResponse,
 	CreateScreeningsResponse,
 	CreateSurveyInterestsResponse,
@@ -63,12 +64,11 @@ export const createScreenings = async ({
 
 export const createForm = async ({
 	surveyId,
-}: {
-	surveyId: number;
-}): Promise<CreateFormResponse> => {
-	const { data } = await api.patch<CreateFormResponse, { surveyId: number }>(
+	...formPayload
+}: CreateFormRequest & { surveyId: number }): Promise<CreateFormResponse> => {
+	const { data } = await api.patch<CreateFormResponse, CreateFormRequest>(
 		`/v1/survey-form/surveys/${surveyId}`,
-		{ surveyId },
+		formPayload,
 	);
 	return data;
 };

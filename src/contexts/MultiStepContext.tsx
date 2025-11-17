@@ -22,6 +22,7 @@ type MultiStepContextValue = {
 	goNextPayment: () => void;
 	goPrevPayment: () => void;
 	resetPayment: () => void;
+	resetActiveStep: () => void;
 };
 
 const MultiStepContext = createContext<MultiStepContextValue | undefined>(
@@ -65,12 +66,17 @@ export const MultiStepProvider = ({ children }: PropsWithChildren) => {
 		setPaymentStep(0);
 	}, []);
 
+	const resetActiveStep = useCallback(() => {
+		setActiveStep(0);
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			activeStep,
 			handleStepChange,
 			handlePrevious,
 			setActiveStep,
+			resetActiveStep,
 			screeningStep,
 			setScreeningStep,
 			goNextScreening,
@@ -86,6 +92,7 @@ export const MultiStepProvider = ({ children }: PropsWithChildren) => {
 			activeStep,
 			handleStepChange,
 			handlePrevious,
+			resetActiveStep,
 			screeningStep,
 			goNextScreening,
 			goPrevScreening,
