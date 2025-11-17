@@ -102,6 +102,10 @@ export const Mypage = () => {
 		navigate("/mypage/promotionNotice");
 	};
 
+	const handleCoinHistory = () => {
+		navigate("/mypage/coinHistory");
+	};
+
 	const handleCharge = () => {
 		// 충전 전용 플로우: totalPrice를 0으로 설정하고 상품 선택 페이지부터 시작
 		handleTotalPriceChange(0);
@@ -237,6 +241,17 @@ export const Mypage = () => {
 						}
 						arrowType="right"
 						onClick={handleOrderHistory}
+					/>
+					<ListRow
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
+								top="코인 사용 내역"
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						arrowType="right"
+						onClick={handleCoinHistory}
 					/>
 					<ListRow
 						contents={
