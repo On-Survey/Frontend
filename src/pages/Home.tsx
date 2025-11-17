@@ -27,8 +27,7 @@ export const Home = () => {
 				setUserName(memberInfo.name);
 			} catch (err) {
 				console.error("회원 정보 조회 실패:", err);
-				// 에러 시 기본값 사용
-				setUserName("온서베이");
+				setUserName("회원");
 			}
 		};
 
@@ -55,9 +54,6 @@ export const Home = () => {
 
 			try {
 				const result = await getOngoingSurveys();
-				console.log("노출 중 설문 (recommended):", result.recommended);
-				console.log("노출 중 설문 (impending):", result.impending);
-
 				const mapSurveyToItem = (
 					survey: OngoingSurveySummary,
 				): SurveyListItem => {
@@ -84,7 +80,6 @@ export const Home = () => {
 				setImpending(imp);
 			} catch (err) {
 				console.error("노출 중 설문 조회 실패:", err);
-				setError("설문 목록을 불러오지 못했습니다.");
 			} finally {
 				setIsLoading(false);
 			}

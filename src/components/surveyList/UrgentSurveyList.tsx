@@ -14,18 +14,6 @@ export const UrgentSurveyList = ({
 	onViewAll,
 }: UrgentSurveyListProps) => {
 	const navigate = useNavigate();
-	const fallbackSurveys: SurveyListItem[] = [
-		{
-			id: "mock-urgent-1",
-			topicId: "CAREER",
-			title: "커리어 만족도 설문",
-			iconType: "image",
-			iconSrc: "https://static.toss.im/2d-emojis/png/4x/u1F680.png",
-			description: "5분 만에 참여하고 포인트 보상 받아가세요!",
-			remainingTimeText: "마감 하루 전",
-		},
-	];
-	const displaySurveys = surveys.length > 0 ? surveys : fallbackSurveys;
 
 	const cardGradients = [
 		"from-[#FFF4C2] to-[#FFE08A]",
@@ -92,14 +80,14 @@ export const UrgentSurveyList = ({
 
 			<div className="overflow-x-auto overflow-y-hidden hide-scrollbar px-4">
 				<div className="flex gap-3">
-					{displaySurveys.length === 0 ? (
+					{surveys.length === 0 ? (
 						<div className="rounded-2xl p-4 flex-shrink-0 flex items-center justify-center w-[198px] min-h-[166px] bg-gray-100 text-center">
 							<Text color={adaptive.grey700} typography="t7">
 								마감 임박 설문이 없습니다.
 							</Text>
 						</div>
 					) : (
-						displaySurveys.map((survey, index) => (
+						surveys.map((survey, index) => (
 							<button
 								key={survey.id}
 								type="button"
