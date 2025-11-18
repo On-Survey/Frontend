@@ -1,5 +1,12 @@
 import { colors } from "@toss/tds-colors";
-import { Asset, Badge, Button, ProgressBar, Text } from "@toss/tds-mobile";
+import {
+	Asset,
+	Badge,
+	Button,
+	ProgressBar,
+	Text,
+	useToast,
+} from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { formatDateDisplay } from "../../../utils/FormatDate";
 import { shareSurveyById } from "../../../utils/shareSurvey";
@@ -16,6 +23,7 @@ interface SurveyCardProps {
 
 export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	const navigate = useNavigate();
+	const { openToast } = useToast();
 	const badgeConfig: Record<SurveyState, { color: BadgeColor; label: string }> =
 		{
 			draft: { color: "green", label: "작성중" },
@@ -44,7 +52,12 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	const handleShareClick = async () => {
 		if (!isActiveCard) return;
 
-		await shareSurveyById(survey.id);
+		await shareSurveyById(survey.id, () => {
+			openToast("공유 링크가 생성되었어요", {
+				type: "bottom",
+				higherThanCTA: true,
+			});
+		});
 	};
 
 	const handleDetailClick = () => {
