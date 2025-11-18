@@ -114,26 +114,45 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 				{survey.title}
 			</Text>
 
-			{type === "active" && hasProgress && activeSurvey && (
+			{type === "active" && activeSurvey && (
 				<>
-					<div className="flex items-center justify-between mb-2">
-						<Text color={colors.grey700} typography="t7" fontWeight="medium">
-							{activeSurvey.progress}/{activeSurvey.total}
-						</Text>
-						<Text color={colors.grey700} typography="t7" fontWeight="medium">
-							{deadlineText}
-						</Text>
-					</div>
+					{hasProgress && (
+						<div className="mb-2">
+							<Text color={colors.grey700} typography="t7" fontWeight="medium">
+								{activeSurvey.progress}/{activeSurvey.total}
+							</Text>
+						</div>
+					)}
+					{(activeDescription || deadlineText) && (
+						<div className="flex items-center justify-between gap-2 mb-4">
+							{activeDescription && (
+								<Text color={colors.grey700} typography="t7" className="flex-1">
+									{activeDescription}
+								</Text>
+							)}
+							{deadlineText && (
+								<Text
+									color={colors.grey700}
+									typography="t7"
+									fontWeight="medium"
+									className="shrink-0"
+								>
+									{deadlineText}
+								</Text>
+							)}
+						</div>
+					)}
 					<div className="mb-4">
 						<ProgressBar
 							size="normal"
 							color={colors.blue500}
 							progress={
-								(activeSurvey.progress ?? 0) / (activeSurvey.total ?? 1)
+								hasProgress
+									? (activeSurvey.progress ?? 0) / (activeSurvey.total ?? 1)
+									: 0
 							}
 						/>
 					</div>
-					<div className="h-4" />
 					<Button
 						size="medium"
 						variant="weak"
@@ -143,11 +162,6 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 						친구에게 공유하기
 					</Button>
 				</>
-			)}
-			{type === "active" && !hasProgress && activeDescription && (
-				<Text color={colors.grey700} typography="t7">
-					{activeDescription}
-				</Text>
 			)}
 		</div>
 	);
