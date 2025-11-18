@@ -48,7 +48,7 @@ export const MAIN_CONTROLS = [
 	{
 		id: "add_question",
 		label: "문항 추가",
-		icon: "icon-plus-square-mono",
+		icon: "icon-line-three-dots-mono",
 		action: "handleAddQuestion",
 	},
 	{

@@ -1,6 +1,8 @@
+import { generateHapticFeedback } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, ConfirmDialog, Text, useToast } from "@toss/tds-mobile";
-import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import {
 	BUTTON_STYLES,
 	ICON_PROPS,
@@ -23,6 +25,7 @@ export const FormController = ({
 	isReorderMode = false,
 	onReorderModeChange,
 }: FormControllerProps) => {
+	const hasVisitedControlsRef = useRef(false);
 	const { handleStepChange } = useMultiStep();
 	const { setScreeningEnabled, state } = useSurvey();
 
@@ -37,6 +40,7 @@ export const FormController = ({
 	} = useModal(false);
 
 	const handleSaveAndIsConfirmDialogOpen = async () => {
+		generateHapticFeedback({ type: "tap" });
 		if (state.survey.question.length === 0) {
 			openToast("문항을 추가해주세요.", {
 				type: "bottom",
@@ -63,10 +67,12 @@ export const FormController = ({
 	};
 
 	const handleOpen = () => {
+		generateHapticFeedback({ type: "tap" });
 		setIsOpen(true);
 	};
 
 	const handleClose = () => {
+		generateHapticFeedback({ type: "tap" });
 		setIsOpen(false);
 	};
 
@@ -122,6 +128,10 @@ export const FormController = ({
 		handleConfirmDialogClose();
 	};
 
+	useEffect(() => {
+		hasVisitedControlsRef.current = true;
+	}, []);
+
 	// 액션 핸들러 매핑
 	const actionHandlers = {
 		handleSave,
@@ -130,7 +140,7 @@ export const FormController = ({
 	};
 
 	return (
-		<>
+		<AnimatePresence>
 			<ConfirmDialog
 				open={isConfirmDialogOpen}
 				onClose={handleDialogCancel}
@@ -150,103 +160,125 @@ export const FormController = ({
 				title="스크리닝 질문을 추가할까요?"
 				description="스크리닝 질문이란 설문에 참여할 적합한 사람을 미리 선별하기 위한 OX 질문이에요."
 			/>
-			<div className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6">
-				<div className="flex items-center gap-2 w-full justify-between">
-					<div className="relative flex-1 overflow-hidden h-[60px]">
-						{/* QuestionController - 왼쪽에서 슬라이드 인 */}
-						<div
-							className={`absolute inset-0 transition-all duration-300 ease-out ${
-								isOpen
-									? "opacity-100 translate-x-0 z-20"
-									: "opacity-0 -translate-x-full z-0"
-							}`}
-						>
-							{isOpen && (
-								<div className="animate-slide-in-left">
-									<QuestionController onPrevious={handleClose} />
-								</div>
-							)}
-						</div>
+			{isOpen && (
+				<div className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6">
+					<QuestionController onPrevious={handleClose} />
+				</div>
+			)}
 
-						{/* 기본 컨트롤들 - 오른쪽으로 슬라이드 아웃 */}
-						<div
-							className={`absolute inset-0 transition-all duration-300 ease-out ${
-								!isOpen
-									? "opacity-100 translate-x-0 z-20"
-									: "opacity-0 translate-x-full z-0 pointer-events-none"
-							}`}
-						>
-							{!isOpen && (
-								<div className="animate-slide-in-right">
-									<div className="flex items-center gap-2 w-full justify-between">
-										<div className="flex items-center gap-10 bg-white rounded-full p-2 w-full justify-center">
-											{MAIN_CONTROLS.map((control) => {
-												const isReorderControl = control.id === "reorder";
-												const displayLabel =
-													isReorderControl && isReorderMode
-														? "변경 완료"
-														: control.label;
-												const displayIcon =
-													isReorderControl && isReorderMode
-														? "icon-check-mono"
-														: control.icon;
+			{!isOpen && (
+				<div className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6">
+					<div className="flex items-center gap-2 w-full justify-between">
+						<div className="relative flex-1 overflow-hidden h-[60px]">
+							<div className="flex items-center gap-2 w-full justify-between">
+								<div className="flex items-center gap-10 bg-white rounded-full p-2 w-full justify-center">
+									{MAIN_CONTROLS.map((control) => {
+										const isReorderControl = control.id === "reorder";
+										const displayLabel =
+											isReorderControl && isReorderMode
+												? "변경 완료"
+												: control.label;
+										const displayIcon =
+											isReorderControl && isReorderMode
+												? "icon-check-mono"
+												: control.icon;
 
-												return (
-													<button
-														key={control.id}
-														className={BUTTON_STYLES.mainControl}
-														onClick={actionHandlers[control.action]}
-														type="button"
+										if (control.id === "add_question") {
+											const shouldAnimateAddButton =
+												hasVisitedControlsRef.current;
+
+											return (
+												<motion.button
+													key={control.id}
+													className={BUTTON_STYLES.mainControl}
+													onClick={actionHandlers[control.action]}
+													type="button"
+													initial={
+														shouldAnimateAddButton
+															? { opacity: 1, x: -60 }
+															: false
+													}
+													animate={{ opacity: 1, x: 0 }}
+													transition={
+														shouldAnimateAddButton
+															? {
+																	duration: 0.01,
+																	ease: "linear",
+																}
+															: undefined
+													}
+												>
+													<Asset.Icon
+														frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+														backgroundColor={ICON_PROPS.backgroundColor}
+														name={displayIcon}
+														color={adaptive.grey600}
+														aria-hidden={ICON_PROPS.ariaHidden}
+														ratio={ICON_PROPS.ratio}
+													/>
+													<Text
+														color={adaptive.grey700}
+														typography={TEXT_PROPS.typography}
+														fontWeight={TEXT_PROPS.fontWeight}
 													>
-														<Asset.Icon
-															frameShape={
-																Asset.frameShape[ICON_PROPS.frameShape]
-															}
-															backgroundColor={ICON_PROPS.backgroundColor}
-															name={displayIcon}
-															color={adaptive.grey600}
-															aria-hidden={ICON_PROPS.ariaHidden}
-															ratio={ICON_PROPS.ratio}
-														/>
-														<Text
-															color={adaptive.grey700}
-															typography={TEXT_PROPS.typography}
-															fontWeight={TEXT_PROPS.fontWeight}
-														>
-															{displayLabel}
-														</Text>
-													</button>
-												);
-											})}
-										</div>
-										<button
-											className={BUTTON_STYLES.nextButton}
-											type="button"
-											onClick={handleSaveAndIsConfirmDialogOpen}
-										>
-											<Asset.Icon
-												frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
-												backgroundColor={ICON_PROPS.backgroundColor}
-												name="icon-arrow-left-big-mono"
-												color={adaptive.background}
-												aria-hidden={ICON_PROPS.ariaHidden}
-												ratio={ICON_PROPS.ratio}
-											/>
-											<Text
-												color={adaptive.background}
-												typography={TEXT_PROPS.typography}
-												fontWeight={TEXT_PROPS.fontWeight}
+														{displayLabel}
+													</Text>
+												</motion.button>
+											);
+										}
+
+										return (
+											<button
+												key={control.id}
+												className={BUTTON_STYLES.mainControl}
+												onClick={actionHandlers[control.action]}
+												type="button"
 											>
-												다음
-											</Text>
-										</button>
-									</div>
+												<Asset.Icon
+													frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+													backgroundColor={ICON_PROPS.backgroundColor}
+													name={displayIcon}
+													color={adaptive.grey600}
+													aria-hidden={ICON_PROPS.ariaHidden}
+													ratio={ICON_PROPS.ratio}
+												/>
+												<Text
+													color={adaptive.grey700}
+													typography={TEXT_PROPS.typography}
+													fontWeight={TEXT_PROPS.fontWeight}
+												>
+													{displayLabel}
+												</Text>
+											</button>
+										);
+									})}
 								</div>
-							)}
+								<button
+									className={BUTTON_STYLES.nextButton}
+									type="button"
+									onClick={handleSaveAndIsConfirmDialogOpen}
+								>
+									<Asset.Icon
+										frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+										backgroundColor={ICON_PROPS.backgroundColor}
+										name="icon-arrow-left-big-mono"
+										color={adaptive.background}
+										aria-hidden={ICON_PROPS.ariaHidden}
+										ratio={ICON_PROPS.ratio}
+									/>
+									<Text
+										color={adaptive.background}
+										typography={TEXT_PROPS.typography}
+										fontWeight={TEXT_PROPS.fontWeight}
+									>
+										다음
+									</Text>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</>
+			)}
+		</AnimatePresence>
 	);
 };
