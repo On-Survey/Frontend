@@ -1,5 +1,6 @@
 import { colors } from "@toss/tds-colors";
 import { CTAButton, FixedBottomCTA, ProgressBar, Top } from "@toss/tds-mobile";
+import { QuestionBadge } from "../../components/QuestionBadge";
 import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveyRating = () => {
@@ -42,13 +43,7 @@ export const SurveyRating = () => {
 						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={
-					currentQuestion.isRequired ? (
-						<Top.SubtitleBadges
-							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
-						/>
-					) : undefined
-				}
+				subtitleTop={<QuestionBadge isRequired={currentQuestion.isRequired} />}
 				subtitleBottom={
 					currentQuestion.description ? (
 						<Top.SubtitleParagraph size={15}>
@@ -56,8 +51,8 @@ export const SurveyRating = () => {
 						</Top.SubtitleParagraph>
 					) : (
 						<Top.SubtitleParagraph size={15}>
-							{currentQuestion.minValue ?? "1"} ~{" "}
-							{currentQuestion.maxValue ?? "5"}점 중 선택
+							{currentQuestion.minValue ?? "매우 나쁨"} ~{" "}
+							{currentQuestion.maxValue ?? "매우 좋음"} 중 선택
 						</Top.SubtitleParagraph>
 					)
 				}
@@ -72,7 +67,7 @@ export const SurveyRating = () => {
 							<div key={v} className="flex flex-col items-center gap-2">
 								<button
 									type="button"
-									className={`w-8 h-8 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
+									className={`w-8 h-8 rounded-full! ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
 									aria-label={`${v}점`}
 									onClick={() => handleScoreChange(v)}
 								/>
@@ -87,8 +82,12 @@ export const SurveyRating = () => {
 					})}
 				</div>
 				<div className="flex items-center justify-between mt-4 px-12">
-					<span className="text-[12px] text-gray-500">매우 아니다</span>
-					<span className="text-[12px] text-gray-500">매우 그렇다</span>
+					<span className="text-[12px] text-gray-500">
+						{currentQuestion.minValue ?? "매우 나쁨"}
+					</span>
+					<span className="text-[12px] text-gray-500">
+						{currentQuestion.maxValue ?? "매우 좋음"}
+					</span>
 				</div>
 			</div>
 

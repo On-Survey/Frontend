@@ -57,24 +57,68 @@ export const SurveyResponseDetail = () => {
 
 			try {
 				setIsLoading(true);
-				const [result, userSurveysResult] = await Promise.all([
-					getSurveyAnswerDetail(Number(id)),
-					getUserSurveys(),
-				]);
+				console.log("설문 상세 조회 시작, surveyId:", id);
+
+				// 각 API를 개별적으로 호출하여 에러 처리
+				let result: SurveyAnswerDetailResult | null = null;
+				let userSurveysResult = null;
+
+				try {
+					console.log("getSurveyAnswerDetail 호출 중...");
+					result = await getSurveyAnswerDetail(Number(id));
+					console.log("getSurveyAnswerDetail 성공:", result);
+				} catch (error) {
+					console.error("getSurveyAnswerDetail 실패:", error);
+				}
+
+				try {
+					console.log("getUserSurveys 호출 중...");
+					userSurveysResult = await getUserSurveys();
+					console.log("getUserSurveys 성공:", userSurveysResult);
+				} catch (error) {
+					console.error("getUserSurveys 실패:", error);
+				}
+
+				if (!result) {
+					console.error("설문 응답 상세 정보를 가져올 수 없습니다.");
+					// getUserSurveys에서만 정보를 가져와서 기본 화면 표시
+					if (userSurveysResult) {
+						const survey = userSurveysResult.infoList.find(
+							(s) => s.surveyId === Number(id),
+						);
+						setSurveyResponse({
+							id: Number(id),
+							title: survey?.title || "설문",
+							status: "active",
+							responseCount: survey?.currentCount || 0,
+							questions: [],
+						});
+					} else {
+						setSurveyResponse({
+							id: Number(id),
+							title: "설문",
+							status: "active",
+							responseCount: 0,
+							questions: [],
+						});
+					}
+					return;
+				}
 
 				setAnswerDetails(result);
 
-				const survey = userSurveysResult.infoList.find(
-					(s) => s.surveyId === result.surveyId,
+				const survey = userSurveysResult?.infoList.find(
+					(s) => s.surveyId === result!.surveyId,
 				);
-				const surveyTitle = survey?.title || "";
+				const surveyTitle =
+					survey?.title || result!.surveyId?.toString() || "설문";
 
 				const status: "active" | "closed" =
-					result.status === "ONGOING" || result.status === "ACTIVE"
+					result!.status === "ONGOING" || result!.status === "ACTIVE"
 						? "active"
 						: "closed";
 
-				const questions = result.detailInfoList.map((detail) => {
+				const questions = (result!.detailInfoList || []).map((detail) => {
 					const questionType = mapApiQuestionTypeToComponentType(detail.type);
 					const responseCount = detail.answerList?.length || 0;
 
@@ -88,14 +132,22 @@ export const SurveyResponseDetail = () => {
 				});
 
 				setSurveyResponse({
-					id: result.surveyId,
+					id: result!.surveyId,
 					title: surveyTitle,
 					status,
-					responseCount: result.currentCount,
+					responseCount: result!.currentCount || 0,
 					questions,
 				});
 			} catch (error) {
 				console.error("설문 상세 조회 실패:", error);
+				// 에러 발생 시에도 기본값 설정
+				setSurveyResponse({
+					id: Number(id),
+					title: "설문",
+					status: "active",
+					responseCount: 0,
+					questions: [],
+				});
 			} finally {
 				setIsLoading(false);
 			}

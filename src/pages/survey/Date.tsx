@@ -6,6 +6,7 @@ import {
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
+import { QuestionBadge } from "../../components/QuestionBadge";
 import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveyDate = () => {
@@ -45,13 +46,7 @@ export const SurveyDate = () => {
 						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={
-					currentQuestion.isRequired ? (
-						<Top.SubtitleBadges
-							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
-						/>
-					) : undefined
-				}
+				subtitleTop={<QuestionBadge isRequired={currentQuestion.isRequired} />}
 				subtitleBottom={
 					currentQuestion.description ? (
 						<Top.SubtitleParagraph size={15}>

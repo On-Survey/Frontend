@@ -7,6 +7,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { Controller, useForm } from "react-hook-form";
+import { QuestionBadge } from "../../components/QuestionBadge";
 import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 import { validateNumberInput } from "../../utils/validators";
 
@@ -66,13 +67,7 @@ export const SurveyNumber = () => {
 						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={
-					currentQuestion.isRequired ? (
-						<Top.SubtitleBadges
-							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
-						/>
-					) : undefined
-				}
+				subtitleTop={<QuestionBadge isRequired={currentQuestion.isRequired} />}
 				subtitleBottom={
 					currentQuestion.description ? (
 						<Top.SubtitleParagraph size={15}>
