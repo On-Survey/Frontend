@@ -10,22 +10,6 @@ interface UseApiRequestReturn<T, P> {
 	reset: () => void;
 }
 
-/**
- * API 요청을 감싸는 커스텀 훅
- * @param apiFunction - 실행할 API 함수
- * @returns {UseApiRequestReturn} 로딩 상태, 성공 여부, 응답 데이터, 에러, 실행 함수, 리셋 함수
- *
- * @example
- * ```tsx
- * const { isLoading, isSuccess, data, error, execute } = useApiRequest<
- *   OnboardingResponse,
- *   { residence: string; interests: string[] }
- * >(OnboardingApi);
- *
- * // 사용
- * await execute({ residence: "서울", interests: ["기술"] });
- * ```
- */
 export function useApiRequest<T, P = void>(
 	apiFunction: (...args: P extends void ? [] : [P]) => Promise<ApiResponse<T>>,
 ): UseApiRequestReturn<T, P> {

@@ -65,25 +65,23 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 							/>
 						}
 						left={
-							icon.type === "image" && icon.src ? (
-								<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+							<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+								{icon.type === "image" && icon.src ? (
 									<ListRow.AssetImage
 										src={icon.src}
 										shape="original"
 										className="w-8"
 									/>
-								</div>
-							) : icon.name ? (
-								<ListRow.AssetIcon name={icon.name} />
-							) : (
-								<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+								) : icon.name ? (
+									<ListRow.AssetIcon name={icon.name} />
+								) : (
 									<ListRow.AssetImage
 										src={survey.iconSrc || ""}
 										shape="original"
 										className="w-8"
 									/>
-								</div>
-							)
+								)}
+							</div>
 						}
 						verticalPadding="large"
 						arrowType="right"

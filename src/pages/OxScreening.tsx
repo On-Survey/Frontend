@@ -38,7 +38,6 @@ export const OxScreening = () => {
 					setShowNoQuiz(true);
 				} else {
 					setScreeningQuestions(result.data);
-					// 다음 설문 ID 설정 (현재 질문의 surveyId)
 					if (result.data.length > 0) {
 						setNextSurveyId(result.data[0].surveyId);
 					}
@@ -121,7 +120,7 @@ export const OxScreening = () => {
 					backgroundColor="transparent"
 					src="https://static.toss.im/2d-emojis/png/4x/u1F622.png"
 					aria-hidden={true}
-					className="aspect-square"
+					className="aspect-square mb-5"
 				/>
 				<Text
 					display="block"
@@ -129,12 +128,10 @@ export const OxScreening = () => {
 					typography="st8"
 					fontWeight="semibold"
 					textAlign="center"
-					className="mt-5"
 				>
 					풀 수 있는 퀴즈가 없어요
 				</Text>
 				<div className="mt-5" />
-				<Button size="medium">퀴즈 알림 받을래요</Button>
 			</div>
 		);
 	}

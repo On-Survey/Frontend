@@ -9,9 +9,14 @@ import {
 import { PaymentBottomSheet } from "../../components/payment";
 import {
 	AGE,
+	type AgeCode,
 	DESIRED_PARTICIPANTS,
 	EstimateField,
 	GENDER,
+	getAgeLabel,
+	getGenderLabel,
+	getRegionLabel,
+	type RegionCode,
 } from "../../constants/payment";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
@@ -159,7 +164,7 @@ const EstimatePageContent = () => {
 						label="성별"
 						labelOption="sustain"
 						help="특정 성별만 선택하면 추가 비용이 발생해요"
-						value={estimate.gender}
+						value={getGenderLabel(estimate.gender)}
 						placeholder="전체"
 						right={
 							<Asset.Icon
@@ -182,15 +187,14 @@ const EstimatePageContent = () => {
 							estimate.age === "ALL"
 								? "전체"
 								: estimate.age
-									? estimate.age
-											.split(", ")
-											.map((age) => {
-												// "20대(20세~29세)" 형식에서 "20대"만 추출
-												const match = age.match(/^(\d+대)/);
-												return match ? match[1] : age;
-											})
-											.join(", ")
-									: ""
+										.split(", ")
+										.map((code) =>
+											getAgeLabel(code as AgeCode)
+												.replace(/\s*\(.*?\)/, "")
+												.trim(),
+										)
+										.filter(Boolean)
+										.join(", ")
 						}
 						placeholder="연령대를 선택해주세요"
 						right={
@@ -209,7 +213,7 @@ const EstimatePageContent = () => {
 						hasError={false}
 						label="거주지"
 						labelOption="sustain"
-						value={estimate.location}
+						value={getRegionLabel(estimate.location as RegionCode)}
 						placeholder="거주지를 선택해주세요"
 						right={
 							<Asset.Icon

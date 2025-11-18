@@ -13,10 +13,7 @@ export interface GetSurveyParticipationParams {
 	surveyId: number;
 }
 
-/**
- * 선택한 설문 문항을 조회합니다.
- * GET /v1/survey-participation/surveys
- */
+//설문에 대한 응답 생성
 export const getSurveyParticipation = async (
 	params: GetSurveyParticipationParams,
 ): Promise<{ info: TransformedSurveyQuestion[] }> => {
@@ -26,7 +23,6 @@ export const getSurveyParticipation = async (
 		params,
 	});
 
-	// 백엔드 응답을 프론트엔드 형식으로 변환
 	const transformed = result.info.map((question) => {
 		const base: TransformedSurveyQuestion = {
 			questionId: question.questionId,
@@ -38,7 +34,6 @@ export const getSurveyParticipation = async (
 			questionOrder: question.questionOrder,
 		};
 
-		// 타입별 추가 필드 추가
 		if (question.questionType === "CHOICE" && "options" in question) {
 			base.maxChoice = question.maxChoice;
 			base.hasNoneOption = question.hasNoneOption;
@@ -64,11 +59,7 @@ export const getSurveyParticipation = async (
 	return { info: transformed };
 };
 
-/**
- * 설문에 대한 응답 생성
- * POST /v1/survey-participation/surveys/{surveyId}
- * Request body: { "infoList": [{ "questionId": number, "content": string }] }
- */
+//설문에 대한 응답 생성
 export const submitSurveyParticipation = async (
 	surveyId: number,
 	infoList: SubmitSurveyParticipationPayload["infoList"],
@@ -80,11 +71,7 @@ export const submitSurveyParticipation = async (
 	});
 };
 
-/**
- * 관심사에 일치하는 설문의 스크리닝 문항 조회
- * GET /v1/survey-participation/surveys/screenings
- * Query params: lastSurveyId (default: 0), size (default: 5)
- */
+//관심사에 일치하는 설문의 스크리닝 문항 조회
 export const getScreenings = async (
 	params?: GetScreeningsParams,
 ): Promise<ScreeningResponse> => {
@@ -102,11 +89,7 @@ export const getScreenings = async (
 	return result;
 };
 
-/**
- * 스크리닝 문항에 대한 응답 생성
- * POST /v1/survey-participation/screenings/{screeningId}
- * Request body: { "content": string }
- */
+//스크리닝 문항에 대한 응답 생성
 export const submitScreeningResponse = async (
 	screeningId: number,
 	payload: SubmitScreeningResponsePayload,

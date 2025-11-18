@@ -56,10 +56,23 @@ export const SurveyListPage = () => {
 
 				const mappedSurveys = allSurveys.map(mapSurveyToItem);
 
+				// 중복 제거: surveyId를 기준으로 중복된 설문 제거
+				const uniqueSurveys = mappedSurveys.filter(
+					(survey, index, self) =>
+						index === self.findIndex((s) => s.id === survey.id),
+				);
+
 				if (reset) {
-					setSurveys(mappedSurveys);
+					setSurveys(uniqueSurveys);
 				} else {
-					setSurveys((prev) => [...prev, ...mappedSurveys]);
+					setSurveys((prev) => {
+						// 기존 설문과 새 설문을 합치고 중복 제거
+						const combined = [...prev, ...uniqueSurveys];
+						return combined.filter(
+							(survey, index, self) =>
+								index === self.findIndex((s) => s.id === survey.id),
+						);
+					});
 				}
 
 				setHasNext(result.hasNext ?? false);

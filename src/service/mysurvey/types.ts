@@ -92,13 +92,15 @@ export interface SurveyAnswerDetailResponse extends BaseResponse {
 	result: SurveyAnswerDetailResult;
 }
 
-// 작성 중인 설문 조회
 export type WritingQuestionType =
 	| "CHOICE"
-	| "DATE"
+	| "RATING"
+	| "NPS"
+	| "SHORT"
+	| "LONG"
 	| "NUMBER"
-	| "TEXT"
-	| string;
+	| "DATE"
+	| "TEXT";
 
 export interface WritingQuestionOption {
 	optionId: number;
@@ -114,15 +116,11 @@ export interface WritingQuestion {
 	description: string;
 	isRequired: boolean;
 	questionOrder: number;
-	// 선택형 확장 필드
-	choice?: boolean;
 	maxChoice?: number;
 	hasNoneOption?: boolean;
 	hasCustomInput?: boolean;
 	options?: WritingQuestionOption[];
-	// 날짜형 확장 필드
-	date?: string;
-	// 숫자형 확장 필드
+	defaultDate?: string;
 	minValue?: string | number;
 	maxValue?: string | number;
 }

@@ -62,16 +62,13 @@ export const SurveyResponseDetail = () => {
 					getUserSurveys(),
 				]);
 
-				// API 응답 전체 저장
 				setAnswerDetails(result);
 
-				// 설문 목록에서 해당 설문의 제목 찾기
 				const survey = userSurveysResult.infoList.find(
 					(s) => s.surveyId === result.surveyId,
 				);
 				const surveyTitle = survey?.title || "";
 
-				// API 응답을 컴포넌트에서 사용하는 형식으로 변환
 				const status: "active" | "closed" =
 					result.status === "ONGOING" || result.status === "ACTIVE"
 						? "active"
@@ -134,7 +131,6 @@ export const SurveyResponseDetail = () => {
 	const handleResultNavigation = (type: QuestionType, questionId: string) => {
 		if (!answerDetails) return;
 
-		// 해당 질문의 응답 데이터 찾기
 		const questionDetail = answerDetails.detailInfoList.find(
 			(detail) => String(detail.questionId) === questionId,
 		);

@@ -1,4 +1,3 @@
-// 설문 리스트 아이템 타입
 import type { InterestId } from "../constants/topics";
 
 export interface SurveyListItem {
@@ -10,4 +9,5 @@ export interface SurveyListItem {
 	iconName?: string;
 	description?: string;
 	remainingTimeText?: string;
+	isClosed?: boolean;
 }

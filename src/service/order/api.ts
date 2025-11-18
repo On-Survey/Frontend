@@ -1,10 +1,7 @@
 import { apiCall } from "../axios/apiClient";
 import type { SurveyDetailResult, SurveyManagementResult } from "./types";
 
-/**
- * 내 설문 목록 조회
- * GET /v1/survey-management
- */
+//내 설문 목록 조회
 export const getSurveyManagement =
 	async (): Promise<SurveyManagementResult> => {
 		try {
@@ -18,10 +15,7 @@ export const getSurveyManagement =
 		}
 	};
 
-/**
- * 내 설문 상세 조회
- * GET /v1/survey-management/{surveyId}
- */
+// 내 설문 상세 조회
 export const getSurveyDetail = async (
 	surveyId: number,
 ): Promise<SurveyDetailResult> => {
@@ -36,10 +30,7 @@ export const getSurveyDetail = async (
 	}
 };
 
-/**
- * 내 설문 결제 환불
- * POST /v1/survey-management/{surveyId}/refund
- */
+//내 설문 결제 환불
 export const refundSurvey = async (surveyId: number): Promise<boolean> => {
 	try {
 		return await apiCall<boolean>({
