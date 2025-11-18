@@ -44,7 +44,7 @@ export const FormController = ({
 		if (state.survey.question.length === 0) {
 			openToast("문항을 추가해주세요.", {
 				type: "bottom",
-				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
 				higherThanCTA: true,
 			});
 			return;
@@ -77,6 +77,15 @@ export const FormController = ({
 	};
 
 	const handleSave = async () => {
+		generateHapticFeedback({ type: "tap" });
+		if (state.survey.question.length === 0) {
+			openToast("문항을 추가해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
 		const surveyId = state.surveyId ?? 0;
 		const serverQuestions = convertQuestionsToServerFormat(
 			state.survey.question,
@@ -104,6 +113,15 @@ export const FormController = ({
 	};
 
 	const handleReorderQuestion = () => {
+		generateHapticFeedback({ type: "tap" });
+		if (state.survey.question.length === 0) {
+			openToast("문항을 추가해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
 		if (onReorderModeChange) {
 			onReorderModeChange(!isReorderMode);
 		}
@@ -164,7 +182,7 @@ export const FormController = ({
 			{isOpen && (
 				<div
 					key="question-controller-sheet"
-					className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6"
+					className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-3"
 				>
 					<QuestionController onPrevious={handleClose} />
 				</div>
@@ -173,7 +191,7 @@ export const FormController = ({
 			{!isOpen && (
 				<div
 					key="main-controls-bar"
-					className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6"
+					className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-3"
 				>
 					<div className="flex items-center gap-2 w-full justify-between">
 						<div className="relative flex-1 overflow-hidden h-[60px]">
