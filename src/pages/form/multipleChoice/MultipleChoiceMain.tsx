@@ -103,9 +103,7 @@ export const MultipleChoiceMain = () => {
 		});
 		if (result.success && typeof result.result !== "string") {
 			updateQuestion(questionId, {
-				surveyId: result.result.surveyId,
 				questionId: result.result.questionId,
-				questionOrder: result.result.order,
 			});
 
 			navigate(-1);
