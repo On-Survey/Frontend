@@ -164,7 +164,7 @@ const EstimatePageContent = () => {
 						label="성별"
 						labelOption="sustain"
 						help="특정 성별만 선택하면 추가 비용이 발생해요"
-						value={getGenderLabel(estimate.gender as "ALL" | "MALE" | "FEMALE")}
+						value={getGenderLabel(estimate.gender)}
 						placeholder="전체"
 						right={
 							<Asset.Icon

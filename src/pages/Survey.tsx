@@ -24,7 +24,6 @@ export const Survey = () => {
 	const surveyId = surveyIdFromQuery ?? surveyIdFromState ?? null;
 
 	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
-	const [, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -42,7 +41,6 @@ export const Survey = () => {
 
 		const fetchSurveyParticipation = async () => {
 			try {
-				setIsLoading(true);
 				setError(null);
 				const result = await getSurveyParticipation({
 					surveyId: numericSurveyId,
@@ -57,10 +55,6 @@ export const Survey = () => {
 					return;
 				}
 				setError("설문 정보를 불러오지 못했습니다.");
-			} finally {
-				if (isMounted) {
-					setIsLoading(false);
-				}
 			}
 		};
 
