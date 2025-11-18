@@ -126,14 +126,19 @@ export const App = () => {
 					<Route path="/oxScreening" element={<OxScreening />} />
 					<Route path="/survey" element={<Survey />} />
 					<Route path="/surveyList" element={<SurveyListPage />} />
-					<Route path="/survey/singleChoice" element={<SurveySingleChoice />} />
-					<Route path="/survey/essay" element={<SurveyEssay />} />
-					<Route path="/survey/shortAnswer" element={<SurveyShortAnswer />} />
-					<Route path="/survey/rating" element={<SurveyRating />} />
-					<Route path="/survey/nps" element={<SurveyNPS />} />
-					<Route path="/survey/number" element={<SurveyNumber />} />
-					<Route path="/survey/date" element={<SurveyDate />} />
-					<Route path="/survey/complete" element={<SurveyComplete />} />
+					<Route element={<SurveyProviderLayout />}>
+						<Route
+							path="/survey/singleChoice"
+							element={<SurveySingleChoice />}
+						/>
+						<Route path="/survey/essay" element={<SurveyEssay />} />
+						<Route path="/survey/shortAnswer" element={<SurveyShortAnswer />} />
+						<Route path="/survey/rating" element={<SurveyRating />} />
+						<Route path="/survey/nps" element={<SurveyNPS />} />
+						<Route path="/survey/number" element={<SurveyNumber />} />
+						<Route path="/survey/date" element={<SurveyDate />} />
+						<Route path="/survey/complete" element={<SurveyComplete />} />
+					</Route>
 					<Route
 						path="/result/shortAnswer"
 						element={<ShortAnswerResultPage />}

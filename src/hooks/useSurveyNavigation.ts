@@ -120,10 +120,18 @@ export const useSurveyNavigation = ({
 				questionId: question.questionId,
 				content: answers[question.questionId] ?? "",
 			}));
+			console.log("설문 제출 시작:", { surveyId, payload });
 			await submitSurveyParticipation(surveyId, payload);
-			navigate("/survey/complete", { replace: true });
+			console.log("설문 제출 성공, complete 화면으로 이동");
+			// 제출 성공 후 complete 화면으로 이동 (surveyId 전달)
+			navigate("/survey/complete", {
+				replace: true,
+				state: { surveyId },
+			});
 		} catch (error) {
 			console.error("설문 응답 제출 실패:", error);
+			// 에러 발생 시에도 사용자에게 알림
+			alert("설문 제출에 실패했습니다. 다시 시도해주세요.");
 		} finally {
 			setSubmitting(false);
 		}

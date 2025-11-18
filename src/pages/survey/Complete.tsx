@@ -7,7 +7,7 @@ import {
 	Toast,
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { issuePromotion } from "../../service/promotion";
@@ -15,9 +15,20 @@ import { getMemberInfo } from "../../service/userInfo/api";
 
 export const SurveyComplete = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { isOpen: toastOpen, handleClose } = useModal(true);
-	const { state } = useSurvey();
+	const { state, setSurveyId } = useSurvey();
 	const [userName, setUserName] = useState<string>("");
+
+	// location state에서 surveyId 가져오기
+	const surveyIdFromState = (location.state as { surveyId?: number })?.surveyId;
+
+	// surveyId를 context에 설정
+	useEffect(() => {
+		if (surveyIdFromState && !state.surveyId) {
+			setSurveyId(surveyIdFromState);
+		}
+	}, [surveyIdFromState, state.surveyId, setSurveyId]);
 
 	// 사용자 정보 가져오기 및 토스포인트 지급
 	useEffect(() => {
@@ -25,9 +36,10 @@ export const SurveyComplete = () => {
 			try {
 				const memberInfo = await getMemberInfo();
 				setUserName(memberInfo.name || "");
-				if (state.surveyId) {
+				const surveyId = state.surveyId || surveyIdFromState;
+				if (surveyId) {
 					try {
-						await issuePromotion({ surveyId: state.surveyId });
+						await issuePromotion({ surveyId });
 						console.log("토스포인트 지급 완료");
 					} catch (error) {
 						console.error("토스포인트 지급 실패:", error);
@@ -39,7 +51,7 @@ export const SurveyComplete = () => {
 		};
 
 		void fetchUserAndIssuePromotion();
-	}, [state.surveyId]);
+	}, [state.surveyId, surveyIdFromState]);
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-white">
@@ -95,8 +107,8 @@ export const SurveyComplete = () => {
 					</Text>
 				</div>
 			</div>
-			<FixedBottomCTA loading={false} onClick={() => navigate("/surveyList")}>
-				다른 설문 참여하기
+			<FixedBottomCTA loading={false} onClick={() => navigate("/home")}>
+				홈으로 이동
 			</FixedBottomCTA>
 		</div>
 	);
