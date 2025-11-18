@@ -37,8 +37,8 @@ export const PaymentSuccessPage = () => {
 		return unsubscription;
 	}, [navigate, isChargeFlow]);
 	return (
-		<>
-			<div className="flex flex-col items-center justify-center gap-3 min-h-screen pb-32">
+		<div className="flex flex-col h-screen">
+			<div className="flex-1 flex flex-col items-center justify-center gap-3">
 				<Asset.Image
 					frameShape={{ width: 100 }}
 					src="https://static.toss.im/lotties/check-spot-apng.png"
@@ -63,6 +63,6 @@ export const PaymentSuccessPage = () => {
 			<FixedBottomCTA loading={false} onClick={handleNavigate}>
 				확인했어요
 			</FixedBottomCTA>
-		</>
+		</div>
 	);
 };

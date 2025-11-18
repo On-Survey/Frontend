@@ -189,7 +189,7 @@ export const Mypage = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								충전 캐쉬
+								충전 코인
 							</Text>
 							<div className="flex items-center gap-2">
 								<Text
