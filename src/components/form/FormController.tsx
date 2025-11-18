@@ -142,6 +142,7 @@ export const FormController = ({
 	return (
 		<AnimatePresence>
 			<ConfirmDialog
+				key="confirm-dialog"
 				open={isConfirmDialogOpen}
 				onClose={handleDialogCancel}
 				cancelButton={
@@ -161,13 +162,19 @@ export const FormController = ({
 				description="스크리닝 질문이란 설문에 참여할 적합한 사람을 미리 선별하기 위한 OX 질문이에요."
 			/>
 			{isOpen && (
-				<div className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6">
+				<div
+					key="question-controller-sheet"
+					className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6"
+				>
 					<QuestionController onPrevious={handleClose} />
 				</div>
 			)}
 
 			{!isOpen && (
-				<div className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6">
+				<div
+					key="main-controls-bar"
+					className="fixed bottom-1 left-0 right-0 z-50 bg-gray-100 px-2 pt-2 pb-6"
+				>
 					<div className="flex items-center gap-2 w-full justify-between">
 						<div className="relative flex-1 overflow-hidden h-[60px]">
 							<div className="flex items-center gap-2 w-full justify-between">
