@@ -237,7 +237,7 @@ export const QuestionHome = () => {
 								)}
 								{!isReorderMode && (
 									<IconButton
-										src="https://static.toss.im/icons/png/4x/icon-fill-three-dots-mono.png"
+										src="https://static.toss.im/icons/png/4x/icon-bin-mono.png"
 										variant="clear"
 										color={adaptive.grey600}
 										aria-label="더보기"
