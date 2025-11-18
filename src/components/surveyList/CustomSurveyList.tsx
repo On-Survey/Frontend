@@ -66,17 +66,17 @@ export const CustomSurveyList = ({
 								/>
 							}
 							left={
-								survey.iconType === "image" ? (
-									<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+								<div className="flex bg-gray-100 rounded-full p-2 items-center justify-center w-10 h-10">
+									{survey.iconType === "image" ? (
 										<ListRow.AssetImage
 											src={survey.iconSrc || ""}
 											shape="original"
-											className="w-8"
+											className="w-[20px]"
 										/>
-									</div>
-								) : (
-									<ListRow.AssetIcon name={survey.iconName || ""} />
-								)
+									) : (
+										<ListRow.AssetIcon name={survey.iconName || ""} />
+									)}
+								</div>
 							}
 							verticalPadding="large"
 							arrowType="right"

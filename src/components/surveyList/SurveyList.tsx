@@ -68,7 +68,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 									<ListRow.AssetImage
 										src={icon.src}
 										shape="original"
-										className="w-8"
+										className="w-[20px]"
 									/>
 								) : icon.name ? (
 									<ListRow.AssetIcon name={icon.name} />
@@ -76,7 +76,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 									<ListRow.AssetImage
 										src={survey.iconSrc || ""}
 										shape="original"
-										className="w-8"
+										className="w-[20px]"
 									/>
 								)}
 							</div>

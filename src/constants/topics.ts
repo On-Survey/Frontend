@@ -41,8 +41,8 @@ export const topics: TopicData[] = [
 		name: "비즈니스 / 테크",
 		description: "데이터, AI, 마케팅, 앱",
 		icon: {
-			type: "icon",
-			name: "icon-it",
+			type: "image",
+			src: "https://static.toss.im/2d-emojis/png/4x/u1F4BB.png",
 		},
 		value: Interest.BUSINESS,
 	},
