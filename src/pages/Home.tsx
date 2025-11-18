@@ -37,7 +37,6 @@ export const Home = () => {
 
 	const [recommended, setRecommended] = useState<SurveyListItem[]>([]);
 	const [impending, setImpending] = useState<SurveyListItem[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const handleMySurvey = () => navigate("/mysurvey");
@@ -50,7 +49,6 @@ export const Home = () => {
 
 	useEffect(() => {
 		const fetch = async () => {
-			setIsLoading(true);
 			setError(null);
 
 			try {
@@ -58,7 +56,6 @@ export const Home = () => {
 				const mapSurveyToItem = (
 					survey: OngoingSurveySummary,
 				): SurveyListItem => {
-					// interests 배열이 오면 첫 번째 값을 사용, 없으면 interest 단수 값 사용
 					const topicId =
 						(survey.interests && survey.interests.length > 0
 							? survey.interests[0]
@@ -88,8 +85,6 @@ export const Home = () => {
 				setImpending(imp);
 			} catch (err) {
 				console.error("노출 중 설문 조회 실패:", err);
-			} finally {
-				setIsLoading(false);
 			}
 		};
 
@@ -146,7 +141,7 @@ export const Home = () => {
 				onConfirm={handleConfirmDialogConfirm}
 			/>
 			<div className="flex flex-col w-full min-h-screen">
-				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden flex-shrink-0 h-[337px]">
+				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden shrink-0 h-[337px]">
 					<div className="absolute inset-0 home-banner-gradient" />
 					<div className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay" />
 					<div className="relative p-6 flex flex-col h-full">
@@ -242,12 +237,7 @@ export const Home = () => {
 					</div>
 				</div>
 
-				{/* 에러 / 로딩 UI */}
-				{isLoading && (
-					<div className="px-4 py-6 text-center text-sm text-gray-500">
-						설문을 불러오는 중입니다...
-					</div>
-				)}
+				{/* 에러 UI */}
 				{error && (
 					<div className="px-4 py-6 text-center text-sm text-red-500">
 						{error}

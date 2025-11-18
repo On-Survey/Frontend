@@ -48,13 +48,7 @@ export const CustomSurveyList = ({
 				</div>
 			</div>
 
-			{surveys.length === 0 ? (
-				<div className="px-4 py-6 text-center">
-					<Text color={adaptive.grey700} typography="t7">
-						맞춤 설문이 없습니다
-					</Text>
-				</div>
-			) : (
+			{surveys.length > 0 && (
 				<List>
 					{surveys.map((survey) => (
 						<ListRow

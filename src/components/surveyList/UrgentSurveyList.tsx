@@ -63,6 +63,10 @@ export const UrgentSurveyList = ({
 		);
 	};
 
+	if (surveys.length === 0) {
+		return null;
+	}
+
 	return (
 		<>
 			<div className="px-4 pt-4 pb-3">
@@ -80,56 +84,48 @@ export const UrgentSurveyList = ({
 
 			<div className="overflow-x-auto overflow-y-hidden hide-scrollbar px-4">
 				<div className="flex gap-3">
-					{surveys.length === 0 ? (
-						<div className="rounded-2xl p-4 flex-shrink-0 flex items-center justify-center w-[198px] min-h-[166px] bg-gray-100 text-center">
-							<Text color={adaptive.grey700} typography="t7">
-								마감 임박 설문이 없습니다.
-							</Text>
-						</div>
-					) : (
-						surveys.map((survey, index) => (
-							<button
-								key={survey.id}
-								type="button"
-								onClick={() => !survey.isClosed && handleSurveyClick(survey)}
-								disabled={survey.isClosed}
-								className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] text-left bg-gradient-to-b rounded-2xl! ${
-									cardGradients[index % cardGradients.length]
-								} shadow-[0_8px_24px_rgba(15,23,42,0.05)] ${
-									survey.isClosed
-										? "cursor-not-allowed"
-										: "cursor-pointer focus-visible:outline focus-visible:outline-2 "
-								}`}
+					{surveys.map((survey, index) => (
+						<button
+							key={survey.id}
+							type="button"
+							onClick={() => !survey.isClosed && handleSurveyClick(survey)}
+							disabled={survey.isClosed}
+							className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] text-left bg-gradient-to-b rounded-2xl! ${
+								cardGradients[index % cardGradients.length]
+							} shadow-[0_8px_24px_rgba(15,23,42,0.05)] ${
+								survey.isClosed
+									? "cursor-not-allowed"
+									: "cursor-pointer focus-visible:outline focus-visible:outline-2 "
+							}`}
+						>
+							<div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center mb-3">
+								{renderIcon(survey)}
+							</div>
+							<Text
+								color={adaptive.grey800}
+								typography="t6"
+								fontWeight="bold"
+								className="mb-2 line-clamp-2"
 							>
-								<div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center mb-3">
-									{renderIcon(survey)}
-								</div>
+								{survey.title}
+							</Text>
+							{survey.iconType === "image" && survey.remainingTimeText ? (
 								<Text
-									color={adaptive.grey800}
-									typography="t6"
-									fontWeight="bold"
-									className="mb-2 line-clamp-2"
+									color={adaptive.grey700}
+									typography="t7"
+									className="mb-3 line-clamp-2"
 								>
-									{survey.title}
+									{survey.remainingTimeText}
 								</Text>
-								{survey.iconType === "image" && survey.remainingTimeText ? (
-									<Text
-										color={adaptive.grey700}
-										typography="t7"
-										className="mb-3 line-clamp-2"
-									>
-										{survey.remainingTimeText}
-									</Text>
-								) : (
-									<div className="mb-3" />
-								)}
-								<div className="flex-1" />
-								<span className="mt-auto inline-flex h-9 items-center justify-center rounded-xl px-4 text-sm font-semibold text-gray-700 bg-gray-300/40">
-									{survey.isClosed ? "마감" : "시작하기"}
-								</span>
-							</button>
-						))
-					)}
+							) : (
+								<div className="mb-3" />
+							)}
+							<div className="flex-1" />
+							<span className="mt-auto inline-flex h-9 items-center justify-center rounded-xl px-4 text-sm font-semibold text-gray-700 bg-gray-300/40">
+								{survey.isClosed ? "마감" : "시작하기"}
+							</span>
+						</button>
+					))}
 				</div>
 			</div>
 		</>
