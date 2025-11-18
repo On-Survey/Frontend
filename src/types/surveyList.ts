@@ -9,4 +9,5 @@ export interface SurveyListItem {
 	iconName?: string;
 	description?: string;
 	remainingTimeText?: string;
+	isClosed?: boolean;
 }

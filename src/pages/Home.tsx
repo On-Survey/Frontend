@@ -67,6 +67,7 @@ export const Home = () => {
 					const iconSrc =
 						topic?.icon.type === "image" ? topic.icon.src : undefined;
 
+					const remainingTime = formatRemainingTime(survey.deadline);
 					return {
 						id: String(survey.surveyId),
 						topicId: topicId as SurveyListItem["topicId"],
@@ -75,7 +76,8 @@ export const Home = () => {
 						iconSrc,
 						iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
 						description: survey.description,
-						remainingTimeText: formatRemainingTime(survey.deadline),
+						remainingTimeText: remainingTime,
+						isClosed: remainingTime === "마감됨",
 					};
 				};
 
