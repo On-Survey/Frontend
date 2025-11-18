@@ -47,6 +47,10 @@ export const LongAnswerPage = () => {
 	};
 
 	const handleSubmit = async () => {
+		if (!questionId) {
+			return;
+		}
+
 		const result = await createSurveyQuestion({
 			surveyId: state.surveyId ?? 0,
 			questionInfo: {
@@ -56,7 +60,11 @@ export const LongAnswerPage = () => {
 			},
 		});
 
-		if (result.success) {
+		if (result.success && typeof result.result !== "string") {
+			updateQuestion(questionId, {
+				questionId: result.result.questionId,
+			});
+
 			navigate(-1);
 		}
 	};

@@ -1,5 +1,7 @@
+import { generateHapticFeedback } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Text } from "@toss/tds-mobile";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import {
 	BUTTON_STYLES,
@@ -20,6 +22,7 @@ export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 		useState<QuestionType | null>(null);
 
 	const handlePrevious = () => {
+		generateHapticFeedback({ type: "tap" });
 		onPrevious();
 	};
 
@@ -67,30 +70,72 @@ export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 				</button>
 
 				{/* 문항 타입 버튼들 */}
-				{QUESTION_TYPES.map((questionType) => (
-					<button
-						key={questionType.id}
-						className={BUTTON_STYLES.questionType}
-						type="button"
-						onClick={() => handleQuestionTypeClick(questionType.id)}
-					>
-						<Asset.Icon
-							frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
-							backgroundColor={ICON_PROPS.backgroundColor}
-							name={questionType.icon}
-							color={adaptive.grey600}
-							aria-hidden={ICON_PROPS.ariaHidden}
-							ratio={ICON_PROPS.ratio}
-						/>
-						<Text
-							color={adaptive.grey700}
-							typography={TEXT_PROPS.typography}
-							fontWeight={TEXT_PROPS.fontWeight}
+				{QUESTION_TYPES.map((questionType, index) => {
+					if (index === 0) {
+						return (
+							<motion.button
+								key={questionType.id}
+								className={BUTTON_STYLES.questionType}
+								type="button"
+								onClick={() => handleQuestionTypeClick(questionType.id)}
+								initial={{ opacity: 1, x: 60 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{
+									duration: 0.01,
+									ease: "linear",
+								}}
+							>
+								<Asset.Icon
+									frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+									backgroundColor={ICON_PROPS.backgroundColor}
+									name={questionType.icon}
+									color={adaptive.grey600}
+									aria-hidden={ICON_PROPS.ariaHidden}
+									ratio={ICON_PROPS.ratio}
+								/>
+								<Text
+									color={adaptive.grey700}
+									typography={TEXT_PROPS.typography}
+									fontWeight={TEXT_PROPS.fontWeight}
+								>
+									{questionType.label}
+								</Text>
+							</motion.button>
+						);
+					}
+
+					return (
+						<motion.button
+							key={questionType.id}
+							className={BUTTON_STYLES.questionType}
+							type="button"
+							onClick={() => handleQuestionTypeClick(questionType.id)}
+							initial={{ opacity: 0, scale: 0.85, y: 14 }}
+							animate={{ opacity: 1, scale: 1, y: 0 }}
+							transition={{
+								duration: 0.01,
+								ease: "linear",
+								delay: index * 0.05,
+							}}
 						>
-							{questionType.label}
-						</Text>
-					</button>
-				))}
+							<Asset.Icon
+								frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+								backgroundColor={ICON_PROPS.backgroundColor}
+								name={questionType.icon}
+								color={adaptive.grey600}
+								aria-hidden={ICON_PROPS.ariaHidden}
+								ratio={ICON_PROPS.ratio}
+							/>
+							<Text
+								color={adaptive.grey700}
+								typography={TEXT_PROPS.typography}
+								fontWeight={TEXT_PROPS.fontWeight}
+							>
+								{questionType.label}
+							</Text>
+						</motion.button>
+					);
+				})}
 			</div>
 		</>
 	);
