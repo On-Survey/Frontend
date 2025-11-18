@@ -1,7 +1,6 @@
-import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { colors } from "@toss/tds-colors";
 import { Button, Text } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { BottomNavigation } from "../../components/BottomNavigation";
@@ -15,7 +14,7 @@ export const MySurvey = () => {
 	const { draftSurveys, activeSurveys, closedSurveys, isLoading } =
 		useUserSurveys();
 
-	const handleAddSurvey = () => navigate("/createForm");
+	const handleAddSurvey = () => navigate("/createFormStart");
 	const handleMyPage = () => navigate("/mypage");
 
 	return (
