@@ -9,7 +9,8 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormController } from "../../components/form/FormController";
 import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
@@ -23,6 +24,10 @@ import {
 
 export const QuestionHome = () => {
 	const [isReorderMode, setIsReorderMode] = useState(false);
+	const [displayOrderMap, setDisplayOrderMap] = useState<
+		Record<number, number>
+	>({});
+	const hasInitializedDisplayOrder = useRef(false);
 	const { state, deleteQuestion, reorderQuestions } = useSurvey();
 	const { handleStepChange } = useMultiStep();
 	const navigate = useNavigate();
@@ -49,6 +54,27 @@ export const QuestionHome = () => {
 	const sortedQuestions = [...state.survey.question].sort(
 		(a, b) => a.questionOrder - b.questionOrder,
 	);
+
+	useEffect(() => {
+		const newOrderMap: Record<number, number> = {};
+		state.survey.question.forEach((question, index) => {
+			newOrderMap[question.questionId] = index;
+		});
+
+		if (!hasInitializedDisplayOrder.current) {
+			setDisplayOrderMap(newOrderMap);
+			hasInitializedDisplayOrder.current = true;
+			return;
+		}
+
+		const timer = window.setTimeout(() => {
+			setDisplayOrderMap(newOrderMap);
+		}, 600);
+
+		return () => {
+			window.clearTimeout(timer);
+		};
+	}, [state.survey.question]);
 
 	const handleQuestionClick = (questionType: string, questionId: number) => {
 		const route =
@@ -156,103 +182,118 @@ export const QuestionHome = () => {
 			/>
 			<Border variant="height16" />
 			<List>
-				{sortedQuestions.map((question, index) => (
-					<ListRow
-						key={question.questionId}
-						onClick={() =>
-							handleQuestionClick(question.type, question.questionId)
-						}
-						contents={
-							<div className="flex-1 min-w-0">
-								<div className="flex items-center gap-1 mb-1">
-									<Text
-										display="block"
-										color={adaptive.grey800}
-										typography="t5"
-										fontWeight="semibold"
-										textAlign="center"
-										className="w-10 shrink-0"
-									>
-										{formatQuestionNumber(question.questionOrder + 1)}
-									</Text>
-									<Text
-										display="block"
-										color={adaptive.grey700}
-										typography="t6"
-										fontWeight="semibold"
-										textAlign="left"
-										className="line-clamp-2 flex-1 min-w-0"
-									>
-										{question.title}
-									</Text>
-								</div>
-								<div className="flex items-center gap-1 pl-11">
-									<Text
-										color={adaptive.grey600}
-										typography="t7"
-										fontWeight="medium"
-									>
-										{question.isRequired ? "필수" : "선택"}
-									</Text>
-									<Text
-										color={adaptive.grey600}
-										typography="t7"
-										fontWeight="medium"
-									>
-										·
-									</Text>
-									<Text
-										color={adaptive.grey600}
-										typography="t7"
-										fontWeight="medium"
-									>
-										{getQuestionTypeLabel(question.type)}
-									</Text>
-								</div>
-							</div>
-						}
-						right={
-							<div className="flex items-center">
-								{isReorderMode && (
-									<>
-										<IconButton
-											src="https://static.toss.im/icons/png/4x/icon-chip-arrow-up-mono.png"
-											variant="clear"
-											color={adaptive.grey600}
-											aria-label="위로 이동"
-											iconSize={20}
-											onClick={(e) => handleMoveUp(e, index)}
-											disabled={index === 0}
-										/>
-										<IconButton
-											src="https://static.toss.im/icons/png/4x/icon-chip-arrow-down-mono.png"
-											variant="clear"
-											color={adaptive.grey600}
-											aria-label="아래로 이동"
-											iconSize={20}
-											onClick={(e) => handleMoveDown(e, index)}
-											disabled={index === sortedQuestions.length - 1}
-										/>
-									</>
-								)}
-								{!isReorderMode && (
-									<IconButton
-										src="https://static.toss.im/icons/png/4x/icon-bin-mono.png"
-										variant="clear"
-										color={adaptive.grey600}
-										aria-label="더보기"
-										iconSize={16}
-										onClick={(e) => {
-											e.stopPropagation();
-											deleteQuestion(question.questionId.toString());
-										}}
-									/>
-								)}
-							</div>
-						}
-						verticalPadding="large"
-					/>
-				))}
+				<AnimatePresence initial={false}>
+					{sortedQuestions.map((question, index) => (
+						<motion.div
+							key={question.questionId}
+							layout
+							initial={{ opacity: 0, y: 12 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -12 }}
+							transition={{ duration: 0.25, ease: "easeInOut" }}
+						>
+							<ListRow
+								onClick={() =>
+									handleQuestionClick(question.type, question.questionId)
+								}
+								contents={
+									<div className="flex-1 min-w-0">
+										<div className="flex items-center gap-1 mb-1">
+											<Text
+												display="block"
+												color={adaptive.grey800}
+												typography="t5"
+												fontWeight="semibold"
+												textAlign="center"
+												className="w-10 shrink-0"
+											>
+												{formatQuestionNumber(
+													(displayOrderMap[question.questionId] ??
+														question.questionOrder) + 1,
+												)}
+											</Text>
+											<Text
+												display="block"
+												color={adaptive.grey700}
+												typography="t6"
+												fontWeight="semibold"
+												textAlign="left"
+												className="line-clamp-2 flex-1 min-w-0"
+											>
+												{question.title}
+											</Text>
+										</div>
+										<div className="flex items-center gap-1 pl-11">
+											<Text
+												color={adaptive.grey600}
+												typography="t7"
+												fontWeight="medium"
+											>
+												{question.isRequired ? "필수" : "선택"}
+											</Text>
+											<Text
+												color={adaptive.grey600}
+												typography="t7"
+												fontWeight="medium"
+											>
+												·
+											</Text>
+											<Text
+												color={adaptive.grey600}
+												typography="t7"
+												fontWeight="medium"
+											>
+												{getQuestionTypeLabel(question.type)}
+											</Text>
+										</div>
+									</div>
+								}
+								right={
+									<div className="flex items-center">
+										{isReorderMode && (
+											<>
+												{index !== 0 && (
+													<IconButton
+														src="https://static.toss.im/icons/png/4x/icon-chip-arrow-up-mono.png"
+														variant="clear"
+														color={adaptive.grey600}
+														aria-label="위로 이동"
+														iconSize={20}
+														onClick={(e) => handleMoveUp(e, index)}
+													/>
+												)}
+												{index !== sortedQuestions.length - 1 && (
+													<IconButton
+														src="https://static.toss.im/icons/png/4x/icon-chip-arrow-down-mono.png"
+														variant="clear"
+														color={adaptive.grey600}
+														aria-label="아래로 이동"
+														iconSize={20}
+														onClick={(e) => handleMoveDown(e, index)}
+													/>
+												)}
+											</>
+										)}
+										{!isReorderMode && (
+											<IconButton
+												src="https://static.toss.im/icons/png/4x/icon-bin-mono.png"
+												variant="clear"
+												color={adaptive.grey600}
+												aria-label="더보기"
+												iconSize={16}
+												onClick={(e) => {
+													e.stopPropagation();
+													deleteQuestion(question.questionId.toString());
+												}}
+											/>
+										)}
+									</div>
+								}
+								verticalPadding="large"
+							/>
+						</motion.div>
+					))}
+				</AnimatePresence>
 			</List>
 			<div className="h-25"></div>
 			<FormController
