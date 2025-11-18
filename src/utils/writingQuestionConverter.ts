@@ -57,7 +57,9 @@ export const convertWritingQuestionToQuestion = (
 		return {
 			...baseQuestion,
 			type: "date",
-			date: writingQuestion.date ? new Date(writingQuestion.date) : new Date(),
+			date: writingQuestion.defaultDate
+				? new Date(writingQuestion.defaultDate)
+				: new Date(),
 		};
 	}
 
