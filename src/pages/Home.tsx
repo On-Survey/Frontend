@@ -94,8 +94,8 @@ export const Home = () => {
 		void fetch();
 	}, []);
 
-	const customSurveysToShow = recommended;
-	const urgentSurveysToShow = impending;
+	const customSurveysToShow = recommended.slice(0, 3);
+	const urgentSurveysToShow = impending.slice(0, 3);
 
 	const {
 		isOpen: isConfirmDialogOpen,
