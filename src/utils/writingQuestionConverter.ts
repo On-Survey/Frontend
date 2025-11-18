@@ -1,9 +1,6 @@
 import type { WritingQuestion } from "../service/mysurvey/types";
 import type { Question } from "../types/survey";
 
-/**
- * 서버의 WritingQuestionType을 클라이언트 QuestionType으로 변환
- */
 const mapServerQuestionTypeToClient = (
 	serverType: WritingQuestion["questionType"],
 ): Question["type"] => {
@@ -15,15 +12,12 @@ const mapServerQuestionTypeToClient = (
 		LONG: "longAnswer",
 		DATE: "date",
 		NUMBER: "number",
-		TEXT: "shortAnswer", // TEXT는 단답형으로 처리
+		TEXT: "shortAnswer",
 	};
 
 	return typeMap[serverType] ?? "shortAnswer";
 };
 
-/**
- * 서버의 WritingQuestion을 클라이언트 Question으로 변환
- */
 export const convertWritingQuestionToQuestion = (
 	writingQuestion: WritingQuestion,
 ): Question => {
@@ -37,7 +31,6 @@ export const convertWritingQuestionToQuestion = (
 		questionOrder: writingQuestion.questionOrder,
 	};
 
-	// CHOICE 타입 처리
 	if (writingQuestion.questionType === "CHOICE" && writingQuestion.options) {
 		return {
 			...baseQuestion,
@@ -51,7 +44,6 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
-	// RATING 타입 처리
 	if (writingQuestion.questionType === "RATING") {
 		return {
 			...baseQuestion,
@@ -61,7 +53,6 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
-	// DATE 타입 처리
 	if (writingQuestion.questionType === "DATE") {
 		return {
 			...baseQuestion,
@@ -70,7 +61,6 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
-	// NUMBER 타입 처리
 	if (writingQuestion.questionType === "NUMBER") {
 		return {
 			...baseQuestion,
@@ -78,7 +68,6 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
-	// NPS 타입 처리
 	if (writingQuestion.questionType === "NPS") {
 		return {
 			...baseQuestion,
@@ -86,7 +75,6 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
-	// SHORT, LONG, TEXT 타입 처리
 	if (
 		writingQuestion.questionType === "SHORT" ||
 		writingQuestion.questionType === "TEXT"
@@ -104,16 +92,12 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
-	// 기본값: 단답형
 	return {
 		...baseQuestion,
 		type: "shortAnswer",
 	};
 };
 
-/**
- * 서버의 WritingQuestion 배열을 클라이언트 Question 배열로 변환
- */
 export const convertWritingQuestionsToQuestions = (
 	writingQuestions: WritingQuestion[],
 ): Question[] => {

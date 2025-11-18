@@ -25,14 +25,12 @@ export const SurveyComplete = () => {
 			try {
 				const memberInfo = await getMemberInfo();
 				setUserName(memberInfo.name || "");
-				// surveyId가 있으면 토스포인트 지급
 				if (state.surveyId) {
 					try {
 						await issuePromotion({ surveyId: state.surveyId });
 						console.log("토스포인트 지급 완료");
 					} catch (error) {
 						console.error("토스포인트 지급 실패:", error);
-						// 에러가 발생해도 사용자에게는 표시하지 않음
 					}
 				}
 			} catch (error) {

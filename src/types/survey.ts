@@ -1,6 +1,5 @@
 import type { Interest } from "../service/form";
 
-// 설문 문항 타입 정의
 export type QuestionType =
 	| "multipleChoice" // 객관식
 	| "rating" // 평가형 (양쪽 내용 + 원 10개)
@@ -10,7 +9,6 @@ export type QuestionType =
 	| "date" // 날짜 (ex: 2025-10-26)
 	| "number"; // 숫자형 (1~100)
 
-// 기본 문항 인터페이스 (공통 필드)
 export interface BaseQuestion {
 	surveyId: number;
 	questionId: number;
@@ -18,12 +16,12 @@ export interface BaseQuestion {
 	title: string;
 	description: string;
 	isRequired: boolean;
-	questionOrder: number; // 전체 문항 중 순서
+	questionOrder: number;
 }
 
 // 객관식 문항 옵션
 export interface MultipleChoiceOption {
-	order: number; // 옵션 중 순서
+	order: number;
 	content: string;
 	nextQuestionId: number;
 }

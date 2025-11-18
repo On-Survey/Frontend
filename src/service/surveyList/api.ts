@@ -11,10 +11,7 @@ const DEFAULT_PARAMS: Required<GetOngoingSurveysParams> = {
 	size: 15,
 };
 
-/**
- * 노출 중인 설문 목록을 조회합니다.
- * GET /v1/survey-participation/surveys/ongoing
- */
+//노출 중인 설문 목록을 조회합니다.
 export const getOngoingSurveys = async (
 	params: GetOngoingSurveysParams = {},
 ): Promise<OngoingSurveyResult> => {

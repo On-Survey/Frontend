@@ -1,8 +1,6 @@
 import type { Question, QuestionType } from "../types/survey";
 
-/**
- * API의 질문 타입을 컴포넌트의 QuestionType으로 변환
- */
+//API의 질문 타입을 컴포넌트의 QuestionType으로 변환
 export const mapApiQuestionTypeToComponentType = (
 	apiType: string,
 ): QuestionType => {
