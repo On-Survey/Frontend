@@ -95,6 +95,7 @@ export const FormTitleStep = () => {
 					placeholder="제목"
 					onChange={handleTitleChange}
 					maxLength={50}
+					autoFocus={!step}
 				/>
 			</div>
 
