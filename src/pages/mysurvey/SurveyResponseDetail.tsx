@@ -22,7 +22,7 @@ import { SurveyFilterBottomSheet } from "./components/SurveyFilterBottomSheet";
 
 export const SurveyResponseDetail = () => {
 	const navigate = useNavigate();
-	const { id } = useParams<{ id: string }>();
+	const { surveyId } = useParams<{ surveyId: string }>();
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [surveyResponse, setSurveyResponse] =
 		useState<SurveyResponseDetailType | null>(null);
@@ -53,41 +53,33 @@ export const SurveyResponseDetail = () => {
 	// 설문 상세 조회
 	useEffect(() => {
 		const fetchSurveyDetail = async () => {
-			if (!id) return;
+			if (!surveyId) return;
 
 			try {
 				setIsLoading(true);
-				console.log("설문 상세 조회 시작, surveyId:", id);
-
-				// 각 API를 개별적으로 호출하여 에러 처리
 				let result: SurveyAnswerDetailResult | null = null;
 				let userSurveysResult = null;
 
 				try {
-					console.log("getSurveyAnswerDetail 호출 중...");
-					result = await getSurveyAnswerDetail(Number(id));
-					console.log("getSurveyAnswerDetail 성공:", result);
+					result = await getSurveyAnswerDetail(Number(surveyId));
 				} catch (error) {
 					console.error("getSurveyAnswerDetail 실패:", error);
 				}
 
 				try {
-					console.log("getUserSurveys 호출 중...");
 					userSurveysResult = await getUserSurveys();
-					console.log("getUserSurveys 성공:", userSurveysResult);
 				} catch (error) {
 					console.error("getUserSurveys 실패:", error);
 				}
-
 				if (!result) {
-					console.error("설문 응답 상세 정보를 가져올 수 없습니다.");
-					// getUserSurveys에서만 정보를 가져와서 기본 화면 표시
+					console.error("설문 응답 상세 정보를 가져올 수 없음");
+
 					if (userSurveysResult) {
 						const survey = userSurveysResult.infoList.find(
-							(s) => s.surveyId === Number(id),
+							(s) => s.surveyId === Number(surveyId),
 						);
 						setSurveyResponse({
-							id: Number(id),
+							id: Number(surveyId),
 							title: survey?.title || "설문",
 							status: "active",
 							responseCount: survey?.currentCount || 0,
@@ -95,7 +87,7 @@ export const SurveyResponseDetail = () => {
 						});
 					} else {
 						setSurveyResponse({
-							id: Number(id),
+							id: Number(surveyId),
 							title: "설문",
 							status: "active",
 							responseCount: 0,
@@ -108,17 +100,17 @@ export const SurveyResponseDetail = () => {
 				setAnswerDetails(result);
 
 				const survey = userSurveysResult?.infoList.find(
-					(s) => s.surveyId === result!.surveyId,
+					(s) => s.surveyId === result?.surveyId,
 				);
 				const surveyTitle =
-					survey?.title || result!.surveyId?.toString() || "설문";
+					survey?.title || result?.surveyId?.toString() || "설문";
 
 				const status: "active" | "closed" =
-					result!.status === "ONGOING" || result!.status === "ACTIVE"
+					result?.status === "ONGOING" || result?.status === "ACTIVE"
 						? "active"
 						: "closed";
 
-				const questions = (result!.detailInfoList || []).map((detail) => {
+				const questions = (result?.detailInfoList || []).map((detail) => {
 					const questionType = mapApiQuestionTypeToComponentType(detail.type);
 					const responseCount = detail.answerList?.length || 0;
 
@@ -128,21 +120,20 @@ export const SurveyResponseDetail = () => {
 						type: questionType,
 						required: detail.isRequired,
 						responseCount,
+						order: detail.order,
 					};
 				});
 
 				setSurveyResponse({
-					id: result!.surveyId,
+					id: result?.surveyId ?? 0,
 					title: surveyTitle,
 					status,
-					responseCount: result!.currentCount || 0,
+					responseCount: result?.currentCount ?? 0,
 					questions,
 				});
-			} catch (error) {
-				console.error("설문 상세 조회 실패:", error);
-				// 에러 발생 시에도 기본값 설정
+			} catch (_error) {
 				setSurveyResponse({
-					id: Number(id),
+					id: Number(surveyId),
 					title: "설문",
 					status: "active",
 					responseCount: 0,
@@ -154,12 +145,12 @@ export const SurveyResponseDetail = () => {
 		};
 
 		void fetchSurveyDetail();
-	}, [id]);
+	}, [surveyId]);
 
 	if (isLoading || !surveyResponse) {
 		return (
-			<div className="flex flex-col w-full h-screen bg-white items-center justify-center">
-				<div>로딩 중...</div>
+			<div className="flex flex-col w-full h-screen bg-white items-center justify-center text-gray-500">
+				<div>설문 결과를 불러오는 중이에요</div>
 			</div>
 		);
 	}
@@ -271,7 +262,7 @@ export const SurveyResponseDetail = () => {
 							contents={
 								<ListRow.Texts
 									type="2RowTypeA"
-									top={`${parseInt(question.id, 10)}. ${question.title}`}
+									top={`${question.order !== undefined ? question.order + 1 : parseInt(question.id, 10)}. ${question.title}`}
 									topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
 									bottom={getQuestionTypeLabel(
 										question.type,

@@ -75,14 +75,7 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 			}
 			return;
 		}
-		if (type === "active") {
-			// 노출 중인 설문은 설문 시작 페이지로 이동
-			navigate(`/survey?surveyId=${survey.id}`, {
-				state: { surveyId: survey.id },
-			});
-			return;
-		}
-		// 마감된 설문은 상세 페이지로 이동
+		// 노출 중인 설문과 마감된 설문은 설문 결과 페이지로 이동
 		navigate(`/mysurvey/${survey.id}`);
 	};
 
