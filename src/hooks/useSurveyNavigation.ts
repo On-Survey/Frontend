@@ -88,12 +88,10 @@ export const useSurveyNavigation = ({
 			return;
 		}
 
-		// 답변 검증
 		if (validateAnswer && !validateAnswer(currentAnswer)) {
 			return;
 		}
 
-		// 다음 질문이 있는지 확인
 		if (initialQuestionIndex < allQuestions.length - 1) {
 			const nextQuestion = allQuestions[initialQuestionIndex + 1];
 			const nextRoute = getQuestionTypeRoute(nextQuestion.type);
@@ -108,7 +106,6 @@ export const useSurveyNavigation = ({
 			return;
 		}
 
-		// 마지막 질문이면 제출
 		if (!surveyId) {
 			console.warn("surveyId가 없어 응답을 제출할 수 없습니다.");
 			return;
@@ -123,15 +120,14 @@ export const useSurveyNavigation = ({
 			console.log("설문 제출 시작:", { surveyId, payload });
 			await submitSurveyParticipation(surveyId, payload);
 			console.log("설문 제출 성공, complete 화면으로 이동");
-			// 제출 성공 후 complete 화면으로 이동 (surveyId 전달)
 			navigate("/survey/complete", {
 				replace: true,
 				state: { surveyId },
 			});
 		} catch (error) {
 			console.error("설문 응답 제출 실패:", error);
-			// 에러 발생 시에도 사용자에게 알림
-			alert("설문 제출에 실패했습니다. 다시 시도해주세요.");
+
+			alert("설문 제출을 실패했어요. 다시 시도해주세요.");
 		} finally {
 			setSubmitting(false);
 		}
