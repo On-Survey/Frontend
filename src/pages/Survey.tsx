@@ -2,7 +2,6 @@ import { colors } from "@toss/tds-colors";
 import { Asset, Border, FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-
 import { topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
@@ -25,7 +24,7 @@ export const Survey = () => {
 	const surveyId = surveyIdFromQuery ?? surveyIdFromState ?? null;
 
 	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -201,11 +200,7 @@ export const Survey = () => {
 					>
 						{surveyDescription}
 					</Text>
-					{isLoading ? (
-						<Text color={colors.grey600} typography="t7" className="mt-4">
-							설문 문항을 불러오는 중입니다...
-						</Text>
-					) : error ? (
+					{error ? (
 						<Text color={colors.red500} typography="t7" className="mt-4">
 							{error}
 						</Text>
