@@ -97,9 +97,10 @@ export const Survey = () => {
 		? topics.find((topic) => topic.id === surveyFromState.topicId)?.name
 		: undefined;
 	const remainingTimeText = surveyFromState?.remainingTimeText;
+	const isClosed = surveyFromState?.isClosed || remainingTimeText === "마감됨";
 
 	const handleStart = () => {
-		if (sortedQuestions.length === 0) {
+		if (sortedQuestions.length === 0 || isClosed) {
 			return;
 		}
 
@@ -223,8 +224,12 @@ export const Survey = () => {
 				</div>
 			</div>
 
-			<FixedBottomCTA loading={false} onClick={handleStart}>
-				설문 참여하기
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleStart}
+				disabled={isClosed || sortedQuestions.length === 0}
+			>
+				{isClosed ? "설문 마감" : "설문 참여하기"}
 			</FixedBottomCTA>
 		</div>
 	);
