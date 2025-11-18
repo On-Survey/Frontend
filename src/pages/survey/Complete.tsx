@@ -107,8 +107,8 @@ export const SurveyComplete = () => {
 					</Text>
 				</div>
 			</div>
-			<FixedBottomCTA loading={false} onClick={() => navigate("/home")}>
-				홈으로 이동
+			<FixedBottomCTA loading={false} onClick={() => navigate("/surveyList")}>
+				다른 설문 참여하기
 			</FixedBottomCTA>
 		</div>
 	);
