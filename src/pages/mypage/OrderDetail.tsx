@@ -80,14 +80,14 @@ export const OrderDetail = () => {
 			if (Number.isNaN(surveyId) || surveyId <= 0) {
 				throw new Error("잘못된 설문 ID 입니다.");
 			}
-			// 코인 환불 API 호출
+
 			await refundSurvey(surveyId);
 			openToast("설문 취소가 완료됐어요.", {
 				type: "bottom",
 				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
 				higherThanCTA: true,
 			});
-			// 환불 완료 후 목록으로 이동
+
 			navigate("/mypage/orderHistory");
 		} catch (error) {
 			openToast("환불 처리에 실패했어요. 잠시 후 다시 시도해주세요.", {

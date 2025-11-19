@@ -10,6 +10,33 @@ import type {
 import { mapSurveyToOrder } from "../../utils/orderUtils";
 import { OrderCard } from "./components/OrderCard";
 
+const RefundPolicyNotice = () => (
+	<div className="px-4 py-4 mb-4 bg-blue-50 rounded-xl">
+		<Text
+			color={adaptive.grey800}
+			typography="t6"
+			fontWeight="bold"
+			className="mb-3"
+		>
+			환불 정책 안내
+		</Text>
+		<Text
+			color={adaptive.grey700}
+			typography="t7"
+			className="mb-2"
+			display="block"
+		>
+			등록 후 노출중인 설문에 대해서는 다음과 같은 정책에 의거해 코인 환불을
+			진행해드립니다. <br />
+			1. 설문 마감일까지 응답을 수집하였으나, 요청한 응답 수만큼 모이지 않은
+			경우 <br />
+			2. 설문 노출 중 고객이 설문 등록을 취소하여, 요청한 응답 수만큼 모이지
+			않은 경우 <br />
+			3. 설문이 노출중이더라도, 응답자 수가 0명이라면 전액 환불됩니다.
+		</Text>
+	</div>
+);
+
 // Mock 데이터 - 추후 삭제 예정
 const MOCK_ORDERS: Order[] = [
 	{
@@ -143,6 +170,7 @@ export const OrderHistory = () => {
 			</div>
 
 			<div className="flex-1 overflow-y-auto px-6 pb-6">
+				<RefundPolicyNotice />
 				<div className="space-y-2">
 					{filteredOrders.map((order) => (
 						<OrderCard key={order.id} order={order} />

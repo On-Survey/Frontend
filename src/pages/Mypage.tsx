@@ -235,7 +235,7 @@ export const Mypage = () => {
 						contents={
 							<ListRow.Texts
 								type="1RowTypeA"
-								top="주문내역"
+								top="코인 사용 내역"
 								topProps={{ color: adaptive.grey700 }}
 							/>
 						}
@@ -246,7 +246,7 @@ export const Mypage = () => {
 						contents={
 							<ListRow.Texts
 								type="1RowTypeA"
-								top="코인 사용 내역"
+								top="결제내역"
 								topProps={{ color: adaptive.grey700 }}
 							/>
 						}
