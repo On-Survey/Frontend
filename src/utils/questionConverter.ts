@@ -39,12 +39,15 @@ export const convertQuestionToServerFormat = (
 
 	// CHOICE 타입 처리
 	if (isMultipleChoiceQuestion(question)) {
+		const hasCustomInput = question.option.some(
+			(option) => option.hasCustomInput === true,
+		);
 		return {
 			...baseQuestion,
 			questionType: "CHOICE",
 			maxChoice: question.maxChoice,
 			hasNoneOption: false, // TODO: 클라이언트 타입에 추가 필요
-			hasCustomInput: false, // TODO: 클라이언트 타입에 추가 필요
+			hasCustomInput,
 			options: convertOptionsToServerFormat(question.option),
 		} as ServerChoiceQuestion;
 	}
