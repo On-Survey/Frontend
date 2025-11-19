@@ -59,7 +59,7 @@ export const AGE: SelectOption<AgeCode>[] = [
 ];
 
 export enum EstimateField {
-	Age = "age",
+	Age = "ages",
 	Gender = "gender",
 	DesiredParticipants = "desiredParticipants",
 }

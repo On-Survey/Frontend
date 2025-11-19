@@ -133,7 +133,7 @@ export interface CreateFormRequest {
 	deadline: string;
 	gender: string;
 	genderPrice: number;
-	age: AgeCode[];
+	ages: AgeCode[];
 	agePrice: number;
 	residence: string;
 	residencePrice: number;

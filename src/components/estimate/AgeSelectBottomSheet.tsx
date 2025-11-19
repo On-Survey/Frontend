@@ -15,18 +15,18 @@ export const AgeSelectBottomSheet = ({
 
 	// 연령대 복수 선택 처리
 	const selectedAges =
-		estimate.age.length === 1 && estimate.age[0] === "ALL"
+		estimate.ages.length === 1 && estimate.ages[0] === "ALL"
 			? []
-			: estimate.age.filter((age) => age !== "ALL");
+			: estimate.ages.filter((age) => age !== "ALL");
 
 	const handleAgeToggle = (ageValue: AgeCode) => {
 		if (ageValue === "ALL") {
 			// "전체" 선택 시 다른 모든 선택 해제
-			handleEstimateChange({ ...estimate, age: ["ALL"] });
+			handleEstimateChange({ ...estimate, ages: ["ALL"] });
 		} else {
 			// "전체"가 선택된 상태에서 다른 연령대를 선택하면 "전체" 해제
 			const currentAges =
-				estimate.age.length === 1 && estimate.age[0] === "ALL"
+				estimate.ages.length === 1 && estimate.ages[0] === "ALL"
 					? []
 					: selectedAges;
 			const newSelectedAges = currentAges.includes(ageValue)
@@ -35,7 +35,7 @@ export const AgeSelectBottomSheet = ({
 
 			handleEstimateChange({
 				...estimate,
-				age: newSelectedAges.length === 0 ? ["ALL"] : newSelectedAges,
+				ages: newSelectedAges.length === 0 ? ["ALL"] : newSelectedAges,
 			});
 		}
 	};
@@ -54,7 +54,7 @@ export const AgeSelectBottomSheet = ({
 					{AGE.map((option) => {
 						const isSelected =
 							option.value === "ALL"
-								? estimate.age.length === 1 && estimate.age[0] === "ALL"
+								? estimate.ages.length === 1 && estimate.ages[0] === "ALL"
 								: selectedAges.includes(option.value);
 
 						return (
