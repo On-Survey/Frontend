@@ -53,7 +53,7 @@ const EstimatePageContent = () => {
 				...estimate,
 				desiredParticipants: "50",
 				gender: "ALL",
-				age: ["ALL"],
+				ages: ["ALL"],
 				location: "ALL",
 			});
 		}
