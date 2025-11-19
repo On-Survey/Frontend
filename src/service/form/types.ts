@@ -12,6 +12,7 @@ export interface createSurveyQuestionRequest {
 		| "NUMBER";
 	title: string;
 	description: string;
+	questionOrder: number;
 }
 
 // 서버 요청용 질문 옵션

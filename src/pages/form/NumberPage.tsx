@@ -56,6 +56,7 @@ export const NumberPage = () => {
 				questionType: "NUMBER",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 

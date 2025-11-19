@@ -61,6 +61,7 @@ export const NPSPage = () => {
 				questionType: "NPS",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 

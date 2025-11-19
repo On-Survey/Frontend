@@ -99,6 +99,7 @@ export const MultipleChoiceMain = () => {
 				questionType: "CHOICE",
 				title: question?.title ?? "",
 				description: question?.description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 		if (result.success && typeof result.result !== "string") {

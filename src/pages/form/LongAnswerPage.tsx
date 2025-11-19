@@ -57,6 +57,7 @@ export const LongAnswerPage = () => {
 				questionType: "LONG",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 

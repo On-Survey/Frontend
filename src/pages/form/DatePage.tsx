@@ -66,6 +66,7 @@ export const DatePage = () => {
 				questionType: "DATE",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 

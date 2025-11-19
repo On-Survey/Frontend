@@ -57,6 +57,7 @@ export const ShortAnswerPage = () => {
 				questionType: "SHORT",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 

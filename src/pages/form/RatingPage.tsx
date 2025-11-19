@@ -111,6 +111,7 @@ export const RatingPage = () => {
 				questionType: "RATING",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 
