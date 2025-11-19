@@ -24,7 +24,6 @@ export const OxScreening = () => {
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 	const [showNoQuiz, setShowNoQuiz] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 	const [nextSurveyId, setNextSurveyId] = useState<number | null>(null);
 
 	// 스크리닝 설문 조회
@@ -32,19 +31,15 @@ export const OxScreening = () => {
 		const fetchScreenings = async () => {
 			try {
 				setIsLoading(true);
-				setError(null);
 				const result = await getScreenings();
 				if (result.data.length === 0) {
 					setShowNoQuiz(true);
 				} else {
 					setScreeningQuestions(result.data);
-					if (result.data.length > 0) {
-						setNextSurveyId(result.data[0].surveyId);
-					}
+					setNextSurveyId(result.data[0].surveyId);
 				}
 			} catch (err) {
 				console.error("스크리닝 설문 조회 실패:", err);
-				setError("스크리닝 설문을 불러오지 못했습니다.");
 				setShowNoQuiz(true);
 			} finally {
 				setIsLoading(false);
@@ -64,7 +59,6 @@ export const OxScreening = () => {
 		if (!isLastQuestion) {
 			const nextIndex = currentQuestionIndex + 1;
 			setCurrentQuestionIndex(nextIndex);
-			// 다음 질문의 surveyId로 업데이트
 			if (screeningQuestions[nextIndex]) {
 				setNextSurveyId(screeningQuestions[nextIndex].surveyId);
 			}
@@ -74,7 +68,6 @@ export const OxScreening = () => {
 	};
 
 	const handleNextQuestion = async () => {
-		// 스크리닝 응답 제출
 		if (currentQuestion && selectedOption !== null) {
 			try {
 				const content = String(selectedOption);
@@ -88,13 +81,37 @@ export const OxScreening = () => {
 
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
-		// 다음 설문으로 이동
 		if (nextSurveyId) {
 			navigate(`/survey?surveyId=${nextSurveyId}`, {
 				state: { surveyId: String(nextSurveyId) },
 			});
 		} else {
 			navigate("/survey");
+		}
+	};
+
+	const handleSkipToNextScreening = async () => {
+		if (currentQuestion && selectedOption !== null) {
+			try {
+				const content = String(selectedOption);
+				await submitScreeningResponse(currentQuestion.screeningId, {
+					content,
+				});
+			} catch (err) {
+				console.error("스크리닝 응답 제출 실패:", err);
+			}
+		}
+
+		setSelectedOption(null);
+
+		if (!isLastQuestion) {
+			const nextIndex = currentQuestionIndex + 1;
+			setCurrentQuestionIndex(nextIndex);
+			if (screeningQuestions[nextIndex]) {
+				setNextSurveyId(screeningQuestions[nextIndex].surveyId);
+			}
+		} else {
+			setShowNoQuiz(true);
 		}
 	};
 
@@ -112,7 +129,7 @@ export const OxScreening = () => {
 		);
 	}
 
-	if (error || showNoQuiz || screeningQuestions.length === 0) {
+	if (showNoQuiz || screeningQuestions.length === 0) {
 		return (
 			<div className="flex flex-col items-center justify-center min-h-screen ">
 				<Asset.Image
@@ -247,11 +264,15 @@ export const OxScreening = () => {
 			{/* 하단 버튼 */}
 			<FixedBottomCTA
 				loading={false}
-				onClick={() => {
-					if (selectedOption) {
+				onClick={async () => {
+					if (selectedOption === null || !currentQuestion) return;
+					if (selectedOption === currentQuestion.answer) {
 						setIsBottomSheetOpen(true);
+					} else {
+						await handleSkipToNextScreening();
 					}
 				}}
+				disabled={selectedOption === null}
 			>
 				확인
 			</FixedBottomCTA>
