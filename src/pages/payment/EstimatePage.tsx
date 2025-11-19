@@ -92,7 +92,7 @@ export const EstimatePage = () => {
 	}, [totalPrice, handleTotalPriceChange]);
 
 	const genderDisplay = getGenderLabel(estimate.gender);
-	const ageDisplay = formatAgeDisplay(estimate.age);
+	const ageDisplay = formatAgeDisplay(estimate.ages);
 	const locationDisplay = getRegionLabel(estimate.location);
 
 	const handleReturn = () => {
@@ -116,8 +116,8 @@ export const EstimatePage = () => {
 		}
 	};
 
-	const handleAgeBottomSheetConfirm = (age: AgeCode[]) => {
-		handleEstimateChange({ ...estimate, age });
+	const handleAgeBottomSheetConfirm = (ages: AgeCode[]) => {
+		handleEstimateChange({ ...estimate, ages });
 	};
 
 	useEffect(() => {
@@ -143,8 +143,8 @@ export const EstimatePage = () => {
 				isOpen={isAgeBottomSheetOpen}
 				handleClose={handleAgeBottomSheetClose}
 				options={AGE}
-				value={estimate.age}
-				onConfirm={(age: AgeCode[]) => handleAgeBottomSheetConfirm(age)}
+				value={estimate.ages}
+				onConfirm={(ages: AgeCode[]) => handleAgeBottomSheetConfirm(ages)}
 				title="대상 연령대를 선택해주세요"
 			/>
 			<PaymentBottomSheet
