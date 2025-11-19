@@ -7,13 +7,15 @@ import {
 	DateSelectBottomSheet,
 	PaymentBottomSheet,
 } from "../../components/payment";
+import { AgeMultiSelectBottomSheet } from "../../components/payment/bottomSheet/AgeMultiSelectBottomSheet";
 import { CoinAlertBottomSheet } from "../../components/payment/bottomSheet/CoinAlertBottomSheet";
 import {
 	AGE,
+	type AgeCode,
 	DESIRED_PARTICIPANTS,
 	EstimateField,
+	formatAgeDisplay,
 	GENDER,
-	getAgeLabel,
 	getGenderLabel,
 	getRegionLabel,
 } from "../../constants/payment";
@@ -46,6 +48,12 @@ export const EstimatePage = () => {
 		isOpen: isBottomSheetOpen,
 		handleOpen: handleBottomSheetOpen,
 		handleClose: handleBottomSheetClose,
+	} = useModal(false);
+
+	const {
+		isOpen: isAgeBottomSheetOpen,
+		handleOpen: handleAgeBottomSheetOpen,
+		handleClose: handleAgeBottomSheetClose,
 	} = useModal(false);
 
 	const {
@@ -84,18 +92,11 @@ export const EstimatePage = () => {
 	}, [totalPrice, handleTotalPriceChange]);
 
 	const genderDisplay = getGenderLabel(estimate.gender);
-	const ageDisplay = getAgeLabel(estimate.age);
+	const ageDisplay = formatAgeDisplay(estimate.age);
 	const locationDisplay = getRegionLabel(estimate.location);
 
 	const handleReturn = () => {
 		switch (type) {
-			case EstimateField.Age:
-				return {
-					value: estimate.age,
-					title: "대상 연령대를 선택해주세요",
-					options: AGE,
-					field: EstimateField.Age,
-				};
 			case EstimateField.Gender:
 				return {
 					value: estimate.gender,
@@ -113,6 +114,10 @@ export const EstimatePage = () => {
 			default:
 				return { value: "", title: "", options: [], field: EstimateField.Age };
 		}
+	};
+
+	const handleAgeBottomSheetConfirm = (age: AgeCode[]) => {
+		handleEstimateChange({ ...estimate, age });
 	};
 
 	useEffect(() => {
@@ -134,7 +139,14 @@ export const EstimatePage = () => {
 				isOpen={isCoinBottomSheetOpen}
 				handleClose={handleCoinBottomSheetClose}
 			/>
-
+			<AgeMultiSelectBottomSheet
+				isOpen={isAgeBottomSheetOpen}
+				handleClose={handleAgeBottomSheetClose}
+				options={AGE}
+				value={estimate.age}
+				onConfirm={(age: AgeCode[]) => handleAgeBottomSheetConfirm(age)}
+				title="대상 연령대를 선택해주세요"
+			/>
 			<PaymentBottomSheet
 				isOpen={isBottomSheetOpen}
 				handleClose={handleBottomSheetClose}
@@ -191,7 +203,7 @@ export const EstimatePage = () => {
 						aria-hidden={true}
 					/>
 				}
-				onClick={() => handleTypeChange(EstimateField.Age)}
+				onClick={() => handleAgeBottomSheetOpen()}
 			/>
 			<TextField.Button
 				variant="line"

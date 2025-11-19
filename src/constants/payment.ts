@@ -143,3 +143,48 @@ export const getAgeLabel = (value: AgeCode): string =>
 	AGE_LABEL_MAP[value] ?? "";
 export const getRegionLabel = (value: RegionCode): string =>
 	REGION_LABEL_MAP[value] ?? "";
+
+/**
+ * 연령대 배열을 표시용 문자열로 변환
+ * - 전체: "전체"
+ * - 단일: "10대(단일)"
+ * - 복수: "10대, 20대, 30대(복수)"
+ */
+export const formatAgeDisplay = (ages: AgeCode[]): string => {
+	if (ages.length === 0 || (ages.length === 1 && ages[0] === "ALL")) {
+		return "전체";
+	}
+
+	// 연령대 순서 정의
+	const ageOrder: Record<AgeCode, number> = {
+		ALL: 0,
+		TEN: 1,
+		TWENTY: 2,
+		THIRTY: 3,
+		FOURTY: 4,
+		FIFTY: 5,
+		SIXTY: 6,
+		OVER: 7,
+	};
+
+	const sortedAges = ages
+		.filter((age) => age !== "ALL")
+		.sort((a, b) => ageOrder[a] - ageOrder[b]);
+
+	const ageLabels = sortedAges.map((age) => {
+		const fullLabel = AGE_LABEL_MAP[age] ?? "";
+		// "10대(10세~19세)" -> "10대" 추출
+		const match = fullLabel.match(/^([^(]+)/);
+		return match ? match[1] : fullLabel;
+	});
+
+	if (ageLabels.length === 0) {
+		return "전체";
+	}
+
+	if (ageLabels.length === 1) {
+		return `${ageLabels[0]}(단일)`;
+	}
+
+	return `${ageLabels.join(", ")} (복수)`;
+};
