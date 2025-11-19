@@ -74,7 +74,13 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
 			onEvent: ({ id }) => {
-				if (id === "heart") {
+				if (
+					id === "heart" &&
+					!location.pathname.startsWith("/createForm") &&
+					!location.pathname.startsWith("/payment") &&
+					!location.pathname.startsWith("/questions") &&
+					!location.pathname.startsWith("/estimate")
+				) {
 					navigate("/estimateNavigation");
 				}
 			},
