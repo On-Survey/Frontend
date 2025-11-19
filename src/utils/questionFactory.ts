@@ -56,10 +56,7 @@ export const createQuestion = (
 				...baseQuestion,
 				type: "multipleChoice",
 				maxChoice: 1,
-				option: [
-					{ order: 1, content: "옵션 1", nextQuestionId: 0 },
-					{ order: 2, content: "옵션 2", nextQuestionId: 0 },
-				],
+				option: [],
 			};
 		case "rating":
 			return {
