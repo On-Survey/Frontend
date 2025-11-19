@@ -224,7 +224,11 @@ export const MultipleChoiceMain = () => {
 				/>
 			)}
 
-			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleConfirm}
+				disabled={options.length === 0}
+			>
 				확인
 			</FixedBottomCTA>
 		</>
