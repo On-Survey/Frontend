@@ -8,12 +8,10 @@ import {
 } from "../../components/estimate";
 import { PaymentBottomSheet } from "../../components/payment";
 import {
-	AGE,
-	type AgeCode,
 	DESIRED_PARTICIPANTS,
 	EstimateField,
+	formatAgeDisplay,
 	GENDER,
-	getAgeLabel,
 	getGenderLabel,
 	getRegionLabel,
 	type RegionCode,
@@ -55,7 +53,7 @@ const EstimatePageContent = () => {
 				...estimate,
 				desiredParticipants: "50",
 				gender: "ALL",
-				age: "ALL",
+				age: ["ALL"],
 				location: "ALL",
 			});
 		}
@@ -72,13 +70,6 @@ const EstimatePageContent = () => {
 
 	const handleReturn = () => {
 		switch (type) {
-			case EstimateField.Age:
-				return {
-					value: estimate.age,
-					title: "대상 연령대를 선택해주세요",
-					options: AGE,
-					field: EstimateField.Age,
-				};
 			case EstimateField.Gender:
 				return {
 					value: estimate.gender,
@@ -98,7 +89,7 @@ const EstimatePageContent = () => {
 					value: "",
 					title: "",
 					options: [],
-					field: EstimateField.Age,
+					field: EstimateField.Gender,
 				};
 		}
 	};
@@ -183,19 +174,7 @@ const EstimatePageContent = () => {
 						label="연령대"
 						labelOption="sustain"
 						help="복수 선택 시 추가 요금이 부과되고, 전체 선택 시는 제외돼요."
-						value={
-							estimate.age === "ALL"
-								? "전체"
-								: estimate.age
-										.split(", ")
-										.map((code) =>
-											getAgeLabel(code as AgeCode)
-												.replace(/\s*\(.*?\)/, "")
-												.trim(),
-										)
-										.filter(Boolean)
-										.join(", ")
-						}
+						value={formatAgeDisplay(estimate.age)}
 						placeholder="연령대를 선택해주세요"
 						right={
 							<Asset.Icon

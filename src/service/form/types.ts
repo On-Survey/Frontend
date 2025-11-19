@@ -1,3 +1,4 @@
+import type { AgeCode } from "../../constants/payment";
 import type { QuestionInfo } from "../../types/survey";
 
 export interface createSurveyQuestionRequest {
@@ -132,7 +133,7 @@ export interface CreateFormRequest {
 	deadline: string;
 	gender: string;
 	genderPrice: number;
-	age: string;
+	age: AgeCode[];
 	agePrice: number;
 	residence: string;
 	residencePrice: number;
