@@ -144,7 +144,7 @@ export const MultipleChoiceMain = () => {
 					display="block"
 					onClick={handleCreateMultiChoiceOpen}
 				>
-					문항 추가하기
+					옵션 추가하기
 				</Button>
 				<Button
 					size="large"
