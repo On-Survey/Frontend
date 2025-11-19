@@ -2,7 +2,9 @@ import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
 	FixedBottomCTA,
-	SegmentedControl,
+	List,
+	ListRow,
+	Switch,
 	Text,
 	Top,
 } from "@toss/tds-mobile";
@@ -161,19 +163,8 @@ export const RatingPage = () => {
 					</Top.LowerButton>
 				}
 			/>
-			<SegmentedControl
-				alignment="fixed"
-				value={isRequired ? "0-필수" : "1-선택"}
-				disabled={false}
-				size="large"
-				name="SegmentedControl"
-				onChange={(v) => handleRequiredChange(v === "0-필수")}
-			>
-				<SegmentedControl.Item value="0-필수">필수</SegmentedControl.Item>
-				<SegmentedControl.Item value="1-선택">선택</SegmentedControl.Item>
-			</SegmentedControl>
 
-			<div className="flex gap-1 mt-20 w-full justify-between px-3">
+			<div className="flex gap-1 mt-20 w-full justify-between px-4">
 				<Asset.Icon
 					frameShape={Asset.frameShape.CleanW24}
 					backgroundColor="transparent"
@@ -184,7 +175,7 @@ export const RatingPage = () => {
 					onClick={handleMinusClick}
 				/>
 
-				<div className="flex gap-1.5 flex-1 justify-center">
+				<div className="flex gap-1.5 flex-1 justify-center ">
 					{Array.from({ length: 10 }, (_, idx) => {
 						const v = idx + 1;
 						const isActive = score !== null && v <= score;
@@ -209,7 +200,7 @@ export const RatingPage = () => {
 					onClick={handlePlusClick}
 				/>
 			</div>
-			<div className="mt-2 flex justify-between items-center px-3">
+			<div className="mt-2 flex justify-between items-center px-4.5">
 				<button type="button" onClick={handleMinValueEditOpen}>
 					<Text typography="t5" fontWeight="medium" color={adaptive.grey400}>
 						{minValue}
@@ -220,6 +211,29 @@ export const RatingPage = () => {
 						{maxValue}
 					</Text>
 				</button>
+			</div>
+
+			<div className="mt-8">
+				<List>
+					<ListRow
+						role="switch"
+						aria-checked={isRequired}
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
+								top="필수 문항"
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						right={
+							<Switch
+								checked={isRequired}
+								onChange={() => handleRequiredChange(!isRequired)}
+							/>
+						}
+						verticalPadding="large"
+					/>
+				</List>
 			</div>
 			<FixedBottomCTA loading={false} onClick={handleConfirm}>
 				확인

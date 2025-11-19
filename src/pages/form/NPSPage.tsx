@@ -1,5 +1,12 @@
 import { adaptive } from "@toss/tds-colors";
-import { FixedBottomCTA, SegmentedControl, Text, Top } from "@toss/tds-mobile";
+import {
+	FixedBottomCTA,
+	List,
+	ListRow,
+	Switch,
+	Text,
+	Top,
+} from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -92,19 +99,8 @@ export const NPSPage = () => {
 					</Top.LowerButton>
 				}
 			/>
-			<SegmentedControl
-				alignment="fixed"
-				value={isRequired ? "0-필수" : "1-선택"}
-				disabled={false}
-				size="large"
-				name="SegmentedControl"
-				onChange={(v) => handleRequiredChange(v === "0-필수")}
-			>
-				<SegmentedControl.Item value="0-필수">필수</SegmentedControl.Item>
-				<SegmentedControl.Item value="1-선택">선택</SegmentedControl.Item>
-			</SegmentedControl>
 
-			<div className="flex gap-2.5 mt-20 justify-center px-6">
+			<div className="flex gap-2.5 mt-4 justify-center px-6">
 				{Array.from({ length: 10 }, (_, idx) => {
 					const v = idx + 1;
 					const isActive = score !== null && v <= score;
@@ -126,6 +122,29 @@ export const NPSPage = () => {
 						</div>
 					);
 				})}
+			</div>
+
+			<div className="mt-8 px-2">
+				<List>
+					<ListRow
+						role="switch"
+						aria-checked={isRequired}
+						contents={
+							<ListRow.Texts
+								type="1RowTypeA"
+								top="필수 문항"
+								topProps={{ color: adaptive.grey700 }}
+							/>
+						}
+						right={
+							<Switch
+								checked={isRequired}
+								onChange={() => handleRequiredChange(!isRequired)}
+							/>
+						}
+						verticalPadding="large"
+					/>
+				</List>
 			</div>
 			<FixedBottomCTA loading={false} onClick={handleConfirm}>
 				확인
