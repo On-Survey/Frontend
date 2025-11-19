@@ -41,7 +41,9 @@ export const Home = () => {
 
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
-	const handleViewAllSurveys = () => navigate("/surveyList");
+	const handleViewAllRecommended = () =>
+		navigate("/surveyList?type=recommended");
+	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
 	const handleCreateSurvey = () => navigate("/createFormStart");
 	const handleQuizClick = () => navigate("/oxScreening");
 
@@ -251,14 +253,14 @@ export const Home = () => {
 				<CustomSurveyList
 					surveys={customSurveysToShow}
 					userName={userName || "온서베이"}
-					onViewAll={handleViewAllSurveys}
+					onViewAll={handleViewAllRecommended}
 				/>
 
 				<Border variant="height16" />
 
 				<UrgentSurveyList
 					surveys={urgentSurveysToShow}
-					onViewAll={handleViewAllSurveys}
+					onViewAll={handleViewAllImpending}
 				/>
 
 				<div className="mb-24" />

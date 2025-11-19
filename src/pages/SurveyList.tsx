@@ -1,9 +1,14 @@
 import { adaptive } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { SurveyList } from "../components/surveyList/SurveyList";
 import { topics } from "../constants/topics";
-import { getOngoingSurveys } from "../service/surveyList";
+import {
+	getImpendingSurveys,
+	getOngoingSurveys,
+	getRecommendedSurveys,
+} from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
@@ -11,10 +16,16 @@ import { formatRemainingTime } from "../utils/FormatDate";
 const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
 export const SurveyListPage = () => {
+	const [searchParams] = useSearchParams();
+	const listType = searchParams.get("type"); // "recommended" | "impending" | null
+
 	const [surveys, setSurveys] = useState<SurveyListItem[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasNext, setHasNext] = useState(true);
 	const [lastSurveyId, setLastSurveyId] = useState<number>(0);
+	const [lastDeadline, setLastDeadline] = useState<string | undefined>(
+		undefined,
+	);
 	const loadingRef = useRef<HTMLDivElement | null>(null);
 
 	const mapSurveyToItem = useCallback(
@@ -45,17 +56,42 @@ export const SurveyListPage = () => {
 
 			try {
 				const currentLastId = reset ? 0 : lastSurveyId;
-				const result = await getOngoingSurveys({
-					lastSurveyId: currentLastId,
-					size: 15,
-				});
+				const currentLastDeadline = reset ? undefined : lastDeadline;
 
-				const allSurveys = [
-					...(result.recommended ?? []),
-					...(result.impending ?? []),
-				];
+				let fetchedSurveys: OngoingSurveySummary[] = [];
 
-				const activeSurveys = allSurveys.filter((survey) => {
+				if (listType === "recommended") {
+					const recommendedResult = await getRecommendedSurveys({
+						lastSurveyId: currentLastId,
+						size: 15,
+					});
+					fetchedSurveys = recommendedResult.data ?? [];
+					setHasNext(recommendedResult.hasNext ?? false);
+				} else if (listType === "impending") {
+					const impendingResult = await getImpendingSurveys({
+						lastSurveyId: currentLastId,
+						lastDeadline: currentLastDeadline,
+						size: 15,
+					});
+					fetchedSurveys = impendingResult.data ?? [];
+					setHasNext(impendingResult.hasNext ?? false);
+				} else {
+					const result = await getOngoingSurveys({
+						lastSurveyId: currentLastId,
+						size: 15,
+					});
+					fetchedSurveys = [
+						...(result.recommended ?? []),
+						...(result.impending ?? []),
+					];
+					// 전체 목록의 경우 hasNext는 둘 중 하나라도 true면 true
+					setHasNext(
+						(result.recommendedHasNext ?? false) ||
+							(result.impendingHasNext ?? false),
+					);
+				}
+
+				const activeSurveys = fetchedSurveys.filter((survey) => {
 					const remainingTime = formatRemainingTime(survey.deadline);
 					return remainingTime !== "마감됨";
 				});
@@ -78,11 +114,13 @@ export const SurveyListPage = () => {
 					});
 				}
 
-				setHasNext(result.hasNext ?? false);
-
 				if (activeSurveys.length > 0) {
-					const lastId = Math.max(...activeSurveys.map((s) => s.surveyId));
-					setLastSurveyId(lastId);
+					const lastSurvey = activeSurveys[activeSurveys.length - 1];
+					setLastSurveyId(lastSurvey.surveyId);
+					// 마감 임박 설문의 경우 lastDeadline도 업데이트
+					if (listType === "impending" && lastSurvey.deadline) {
+						setLastDeadline(lastSurvey.deadline);
+					}
 				}
 			} catch (err) {
 				console.error("설문 목록 조회 실패:", err);
@@ -90,12 +128,77 @@ export const SurveyListPage = () => {
 				setIsLoading(false);
 			}
 		},
-		[lastSurveyId, mapSurveyToItem],
+		[lastSurveyId, lastDeadline, listType, mapSurveyToItem],
 	);
 
+	// listType이 변경되면 초기화하고 다시 불러오기
 	useEffect(() => {
-		void fetchSurveys(true);
-	}, [fetchSurveys]);
+		setSurveys([]);
+		setLastSurveyId(0);
+		setLastDeadline(undefined);
+		setHasNext(true);
+		const fetch = async () => {
+			setIsLoading(true);
+			try {
+				let fetchedSurveys: OngoingSurveySummary[] = [];
+
+				if (listType === "recommended") {
+					const recommendedResult = await getRecommendedSurveys({
+						lastSurveyId: 0,
+						size: 15,
+					});
+					fetchedSurveys = recommendedResult.data ?? [];
+					setHasNext(recommendedResult.hasNext ?? false);
+				} else if (listType === "impending") {
+					const impendingResult = await getImpendingSurveys({
+						lastSurveyId: 0,
+						size: 15,
+					});
+					fetchedSurveys = impendingResult.data ?? [];
+					setHasNext(impendingResult.hasNext ?? false);
+				} else {
+					const result = await getOngoingSurveys({
+						lastSurveyId: 0,
+						size: 15,
+					});
+					fetchedSurveys = [
+						...(result.recommended ?? []),
+						...(result.impending ?? []),
+					];
+					setHasNext(
+						(result.recommendedHasNext ?? false) ||
+							(result.impendingHasNext ?? false),
+					);
+				}
+
+				const activeSurveys = fetchedSurveys.filter((survey) => {
+					const remainingTime = formatRemainingTime(survey.deadline);
+					return remainingTime !== "마감됨";
+				});
+
+				const mappedSurveys = activeSurveys.map(mapSurveyToItem);
+				const uniqueSurveys = mappedSurveys.filter(
+					(survey, index, self) =>
+						index === self.findIndex((s) => s.id === survey.id),
+				);
+
+				setSurveys(uniqueSurveys);
+
+				if (activeSurveys.length > 0) {
+					const lastSurvey = activeSurveys[activeSurveys.length - 1];
+					setLastSurveyId(lastSurvey.surveyId);
+					if (listType === "impending" && lastSurvey.deadline) {
+						setLastDeadline(lastSurvey.deadline);
+					}
+				}
+			} catch (err) {
+				console.error("설문 목록 조회 실패:", err);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		void fetch();
+	}, [listType, mapSurveyToItem]);
 
 	useEffect(() => {
 		if (!loadingRef.current || !hasNext || isLoading) return;
