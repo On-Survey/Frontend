@@ -24,6 +24,7 @@ export interface MultipleChoiceOption {
 	order: number;
 	content: string;
 	nextQuestionId: number;
+	hasCustomInput?: boolean;
 }
 
 // 객관식 문항
@@ -142,6 +143,8 @@ export type QuestionUpdateData = {
 	maxValue?: string;
 	date?: Date;
 	surveyId?: number;
+	hasCustomInput?: boolean;
+	hasOtherOption?: boolean;
 };
 
 // 설문 폼 액션 타입

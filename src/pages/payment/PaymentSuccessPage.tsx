@@ -55,9 +55,8 @@ export const PaymentSuccessPage = () => {
 					fontWeight="regular"
 					textAlign="center"
 				>
-					{isChargeFlow
-						? "충전한 코인으로 설문을 등록할 수 있어요."
-						: "검수는 최대 2일 정도 소요돼요\n받은 응답은 내 설문 탭에서 확인할 수 있어요."}
+					{/* TODO: 검수는 최대 2일 정도 소요돼요, 받은 응답은 내 설문 탭에서 확인할 수 있어요. 라는 키워드는 검수 과정이 생기면 다시 추가 */}
+					{isChargeFlow ? "충전한 코인으로 설문을 등록할 수 있어요." : ""}
 				</Text>
 			</div>
 			<FixedBottomCTA loading={false} onClick={handleNavigate}>

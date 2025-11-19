@@ -144,7 +144,7 @@ export const MultipleChoiceMain = () => {
 					display="block"
 					onClick={handleCreateMultiChoiceOpen}
 				>
-					문항 추가하기
+					옵션 추가하기
 				</Button>
 				<Button
 					size="large"
@@ -224,7 +224,11 @@ export const MultipleChoiceMain = () => {
 				/>
 			)}
 
-			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleConfirm}
+				disabled={options.length === 0}
+			>
 				확인
 			</FixedBottomCTA>
 		</>

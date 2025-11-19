@@ -11,7 +11,7 @@ import type { AgeCode, GenderCode, RegionCode } from "../constants/payment";
 export type Estimate = {
 	date: Date | null;
 	location: RegionCode;
-	age: AgeCode;
+	age: AgeCode[];
 	gender: GenderCode;
 	desiredParticipants: string;
 };
@@ -36,11 +36,17 @@ const PaymentContext = createContext<PaymentEstimateContextValue | undefined>(
 	undefined,
 );
 
+const getDefaultEstimateDate = () => {
+	const nextWeek = new Date();
+	nextWeek.setDate(nextWeek.getDate() + 7);
+	return nextWeek;
+};
+
 export const PaymentProvider = ({ children }: PropsWithChildren) => {
 	const [estimate, setEstimate] = useState<Estimate>({
-		date: new Date(),
+		date: getDefaultEstimateDate(),
 		location: "ALL",
-		age: "ALL",
+		age: ["ALL"],
 		gender: "ALL",
 		desiredParticipants: "50명",
 	});
@@ -71,9 +77,9 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 
 	const resetEstimate = useCallback(() => {
 		setEstimate({
-			date: new Date(),
+			date: getDefaultEstimateDate(),
 			location: "ALL",
-			age: "ALL",
+			age: ["ALL"],
 			gender: "ALL",
 			desiredParticipants: "50명",
 		});

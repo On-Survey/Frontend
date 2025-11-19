@@ -56,17 +56,14 @@ export const createQuestion = (
 				...baseQuestion,
 				type: "multipleChoice",
 				maxChoice: 1,
-				option: [
-					{ order: 1, content: "옵션 1", nextQuestionId: 0 },
-					{ order: 2, content: "옵션 2", nextQuestionId: 0 },
-				],
+				option: [],
 			};
 		case "rating":
 			return {
 				...baseQuestion,
 				type: "rating",
-				minValue: "매우 나쁨",
-				maxValue: "매우 좋음",
+				minValue: "입력",
+				maxValue: "입력",
 			};
 		case "nps":
 			return {
