@@ -6,6 +6,7 @@ import { topics } from "../constants/topics";
 import { getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import type { SurveyListItem } from "../types/surveyList";
+import { formatRemainingTime } from "../utils/FormatDate";
 
 const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
@@ -54,7 +55,12 @@ export const SurveyListPage = () => {
 					...(result.impending ?? []),
 				];
 
-				const mappedSurveys = allSurveys.map(mapSurveyToItem);
+				const activeSurveys = allSurveys.filter((survey) => {
+					const remainingTime = formatRemainingTime(survey.deadline);
+					return remainingTime !== "마감됨";
+				});
+
+				const mappedSurveys = activeSurveys.map(mapSurveyToItem);
 				const uniqueSurveys = mappedSurveys.filter(
 					(survey, index, self) =>
 						index === self.findIndex((s) => s.id === survey.id),
@@ -74,8 +80,8 @@ export const SurveyListPage = () => {
 
 				setHasNext(result.hasNext ?? false);
 
-				if (allSurveys.length > 0) {
-					const lastId = Math.max(...allSurveys.map((s) => s.surveyId));
+				if (activeSurveys.length > 0) {
+					const lastId = Math.max(...activeSurveys.map((s) => s.surveyId));
 					setLastSurveyId(lastId);
 				}
 			} catch (err) {

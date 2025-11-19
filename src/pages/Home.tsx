@@ -78,8 +78,12 @@ export const Home = () => {
 					};
 				};
 
-				const rec = (result.recommended ?? []).map(mapSurveyToItem);
-				const imp = (result.impending ?? []).map(mapSurveyToItem);
+				const rec = (result.recommended ?? [])
+					.map(mapSurveyToItem)
+					.filter((survey) => !survey.isClosed);
+				const imp = (result.impending ?? [])
+					.map(mapSurveyToItem)
+					.filter((survey) => !survey.isClosed);
 
 				setRecommended(rec);
 				setImpending(imp);
