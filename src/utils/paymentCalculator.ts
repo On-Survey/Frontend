@@ -23,15 +23,30 @@ const getBasePrice = (participants: string): number => {
 
 /**
  * 연령대에 따른 추가금 계산
+ * - 전체: 0원
+ * - 단일 연령대: +15% (건당 105원)
+ * - 복수 연령대: +20% (건당 140원)
  */
-const getAgeSurcharge = (age: AgeCode, participants: string): number => {
-	if (age === "ALL") {
+const getAgeSurcharge = (ages: AgeCode[], participants: string): number => {
+	// "전체" 또는 빈 배열
+	if (ages.length === 0 || (ages.length === 1 && ages[0] === "ALL")) {
 		return 0;
 	}
 
 	const count = parseParticipantsCount(participants);
+	const filteredAges = ages.filter((age) => age !== "ALL");
+
 	// 단일 연령대: +15% (건당 105원)
-	return count * 105;
+	if (filteredAges.length === 1) {
+		return count * 105;
+	}
+
+	// 복수 연령대: +20% (건당 140원)
+	if (filteredAges.length >= 2) {
+		return count * 140;
+	}
+
+	return 0;
 };
 
 /**

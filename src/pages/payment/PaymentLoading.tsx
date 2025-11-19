@@ -2,11 +2,12 @@ import { graniteEvent, IAP } from "@apps-in-toss/web-framework";
 
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { useUserInfo } from "../../contexts/UserContext";
 import { createForm } from "../../service/form";
 import { createPayment } from "../../service/payments";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
@@ -15,6 +16,8 @@ export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
 	const { state, resetForm } = useSurvey();
 	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
+	const { userInfo } = useUserInfo();
+
 	const location = useLocation();
 
 	const isChargeFlow = location.pathname === "/payment/charge";
@@ -23,38 +26,86 @@ export const PaymentLoading = () => {
 		[estimate],
 	);
 
+	const formPayload = useMemo(() => {
+		if (!state.surveyId) return null;
+		return {
+			surveyId: state.surveyId,
+			deadline: estimate.date?.toISOString() ?? "",
+			gender: estimate.gender,
+			genderPrice: priceBreakdown.genderPrice,
+			age: estimate.age,
+			agePrice: priceBreakdown.agePrice,
+			residence: estimate.location,
+			residencePrice: priceBreakdown.residencePrice,
+			dueCount: priceBreakdown.dueCount,
+			dueCountPrice: priceBreakdown.dueCountPrice,
+			totalCoin: priceBreakdown.totalPrice,
+		};
+	}, [
+		state.surveyId,
+		estimate.date,
+		estimate.gender,
+		estimate.age,
+		estimate.location,
+		priceBreakdown,
+	]);
+
+	const handleSuccess = useCallback(() => {
+		resetForm();
+		resetEstimate();
+		setTimeout(() => {
+			goNextPayment();
+		}, 3000);
+	}, [resetForm, resetEstimate, goNextPayment]);
+
+	const submitForm = useCallback(async () => {
+		if (!formPayload) return;
+		try {
+			await createForm(formPayload);
+		} catch (error) {
+			console.error("폼 생성 실패:", error);
+			throw error;
+		}
+	}, [formPayload]);
+
 	useEffect(() => {
+		if (!userInfo) return;
+
+		const hasEnoughCoin = userInfo.result.coin >= priceBreakdown.totalPrice;
+
+		if (hasEnoughCoin) {
+			const processWithCoin = async () => {
+				try {
+					await submitForm();
+					handleSuccess();
+				} catch (error) {
+					console.error("코인으로 결제 처리 실패:", error);
+				}
+			};
+			processWithCoin();
+			return;
+		}
+
 		const buyIapProduct = async () => {
 			if (!selectedCoinAmount?.sku) {
-				throw new Error("상품 정보가 없습니다");
+				console.error("상품 정보가 없습니다");
+				return;
 			}
+
 			IAP.createOneTimePurchaseOrder({
 				options: {
 					sku: selectedCoinAmount.sku,
 					processProductGrant: async ({ orderId }) => {
 						try {
 							const response = await createPayment({
-								orderId: orderId,
+								orderId,
 								price: Number(
 									selectedCoinAmount.displayAmount.replace("원", ""),
 								),
 							});
 
-							if (response.success && state.surveyId) {
-								const formPayload = {
-									surveyId: state.surveyId,
-									deadline: estimate.date?.toISOString() ?? "",
-									gender: estimate.gender,
-									genderPrice: priceBreakdown.genderPrice,
-									age: estimate.age,
-									agePrice: priceBreakdown.agePrice,
-									residence: estimate.location,
-									residencePrice: priceBreakdown.residencePrice,
-									dueCount: priceBreakdown.dueCount,
-									dueCountPrice: priceBreakdown.dueCountPrice,
-									totalCoin: priceBreakdown.totalPrice,
-								};
-								await createForm(formPayload);
+							if (response.success && formPayload) {
+								await submitForm();
 							}
 							return true;
 						} catch (error) {
@@ -67,11 +118,7 @@ export const PaymentLoading = () => {
 					if (event.type === "success") {
 						const { orderId } = event.data;
 						console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
-						resetForm();
-						resetEstimate();
-						setTimeout(() => {
-							goNextPayment();
-						}, 3000);
+						handleSuccess();
 					}
 				},
 				onError: (error) => {
@@ -79,15 +126,15 @@ export const PaymentLoading = () => {
 				},
 			});
 		};
+
 		buyIapProduct();
 	}, [
+		userInfo,
+		priceBreakdown.totalPrice,
 		selectedCoinAmount,
-		goNextPayment,
-		estimate,
-		state.surveyId,
-		priceBreakdown,
-		resetForm,
-		resetEstimate,
+		formPayload,
+		handleSuccess,
+		submitForm,
 	]);
 
 	useEffect(() => {

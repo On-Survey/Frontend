@@ -1,7 +1,7 @@
 import {
+	AGE_LABEL_MAP,
 	type AgeCode,
 	type GenderCode,
-	getAgeLabel,
 	getGenderLabel,
 	getRegionLabel,
 	REGIONS_5_PERCENT_SURCHARGE,
@@ -26,22 +26,28 @@ const getBasePrice = (participants: string): number => {
 	return count * 550;
 };
 
-const getAgeSurcharge = (age: string, participants: string): number => {
-	if (age === "ALL") {
+const getAgeSurcharge = (ages: AgeCode[], participants: string): number => {
+	// "전체" 또는 빈 배열
+	if (ages.length === 0 || (ages.length === 1 && ages[0] === "ALL")) {
 		return 0;
 	}
 
 	const count = parseInt(participants.replace("명", ""), 10);
 	if (Number.isNaN(count)) return 0;
 
-	const ageMatches = age.match(/\d+대/g);
-	const isMultipleAges = ageMatches ? ageMatches.length > 1 : false;
+	const filteredAges = ages.filter((age) => age !== "ALL");
 
-	if (isMultipleAges) {
-		return count * 140;
-	} else {
+	// 단일 연령대: +15% (건당 105원)
+	if (filteredAges.length === 1) {
 		return count * 105;
 	}
+
+	// 복수 연령대: +20% (건당 140원)
+	if (filteredAges.length >= 2) {
+		return count * 140;
+	}
+
+	return 0;
 };
 
 const getLocationSurcharge = (
@@ -111,21 +117,24 @@ const getLocationDifficulty = (location: string): string => {
 	return "";
 };
 
-const formatAgeLabel = (age: string): string => {
-	if (age === "ALL") {
+const formatAgeLabel = (ages: AgeCode[]): string => {
+	if (ages.length === 0 || (ages.length === 1 && ages[0] === "ALL")) {
 		return "전체";
 	}
-	if (!age) {
-		return "선택 안함";
+
+	const filteredAges = ages.filter((age) => age !== "ALL");
+
+	if (filteredAges.length === 0) {
+		return "전체";
 	}
 
-	return age
-		.split(", ")
-		.map((code) =>
-			getAgeLabel(code as AgeCode)
-				.replace(/\s*\(.*?\)/, "")
-				.trim(),
-		)
+	return filteredAges
+		.map((code) => {
+			const fullLabel = AGE_LABEL_MAP[code] ?? "";
+			// "10대(10세~19세)" -> "10대" 추출
+			const match = fullLabel.match(/^([^(]+)/);
+			return match ? match[1] : fullLabel;
+		})
 		.filter(Boolean)
 		.join(", ");
 };

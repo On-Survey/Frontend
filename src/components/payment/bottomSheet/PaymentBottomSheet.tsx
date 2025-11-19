@@ -24,6 +24,7 @@ export const PaymentBottomSheet = ({
 		...option,
 		hideUnCheckedCheckBox: option.value !== value,
 	}));
+
 	return (
 		<BottomSheet
 			header={<BottomSheet.Header>{title}</BottomSheet.Header>}

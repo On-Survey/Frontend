@@ -33,8 +33,14 @@ export const CreateMultiChoiceBottomSheet = ({
 
 	const currentOptions = question?.option ?? [];
 
+	const hasOtherOption = useMemo(() => {
+		return currentOptions.some(
+			(option) => option.content === "기타 (직접 입력)",
+		);
+	}, [currentOptions]);
+
 	const handleAddOtherOption = () => {
-		if (question) {
+		if (question && !hasOtherOption) {
 			updateQuestion(questionId, {
 				option: [
 					...currentOptions,
@@ -42,6 +48,7 @@ export const CreateMultiChoiceBottomSheet = ({
 						order: currentOptions.length + 1,
 						content: "기타 (직접 입력)",
 						nextQuestionId: 0,
+						hasCustomInput: true,
 					},
 				],
 			});
@@ -73,12 +80,15 @@ export const CreateMultiChoiceBottomSheet = ({
 					<ListRow.Texts
 						type="1RowTypeA"
 						top="기타 (직접 입력)"
-						topProps={{ color: adaptive.grey700 }}
+						topProps={{
+							color: hasOtherOption ? adaptive.grey400 : adaptive.grey700,
+						}}
 					/>
 				}
 				verticalPadding="large"
 				arrowType="right"
 				onClick={handleAddOtherOption}
+				disabled={hasOtherOption}
 			/>
 		</BottomSheet>
 	);

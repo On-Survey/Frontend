@@ -7,13 +7,15 @@ import {
 	DateSelectBottomSheet,
 	PaymentBottomSheet,
 } from "../../components/payment";
+import { AgeMultiSelectBottomSheet } from "../../components/payment/bottomSheet/AgeMultiSelectBottomSheet";
 import { CoinAlertBottomSheet } from "../../components/payment/bottomSheet/CoinAlertBottomSheet";
 import {
 	AGE,
+	type AgeCode,
 	DESIRED_PARTICIPANTS,
 	EstimateField,
+	formatAgeDisplay,
 	GENDER,
-	getAgeLabel,
 	getGenderLabel,
 	getRegionLabel,
 } from "../../constants/payment";
@@ -46,6 +48,12 @@ export const EstimatePage = () => {
 		isOpen: isBottomSheetOpen,
 		handleOpen: handleBottomSheetOpen,
 		handleClose: handleBottomSheetClose,
+	} = useModal(false);
+
+	const {
+		isOpen: isAgeBottomSheetOpen,
+		handleOpen: handleAgeBottomSheetOpen,
+		handleClose: handleAgeBottomSheetClose,
 	} = useModal(false);
 
 	const {
@@ -84,18 +92,11 @@ export const EstimatePage = () => {
 	}, [totalPrice, handleTotalPriceChange]);
 
 	const genderDisplay = getGenderLabel(estimate.gender);
-	const ageDisplay = getAgeLabel(estimate.age);
+	const ageDisplay = formatAgeDisplay(estimate.age);
 	const locationDisplay = getRegionLabel(estimate.location);
 
 	const handleReturn = () => {
 		switch (type) {
-			case EstimateField.Age:
-				return {
-					value: estimate.age,
-					title: "대상 연령대를 선택해주세요",
-					options: AGE,
-					field: EstimateField.Age,
-				};
 			case EstimateField.Gender:
 				return {
 					value: estimate.gender,
@@ -113,6 +114,10 @@ export const EstimatePage = () => {
 			default:
 				return { value: "", title: "", options: [], field: EstimateField.Age };
 		}
+	};
+
+	const handleAgeBottomSheetConfirm = (age: AgeCode[]) => {
+		handleEstimateChange({ ...estimate, age });
 	};
 
 	useEffect(() => {
@@ -134,9 +139,13 @@ export const EstimatePage = () => {
 				isOpen={isCoinBottomSheetOpen}
 				handleClose={handleCoinBottomSheetClose}
 			/>
-			<DateSelectBottomSheet
-				value={estimate.date ?? new Date()}
-				onChange={handleDateBottomSheetConfirm}
+			<AgeMultiSelectBottomSheet
+				isOpen={isAgeBottomSheetOpen}
+				handleClose={handleAgeBottomSheetClose}
+				options={AGE}
+				value={estimate.age}
+				onConfirm={(age: AgeCode[]) => handleAgeBottomSheetConfirm(age)}
+				title="대상 연령대를 선택해주세요"
 			/>
 			<PaymentBottomSheet
 				isOpen={isBottomSheetOpen}
@@ -149,10 +158,9 @@ export const EstimatePage = () => {
 			<TextField.Button
 				variant="line"
 				hasError={false}
-				label="거주지"
-				labelOption="sustain"
-				value={locationDisplay}
-				placeholder="거주지를 선택해주세요"
+				label="희망 응답자 수"
+				value={estimate.desiredParticipants}
+				placeholder="희망 응답자 수"
 				right={
 					<Asset.Icon
 						frameShape={Asset.frameShape.CleanW24}
@@ -161,27 +169,7 @@ export const EstimatePage = () => {
 						aria-hidden={true}
 					/>
 				}
-				onClick={() => {
-					Storage.setItem("createFormReturnStep", "4");
-					navigate("/payment/location");
-				}}
-			/>
-			<TextField.Button
-				variant="line"
-				hasError={false}
-				label="연령대"
-				labelOption="sustain"
-				value={ageDisplay}
-				placeholder="연령대를 선택해주세요"
-				right={
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						name="icon-arrow-down-mono"
-						color={adaptive.grey400}
-						aria-hidden={true}
-					/>
-				}
-				onClick={() => handleTypeChange(EstimateField.Age)}
+				onClick={() => handleTypeChange(EstimateField.DesiredParticipants)}
 			/>
 			<TextField.Button
 				variant="line"
@@ -203,9 +191,10 @@ export const EstimatePage = () => {
 			<TextField.Button
 				variant="line"
 				hasError={false}
-				label="희망 응답자 수"
-				value={estimate.desiredParticipants}
-				placeholder="희망 응답자 수"
+				label="연령대"
+				labelOption="sustain"
+				value={ageDisplay}
+				placeholder="연령대를 선택해주세요"
 				right={
 					<Asset.Icon
 						frameShape={Asset.frameShape.CleanW24}
@@ -214,7 +203,31 @@ export const EstimatePage = () => {
 						aria-hidden={true}
 					/>
 				}
-				onClick={() => handleTypeChange(EstimateField.DesiredParticipants)}
+				onClick={() => handleAgeBottomSheetOpen()}
+			/>
+			<TextField.Button
+				variant="line"
+				hasError={false}
+				label="거주지"
+				labelOption="sustain"
+				value={locationDisplay}
+				placeholder="거주지를 선택해주세요"
+				right={
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW24}
+						name="icon-arrow-down-mono"
+						color={adaptive.grey400}
+						aria-hidden={true}
+					/>
+				}
+				onClick={() => {
+					Storage.setItem("createFormReturnStep", "4");
+					navigate("/payment/location");
+				}}
+			/>
+			<DateSelectBottomSheet
+				value={estimate.date ?? new Date()}
+				onChange={handleDateBottomSheetConfirm}
 			/>
 			<FixedBottomCTA loading={false} onClick={handleSubmit}>
 				{formatPriceAsCoin(totalPrice)} 결제하기
