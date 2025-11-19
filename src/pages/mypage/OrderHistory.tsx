@@ -9,33 +9,7 @@ import type {
 } from "../../types/order";
 import { mapSurveyToOrder } from "../../utils/orderUtils";
 import { OrderCard } from "./components/OrderCard";
-
-const RefundPolicyNotice = () => (
-	<div className="px-4 py-4 mb-4 bg-blue-50 rounded-xl">
-		<Text
-			color={adaptive.grey800}
-			typography="t6"
-			fontWeight="bold"
-			className="mb-3"
-		>
-			환불 정책 안내
-		</Text>
-		<Text
-			color={adaptive.grey700}
-			typography="t7"
-			className="mb-2"
-			display="block"
-		>
-			등록 후 노출중인 설문에 대해서는 다음과 같은 정책에 의거해 코인 환불을
-			진행해드립니다. <br />
-			1. 설문 마감일까지 응답을 수집하였으나, 요청한 응답 수만큼 모이지 않은
-			경우 <br />
-			2. 설문 노출 중 고객이 설문 등록을 취소하여, 요청한 응답 수만큼 모이지
-			않은 경우 <br />
-			3. 설문이 노출중이더라도, 응답자 수가 0명이라면 전액 환불됩니다.
-		</Text>
-	</div>
-);
+import { RefundPolicyNotice } from "./components/RefundPolicyNotice";
 
 // Mock 데이터 - 추후 삭제 예정
 const MOCK_ORDERS: Order[] = [
@@ -84,14 +58,14 @@ export const OrderHistory = () => {
 		const fetchOrders = async () => {
 			try {
 				const data = await getSurveyManagement();
-				// API 응답을 Order 타입으로 변환
+
 				const ongoingOrders: Order[] = data.ongoingSurveys.map((survey) =>
 					mapSurveyToOrder(survey, "active"),
 				);
 				const refundedOrders: Order[] = data.refundedSurveys.map((survey) =>
 					mapSurveyToOrder(survey, "refund_completed"),
 				);
-				// 노출중과 환불된 설문을 합침
+
 				const allOrders = [...ongoingOrders, ...refundedOrders];
 				if (allOrders.length > 0) {
 					setOrders(allOrders);
