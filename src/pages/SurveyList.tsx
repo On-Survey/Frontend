@@ -65,16 +65,26 @@ export const SurveyListPage = () => {
 						lastSurveyId: currentLastId,
 						size: 15,
 					});
-					fetchedSurveys = recommendedResult.data ?? [];
-					setHasNext(recommendedResult.hasNext ?? false);
+					fetchedSurveys =
+						recommendedResult.data ?? recommendedResult.recommended ?? [];
+					setHasNext(
+						recommendedResult.hasNext ??
+							recommendedResult.recommendedHasNext ??
+							false,
+					);
 				} else if (listType === "impending") {
 					const impendingResult = await getImpendingSurveys({
 						lastSurveyId: currentLastId,
 						lastDeadline: currentLastDeadline,
 						size: 15,
 					});
-					fetchedSurveys = impendingResult.data ?? [];
-					setHasNext(impendingResult.hasNext ?? false);
+					fetchedSurveys =
+						impendingResult.data ?? impendingResult.impending ?? [];
+					setHasNext(
+						impendingResult.hasNext ??
+							impendingResult.impendingHasNext ??
+							false,
+					);
 				} else {
 					const result = await getOngoingSurveys({
 						lastSurveyId: currentLastId,
@@ -147,15 +157,25 @@ export const SurveyListPage = () => {
 						lastSurveyId: 0,
 						size: 15,
 					});
-					fetchedSurveys = recommendedResult.data ?? [];
-					setHasNext(recommendedResult.hasNext ?? false);
+					fetchedSurveys =
+						recommendedResult.data ?? recommendedResult.recommended ?? [];
+					setHasNext(
+						recommendedResult.hasNext ??
+							recommendedResult.recommendedHasNext ??
+							false,
+					);
 				} else if (listType === "impending") {
 					const impendingResult = await getImpendingSurveys({
 						lastSurveyId: 0,
 						size: 15,
 					});
-					fetchedSurveys = impendingResult.data ?? [];
-					setHasNext(impendingResult.hasNext ?? false);
+					fetchedSurveys =
+						impendingResult.data ?? impendingResult.impending ?? [];
+					setHasNext(
+						impendingResult.hasNext ??
+							impendingResult.impendingHasNext ??
+							false,
+					);
 				} else {
 					const result = await getOngoingSurveys({
 						lastSurveyId: 0,

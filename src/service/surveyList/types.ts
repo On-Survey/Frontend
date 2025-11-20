@@ -24,13 +24,17 @@ export interface OngoingSurveyResult {
 }
 
 export interface RecommendedSurveyResult {
-	data: OngoingSurveySummary[];
-	hasNext: boolean;
+	data?: OngoingSurveySummary[];
+	recommended?: OngoingSurveySummary[];
+	hasNext?: boolean;
+	recommendedHasNext?: boolean;
 }
 
 export interface ImpendingSurveyResult {
-	data: OngoingSurveySummary[];
-	hasNext: boolean;
+	data?: OngoingSurveySummary[];
+	impending?: OngoingSurveySummary[];
+	hasNext?: boolean;
+	impendingHasNext?: boolean;
 }
 
 export interface OngoingSurveyResponse extends BaseResponse {
