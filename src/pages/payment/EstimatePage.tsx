@@ -1,6 +1,11 @@
 import { graniteEvent, Storage } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, FixedBottomCTA, TextField } from "@toss/tds-mobile";
+import {
+	Asset,
+	ConfirmDialog,
+	FixedBottomCTA,
+	TextField,
+} from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -62,7 +67,14 @@ export const EstimatePage = () => {
 		handleClose: handleCoinBottomSheetClose,
 	} = useModal(false);
 
+	const {
+		isOpen: isConfirmDialogOpen,
+		handleOpen: handleConfirmDialogOpen,
+		handleClose: handleConfirmDialogClose,
+	} = useModal(false);
+
 	const handleSubmit = () => {
+		handleConfirmDialogClose();
 		if (userInfo && totalPrice > userInfo?.result.coin) {
 			handleCoinBottomSheetOpen();
 		} else {
@@ -135,6 +147,24 @@ export const EstimatePage = () => {
 
 	return (
 		<>
+			<ConfirmDialog
+				open={isConfirmDialogOpen}
+				title={`정말  ${formatPriceAsCoin(totalPrice)} 코인을 결제할까요`}
+				description={`즉시 보유 코인에서 ${formatPriceAsCoin(totalPrice)}코인이 차감되며, 설문은 바로 노출되기 시작해요`}
+				cancelButton={
+					<ConfirmDialog.CancelButton
+						size="xlarge"
+						onClick={handleConfirmDialogClose}
+					>
+						닫기
+					</ConfirmDialog.CancelButton>
+				}
+				confirmButton={
+					<ConfirmDialog.ConfirmButton size="xlarge" onClick={handleSubmit}>
+						결제하기
+					</ConfirmDialog.ConfirmButton>
+				}
+			/>
 			<CoinAlertBottomSheet
 				isOpen={isCoinBottomSheetOpen}
 				handleClose={handleCoinBottomSheetClose}
@@ -229,7 +259,7 @@ export const EstimatePage = () => {
 				value={estimate.date ?? new Date()}
 				onChange={handleDateBottomSheetConfirm}
 			/>
-			<FixedBottomCTA loading={false} onClick={handleSubmit}>
+			<FixedBottomCTA loading={false} onClick={handleConfirmDialogOpen}>
 				{formatPriceAsCoin(totalPrice)} 결제하기
 			</FixedBottomCTA>
 		</>
