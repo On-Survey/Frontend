@@ -74,6 +74,7 @@ export const EstimatePage = () => {
 	} = useModal(false);
 
 	const handleSubmit = () => {
+		handleConfirmDialogClose();
 		if (userInfo && totalPrice > userInfo?.result.coin) {
 			handleCoinBottomSheetOpen();
 		} else {
@@ -148,11 +149,13 @@ export const EstimatePage = () => {
 		<>
 			<ConfirmDialog
 				open={isConfirmDialogOpen}
-				onClose={handleConfirmDialogClose}
 				title={`정말  ${formatPriceAsCoin(totalPrice)} 코인을 결제할까요`}
 				description={`즉시 보유 코인에서 ${formatPriceAsCoin(totalPrice)}코인이 차감되며, 설문은 바로 노출되기 시작해요`}
 				cancelButton={
-					<ConfirmDialog.CancelButton size="xlarge">
+					<ConfirmDialog.CancelButton
+						size="xlarge"
+						onClick={handleConfirmDialogClose}
+					>
 						닫기
 					</ConfirmDialog.CancelButton>
 				}
