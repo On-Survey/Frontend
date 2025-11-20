@@ -82,7 +82,7 @@ export const SurveyResponseDetail = () => {
 							id: Number(surveyId),
 							title: survey?.title || "설문",
 							status: "active",
-							responseCount: survey?.currentCount || 0,
+							responseCount: survey?.currentCount ?? 0,
 							questions: [],
 						});
 					} else {

@@ -20,11 +20,10 @@ export const useUserSurveys = () => {
 			setIsLoading(true);
 			try {
 				const resultObj = await getUserSurveys();
-				const userSurveys = resultObj.infoList;
+				const userSurveys = resultObj?.infoList ?? [];
 
 				const now = new Date();
 
-				// 작성 중 (백엔드에 따라 DRAFT 또는 WRITING 사용)
 				const draftStatuses = new Set(["DRAFT", "WRITING"]);
 				let drafts: DraftSurvey[] = userSurveys
 					.filter((survey) => draftStatuses.has(survey.status))
@@ -34,10 +33,9 @@ export const useUserSurveys = () => {
 						description: survey.description,
 					}));
 
-				// 노출 중
 				const activeStatuses = new Set(["ACTIVE", "ONGOING"]);
 				let active: ActiveSurvey[] = userSurveys
-					.filter((survey) => {
+					.filter((survey): survey is typeof survey & { deadLine: string } => {
 						if (!survey.deadLine) return false;
 						const deadline = new Date(survey.deadLine);
 						return activeStatuses.has(survey.status) && deadline > now;
@@ -47,15 +45,13 @@ export const useUserSurveys = () => {
 						title: survey.title,
 						description: survey.description,
 						deadline: survey.deadLine,
-						progress: survey.currentCount,
-						total: survey.dueCount,
+						progress: survey.currentCount ?? 0,
+						total: survey.dueCount ?? 0,
 					}));
 
-				// 마감: 마감일이 있고, 이미 지난 설문만 (작성중/DRAFT는 제외)
 				let closed: ClosedSurvey[] = userSurveys
-					.filter((survey) => {
+					.filter((survey): survey is typeof survey & { deadLine: string } => {
 						if (!survey.deadLine) return false;
-						// 작성 중인 설문은 마감 리스트에서 제외
 						if (draftStatuses.has(survey.status)) return false;
 						const deadline = new Date(survey.deadLine);
 						return deadline <= now;
@@ -66,8 +62,6 @@ export const useUserSurveys = () => {
 						description: survey.description,
 						closedAt: survey.deadLine,
 					}));
-
-				// API에서 아무것도 안 오면 더미 카드 하나씩 노출
 				if (drafts.length === 0) {
 					drafts = [
 						{
@@ -108,6 +102,9 @@ export const useUserSurveys = () => {
 				setClosedSurveys(closed);
 			} catch (error) {
 				console.error("사용자 설문 조회 실패:", error);
+				setDraftSurveys([]);
+				setActiveSurveys([]);
+				setClosedSurveys([]);
 			} finally {
 				setIsLoading(false);
 			}
