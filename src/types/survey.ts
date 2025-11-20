@@ -21,16 +21,18 @@ export interface BaseQuestion {
 
 // 객관식 문항 옵션
 export interface MultipleChoiceOption {
+	optionId: number | null;
 	order: number;
 	content: string;
-	nextQuestionId: number;
-	hasCustomInput?: boolean;
+	nextQuestionId: number | null;
 }
 
 // 객관식 문항
 export interface MultipleChoiceQuestion extends BaseQuestion {
 	type: "multipleChoice";
 	maxChoice: number;
+	hasCustomInput: boolean;
+	hasOtherOption: boolean;
 	option: MultipleChoiceOption[];
 }
 

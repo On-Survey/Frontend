@@ -69,7 +69,7 @@ export const QuestionListPage = () => {
 								right={
 									<ListRow.Texts
 										type="Right1RowTypeA"
-										top={getNextQuestionTitle(option.nextQuestionId)}
+										top={getNextQuestionTitle(option.nextQuestionId || 0)}
 										topProps={{ color: adaptive.grey700 }}
 										marginTop={0}
 									/>

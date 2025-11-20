@@ -35,9 +35,10 @@ export const QuestionSelectionBottomSheet = ({
 				option: [
 					...currentOptions,
 					{
+						optionId: null,
 						order: currentOptions.length + 1,
 						content: selection.trim(),
-						nextQuestionId: 0,
+						nextQuestionId: null,
 					},
 				],
 			});

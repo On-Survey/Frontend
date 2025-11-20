@@ -42,13 +42,14 @@ export const CreateMultiChoiceBottomSheet = ({
 	const handleAddOtherOption = () => {
 		if (question && !hasOtherOption) {
 			updateQuestion(questionId, {
+				hasCustomInput: true,
 				option: [
 					...currentOptions,
 					{
+						optionId: null,
 						order: currentOptions.length + 1,
 						content: "기타 (직접 입력)",
-						nextQuestionId: 0,
-						hasCustomInput: true,
+						nextQuestionId: null,
 					},
 				],
 			});

@@ -58,10 +58,10 @@ export const MultipleChoiceMain = () => {
 		handleClose: handleQuestionSelectionClose,
 	} = useModal(false);
 
-	const handleRequiredChange = (checked: boolean) => {
-		if (questionId) {
+	const handleRequiredChange = () => {
+		if (questionId && question) {
 			updateQuestion(questionId, {
-				isRequired: checked,
+				isRequired: !question.isRequired,
 			});
 		}
 	};
@@ -171,10 +171,7 @@ export const MultipleChoiceMain = () => {
 						/>
 					}
 					right={
-						<Switch
-							checked={isRequired}
-							onChange={() => handleRequiredChange(!isRequired)}
-						/>
+						<Switch checked={isRequired} onChange={handleRequiredChange} />
 					}
 					verticalPadding="large"
 				/>
