@@ -79,7 +79,9 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 					!location.pathname.startsWith("/createForm") &&
 					!location.pathname.startsWith("/payment") &&
 					!location.pathname.startsWith("/questions") &&
-					!location.pathname.startsWith("/estimate")
+					!location.pathname.startsWith("/estimate") &&
+					!location.pathname.startsWith("/onboarding") &&
+					!location.pathname.startsWith("/survey")
 				) {
 					navigate("/estimateNavigation");
 				}
