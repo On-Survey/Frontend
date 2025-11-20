@@ -37,9 +37,7 @@ export const CoinHistory = () => {
 			<div className="flex-1 overflow-y-auto px-4 py-6">
 				{isLoading ? null : paymentHistory.length === 0 ? (
 					<div className="text-center py-6">
-						<span style={{ color: adaptive.grey600 }}>
-							결제 내역이 없습니다.
-						</span>
+						<span style={{ color: adaptive.grey600 }}>결제 내역이 없어요</span>
 					</div>
 				) : (
 					<List>
