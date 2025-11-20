@@ -1,6 +1,7 @@
 import { getAccessToken } from "../../utils/tokenManager";
 import { api } from "../axios";
-import type { CreatePaymentResponse } from ".";
+import { apiCall } from "../axios/apiClient";
+import type { CreatePaymentResponse, PaymentHistoryItem } from ".";
 
 export const createPayment = async ({
 	orderId,
@@ -28,4 +29,11 @@ export const createPayment = async ({
 	);
 
 	return data;
+};
+
+export const getPaymentHistory = async (): Promise<PaymentHistoryItem[]> => {
+	return apiCall<PaymentHistoryItem[]>({
+		method: "GET",
+		url: "/v1/payments",
+	});
 };
