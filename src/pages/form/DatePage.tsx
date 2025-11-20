@@ -72,7 +72,7 @@ export const DatePage = () => {
 
 		if (result.success && typeof result.result !== "string") {
 			updateQuestion(questionId, {
-				questionId: result.result.questionId,
+				questionId: result.result.info[0].questionId,
 			});
 
 			navigate(-1);
