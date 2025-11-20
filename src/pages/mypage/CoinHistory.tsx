@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { List, ListRow } from "@toss/tds-mobile";
+import { List, ListRow, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPaymentHistory } from "../../service/payments";
@@ -11,14 +11,18 @@ export const CoinHistory = () => {
 	const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryItem[]>(
 		[],
 	);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchPaymentHistory = async () => {
 			try {
 				const history = await getPaymentHistory();
-				setPaymentHistory(history);
+				setPaymentHistory(Array.isArray(history) ? history : []);
 			} catch (err) {
 				console.error("결제 내역 조회 실패:", err);
+				setPaymentHistory([]);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 		void fetchPaymentHistory();
@@ -31,7 +35,7 @@ export const CoinHistory = () => {
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<div className="flex-1 overflow-y-auto px-4 py-6">
-				{paymentHistory.length === 0 ? (
+				{isLoading ? null : paymentHistory.length === 0 ? (
 					<div className="text-center py-6">
 						<span style={{ color: adaptive.grey600 }}>
 							결제 내역이 없습니다.

@@ -31,6 +31,8 @@ export const createPayment = async ({
 };
 
 export const getPaymentHistory = async (): Promise<PaymentHistoryItem[]> => {
-	const { data } = await api.get<PaymentHistoryItem[]>("/v1/payments");
-	return data;
+	const response = await api.get<{ result: PaymentHistoryItem[] }>(
+		"/v1/payments",
+	);
+	return response.data.result ?? [];
 };
