@@ -6,7 +6,6 @@ import { topics } from "../constants/topics";
 import { getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import type { SurveyListItem } from "../types/surveyList";
-import { getUniqueSurveyIdsFromArrays } from "../utils/surveyListUtils";
 
 const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
