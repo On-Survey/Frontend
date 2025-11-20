@@ -1,5 +1,5 @@
 import { apiCall } from "../axios/apiClient";
-import type { OngoingSurveyResult } from "./types";
+import type { GlobalStats, OngoingSurveyResult } from "./types";
 
 export interface GetOngoingSurveysParams {
 	lastSurveyId?: number;
@@ -26,4 +26,12 @@ export const getOngoingSurveys = async (
 		url: "/v1/survey-participation/surveys/ongoing",
 		params: merged,
 	}) as Promise<OngoingSurveyResult>;
+};
+
+// 전체 설문 전역 통계 조회
+export const getGlobalStats = async (): Promise<GlobalStats> => {
+	return apiCall<GlobalStats>({
+		method: "GET",
+		url: "/v1/surveys/global-stats",
+	});
 };
