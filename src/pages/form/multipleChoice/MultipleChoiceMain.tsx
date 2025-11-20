@@ -58,10 +58,10 @@ export const MultipleChoiceMain = () => {
 		handleClose: handleQuestionSelectionClose,
 	} = useModal(false);
 
-	const handleRequiredChange = (checked: boolean) => {
-		if (questionId) {
+	const handleRequiredChange = () => {
+		if (questionId && question) {
 			updateQuestion(questionId, {
-				isRequired: checked,
+				isRequired: !question.isRequired,
 			});
 		}
 	};
@@ -99,11 +99,12 @@ export const MultipleChoiceMain = () => {
 				questionType: "CHOICE",
 				title: question?.title ?? "",
 				description: question?.description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 		if (result.success && typeof result.result !== "string") {
 			updateQuestion(questionId, {
-				questionId: result.result.questionId,
+				questionId: result.result.info[0].questionId,
 			});
 
 			navigate(-1);
@@ -170,10 +171,7 @@ export const MultipleChoiceMain = () => {
 						/>
 					}
 					right={
-						<Switch
-							checked={isRequired}
-							onChange={() => handleRequiredChange(!isRequired)}
-						/>
+						<Switch checked={isRequired} onChange={handleRequiredChange} />
 					}
 					verticalPadding="large"
 				/>

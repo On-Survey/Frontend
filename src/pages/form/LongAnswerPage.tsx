@@ -57,12 +57,13 @@ export const LongAnswerPage = () => {
 				questionType: "LONG",
 				title: title ?? "",
 				description: description ?? "",
+				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
 
 		if (result.success && typeof result.result !== "string") {
 			updateQuestion(questionId, {
-				questionId: result.result.questionId,
+				questionId: result.result.info[0].questionId,
 			});
 
 			navigate(-1);

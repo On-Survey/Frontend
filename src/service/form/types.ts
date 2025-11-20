@@ -12,13 +12,14 @@ export interface createSurveyQuestionRequest {
 		| "NUMBER";
 	title: string;
 	description: string;
+	questionOrder: number;
 }
 
 // 서버 요청용 질문 옵션
 export interface ServerQuestionOption {
-	optionId: number;
+	optionId: number | null;
 	content: string;
-	nextQuestionId: number;
+	nextQuestionId: number | null;
 }
 
 // 서버 요청용 질문 타입 (공통 필드)
@@ -88,17 +89,33 @@ export interface CreateSurveyResponse extends BaseResponse {
 }
 
 export interface CreateSurveyQuestionResponse extends BaseResponse {
-	result:
-		| {
-				surveyId: number;
+	result: {
+		surveyId: number;
+		info: [
+			{
 				questionId: number;
-				order: number;
 				title: string;
-				type: string;
-				errorClass?: string;
-				errorMessage?: string;
-		  }
-		| string;
+				description: string;
+				isRequired: boolean;
+				questionType: string;
+				questionOrder: number;
+				maxChoice: number;
+				hasNoneOption: boolean;
+				hasCustomInput: boolean;
+				options: [
+					{
+						optionId: number;
+						content: string;
+						nextQuestionId: number;
+					},
+				];
+				minValue: string;
+				maxValue: string;
+				defaultDate: string;
+			},
+		];
+	};
+
 	success: boolean;
 }
 

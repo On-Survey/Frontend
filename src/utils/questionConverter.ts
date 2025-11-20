@@ -1,5 +1,4 @@
 import type {
-	ServerChoiceQuestion,
 	ServerQuestion,
 	ServerQuestionOption,
 } from "../service/form/types";
@@ -14,7 +13,7 @@ const convertOptionsToServerFormat = (
 	options: MultipleChoiceQuestion["option"],
 ): ServerQuestionOption[] => {
 	return options.map((option) => ({
-		optionId: 0, // 새로 생성하는 경우 0으로 설정 (서버에서 ID 할당)
+		optionId: option.optionId !== null ? Number(option.optionId) : null,
 		content: option.content,
 		nextQuestionId: option.nextQuestionId,
 	}));
@@ -39,17 +38,14 @@ export const convertQuestionToServerFormat = (
 
 	// CHOICE 타입 처리
 	if (isMultipleChoiceQuestion(question)) {
-		const hasCustomInput = question.option.some(
-			(option) => option.hasCustomInput === true,
-		);
 		return {
 			...baseQuestion,
 			questionType: "CHOICE",
 			maxChoice: question.maxChoice,
-			hasNoneOption: false, // TODO: 클라이언트 타입에 추가 필요
-			hasCustomInput,
+			hasNoneOption: question.hasOtherOption,
+			hasCustomInput: question.hasCustomInput,
 			options: convertOptionsToServerFormat(question.option),
-		} as ServerChoiceQuestion;
+		};
 	}
 
 	// RATING 타입 처리

@@ -100,6 +100,7 @@ export const saveQuestions = async ({
 		CreateSurveyQuestionResponse,
 		ServerQuestionRequest
 	>(`/v1/survey-form/surveys/${surveyId}/questions`, questions);
+	console.log("data", data);
 	return data;
 };
 

@@ -56,6 +56,8 @@ export const createQuestion = (
 				...baseQuestion,
 				type: "multipleChoice",
 				maxChoice: 1,
+				hasCustomInput: false,
+				hasOtherOption: false,
 				option: [],
 			};
 		case "rating":

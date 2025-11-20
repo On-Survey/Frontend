@@ -36,10 +36,13 @@ export const convertWritingQuestionToQuestion = (
 			...baseQuestion,
 			type: "multipleChoice",
 			maxChoice: writingQuestion.maxChoice ?? 1,
+			hasCustomInput: false,
+			hasOtherOption: false,
 			option: writingQuestion.options.map((opt, idx) => ({
+				optionId: opt.optionId ?? null,
 				order: idx,
 				content: opt.content,
-				nextQuestionId: opt.nextQuestionId ?? 0,
+				nextQuestionId: opt.nextQuestionId ?? null,
 			})),
 		};
 	}
