@@ -40,3 +40,13 @@ export interface ImpendingSurveyResult {
 export interface OngoingSurveyResponse extends BaseResponse {
 	result: OngoingSurveyResult;
 }
+
+export interface GlobalStats {
+	totalDueCount: number;
+	totalCompletedCount: number;
+	totalPromotionCount: number;
+}
+
+export interface GlobalStatsResponse extends BaseResponse {
+	result: GlobalStats;
+}

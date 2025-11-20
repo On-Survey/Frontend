@@ -33,7 +33,7 @@ export const PaymentLoading = () => {
 			deadline: estimate.date?.toISOString() ?? "",
 			gender: estimate.gender,
 			genderPrice: priceBreakdown.genderPrice,
-			age: estimate.age,
+			ages: estimate.ages,
 			agePrice: priceBreakdown.agePrice,
 			residence: estimate.location,
 			residencePrice: priceBreakdown.residencePrice,
@@ -45,7 +45,7 @@ export const PaymentLoading = () => {
 		state.surveyId,
 		estimate.date,
 		estimate.gender,
-		estimate.age,
+		estimate.ages,
 		estimate.location,
 		priceBreakdown,
 	]);

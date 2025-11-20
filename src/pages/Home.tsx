@@ -3,7 +3,6 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import mainBanner from "../assets/mainBanner.svg";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
@@ -11,11 +10,12 @@ import { CustomSurveyList } from "../components/surveyList/CustomSurveyList";
 import { UrgentSurveyList } from "../components/surveyList/UrgentSurveyList";
 import { topics } from "../constants/topics";
 import { useModal } from "../hooks/UseToggle";
-import { getOngoingSurveys } from "../service/surveyList";
+import { getGlobalStats, getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import { getMemberInfo } from "../service/userInfo";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
+import { getUniqueSurveyIdsFromArrays } from "../utils/surveyListUtils";
 
 export const Home = () => {
 	const navigate = useNavigate();
@@ -38,6 +38,16 @@ export const Home = () => {
 	const [recommended, setRecommended] = useState<SurveyListItem[]>([]);
 	const [impending, setImpending] = useState<SurveyListItem[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const [globalStats, setGlobalStats] = useState<{
+		totalDueCount: number;
+		totalPromotionCount: number;
+		totalCompletedCount: number;
+	}>({
+		totalDueCount: 0,
+		totalPromotionCount: 0,
+		totalCompletedCount: 0,
+	});
+	const [totalPromotionAmount, setTotalPromotionAmount] = useState<number>(0);
 
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
@@ -89,12 +99,37 @@ export const Home = () => {
 
 				setRecommended(rec);
 				setImpending(imp);
+
+				const uniqueSurveyIds = getUniqueSurveyIdsFromArrays(
+					result.recommended,
+					result.impending,
+				);
+
+				const totalAmount = uniqueSurveyIds.size * 300;
+				setTotalPromotionAmount(totalAmount);
 			} catch (err) {
 				console.error("노출 중 설문 조회 실패:", err);
 			}
 		};
 
 		void fetch();
+	}, []);
+
+	useEffect(() => {
+		const fetchGlobalStats = async () => {
+			try {
+				const stats = await getGlobalStats();
+				setGlobalStats({
+					totalDueCount: stats.totalDueCount,
+					totalPromotionCount: stats.totalPromotionCount,
+					totalCompletedCount: stats.totalCompletedCount,
+				});
+			} catch (err) {
+				console.error("전역 통계 조회 실패:", err);
+			}
+		};
+
+		void fetchGlobalStats();
 	}, []);
 
 	const customSurveysToShow = recommended.slice(0, 3);
@@ -188,7 +223,8 @@ export const Home = () => {
 									fontWeight="bold"
 									className="mb-1 z-999"
 								>
-									설문에 참여하면 50,000원을 받을 수 있어요
+									설문에 참여하면 {totalPromotionAmount.toLocaleString()}원을
+									받을 수 있어요
 								</Text>
 								<Text
 									color="white"
@@ -196,12 +232,18 @@ export const Home = () => {
 									fontWeight="regular"
 									className="z-999 opacity-80"
 								>
-									지금까지 34,092명이 받았어요
+									지금까지 {globalStats.totalPromotionCount.toLocaleString()}
+									명이 받았어요
 								</Text>
 								<ProgressBar
 									size="normal"
 									color="#FFFFFF"
-									progress={0.55}
+									progress={
+										globalStats.totalCompletedCount > 0
+											? globalStats.totalPromotionCount /
+												globalStats.totalCompletedCount
+											: 0
+									}
 									className="z-999 mt-2"
 								/>
 							</div>

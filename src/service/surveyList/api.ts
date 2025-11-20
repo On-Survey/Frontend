@@ -1,5 +1,6 @@
 import { apiCall } from "../axios/apiClient";
 import type {
+	GlobalStats,
 	ImpendingSurveyResult,
 	OngoingSurveyResult,
 	RecommendedSurveyResult,
@@ -67,5 +68,13 @@ export const getImpendingSurveys = async (
 		method: "GET",
 		url: "/v1/survey-participation/surveys/ongoing/impending",
 		params: merged,
+	});
+};
+
+// 전체 설문 전역 통계 조회
+export const getGlobalStats = async (): Promise<GlobalStats> => {
+	return apiCall<GlobalStats>({
+		method: "GET",
+		url: "/v1/surveys/global-stats",
 	});
 };

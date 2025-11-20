@@ -157,7 +157,7 @@ const formatDesiredParticipantsLabel = (participants: string): string => {
 export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {
 	const basePrice = getBasePrice(estimate.desiredParticipants);
 	const ageSurcharge = getAgeSurcharge(
-		estimate.age,
+		estimate.ages,
 		estimate.desiredParticipants,
 	);
 	const locationSurcharge = getLocationSurcharge(
@@ -183,7 +183,7 @@ export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {
 			price: genderSurcharge,
 		},
 		age: {
-			label: formatAgeLabel(estimate.age),
+			label: formatAgeLabel(estimate.ages),
 			price: ageSurcharge,
 		},
 		location: {

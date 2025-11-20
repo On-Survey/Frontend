@@ -111,7 +111,7 @@ export interface PriceBreakdown {
 export const calculatePriceBreakdown = (estimate: Estimate): PriceBreakdown => {
 	const dueCount = parseParticipantsCount(estimate.desiredParticipants);
 	const dueCountPrice = getBasePrice(estimate.desiredParticipants);
-	const agePrice = getAgeSurcharge(estimate.age, estimate.desiredParticipants);
+	const agePrice = getAgeSurcharge(estimate.ages, estimate.desiredParticipants);
 	const residencePrice = getLocationSurcharge(
 		estimate.location,
 		estimate.desiredParticipants,

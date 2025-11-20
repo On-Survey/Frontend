@@ -53,7 +53,7 @@ const EstimatePageContent = () => {
 				...estimate,
 				desiredParticipants: "50",
 				gender: "ALL",
-				age: ["ALL"],
+				ages: ["ALL"],
 				location: "ALL",
 			});
 		}
@@ -174,7 +174,7 @@ const EstimatePageContent = () => {
 						label="연령대"
 						labelOption="sustain"
 						help="복수 선택 시 추가 요금이 부과되고, 전체 선택 시는 제외돼요."
-						value={formatAgeDisplay(estimate.age)}
+						value={formatAgeDisplay(estimate.ages)}
 						placeholder="연령대를 선택해주세요"
 						right={
 							<Asset.Icon
