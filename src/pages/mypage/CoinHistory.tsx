@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { List, ListRow, Top } from "@toss/tds-mobile";
+import { List, ListRow } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPaymentHistory } from "../../service/payments";
