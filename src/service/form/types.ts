@@ -91,29 +91,25 @@ export interface CreateSurveyResponse extends BaseResponse {
 export interface CreateSurveyQuestionResponse extends BaseResponse {
 	result: {
 		surveyId: number;
-		info: [
+		questionId: number;
+		title: string;
+		description: string;
+		isRequired: boolean;
+		questionType: string;
+		questionOrder: number;
+		maxChoice: number;
+		hasNoneOption: boolean;
+		hasCustomInput: boolean;
+		options: [
 			{
-				questionId: number;
-				title: string;
-				description: string;
-				isRequired: boolean;
-				questionType: string;
-				questionOrder: number;
-				maxChoice: number;
-				hasNoneOption: boolean;
-				hasCustomInput: boolean;
-				options: [
-					{
-						optionId: number;
-						content: string;
-						nextQuestionId: number;
-					},
-				];
-				minValue: string;
-				maxValue: string;
-				defaultDate: string;
+				optionId: number;
+				content: string;
+				nextQuestionId: number;
 			},
 		];
+		minValue: string;
+		maxValue: string;
+		defaultDate: string;
 	};
 
 	success: boolean;
