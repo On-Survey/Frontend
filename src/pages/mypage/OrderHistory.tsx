@@ -9,6 +9,7 @@ import type {
 } from "../../types/order";
 import { mapSurveyToOrder } from "../../utils/orderUtils";
 import { OrderCard } from "./components/OrderCard";
+import { RefundPolicyNotice } from "./components/RefundPolicyNotice";
 
 // Mock 데이터 - 추후 삭제 예정
 const MOCK_ORDERS: Order[] = [
@@ -57,14 +58,14 @@ export const OrderHistory = () => {
 		const fetchOrders = async () => {
 			try {
 				const data = await getSurveyManagement();
-				// API 응답을 Order 타입으로 변환
+
 				const ongoingOrders: Order[] = data.ongoingSurveys.map((survey) =>
 					mapSurveyToOrder(survey, "active"),
 				);
 				const refundedOrders: Order[] = data.refundedSurveys.map((survey) =>
 					mapSurveyToOrder(survey, "refund_completed"),
 				);
-				// 노출중과 환불된 설문을 합침
+
 				const allOrders = [...ongoingOrders, ...refundedOrders];
 				if (allOrders.length > 0) {
 					setOrders(allOrders);
@@ -143,6 +144,7 @@ export const OrderHistory = () => {
 			</div>
 
 			<div className="flex-1 overflow-y-auto px-6 pb-6">
+				<RefundPolicyNotice />
 				<div className="space-y-2">
 					{filteredOrders.map((order) => (
 						<OrderCard key={order.id} order={order} />

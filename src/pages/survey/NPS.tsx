@@ -1,5 +1,6 @@
 import { colors } from "@toss/tds-colors";
 import { CTAButton, FixedBottomCTA, ProgressBar, Top } from "@toss/tds-mobile";
+import { QuestionBadge } from "../../components/QuestionBadge";
 import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveyNPS = () => {
@@ -42,13 +43,7 @@ export const SurveyNPS = () => {
 						{currentQuestion.title}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={
-					currentQuestion.isRequired ? (
-						<Top.SubtitleBadges
-							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
-						/>
-					) : undefined
-				}
+				subtitleTop={<QuestionBadge isRequired={currentQuestion.isRequired} />}
 				subtitleBottom={
 					currentQuestion.description ? (
 						<Top.SubtitleParagraph size={15}>
@@ -67,7 +62,7 @@ export const SurveyNPS = () => {
 							<div key={v} className="flex flex-col items-center gap-2">
 								<button
 									type="button"
-									className={`w-6 h-6 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
+									className={`w-6 h-6 rounded-full! ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
 									aria-label={`${v}점`}
 									onClick={() => handleScoreChange(v)}
 								/>

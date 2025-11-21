@@ -63,8 +63,8 @@ export const getSurveyParticipation = async (
 export const submitSurveyParticipation = async (
 	surveyId: number,
 	infoList: SubmitSurveyParticipationPayload["infoList"],
-): Promise<void> => {
-	await apiCall<null>({
+): Promise<boolean> => {
+	return apiCall<boolean>({
 		method: "POST",
 		url: `/v1/survey-participation/surveys/${surveyId}`,
 		data: { infoList },

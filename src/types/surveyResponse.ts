@@ -14,6 +14,7 @@ export interface SurveyResponseQuestion {
 	type: QuestionType;
 	required: boolean;
 	responseCount: number;
+	order?: number;
 }
 
 export type SurveyStatus = "active" | "closed";

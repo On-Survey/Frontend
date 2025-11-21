@@ -8,6 +8,7 @@ import {
 	ProgressBar,
 	Top,
 } from "@toss/tds-mobile";
+import { QuestionBadge } from "../../components/QuestionBadge";
 import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 
 export const SurveySingleChoice = () => {
@@ -47,13 +48,7 @@ export const SurveySingleChoice = () => {
 						{currentQuestion?.title ?? ""}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={
-					currentQuestion?.isRequired ? (
-						<Top.SubtitleBadges
-							badges={[{ text: "필수문항", color: "blue", variant: "fill" }]}
-						/>
-					) : undefined
-				}
+				subtitleTop={<QuestionBadge isRequired={currentQuestion?.isRequired} />}
 				subtitleBottom={
 					currentQuestion?.description ? (
 						<Top.SubtitleParagraph size={15}>
@@ -64,34 +59,40 @@ export const SurveySingleChoice = () => {
 			/>
 
 			<div className="px-2 flex-1 overflow-y-auto pb-28">
-				<List role="radiogroup">
-					{currentQuestion?.options?.map((choice) => (
-						<ListRow
-							key={choice.optionId}
-							role="radio"
-							aria-checked={
-								answers[currentQuestion.questionId] === choice.content
-							}
-							onClick={() => handleOptionSelect(choice.content)}
-							contents={
-								<ListRow.Texts
-									type="1RowTypeA"
-									top={choice.content}
-									topProps={{ color: colors.grey700 }}
-								/>
-							}
-							right={
-								<Checkbox.Line
-									checked={
-										answers[currentQuestion.questionId] === choice.content
-									}
-									aria-hidden={true}
-								/>
-							}
-							verticalPadding="large"
-						/>
-					))}
-				</List>
+				{currentQuestion?.options && currentQuestion.options.length > 0 ? (
+					<List role="radiogroup">
+						{currentQuestion.options.map((choice) => (
+							<ListRow
+								key={choice.optionId}
+								role="radio"
+								aria-checked={
+									answers[currentQuestion.questionId] === choice.content
+								}
+								onClick={() => handleOptionSelect(choice.content)}
+								contents={
+									<ListRow.Texts
+										type="1RowTypeA"
+										top={choice.content}
+										topProps={{ color: colors.grey700 }}
+									/>
+								}
+								right={
+									<Checkbox.Line
+										checked={
+											answers[currentQuestion.questionId] === choice.content
+										}
+										aria-hidden={true}
+									/>
+								}
+								verticalPadding="large"
+							/>
+						))}
+					</List>
+				) : (
+					<div className="flex items-center justify-center h-full">
+						<p className="text-gray-500">객관식 선택지가 없어요.</p>
+					</div>
+				)}
 			</div>
 
 			<FixedBottomCTA.Double

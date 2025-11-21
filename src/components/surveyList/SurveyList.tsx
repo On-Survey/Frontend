@@ -9,7 +9,6 @@ const getTopicTag = (topicId: string): string => {
 	return topic ? `#${topic.name}` : `#${topicId}`;
 };
 
-// 설문의 아이콘을 topics에서 가져오기
 const getSurveyIcon = (survey: SurveyListItem) => {
 	const topic = topics.find((t) => t.id === survey.topicId);
 	if (topic) {
@@ -19,7 +18,6 @@ const getSurveyIcon = (survey: SurveyListItem) => {
 			name: topic.icon.name,
 		};
 	}
-	// fallback to survey's own icon
 	return {
 		type: survey.iconType,
 		src: survey.iconSrc,
@@ -70,7 +68,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 									<ListRow.AssetImage
 										src={icon.src}
 										shape="original"
-										className="w-8"
+										className="w-[20px]"
 									/>
 								) : icon.name ? (
 									<ListRow.AssetIcon name={icon.name} />
@@ -78,7 +76,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 									<ListRow.AssetImage
 										src={survey.iconSrc || ""}
 										shape="original"
-										className="w-8"
+										className="w-[20px]"
 									/>
 								)}
 							</div>

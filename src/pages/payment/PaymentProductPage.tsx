@@ -15,7 +15,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { type createUserResponse, getUserInfo } from "../../service/user";
@@ -26,6 +26,7 @@ export const PaymentProductPage = () => {
 	const { selectedCoinAmount, handleSelectedCoinAmountChange, totalPrice } =
 		usePaymentEstimate();
 	const location = useLocation();
+	const navigate = useNavigate();
 	const isChargeFlow = location.pathname === "/payment/charge";
 
 	const [products, setProducts] = useState<IapProductListItem[]>([]);
@@ -66,7 +67,11 @@ export const PaymentProductPage = () => {
 	useEffect(() => {
 		const unsubscription = graniteEvent.addEventListener("backEvent", {
 			onEvent: () => {
-				goPrevPayment();
+				if (isChargeFlow) {
+					navigate("/mypage");
+				} else {
+					goPrevPayment();
+				}
 			},
 			onError: (error) => {
 				alert(`에러가 발생했어요: ${error}`);
@@ -74,7 +79,7 @@ export const PaymentProductPage = () => {
 		});
 
 		return unsubscription;
-	}, [goPrevPayment]);
+	}, [goPrevPayment, isChargeFlow, navigate]);
 
 	return (
 		<div className="flex flex-col h-screen">

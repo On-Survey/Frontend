@@ -19,7 +19,22 @@ export interface OngoingSurveySummary {
 export interface OngoingSurveyResult {
 	recommended: OngoingSurveySummary[];
 	impending: OngoingSurveySummary[];
-	hasNext: boolean;
+	recommendedHasNext: boolean;
+	impendingHasNext: boolean;
+}
+
+export interface RecommendedSurveyResult {
+	data?: OngoingSurveySummary[];
+	recommended?: OngoingSurveySummary[];
+	hasNext?: boolean;
+	recommendedHasNext?: boolean;
+}
+
+export interface ImpendingSurveyResult {
+	data?: OngoingSurveySummary[];
+	impending?: OngoingSurveySummary[];
+	hasNext?: boolean;
+	impendingHasNext?: boolean;
 }
 
 export interface OngoingSurveyResponse extends BaseResponse {

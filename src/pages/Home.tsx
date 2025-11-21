@@ -37,7 +37,6 @@ export const Home = () => {
 
 	const [recommended, setRecommended] = useState<SurveyListItem[]>([]);
 	const [impending, setImpending] = useState<SurveyListItem[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [globalStats, setGlobalStats] = useState<{
 		totalDueCount: number;
@@ -52,7 +51,9 @@ export const Home = () => {
 
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
-	const handleViewAllSurveys = () => navigate("/surveyList");
+	const handleViewAllRecommended = () =>
+		navigate("/surveyList?type=recommended");
+	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
 	const handleCreateSurvey = () => navigate("/createFormStart");
 	const handleQuizClick = () => navigate("/oxScreening");
 
@@ -60,7 +61,6 @@ export const Home = () => {
 
 	useEffect(() => {
 		const fetch = async () => {
-			setIsLoading(true);
 			setError(null);
 
 			try {
@@ -90,8 +90,12 @@ export const Home = () => {
 					};
 				};
 
-				const rec = (result.recommended ?? []).map(mapSurveyToItem);
-				const imp = (result.impending ?? []).map(mapSurveyToItem);
+				const rec = (result.recommended ?? [])
+					.map(mapSurveyToItem)
+					.filter((survey) => !survey.isClosed);
+				const imp = (result.impending ?? [])
+					.map(mapSurveyToItem)
+					.filter((survey) => !survey.isClosed);
 
 				setRecommended(rec);
 				setImpending(imp);
@@ -105,8 +109,6 @@ export const Home = () => {
 				setTotalPromotionAmount(totalAmount);
 			} catch (err) {
 				console.error("노출 중 설문 조회 실패:", err);
-			} finally {
-				setIsLoading(false);
 			}
 		};
 
@@ -180,7 +182,7 @@ export const Home = () => {
 				onConfirm={handleConfirmDialogConfirm}
 			/>
 			<div className="flex flex-col w-full min-h-screen">
-				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden flex-shrink-0 h-[337px]">
+				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden shrink-0 h-[337px]">
 					<div className="absolute inset-0 home-banner-gradient" />
 					<div className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay" />
 					<div className="relative p-6 flex flex-col h-full">
@@ -283,12 +285,7 @@ export const Home = () => {
 					</div>
 				</div>
 
-				{/* 에러 / 로딩 UI */}
-				{isLoading && (
-					<div className="px-4 py-6 text-center text-sm text-gray-500">
-						설문을 불러오는 중입니다...
-					</div>
-				)}
+				{/* 에러 UI */}
 				{error && (
 					<div className="px-4 py-6 text-center text-sm text-red-500">
 						{error}
@@ -298,14 +295,14 @@ export const Home = () => {
 				<CustomSurveyList
 					surveys={customSurveysToShow}
 					userName={userName || "온서베이"}
-					onViewAll={handleViewAllSurveys}
+					onViewAll={handleViewAllRecommended}
 				/>
 
 				<Border variant="height16" />
 
 				<UrgentSurveyList
 					surveys={urgentSurveysToShow}
-					onViewAll={handleViewAllSurveys}
+					onViewAll={handleViewAllImpending}
 				/>
 
 				<div className="mb-24" />

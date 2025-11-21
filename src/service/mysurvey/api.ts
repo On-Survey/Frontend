@@ -62,9 +62,9 @@ export interface UserSurvey {
 	title: string;
 	description: string;
 	status: string;
-	deadLine: string;
-	dueCount: number;
-	currentCount: number;
+	deadLine: string | null;
+	dueCount: number | null;
+	currentCount: number | null;
 	createdAt: string;
 	updatedAt: string;
 	memberId?: number;

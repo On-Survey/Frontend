@@ -88,13 +88,33 @@ export const useSurveyNavigation = ({
 			return;
 		}
 
-		// 답변 검증
 		if (validateAnswer && !validateAnswer(currentAnswer)) {
 			return;
 		}
 
-		// 다음 질문이 있는지 확인
-		if (initialQuestionIndex < allQuestions.length - 1) {
+		if (!surveyId) {
+			console.warn("surveyId가 없어 응답을 제출할 수 없습니다.");
+			return;
+		}
+
+		try {
+			setSubmitting(true);
+			const payload = [
+				{
+					questionId: isCurrentQuestionType.questionId,
+					content: currentAnswer,
+				},
+			];
+			await submitSurveyParticipation(surveyId, payload);
+
+			if (initialQuestionIndex >= allQuestions.length - 1) {
+				navigate("/survey/complete", {
+					replace: true,
+					state: { surveyId },
+				});
+				return;
+			}
+
 			const nextQuestion = allQuestions[initialQuestionIndex + 1];
 			const nextRoute = getQuestionTypeRoute(nextQuestion.type);
 			navigate(nextRoute, {
@@ -105,25 +125,9 @@ export const useSurveyNavigation = ({
 					answers,
 				},
 			});
-			return;
-		}
-
-		// 마지막 질문이면 제출
-		if (!surveyId) {
-			console.warn("surveyId가 없어 응답을 제출할 수 없습니다.");
-			return;
-		}
-
-		try {
-			setSubmitting(true);
-			const payload = allQuestions.map((question) => ({
-				questionId: question.questionId,
-				content: answers[question.questionId] ?? "",
-			}));
-			await submitSurveyParticipation(surveyId, payload);
-			navigate("/survey/complete", { replace: true });
 		} catch (error) {
 			console.error("설문 응답 제출 실패:", error);
+			alert("설문 제출을 실패했어요. 다시 시도해주세요.");
 		} finally {
 			setSubmitting(false);
 		}
