@@ -112,7 +112,14 @@ export const SurveyResponseDetail = () => {
 
 				const questions = (result?.detailInfoList || []).map((detail) => {
 					const questionType = mapApiQuestionTypeToComponentType(detail.type);
-					const responseCount = detail.answerList?.length || 0;
+					// 객관식의 경우 answerMap의 값들의 합을 사용, 그 외에는 answerList의 길이 사용
+					const responseCount =
+						detail.type === "CHOICE" && detail.answerMap
+							? Object.values(detail.answerMap).reduce(
+									(sum, count) => sum + count,
+									0,
+								)
+							: detail.answerList?.length || 0;
 
 					return {
 						id: String(detail.questionId),
@@ -181,6 +188,15 @@ export const SurveyResponseDetail = () => {
 		if (!questionDetail) return;
 
 		const path = getQuestionResultRoute(type);
+
+		const responseCount =
+			questionDetail.type === "CHOICE" && questionDetail.answerMap
+				? Object.values(questionDetail.answerMap).reduce(
+						(sum, count) => sum + count,
+						0,
+					)
+				: questionDetail.answerList?.length || 0;
+
 		navigate(path, {
 			state: {
 				question: {
@@ -191,11 +207,11 @@ export const SurveyResponseDetail = () => {
 					isRequired: questionDetail.isRequired,
 					order: questionDetail.order,
 				},
-				answerMap: questionDetail.answerMap,
-				answerList: questionDetail.answerList,
+				answerMap: questionDetail.answerMap || {},
+				answerList: questionDetail.answerList || [],
 				surveyTitle: surveyResponse?.title || "",
 				surveyStatus: surveyResponse?.status || "active",
-				responseCount: questionDetail.answerList?.length || 0,
+				responseCount,
 			},
 		});
 	};
