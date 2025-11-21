@@ -76,7 +76,7 @@ export const MultipleChoiceResultPage = () => {
 			/>
 
 			<div className="pb-12 space-y-5">
-				{options.length === 0 ? (
+				{options.length === 0 && totalResponses === 0 ? (
 					<div className="px-4 py-8 text-center">
 						<p className="text-gray-500">아직 응답이 없습니다.</p>
 					</div>
