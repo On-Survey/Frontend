@@ -74,12 +74,12 @@ export const FormTitleStep = () => {
 				<TextArea
 					variant="line"
 					label="상세 설명"
-					help="50자 이내로 작성할 수 있어요"
+					help="200자 이내로 작성할 수 있어요"
 					value={state.survey.description}
 					placeholder="상세 설명"
 					onChange={handleDescriptionChange}
 					autoFocus={step}
-					maxLength={50}
+					maxLength={200}
 				/>
 			</div>
 
