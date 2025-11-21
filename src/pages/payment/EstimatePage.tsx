@@ -149,8 +149,8 @@ export const EstimatePage = () => {
 		<>
 			<ConfirmDialog
 				open={isConfirmDialogOpen}
-				title={`정말  ${formatPriceAsCoin(totalPrice)} 코인을 결제할까요`}
-				description={`즉시 보유 코인에서 ${formatPriceAsCoin(totalPrice)}코인이 차감되며, 설문은 바로 노출되기 시작해요`}
+				title={`정말  ${formatPriceAsCoin(totalPrice)}을 결제할까요`}
+				description={`즉시 보유 코인에서 ${formatPriceAsCoin(totalPrice)}이 차감되며, 설문은 바로 노출되기 시작해요`}
 				cancelButton={
 					<ConfirmDialog.CancelButton
 						size="xlarge"
