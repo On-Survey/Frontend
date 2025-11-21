@@ -147,7 +147,7 @@ export const formatPrice = (price: number): string => {
  * 금액을 코인 형식으로 포맷팅하여 반환 (예: 56500 -> "56,500코인")
  */
 export const formatPriceAsCoin = (price: number): string => {
-	return `${price.toLocaleString("ko-KR")}코인`;
+	return `${price.toLocaleString("ko-KR")} 코인`;
 };
 
 /**
