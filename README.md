@@ -1,73 +1,75 @@
-# React + TypeScript + Vite
+# OnSurvey Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite 기반의 온라인 설문조사 플랫폼 프론트엔드입니다.
 
-Currently, two official plugins are available:
+## 🛠️ 기술 스택
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** - UI 라이브러리
+- **TypeScript** - 타입 안전성
+- **Vite** - 빌드 도구
+- **Tailwind CSS** - 스타일링
+- **Axios** - HTTP 클라이언트
+- **Biome** - 코드 포맷팅 & 린팅
+- **Husky** - Git 훅 관리
+- **CodeRabbit** - AI 코드 리뷰
 
-## React Compiler
+## 🤖 CodeRabbit 설정
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+이 프로젝트는 CodeRabbit AI를 사용하여 자동 코드 리뷰를 제공합니다.
 
-## Expanding the ESLint configuration
+### 설정 파일
+- `.coderabbit.yaml` - CodeRabbit 설정
+- `.github/workflows/coderabbit.yml` - GitHub Actions 워크플로우
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 기능
+- ✅ **코드 품질 체크** - Biome 규칙 강제
+- ✅ **TypeScript 타입 체크** - 타입 안전성 검증
+- ✅ **보안 체크** - 보안 취약점 감지
+- ✅ **성능 개선 제안** - 최적화 방안 제안
+- ✅ **접근성 체크** - 웹 접근성 검증
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 사용법
+1. PR 생성 시 자동으로 CodeRabbit이 리뷰 시작
+2. AI가 코드를 분석하여 개선사항 제안
+3. 한국어로 친근한 리뷰 제공
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🔧 개발 환경 설정
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 설치
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 환경변수 설정
+`.env` 파일을 생성하고 다음 환경변수들을 설정하세요:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# API 서버 URL
+VITE_API_BASE_URL=http://localhost:3001/api
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Sentry DSN (에러 추적)
+VITE_SENTRY_DSN=your_sentry_dsn_here
 ```
+
+### 개발 서버 실행
+```bash
+pnpm dev
+```
+
+### 빌드
+```bash
+pnpm build
+```
+
+### 코드 품질 체크
+```bash
+pnpm lint        # Biome 체크
+pnpm lint:fix    # 자동 수정
+pnpm format      # 포맷팅
+```
+
+## 📋 Git 훅
+
+- **pre-commit**: Biome 코드 체크 & 포맷팅
+- **pre-push**: 빌드 성공 여부 확인
+- **post-checkout**: 의존성 자동 설치
