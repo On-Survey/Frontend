@@ -102,9 +102,10 @@ export const MultipleChoiceMain = () => {
 				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
-		if (result.success && typeof result.result !== "string") {
+		console.log(result);
+		if (result.success && typeof result !== "string") {
 			updateQuestion(questionId, {
-				questionId: result.result.info[0].questionId,
+				questionId: result.result.questionId,
 			});
 
 			navigate(-1);

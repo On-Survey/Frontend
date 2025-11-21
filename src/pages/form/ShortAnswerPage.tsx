@@ -61,9 +61,9 @@ export const ShortAnswerPage = () => {
 			},
 		});
 
-		if (result.success && typeof result.result !== "string") {
+		if (result.success && typeof result !== "string") {
 			updateQuestion(questionId, {
-				questionId: result.result.info[0].questionId,
+				questionId: result.result.questionId,
 			});
 
 			navigate(-1);
