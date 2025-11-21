@@ -1,4 +1,6 @@
+import { api } from "../axios";
 import { apiCall } from "../axios/apiClient";
+
 import {
 	type GetScreeningsParams,
 	mapBackendQuestionType,
@@ -99,4 +101,12 @@ export const submitScreeningResponse = async (
 		url: `/v1/survey-participation/screenings/${screeningId}`,
 		data: payload,
 	});
+};
+
+//설문 완료 처리
+export const completeSurvey = async (surveyId: number): Promise<boolean> => {
+	const { data } = await api.post<{ result: boolean }, undefined>(
+		`/v1/survey-participation/surveys/${surveyId}/complete`,
+	);
+	return data.result ?? false;
 };

@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
-import { submitSurveyParticipation } from "../service/surveyParticipation";
+import {
+	completeSurvey,
+	submitSurveyParticipation,
+} from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
 
@@ -107,7 +110,9 @@ export const useSurveyNavigation = ({
 			];
 			await submitSurveyParticipation(surveyId, payload);
 
-			if (initialQuestionIndex >= allQuestions.length - 1) {
+			const isLastQuestion = initialQuestionIndex >= allQuestions.length - 1;
+			if (isLastQuestion) {
+				await completeSurvey(surveyId);
 				navigate("/survey/complete", {
 					replace: true,
 					state: { surveyId },
