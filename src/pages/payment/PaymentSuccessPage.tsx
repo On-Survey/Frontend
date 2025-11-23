@@ -1,9 +1,8 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text } from "@toss/tds-mobile";
-import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { useBackEventListener } from "../../hooks/useBackEventListener";
 
 export const PaymentSuccessPage = () => {
 	const { resetActiveStep } = useMultiStep();
@@ -20,22 +19,14 @@ export const PaymentSuccessPage = () => {
 		});
 	};
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				if (isChargeFlow) {
-					navigate("/mypage");
-				} else {
-					navigate("/mysurvey");
-				}
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
+	useBackEventListener(() => {
+		if (isChargeFlow) {
+			navigate("/mypage");
+		} else {
+			navigate("/mysurvey");
+		}
+	});
 
-		return unsubscription;
-	}, [navigate, isChargeFlow]);
 	return (
 		<div className="flex flex-col h-screen">
 			<div className="flex-1 flex flex-col items-center justify-center gap-3">

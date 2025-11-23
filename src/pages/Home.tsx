@@ -1,4 +1,4 @@
-import { closeView, graniteEvent } from "@apps-in-toss/web-framework";
+import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { CustomSurveyList } from "../components/surveyList/CustomSurveyList";
 import { UrgentSurveyList } from "../components/surveyList/UrgentSurveyList";
 import { topics } from "../constants/topics";
 import { useModal } from "../hooks/UseToggle";
+import { useBackEventListener } from "../hooks/useBackEventListener";
 import { getGlobalStats, getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import { getMemberInfo } from "../service/userInfo";
@@ -150,29 +151,7 @@ export const Home = () => {
 		closeView();
 	};
 
-	useEffect(() => {
-		// 웹뷰 환경에서만 graniteEvent 사용
-		if (
-			typeof window !== "undefined" &&
-			(window as { __GRANITE_NATIVE_EMITTER?: unknown })
-				.__GRANITE_NATIVE_EMITTER
-		) {
-			try {
-				const unsubscription = graniteEvent.addEventListener("backEvent", {
-					onEvent: () => {
-						handleConfirmDialogOpen();
-					},
-					onError: (error) => {
-						console.error("Granite event error:", error);
-					},
-				});
-
-				return unsubscription;
-			} catch (error) {
-				console.error("Failed to add granite event listener:", error);
-			}
-		}
-	}, [handleConfirmDialogOpen]);
+	useBackEventListener(handleConfirmDialogOpen);
 
 	return (
 		<>

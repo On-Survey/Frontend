@@ -1,4 +1,3 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Border,
@@ -17,6 +16,7 @@ import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { useBackEventListener } from "../../hooks/useBackEventListener";
 import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
@@ -54,27 +54,6 @@ export const QuestionHome = () => {
 	const sortedQuestions = [...state.survey.question].sort(
 		(a, b) => a.questionOrder - b.questionOrder,
 	);
-
-	useEffect(() => {
-		const newOrderMap: Record<number, number> = {};
-		state.survey.question.forEach((question, index) => {
-			newOrderMap[question.questionId] = index;
-		});
-
-		if (!hasInitializedDisplayOrder.current) {
-			setDisplayOrderMap(newOrderMap);
-			hasInitializedDisplayOrder.current = true;
-			return;
-		}
-
-		const timer = window.setTimeout(() => {
-			setDisplayOrderMap(newOrderMap);
-		}, 600);
-
-		return () => {
-			window.clearTimeout(timer);
-		};
-	}, [state.survey.question]);
 
 	const handleQuestionClick = (questionType: string, questionId: number) => {
 		const route =
@@ -119,17 +98,27 @@ export const QuestionHome = () => {
 	};
 
 	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				handleConfirmDialogOpen();
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
+		const newOrderMap: Record<number, number> = {};
+		state.survey.question.forEach((question, index) => {
+			newOrderMap[question.questionId] = index;
 		});
 
-		return unsubscription;
-	}, [handleConfirmDialogOpen]);
+		if (!hasInitializedDisplayOrder.current) {
+			setDisplayOrderMap(newOrderMap);
+			hasInitializedDisplayOrder.current = true;
+			return;
+		}
+
+		const timer = window.setTimeout(() => {
+			setDisplayOrderMap(newOrderMap);
+		}, 600);
+
+		return () => {
+			window.clearTimeout(timer);
+		};
+	}, [state.survey.question]);
+
+	useBackEventListener(handleConfirmDialogOpen);
 
 	return (
 		<>
