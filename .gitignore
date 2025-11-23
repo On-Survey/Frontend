@@ -27,3 +27,7 @@ dist-ssr
 onsurvey.ait
 .env
 tsconfig.app.tsbuildinfo
+
+# Detox
+e2e/artifacts/
+*.detox.log
