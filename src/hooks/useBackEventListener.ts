@@ -14,9 +14,9 @@ export const useBackEventListener = (
 	onError?: (error: unknown) => void,
 ) => {
 	useEffect(() => {
+		setIosSwipeGestureEnabled({ isEnabled: false });
 		const unsubscription = graniteEvent.addEventListener("backEvent", {
 			onEvent: () => {
-				setIosSwipeGestureEnabled({ isEnabled: false });
 				onBack();
 			},
 			onError: (error) => {
