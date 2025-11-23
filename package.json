@@ -12,11 +12,8 @@
 		"preview": "vite preview",
 		"prepare": "husky",
 		"deploy": "ait deploy",
-		"test:e2e": "detox test",
-		"test:e2e:ios": "detox test --configuration ios.sim.debug",
-		"test:e2e:android": "detox test --configuration android.emu.debug",
-		"build:e2e:ios": "detox build --configuration ios.sim.debug",
-		"build:e2e:android": "detox build --configuration android.emu.debug"
+		"test:e2e:survey": "maestro test e2e/survey/create-survey.yaml",
+		"test:e2e:watch": "maestro test --watch e2e/survey/"
 	},
 	"dependencies": {
 		"@apps-in-toss/web-framework": "1.4.7",
@@ -37,13 +34,10 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.5",
-		"@types/jest": "^29.5.12",
 		"@types/node": "^24.6.0",
 		"@types/react": "^18.2.0",
 		"@types/react-dom": "^18.2.0",
 		"@vitejs/plugin-react": "^5.0.4",
-		"detox": "^20.27.4",
-		"jest": "^29.7.0",
 		"lint-staged": "^16.2.3",
 		"typescript": "~5.9.3",
 		"vite": "npm:rolldown-vite@7.1.14"
