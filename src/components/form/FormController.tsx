@@ -91,9 +91,6 @@ export const FormController = ({
 			state.survey.question,
 			surveyId,
 		);
-
-		console.log("serverQuestions", serverQuestions);
-
 		const result = await saveQuestions({
 			surveyId,
 			questions: {

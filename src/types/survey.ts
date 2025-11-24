@@ -41,6 +41,7 @@ export interface RatingQuestion extends BaseQuestion {
 	type: "rating";
 	minValue: string;
 	maxValue: string;
+	rate: number;
 }
 
 // NPS 문항
@@ -143,6 +144,7 @@ export type QuestionUpdateData = {
 	option?: MultipleChoiceOption[];
 	minValue?: string;
 	maxValue?: string;
+	rate?: number;
 	date?: Date;
 	surveyId?: number;
 	hasCustomInput?: boolean;

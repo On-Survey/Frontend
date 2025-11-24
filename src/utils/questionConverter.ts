@@ -55,6 +55,7 @@ export const convertQuestionToServerFormat = (
 			questionType: "RATING",
 			minValue: question.minValue,
 			maxValue: question.maxValue,
+			rate: question.rate,
 		} as ServerQuestion;
 	}
 
