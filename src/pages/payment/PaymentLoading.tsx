@@ -1,4 +1,4 @@
-import { graniteEvent, IAP } from "@apps-in-toss/web-framework";
+import { IAP } from "@apps-in-toss/web-framework";
 
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
@@ -8,6 +8,7 @@ import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
+import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createForm } from "../../service/form";
 import { createPayment } from "../../service/payments";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
@@ -137,16 +138,7 @@ export const PaymentLoading = () => {
 		submitForm,
 	]);
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
-
-		return unsubscription;
-	}, []);
+	useBackEventListener(() => {});
 
 	return (
 		<>

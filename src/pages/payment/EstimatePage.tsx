@@ -1,4 +1,4 @@
-import { graniteEvent, Storage } from "@apps-in-toss/web-framework";
+import { Storage } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -27,6 +27,7 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useModal } from "../../hooks/UseToggle";
+import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { type createUserResponse, getUserInfo } from "../../service/user";
 import {
 	calculateTotalPrice,
@@ -132,18 +133,7 @@ export const EstimatePage = () => {
 		handleEstimateChange({ ...estimate, ages });
 	};
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				handleStepChange(3);
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
-
-		return unsubscription;
-	}, [handleStepChange]);
+	useBackEventListener(() => handleStepChange(3));
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import { closeView, graniteEvent } from "@apps-in-toss/web-framework";
+import { closeView } from "@apps-in-toss/web-framework";
 import { colors } from "@toss/tds-colors";
 import {
 	Checkbox,
@@ -8,12 +8,13 @@ import {
 	ProgressBar,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
 import { type RegionData, regions } from "../constants/regions";
 import { type TopicData, topics } from "../constants/topics";
 import { useModal } from "../hooks/UseToggle";
+import { useBackEventListener } from "../hooks/useBackEventListener";
 import { OnboardingApi } from "../service/onboading";
 
 const OnboardingStep1 = ({
@@ -40,18 +41,7 @@ const OnboardingStep1 = ({
 		closeView();
 	};
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				handleConfirmDialogOpen();
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
-
-		return unsubscription;
-	}, [handleConfirmDialogOpen]);
+	useBackEventListener(handleConfirmDialogOpen);
 
 	return (
 		<>

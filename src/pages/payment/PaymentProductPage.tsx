@@ -1,8 +1,4 @@
-import {
-	graniteEvent,
-	IAP,
-	type IapProductListItem,
-} from "@apps-in-toss/web-framework";
+import { IAP, type IapProductListItem } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Border,
@@ -18,6 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { type createUserResponse, getUserInfo } from "../../service/user";
 import { calculateRequiredCoinAmount } from "../../utils/paymentCalculator";
 
@@ -64,22 +61,13 @@ export const PaymentProductPage = () => {
 		fetchProducts();
 	}, []);
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				if (isChargeFlow) {
-					navigate("/mypage");
-				} else {
-					goPrevPayment();
-				}
-			},
-			onError: (error) => {
-				alert(`에러가 발생했어요: ${error}`);
-			},
-		});
-
-		return unsubscription;
-	}, [goPrevPayment, isChargeFlow, navigate]);
+	useBackEventListener(() => {
+		if (isChargeFlow) {
+			navigate("/mypage");
+		} else {
+			goPrevPayment();
+		}
+	});
 
 	return (
 		<div className="flex flex-col h-screen">
