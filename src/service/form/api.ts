@@ -128,6 +128,6 @@ export const patchSurvey = async ({
 	const { data } = await api.patch<
 		PatchSurveyResponse,
 		{ title: string; description: string }
-	>(`/v1/survey-form/surveys/${surveyId}`, { title, description });
+	>(`/v1/survey-form/surveys/${surveyId}/display`, { title, description });
 	return data;
 };
