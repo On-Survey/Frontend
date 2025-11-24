@@ -54,6 +54,7 @@ export interface ServerRatingQuestion extends BaseServerQuestion {
 	questionType: "RATING";
 	minValue: string;
 	maxValue: string;
+	rate: number;
 }
 
 // 서버 요청용 기타 질문 (SHORT, LONG, DATE, NUMBER, NPS)

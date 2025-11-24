@@ -123,6 +123,7 @@ export interface WritingQuestion {
 	defaultDate?: string;
 	minValue?: string | number;
 	maxValue?: string | number;
+	rate?: number;
 }
 
 export interface WritingSurveyResult {

@@ -66,6 +66,7 @@ export const createQuestion = (
 				type: "rating",
 				minValue: "입력",
 				maxValue: "입력",
+				rate: 10,
 			};
 		case "nps":
 			return {

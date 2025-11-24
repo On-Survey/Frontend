@@ -40,6 +40,7 @@ export const RatingPage = () => {
 	const isRequired = question?.isRequired ?? false;
 	const minValue = question?.minValue ?? "내용 입력하기";
 	const maxValue = question?.maxValue ?? "내용 입력하기";
+	const ratingCount = question?.rate ?? 10;
 	const [score, setScore] = useState<number | null>(null);
 
 	const {
@@ -78,18 +79,22 @@ export const RatingPage = () => {
 	};
 
 	const handlePlusClick = () => {
-		if (score === null) {
-			setScore(1);
-		} else {
-			setScore(score + 1);
+		if (questionId && ratingCount < 10) {
+			updateQuestion(questionId, {
+				rate: ratingCount + 1,
+			});
 		}
 	};
 
 	const handleMinusClick = () => {
-		if (score === null) {
-			setScore(1);
-		} else {
-			setScore(score - 1);
+		if (questionId && ratingCount > 2) {
+			updateQuestion(questionId, {
+				rate: ratingCount - 1,
+			});
+			// 현재 선택된 점수가 새로운 최대값보다 크면 조정
+			if (score !== null && score > ratingCount - 1) {
+				setScore(ratingCount - 1);
+			}
 		}
 	};
 
@@ -170,14 +175,14 @@ export const RatingPage = () => {
 					frameShape={Asset.frameShape.CleanW24}
 					backgroundColor="transparent"
 					name="icon-minus-circle-mono"
-					color={adaptive.grey400}
+					color={ratingCount <= 2 ? adaptive.grey200 : adaptive.grey400}
 					aria-hidden={true}
 					ratio="1/1"
 					onClick={handleMinusClick}
 				/>
 
 				<div className="flex gap-1.5 flex-1 justify-center ">
-					{Array.from({ length: 10 }, (_, idx) => {
+					{Array.from({ length: ratingCount }, (_, idx) => {
 						const v = idx + 1;
 						const isActive = score !== null && v <= score;
 						return (
@@ -195,7 +200,7 @@ export const RatingPage = () => {
 					frameShape={Asset.frameShape.CleanW24}
 					backgroundColor="transparent"
 					name="icon-plus-circle-mono"
-					color={adaptive.grey400}
+					color={ratingCount >= 10 ? adaptive.grey200 : adaptive.grey400}
 					aria-hidden={true}
 					ratio="1/1"
 					onClick={handlePlusClick}
