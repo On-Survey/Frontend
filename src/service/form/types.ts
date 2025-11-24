@@ -187,3 +187,20 @@ export interface CreateSurveyInterestsResponse extends BaseResponse {
 	};
 	success: boolean;
 }
+
+export interface PatchSurveyRequest {
+	surveyId: number;
+	title: string;
+	description: string;
+}
+
+export interface PatchSurveyResponse extends BaseResponse {
+	result: {
+		surveyId: number;
+		title: string;
+		description: string;
+		totalCoin: number;
+		createdAt: string;
+	};
+	success: boolean;
+}

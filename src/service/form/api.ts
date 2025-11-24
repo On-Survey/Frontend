@@ -9,6 +9,8 @@ import type {
 	CreateSurveyResponse,
 	createSurveyQuestionRequest,
 	Interest,
+	PatchSurveyRequest,
+	PatchSurveyResponse,
 	ServerQuestionRequest,
 } from "./types";
 
@@ -115,5 +117,17 @@ export const createSurveyInterests = async ({
 		CreateSurveyInterestsResponse,
 		{ interests: Interest[] }
 	>(`/v1/survey-form/surveys/${surveyId}/interests`, { interests: interests });
+	return data;
+};
+
+export const patchSurvey = async ({
+	surveyId,
+	title,
+	description,
+}: PatchSurveyRequest): Promise<PatchSurveyResponse> => {
+	const { data } = await api.patch<
+		PatchSurveyResponse,
+		{ title: string; description: string }
+	>(`/v1/survey-form/surveys/${surveyId}/display`, { title, description });
 	return data;
 };

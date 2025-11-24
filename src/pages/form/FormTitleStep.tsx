@@ -2,7 +2,7 @@ import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { createSurvey } from "../../service/form";
+import { createSurvey, patchSurvey } from "../../service/form";
 
 export const FormTitleStep = () => {
 	const {
@@ -28,16 +28,31 @@ export const FormTitleStep = () => {
 	const handleNext = () => {
 		setTitleStepCompleted(true);
 	};
-	const handleNextPage = async () => {
-		const result = await createSurvey({
-			title: state.survey.title,
-			description: state.survey.description,
-		});
 
-		if (result.success) {
-			const { surveyId } = result.result;
-			setSurveyId(surveyId);
-			handleStepChange(1);
+	const handleNextPage = async () => {
+		if (state.surveyId) {
+			// 수정 모드
+			const result = await patchSurvey({
+				surveyId: state.surveyId,
+				title: state.survey.title,
+				description: state.survey.description,
+			});
+
+			if (result.success) {
+				handleStepChange(1);
+			}
+		} else {
+			// 생성 모드
+			const result = await createSurvey({
+				title: state.survey.title,
+				description: state.survey.description,
+			});
+
+			if (result.success) {
+				const { surveyId } = result.result;
+				setSurveyId(surveyId);
+				handleStepChange(1);
+			}
 		}
 	};
 
