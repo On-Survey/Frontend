@@ -53,7 +53,7 @@ export const convertWritingQuestionToQuestion = (
 			type: "rating",
 			minValue: String(writingQuestion.minValue ?? "1"),
 			maxValue: String(writingQuestion.maxValue ?? "10"),
-			rate: Number(writingQuestion.minValue ?? "10"),
+			rate: Number(writingQuestion.rate ?? "10"),
 		};
 	}
 
