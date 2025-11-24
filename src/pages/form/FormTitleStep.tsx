@@ -30,10 +30,10 @@ export const FormTitleStep = () => {
 	};
 
 	const handleNextPage = async () => {
-		if (state.survey.surveyId) {
+		if (state.surveyId) {
 			// 수정 모드
 			const result = await patchSurvey({
-				surveyId: state.survey.surveyId,
+				surveyId: state.surveyId,
 				title: state.survey.title,
 				description: state.survey.description,
 			});
