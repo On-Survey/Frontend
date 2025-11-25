@@ -1,21 +1,24 @@
 import { FixedBottomCTA, TextArea } from "@toss/tds-mobile";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
 export const TitleAndDescriptionEditPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
 	const questions = state.survey.question;
 
-	const latestQuestion = questions.sort(
-		(a, b) => b.questionOrder - a.questionOrder,
-	)[0];
-	const title = latestQuestion?.title;
-	const description = latestQuestion?.description;
+	const targetQuestion = questionIdFromUrl
+		? questions.find((q) => q.questionId.toString() === questionIdFromUrl)
+		: questions.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+
+	const title = targetQuestion?.title;
+	const description = targetQuestion?.description;
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		updateQuestion(latestQuestion?.questionId.toString() || "", {
+		updateQuestion(targetQuestion?.questionId.toString() || "", {
 			title: e.target.value,
 		});
 	};
@@ -23,7 +26,7 @@ export const TitleAndDescriptionEditPage = () => {
 	const handleDescriptionChange = (
 		e: React.ChangeEvent<HTMLTextAreaElement>,
 	) => {
-		updateQuestion(latestQuestion?.questionId.toString() || "", {
+		updateQuestion(targetQuestion?.questionId.toString() || "", {
 			description: e.target.value,
 		});
 	};

@@ -47,7 +47,11 @@ export const NPSPage = () => {
 	};
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/nps/edit`);
+		if (questionIdFromUrl) {
+			navigate(`/createForm/nps/edit?questionId=${questionIdFromUrl}`);
+		} else {
+			navigate(`/createForm/nps/edit`);
+		}
 	};
 
 	const handleConfirm = async () => {

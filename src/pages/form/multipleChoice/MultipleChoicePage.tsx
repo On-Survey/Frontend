@@ -1,23 +1,43 @@
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import {
+	Outlet,
+	useLocation,
+	useNavigate,
+	useSearchParams,
+} from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 
 export const MultipleChoicePage = () => {
 	const { state } = useSurvey();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [searchParams] = useSearchParams();
+	const questionIdFromUrl = searchParams.get("questionId");
 
 	const questions = state.survey.question;
 
-	const latestMultipleChoice = questions
-		.filter((q) => q.type === "multipleChoice")
-		.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-	const title = latestMultipleChoice?.title;
-	const description = latestMultipleChoice?.description;
+	const targetMultipleChoice = questionIdFromUrl
+		? questions.find(
+				(q) =>
+					q.questionId.toString() === questionIdFromUrl &&
+					q.type === "multipleChoice",
+			)
+		: questions
+				.filter((q) => q.type === "multipleChoice")
+				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+
+	const title = targetMultipleChoice?.title;
+	const description = targetMultipleChoice?.description;
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/multipleChoice/edit`);
+		if (questionIdFromUrl) {
+			navigate(
+				`/createForm/multipleChoice/edit?questionId=${questionIdFromUrl}`,
+			);
+		} else {
+			navigate(`/createForm/multipleChoice/edit`);
+		}
 	};
 
 	const isQuestionOptionsPage = /\/questions\/\d+$/.test(location.pathname);

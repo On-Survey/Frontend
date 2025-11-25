@@ -71,7 +71,11 @@ export const ShortAnswerPage = () => {
 	};
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/shortAnswer/edit`);
+		if (questionIdFromUrl) {
+			navigate(`/createForm/shortAnswer/edit?questionId=${questionIdFromUrl}`);
+		} else {
+			navigate(`/createForm/shortAnswer/edit`);
+		}
 	};
 
 	return (
