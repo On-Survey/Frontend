@@ -70,7 +70,11 @@ export const NumberPage = () => {
 	};
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/number/edit`);
+		if (questionIdFromUrl) {
+			navigate(`/createForm/number/edit?questionId=${questionIdFromUrl}`);
+		} else {
+			navigate(`/createForm/number/edit`);
+		}
 	};
 
 	return (

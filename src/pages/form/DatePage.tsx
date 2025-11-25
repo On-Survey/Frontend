@@ -52,7 +52,11 @@ export const DatePage = () => {
 	};
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/date/edit`);
+		if (questionIdFromUrl) {
+			navigate(`/createForm/date/edit?questionId=${questionIdFromUrl}`);
+		} else {
+			navigate(`/createForm/date/edit`);
+		}
 	};
 
 	const handleSubmit = async () => {

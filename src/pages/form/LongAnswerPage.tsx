@@ -71,7 +71,11 @@ export const LongAnswerPage = () => {
 	};
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/essay/edit`);
+		if (questionIdFromUrl) {
+			navigate(`/createForm/essay/edit?questionId=${questionIdFromUrl}`);
+		} else {
+			navigate(`/createForm/essay/edit`);
+		}
 	};
 
 	return (

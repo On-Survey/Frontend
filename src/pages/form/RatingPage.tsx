@@ -102,7 +102,11 @@ export const RatingPage = () => {
 	const description = question?.description;
 
 	const handleTitleAndDescriptionEdit = () => {
-		navigate(`/createForm/rating/edit`);
+		if (questionIdFromUrl) {
+			navigate(`/createForm/rating/edit?questionId=${questionIdFromUrl}`);
+		} else {
+			navigate(`/createForm/rating/edit`);
+		}
 	};
 
 	const handleConfirm = async () => {

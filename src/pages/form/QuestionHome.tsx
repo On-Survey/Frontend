@@ -59,6 +59,7 @@ export const QuestionHome = () => {
 		const route =
 			QUESTION_TYPE_ROUTES[questionType as keyof typeof QUESTION_TYPE_ROUTES];
 		if (route) {
+			console.log(`${route}?questionId=${questionId}`);
 			navigate(`${route}?questionId=${questionId}`);
 		}
 	};
