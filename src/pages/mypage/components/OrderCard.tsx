@@ -32,13 +32,13 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 	};
 
 	return (
-		<div className="flex flex-col gap-2">
-			<button
-				type="button"
-				onClick={handleClick}
-				className="flex items-center justify-between px-2 w-full"
-				aria-label="주문 상세 보기"
-			>
+		<button
+			type="button"
+			onClick={handleClick}
+			className="flex flex-col gap-2 w-full text-left cursor-pointer"
+			aria-label="주문 상세 보기"
+		>
+			<div className="flex items-center justify-between px-2">
 				<Text
 					display="block"
 					color={adaptive.grey700}
@@ -50,7 +50,7 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 				<Text color={adaptive.grey500} typography="t6" fontWeight="semibold">
 					〉
 				</Text>
-			</button>
+			</div>
 
 			<div className="flex flex-col items-start gap-2 bg-gray-50 rounded-xl p-4">
 				<Badge variant="weak" color={config.color} size="small">
@@ -85,6 +85,6 @@ export const OrderCard = ({ order }: OrderCardProps) => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</button>
 	);
 };
