@@ -78,6 +78,7 @@ export interface SurveyAnswerDetailInfo {
 	isRequired: boolean;
 	answerMap: Record<string, number>;
 	answerList: string[];
+	rate?: number;
 }
 
 export interface SurveyAnswerDetailResult {

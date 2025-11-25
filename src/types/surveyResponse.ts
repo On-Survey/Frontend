@@ -34,6 +34,7 @@ export interface ResultPageState {
 		type: string;
 		isRequired: boolean;
 		order: number;
+		rate?: number;
 	};
 	answerMap?: Record<string, number>;
 	answerList?: string[];

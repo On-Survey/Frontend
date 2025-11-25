@@ -13,7 +13,7 @@ importers:
     dependencies:
       '@apps-in-toss/web-framework':
         specifier: 1.4.7
-        version: 1.4.7(bczej3lm7hirz37aegqdbm3pn4)
+        version: 1.4.7(51bf8d364b47385bdbef2884f713a839)
       '@emotion/react':
         specifier: ^11
         version: 11.14.0(@types/react@18.3.26)(react@18.3.1)
@@ -31,7 +31,7 @@ importers:
         version: 2.1.2(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@toss/tds-mobile-ait':
         specifier: ^2.1.2
-        version: 2.1.2(@apps-in-toss/web-framework@1.4.7(bczej3lm7hirz37aegqdbm3pn4))(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(@toss/tds-mobile@2.1.2(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.1.2(@apps-in-toss/web-framework@1.4.7(51bf8d364b47385bdbef2884f713a839))(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(@toss/tds-mobile@2.1.2(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios:
         specifier: ^1.12.2
         version: 1.12.2
@@ -60,9 +60,6 @@ importers:
       '@biomejs/biome':
         specifier: 2.2.5
         version: 2.2.5
-      '@playwright/test':
-        specifier: ^1.48.2
-        version: 1.56.1
       '@types/node':
         specifier: ^24.6.0
         version: 24.9.1
@@ -1848,11 +1845,6 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@playwright/test@1.56.1':
-    resolution: {integrity: sha512-vSMYtL/zOcFpvJCW71Q/OEGQb7KYBPAdKh35WNSkaZA75JlAO8ED8UN6GUNTm3drWomcbcqRPFqQbLae8yBTdg==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   '@react-native-async-storage/async-storage@1.18.2':
     resolution: {integrity: sha512-dM8AfdoeIxlh+zqgr0o5+vCTPQ0Ru1mrPzONZMsr7ufp5h+6WgNxQNza7t0r5qQ6b04AJqTlBNixTWZxqP649Q==}
     peerDependencies:
@@ -2504,7 +2496,7 @@ packages:
   '@tailwindcss/vite@4.1.16':
     resolution: {integrity: sha512-bbguNBcDxsRmi9nnlWJxhfDWamY3lmcyACHcdO1crxfzuLpOhHLLtEIN/nCbbAtj5rchUgQD17QVAKi1f7IsKg==}
     peerDependencies:
-      vite: npm:rolldown-vite@7.1.14
+      vite: ^5.2.0 || ^6 || ^7
 
   '@toss/tds-color-utils@0.0.2':
     resolution: {integrity: sha512-cdq+kvMT8XgGRxDPDPte+ddt/q9zoevI+DoYYLzrak7MYkUNZnQPNkwDx5OCZIzRRou68b1NFgu7ljOZK1Q2mA==}
@@ -2630,7 +2622,7 @@ packages:
     resolution: {integrity: sha512-4LuWrg7EKWgQaMJfnN+wcmbAW+VSsCmqGohftWjuct47bv8uE4n/nPpq4XjJPsxgq00GGG5J8dvBczp8uxScew==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: npm:rolldown-vite@7.1.14
+      vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -3648,11 +3640,6 @@ packages:
 
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
-
-  fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
-    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -4962,16 +4949,6 @@ packages:
   pkg-types@1.3.1:
     resolution: {integrity: sha512-/Jm5M4RvtBFVkKWRu2BLUTNP8/M2a+UwuAX+ae4770q1qVGtfjG+WTCupoZixokjmHiry8uI+dlY8KXYV5HVVQ==}
 
-  playwright-core@1.56.1:
-    resolution: {integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==}
-    engines: {node: '>=18'}
-    hasBin: true
-
-  playwright@1.56.1:
-    resolution: {integrity: sha512-aFi5B0WovBHTEvpM3DzXTUaeN6eN0qWnTkKx4NQaH4Wvcmc153PdaY2UBdSYKaGYw+UyWXSVyxDUg5DoPEttjw==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
@@ -6095,7 +6072,7 @@ snapshots:
       - supports-color
       - typanion
 
-  '@apps-in-toss/framework@1.4.7(zpw7tk5cw5tzhzovxprreax5jm)':
+  '@apps-in-toss/framework@1.4.7(c8ab8755f45733805f1a8d028a95cac3)':
     dependencies:
       '@apps-in-toss/analytics': 1.4.7(@granite-js/native@0.1.28(@babel/core@7.23.9)(@babel/runtime@7.28.4)(react-native@0.82.1(@babel/core@7.23.9)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(@granite-js/react-native@0.1.28(@granite-js/native@0.1.28(@babel/core@7.23.9)(@babel/runtime@7.28.4)(react-native@0.82.1(@babel/core@7.23.9)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1))(@swc/helpers@0.5.13)(@types/node@24.9.1)(@types/react@18.3.26)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(postcss@8.5.6)(react-native@0.82.1(@babel/core@7.23.9)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(yaml@2.8.1))(@types/react@18.3.26)(react-native@0.82.1(@babel/core@7.23.9)(@types/react@18.3.26)(react@18.3.1))(react@18.3.1)
       '@apps-in-toss/cli': 1.4.7(@babel/preset-env@7.23.3(@babel/core@7.23.9))(babel-plugin-macros@3.1.0)(typanion@3.14.0)
@@ -6163,11 +6140,11 @@ snapshots:
       '@apps-in-toss/bridge-core': 1.4.7
       '@apps-in-toss/types': 1.4.7
 
-  '@apps-in-toss/web-framework@1.4.7(bczej3lm7hirz37aegqdbm3pn4)':
+  '@apps-in-toss/web-framework@1.4.7(51bf8d364b47385bdbef2884f713a839)':
     dependencies:
       '@apps-in-toss/bridge-core': 1.4.7
       '@apps-in-toss/cli': 1.4.7(@babel/preset-env@7.23.3(@babel/core@7.23.9))(babel-plugin-macros@3.1.0)(typanion@3.14.0)
-      '@apps-in-toss/framework': 1.4.7(zpw7tk5cw5tzhzovxprreax5jm)
+      '@apps-in-toss/framework': 1.4.7(c8ab8755f45733805f1a8d028a95cac3)
       '@apps-in-toss/plugins': 1.4.7(@swc/helpers@0.5.13)(@types/node@24.9.1)(typescript@5.9.3)
       '@apps-in-toss/web-analytics': 1.4.7(@apps-in-toss/web-bridge@1.4.7(@apps-in-toss/bridge-core@1.4.7))
       '@apps-in-toss/web-bridge': 1.4.7(@apps-in-toss/bridge-core@1.4.7)
@@ -8701,10 +8678,6 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@playwright/test@1.56.1':
-    dependencies:
-      playwright: 1.56.1
-
   '@react-native-async-storage/async-storage@1.18.2(react-native@0.82.1(@babel/core@7.23.9)(@types/react@18.3.26)(react@18.3.1))':
     dependencies:
       merge-options: 3.0.4
@@ -9318,9 +9291,9 @@ snapshots:
 
   '@toss/tds-easings@0.0.1': {}
 
-  '@toss/tds-mobile-ait@2.1.2(@apps-in-toss/web-framework@1.4.7(bczej3lm7hirz37aegqdbm3pn4))(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(@toss/tds-mobile@2.1.2(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@toss/tds-mobile-ait@2.1.2(@apps-in-toss/web-framework@1.4.7(51bf8d364b47385bdbef2884f713a839))(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(@toss/tds-mobile@2.1.2(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@apps-in-toss/web-framework': 1.4.7(bczej3lm7hirz37aegqdbm3pn4)
+      '@apps-in-toss/web-framework': 1.4.7(51bf8d364b47385bdbef2884f713a839)
       '@emotion/react': 11.14.0(@types/react@18.3.26)(react@18.3.1)
       '@toss/tds-colors': 0.1.0
       '@toss/tds-mobile': 2.1.2(@emotion/react@11.14.0(@types/react@18.3.26)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -10738,9 +10711,6 @@ snapshots:
       universalify: 2.0.1
 
   fs.realpath@1.0.0: {}
-
-  fsevents@2.3.2:
-    optional: true
 
   fsevents@2.3.3:
     optional: true
@@ -12572,14 +12542,6 @@ snapshots:
       confbox: 0.1.8
       mlly: 1.8.0
       pathe: 2.0.3
-
-  playwright-core@1.56.1: {}
-
-  playwright@1.56.1:
-    dependencies:
-      playwright-core: 1.56.1
-    optionalDependencies:
-      fsevents: 2.3.2
 
   possible-typed-array-names@1.1.0: {}
 
