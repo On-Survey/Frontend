@@ -206,6 +206,7 @@ export const SurveyResponseDetail = () => {
 					type,
 					isRequired: questionDetail.isRequired,
 					order: questionDetail.order,
+					rate: questionDetail.rate,
 				},
 				answerMap: questionDetail.answerMap || {},
 				answerList: questionDetail.answerList || [],

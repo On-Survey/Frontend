@@ -26,26 +26,18 @@ export const RatingResultPage = () => {
 	} = useResultPageData();
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
-
-	// answerList에서 숫자 추출 및 분포 계산
+	const ratingCount = question?.rate ?? 10;
 	const scores = answerList
 		.map((answer) => Number(answer))
-		.filter((score) => !Number.isNaN(score));
+		.filter(
+			(score) => !Number.isNaN(score) && score >= 1 && score <= ratingCount,
+		);
 
-	const ratingDistribution = Object.values(
-		scores.reduce<Record<number, { score: number; count: number }>>(
-			(acc, score) => {
-				if (!acc[score]) {
-					acc[score] = { score, count: 0 };
-				}
-				acc[score].count += 1;
-				return acc;
-			},
-			{},
-		),
-	)
-		.sort((a, b) => b.count - a.count || b.score - a.score)
-		.map((item) => ({ ...item, label: `${item.score}점` }));
+	const ratingDistribution = Array.from({ length: ratingCount }, (_, idx) => {
+		const score = idx + 1;
+		const count = scores.filter((s) => s === score).length;
+		return { score, count, label: `${score}점` };
+	}).sort((a, b) => b.count - a.count || b.score - a.score);
 
 	const maxCount = ratingDistribution[0]?.count ?? 0;
 	const average =
