@@ -11,48 +11,9 @@ import { mapSurveyToOrder } from "../../utils/orderUtils";
 import { OrderCard } from "./components/OrderCard";
 import { RefundPolicyNotice } from "./components/RefundPolicyNotice";
 
-// Mock 데이터 - 추후 삭제 예정
-const MOCK_ORDERS: Order[] = [
-	{
-		id: 1,
-		date: "2025.08.01",
-		title: "영화 시청 경험에 관한 설문",
-		price: "23,400원",
-		status: "active",
-	},
-	{
-		id: 2,
-		date: "2025.10.01",
-		title: "영화 시청 경험에 관한 설문",
-		price: "23,400원",
-		status: "refund_requested",
-	},
-	{
-		id: 3,
-		date: "2025.08.01",
-		title: "영화 시청 경험에 관한 설문",
-		price: "23,400원",
-		status: "closed",
-	},
-	{
-		id: 4,
-		date: "2025.09.01",
-		title: "음식 취향에 관한 설문",
-		price: "15,000원",
-		status: "refund_rejected",
-	},
-	{
-		id: 5,
-		date: "2025.07.01",
-		title: "여행 계획에 관한 설문",
-		price: "30,000원",
-		status: "refund_completed",
-	},
-];
-
 export const OrderHistory = () => {
 	const [activeTab, setActiveTab] = useState<OrderHistoryTabId>("all");
-	const [orders, setOrders] = useState<Order[]>(MOCK_ORDERS);
+	const [orders, setOrders] = useState<Order[]>([]);
 
 	useEffect(() => {
 		const fetchOrders = async () => {
@@ -67,14 +28,10 @@ export const OrderHistory = () => {
 				);
 
 				const allOrders = [...ongoingOrders, ...refundedOrders];
-				if (allOrders.length > 0) {
-					setOrders(allOrders);
-				} else {
-					setOrders(MOCK_ORDERS);
-				}
+				setOrders(allOrders);
 			} catch (error) {
 				console.error("설문 목록 조회 실패:", error);
-				setOrders(MOCK_ORDERS);
+				setOrders([]);
 			}
 		};
 
