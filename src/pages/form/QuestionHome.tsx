@@ -99,8 +99,12 @@ export const QuestionHome = () => {
 	};
 
 	useEffect(() => {
+		const sortedQuestionsList = [...state.survey.question].sort(
+			(a, b) => a.questionOrder - b.questionOrder,
+		);
+
 		const newOrderMap: Record<number, number> = {};
-		state.survey.question.forEach((question, index) => {
+		sortedQuestionsList.forEach((question, index) => {
 			newOrderMap[question.questionId] = index;
 		});
 
