@@ -27,3 +27,6 @@ dist-ssr
 onsurvey.ait
 .env
 tsconfig.app.tsbuildinfo
+
+# Maestro
+.maestro/

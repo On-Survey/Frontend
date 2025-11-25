@@ -1,0 +1,97 @@
+appId: com.vivarepublica.ent.cash.test
+---
+- tapOn:
+    point: "62%,23%"
+- tapOn: "onsurvey"
+- tapOn: "다음"
+- tapOn: "내 설문"
+- tapOn: "설문 추가하기"
+- tapOn: "설문 등록하기"
+- tapOn: "제목"
+- inputText: "Sample text for testing"
+- tapOn: "확인"
+- tapOn: "상세 설명"
+- inputText: "Sample text for testing"
+- tapOn: "확인"
+- tapOn: "문항 추가"
+- tapOn: "평가형"
+- tapOn: "최대한 간결히 입력해주세요"
+- inputText: "테스트 평가형 문항"
+- tapOn: "확인"
+- tapOn: "문항 제목 및 설명 수정하기"
+- tapOn: "설명"
+- inputText: "테스트 평가형 문항입니다"
+- tapOn: "완료"
+- tapOn: "확인"
+- tapOn: "문항 추가"
+- tapOn: "객관식"
+- tapOn: "최대한 간결히 입력해주세요"
+- inputText: "테스트 객관식 문항"
+- tapOn: "확인"
+- tapOn: "문항 제목 및 설명 수정하기"
+- tapOn: "설명"
+- inputText: "테스트 객관식 문항입니다"
+- tapOn: "완료"
+- tapOn: "옵션 추가하기"
+- tapOn: "새 보기"
+- tapOn: "최대한 간결히 입력해주세요"
+- inputText: "선지1"
+- tapOn: "확인"
+- tapOn: "옵션 추가하기"
+- tapOn: "기타 (직접 입력)"
+- tapOn: "응답에 따라 문항 이동하기"
+- tapOn: "선지1다음 문항으로"
+- tapOn: "01 테스트 평가형 문항필수 · 평가형"
+- tapOn: "완료"
+- tapOn:
+    point: "50%,93%"
+- tapOn: "문항 추가"
+- tapOn: "단답형"
+- tapOn: "최대한 간결히 입력해주세요"
+- inputText: "테스트 단문형 문항"
+- tapOn: "확인"
+- tapOn: "확인"
+- tapOn: "다음"
+- tapOn: "추가하기"
+- tapOn: "질문을 입력해주세요"
+- inputText: "스크리닝 테스트"
+- tapOn: "다음"
+- tapOn: "O"
+- tapOn: "다음"
+- tapOn: "다음"
+- tapOn:
+    text: "0"
+    index: 0
+- tapOn:
+    text: "0"
+    index: 1
+- tapOn: "다음"
+- tapOn:
+    point: "50%,23%"
+- tapOn:
+    text: "0"
+    index: 2
+- tapOn: "확인"
+- tapOn: "전체"
+- tapOn:
+    text: "0"
+    index: 0
+- tapOn: "확인"
+- tapOn: "전체"
+- tapOn:
+    text: "0"
+    index: 2
+- tapOn:
+    text: "0"
+    index: 4
+- tapOn: "확인"
+- tapOn: "전체"
+- tapOn:
+    text: "0"
+    index: 0
+- tapOn:
+    text: "0"
+    index: 8
+- tapOn:
+    point: "50%,93%"
+- tapOn: "결제하기"

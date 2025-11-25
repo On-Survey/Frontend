@@ -11,7 +11,9 @@
 		"format": "biome format --write .",
 		"preview": "vite preview",
 		"prepare": "husky",
-		"deploy": "ait deploy"
+		"deploy": "ait deploy",
+		"test:e2e:survey": "maestro test e2e/survey/create-survey.yaml",
+		"test:e2e:watch": "maestro test --watch e2e/survey/"
 	},
 	"dependencies": {
 		"@apps-in-toss/web-framework": "1.4.7",
