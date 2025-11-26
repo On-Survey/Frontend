@@ -163,7 +163,11 @@ export const Home = () => {
 			<div className="flex flex-col w-full min-h-screen">
 				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden shrink-0 h-[337px]">
 					<div className="absolute inset-0 home-banner-gradient" />
-					<div className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay" />
+					<button
+						type="button"
+						className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay cursor-pointer border-0 bg-transparent p-0 w-full h-full"
+						onClick={handleQuizClick}
+					/>
 					<div className="relative p-6 flex flex-col h-full">
 						<div className="flex-1 flex flex-col justify-between">
 							<div className="block">
