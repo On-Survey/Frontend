@@ -62,7 +62,7 @@ export const SurveyRating = () => {
 				<div className="flex gap-2.5 justify-center px-6">
 					{Array.from({ length: 5 }, (_, idx) => {
 						const v = idx + 1;
-						const isActive = score === v;
+						const isActive = score !== null && v <= score;
 						return (
 							<div key={v} className="flex flex-col items-center gap-2">
 								<button
