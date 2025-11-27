@@ -8,7 +8,6 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -41,7 +40,6 @@ export const RatingPage = () => {
 	const minValue = question?.minValue ?? "내용 입력하기";
 	const maxValue = question?.maxValue ?? "내용 입력하기";
 	const ratingCount = question?.rate ?? 10;
-	const [score, setScore] = useState<number | null>(null);
 
 	const {
 		isOpen: isMinValueEditOpen,
@@ -91,10 +89,6 @@ export const RatingPage = () => {
 			updateQuestion(questionId, {
 				rate: ratingCount - 1,
 			});
-			// 현재 선택된 점수가 새로운 최대값보다 크면 조정
-			if (score !== null && score > ratingCount - 1) {
-				setScore(ratingCount - 1);
-			}
 		}
 	};
 
@@ -188,15 +182,8 @@ export const RatingPage = () => {
 				<div className="flex gap-1.5 flex-1 justify-center ">
 					{Array.from({ length: ratingCount }, (_, idx) => {
 						const v = idx + 1;
-						const isActive = score !== null && v <= score;
 						return (
-							<button
-								type="button"
-								key={v}
-								className={`w-6 h-6 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"} rounded-full!`}
-								aria-label={`$v점`}
-								onClick={() => setScore(v)}
-							></button>
+							<div key={v} className="w-6 h-6 rounded-full bg-gray-100"></div>
 						);
 					})}
 				</div>
