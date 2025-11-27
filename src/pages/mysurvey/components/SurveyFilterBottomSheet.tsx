@@ -1,11 +1,18 @@
 import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, Button, Tab } from "@toss/tds-mobile";
 import { useState } from "react";
+import type { SurveyInfo } from "../../../service/mysurvey/types";
 import { FilterContent } from "./FilterContent";
 
 interface SurveyFilterBottomSheetProps {
 	open: boolean;
 	onClose: () => void;
+	surveyInfo?: SurveyInfo;
+	onApplyFilters: (
+		ages: string[],
+		genders: string[],
+		locations: string[],
+	) => void;
 }
 
 type FilterTab = "age" | "gender" | "location";
@@ -13,11 +20,13 @@ type FilterTab = "age" | "gender" | "location";
 export const SurveyFilterBottomSheet = ({
 	open,
 	onClose,
+	surveyInfo,
+	onApplyFilters,
 }: SurveyFilterBottomSheetProps) => {
 	const [activeTab, setActiveTab] = useState<FilterTab>("age");
-	const [selectedAge, setSelectedAge] = useState<string | null>(null);
-	const [selectedGender, setSelectedGender] = useState<string | null>(null);
-	const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+	const [selectedAges, setSelectedAges] = useState<string[]>([]);
+	const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+	const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
 	const handleTabChange = (index: number) => {
 		const tabs: FilterTab[] = ["age", "gender", "location"];
@@ -25,12 +34,7 @@ export const SurveyFilterBottomSheet = ({
 	};
 
 	const handleConfirm = () => {
-		console.log("Selected filters:", {
-			selectedAge,
-			selectedGender,
-			selectedLocation,
-		});
-		onClose();
+		onApplyFilters(selectedAges, selectedGenders, selectedLocations);
 	};
 
 	return (
@@ -50,7 +54,7 @@ export const SurveyFilterBottomSheet = ({
 			}
 		>
 			<div className="flex flex-col h-full">
-				<div className="flex-shrink-0 sticky top-0 z-10">
+				<div className="shrink-0 sticky top-0 z-10">
 					<Tab
 						fluid={false}
 						size="large"
@@ -65,12 +69,31 @@ export const SurveyFilterBottomSheet = ({
 				<div className="flex-1 overflow-y-auto min-h-0">
 					<FilterContent
 						activeTab={activeTab}
-						selectedAge={selectedAge}
-						selectedGender={selectedGender}
-						selectedLocation={selectedLocation}
-						onAgeChange={setSelectedAge}
-						onGenderChange={setSelectedGender}
-						onLocationChange={setSelectedLocation}
+						selectedAges={selectedAges}
+						selectedGenders={selectedGenders}
+						selectedLocations={selectedLocations}
+						onAgeChange={(age) => {
+							setSelectedAges((prev) =>
+								prev.includes(age)
+									? prev.filter((a) => a !== age)
+									: [...prev, age],
+							);
+						}}
+						onGenderChange={(gender) => {
+							setSelectedGenders((prev) =>
+								prev.includes(gender)
+									? prev.filter((g) => g !== gender)
+									: [...prev, gender],
+							);
+						}}
+						onLocationChange={(location) => {
+							setSelectedLocations((prev) =>
+								prev.includes(location)
+									? prev.filter((l) => l !== location)
+									: [...prev, location],
+							);
+						}}
+						surveyInfo={surveyInfo}
 					/>
 				</div>
 			</div>

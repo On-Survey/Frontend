@@ -144,18 +144,34 @@ export const getAgeLabel = (value: AgeCode): string =>
 export const getRegionLabel = (value: RegionCode): string =>
 	REGION_LABEL_MAP[value] ?? "";
 
-/**
- * 연령대 배열을 표시용 문자열로 변환
- * - 전체: "전체"
- * - 단일: "10대(단일)"
- * - 복수: "10대, 20대, 30대(복수)"
- */
+// 10대 -> TEN
+export const getAgeCodeFromLabel = (label: string): AgeCode | null => {
+	if (label === "전체") return "ALL";
+	const age = AGE.find((a) => {
+		const ageName = a.name.split("(")[0];
+		return ageName === label || (label === "60대 이상" && ageName === "60대");
+	});
+
+	return age ? (age.value as AgeCode) : null;
+};
+
+export const getGenderCodeFromLabel = (label: string): GenderCode | null => {
+	const gender = GENDER.find((g) => g.name === label);
+	return gender ? (gender.value as GenderCode) : null;
+};
+
+// TEN -> 10대
+export const getAgeLabelSimple = (code: AgeCode): string => {
+	const age = AGE.find((a) => a.value === code);
+	if (!age) return "";
+	return age.name.split("(")[0];
+};
+
+// 10대, 20대 (복수) 표시
 export const formatAgeDisplay = (ages: AgeCode[]): string => {
 	if (ages.length === 0 || (ages.length === 1 && ages[0] === "ALL")) {
 		return "전체";
 	}
-
-	// 연령대 순서 정의
 	const ageOrder: Record<AgeCode, number> = {
 		ALL: 0,
 		TEN: 1,
@@ -173,7 +189,6 @@ export const formatAgeDisplay = (ages: AgeCode[]): string => {
 
 	const ageLabels = sortedAges.map((age) => {
 		const fullLabel = AGE_LABEL_MAP[age] ?? "";
-		// "10대(10세~19세)" -> "10대" 추출
 		const match = fullLabel.match(/^([^(]+)/);
 		return match ? match[1] : fullLabel;
 	});

@@ -26,3 +26,17 @@ export const regions: RegionData[] = [
 	{ id: "busan", name: "부산", checked: false, value: "BUSAN" },
 	{ id: "jeju", name: "제주", checked: false, value: "JEJU" },
 ];
+
+// 서울 -> SEOUL
+export const getRegionCodeFromLabel = (label: string): string | null => {
+	if (label === "전체") return "ALL";
+	const region = regions.find((r) => r.name === label);
+	return region?.value || null;
+};
+
+// SEOUL -> 서울
+export const getRegionLabelFromCode = (code: string): string => {
+	if (code === "ALL") return "전체";
+	const region = regions.find((r) => r.value === code);
+	return region?.name || "";
+};
