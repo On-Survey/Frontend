@@ -82,13 +82,32 @@ export const getUserSurveys = async (): Promise<UserSurveyResponse> => {
 };
 
 // 사용자가 관리할 설문 상세 조회
+export interface SurveyAnswerDetailFilters {
+	ages?: string[];
+	genders?: string[];
+	residences?: string[];
+}
+
 export const getSurveyAnswerDetail = async (
 	surveyId: number,
+	filters?: SurveyAnswerDetailFilters,
 ): Promise<SurveyAnswerDetailResult> => {
+	const params: Record<string, string | string[] | number> = { surveyId };
+
+	if (filters?.ages && filters.ages.length > 0) {
+		params.ages = filters.ages;
+	}
+	if (filters?.genders && filters.genders.length > 0) {
+		params.genders = filters.genders;
+	}
+	if (filters?.residences && filters.residences.length > 0) {
+		params.residences = filters.residences;
+	}
+
 	return apiCall<SurveyAnswerDetailResult>({
 		method: "GET",
 		url: "/v1/survey-management/surveys/answers",
-		params: { surveyId },
+		params,
 	});
 };
 

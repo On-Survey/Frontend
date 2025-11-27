@@ -1,9 +1,13 @@
-import { partner, tdsEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BottomNavigation } from "../../components/BottomNavigation";
+import {
+	getAgeCodeFromLabel,
+	getGenderCodeFromLabel,
+} from "../../constants/payment";
+import { getRegionCodeFromLabel } from "../../constants/regions";
 import {
 	QUESTION_TYPE_LABELS,
 	SURVEY_BADGE_CONFIG,
@@ -12,6 +16,7 @@ import {
 import {
 	getSurveyAnswerDetail,
 	getUserSurveys,
+	type SurveyAnswerDetailFilters,
 } from "../../service/mysurvey/api";
 import type { SurveyAnswerDetailResult } from "../../service/mysurvey/types";
 import type { QuestionType } from "../../types/survey";
@@ -29,130 +34,109 @@ export const SurveyResponseDetail = () => {
 	const [answerDetails, setAnswerDetails] =
 		useState<SurveyAnswerDetailResult | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [filters, setFilters] = useState<SurveyAnswerDetailFilters>({});
+	const [userSurveysResult, setUserSurveysResult] = useState<Awaited<
+		ReturnType<typeof getUserSurveys>
+	> | null>(null);
+	const [userSurveysLoaded, setUserSurveysLoaded] = useState(false);
 
+	// 초기 로드
 	useEffect(() => {
-		partner.addAccessoryButton({
-			id: "heart",
-			title: "하트",
-			icon: {
-				name: "icon-heart-mono",
-			},
-		});
-
-		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
-			onEvent: ({ id: buttonId }) => {
-				if (buttonId === "heart") {
-					navigate("/estimate");
-				}
-			},
-		});
-
-		return cleanup;
-	}, [navigate]);
-
-	// 설문 상세 조회
-	useEffect(() => {
-		const fetchSurveyDetail = async () => {
-			if (!surveyId) return;
-
+		const fetchUserSurveys = async () => {
 			try {
-				setIsLoading(true);
-				let result: SurveyAnswerDetailResult | null = null;
-				let userSurveysResult = null;
-
-				try {
-					result = await getSurveyAnswerDetail(Number(surveyId));
-				} catch (error) {
-					console.error("getSurveyAnswerDetail 실패:", error);
-				}
-
-				try {
-					userSurveysResult = await getUserSurveys();
-				} catch (error) {
-					console.error("getUserSurveys 실패:", error);
-				}
-				if (!result) {
-					console.error("설문 응답 상세 정보를 가져올 수 없음");
-
-					if (userSurveysResult) {
-						const survey = userSurveysResult.infoList.find(
-							(s) => s.surveyId === Number(surveyId),
-						);
-						setSurveyResponse({
-							id: Number(surveyId),
-							title: survey?.title || "설문",
-							status: "active",
-							responseCount: survey?.currentCount ?? 0,
-							questions: [],
-						});
-					} else {
-						setSurveyResponse({
-							id: Number(surveyId),
-							title: "설문",
-							status: "active",
-							responseCount: 0,
-							questions: [],
-						});
-					}
-					return;
-				}
-
-				setAnswerDetails(result);
-
-				const survey = userSurveysResult?.infoList.find(
-					(s) => s.surveyId === result?.surveyId,
-				);
-				const surveyTitle =
-					survey?.title || result?.surveyId?.toString() || "설문";
-
-				const status: "active" | "closed" =
-					result?.status === "ONGOING" || result?.status === "ACTIVE"
-						? "active"
-						: "closed";
-
-				const questions = (result?.detailInfoList || []).map((detail) => {
-					const questionType = mapApiQuestionTypeToComponentType(detail.type);
-					// 객관식의 경우 answerMap의 값들의 합을 사용, 그 외에는 answerList의 길이 사용
-					const responseCount =
-						detail.type === "CHOICE" && detail.answerMap
-							? Object.values(detail.answerMap).reduce(
-									(sum, count) => sum + count,
-									0,
-								)
-							: detail.answerList?.length || 0;
-
-					return {
-						id: String(detail.questionId),
-						title: detail.title,
-						type: questionType,
-						required: detail.isRequired,
-						responseCount,
-						order: detail.order,
-					};
-				});
-
-				setSurveyResponse({
-					id: result?.surveyId ?? 0,
-					title: surveyTitle,
-					status,
-					responseCount: result?.currentCount ?? 0,
-					questions,
-				});
-			} catch (_error) {
-				setSurveyResponse({
-					id: Number(surveyId),
-					title: "설문",
-					status: "active",
-					responseCount: 0,
-					questions: [],
-				});
+				const result = await getUserSurveys();
+				setUserSurveysResult(result);
+			} catch (error) {
+				console.error("getUserSurveys 실패:", error);
+				setUserSurveysResult(null);
 			} finally {
-				setIsLoading(false);
+				setUserSurveysLoaded(true);
 			}
 		};
 
-		void fetchSurveyDetail();
-	}, [surveyId]);
+		void fetchUserSurveys();
+	}, []);
+
+	// 필터 변경 시 호출
+	const fetchSurveyDetail = useCallback(async () => {
+		if (!surveyId) return;
+
+		try {
+			setIsLoading(true);
+			const result = await getSurveyAnswerDetail(Number(surveyId), filters);
+
+			if (!result) {
+				const survey = userSurveysResult?.infoList.find(
+					(s) => s.surveyId === Number(surveyId),
+				);
+				setSurveyResponse({
+					id: Number(surveyId),
+					title: survey?.title || "설문",
+					status: "active",
+					responseCount: survey?.currentCount ?? 0,
+					questions: [],
+				});
+				return;
+			}
+
+			setAnswerDetails(result);
+
+			const survey = userSurveysResult?.infoList.find(
+				(s) => s.surveyId === result.surveyId,
+			);
+			const status: "active" | "closed" =
+				result.status === "ONGOING" || result.status === "ACTIVE"
+					? "active"
+					: "closed";
+
+			const questions = result.detailInfoList.map((detail) => {
+				const questionType = mapApiQuestionTypeToComponentType(detail.type);
+				const responseCount =
+					detail.type === "CHOICE" && detail.answerMap
+						? Object.values(detail.answerMap).reduce(
+								(sum, count) => sum + count,
+								0,
+							)
+						: detail.answerList?.length || 0;
+
+				return {
+					id: String(detail.questionId),
+					title: detail.title,
+					type: questionType,
+					required: detail.isRequired,
+					responseCount,
+					order: detail.order,
+				};
+			});
+
+			setSurveyResponse({
+				id: result.surveyId,
+				title: survey?.title || result.surveyId.toString() || "설문",
+				status,
+				responseCount: result.currentCount,
+				questions,
+			});
+		} catch (_error) {
+			const survey = userSurveysResult?.infoList.find(
+				(s) => s.surveyId === Number(surveyId),
+			);
+			setSurveyResponse({
+				id: Number(surveyId),
+				title: survey?.title || "설문",
+				status: "active",
+				responseCount: 0,
+				questions: [],
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	}, [surveyId, filters, userSurveysResult]);
+
+	useEffect(() => {
+		if (userSurveysLoaded) {
+			void fetchSurveyDetail();
+		}
+	}, [userSurveysLoaded, fetchSurveyDetail]);
 
 	if (isLoading || !surveyResponse) {
 		return (
@@ -313,6 +297,30 @@ export const SurveyResponseDetail = () => {
 			<SurveyFilterBottomSheet
 				open={isFilterOpen}
 				onClose={() => setIsFilterOpen(false)}
+				surveyInfo={answerDetails?.surveyInfo}
+				onApplyFilters={(selectedAges, selectedGenders, selectedLocations) => {
+					const filterParams: SurveyAnswerDetailFilters = {};
+
+					const ageCodes = selectedAges
+						.map(getAgeCodeFromLabel)
+						.filter((code) => code !== null && code !== "ALL")
+						.map((code) => code as string);
+					if (ageCodes.length > 0) filterParams.ages = ageCodes;
+
+					const genderCodes = selectedGenders
+						.map(getGenderCodeFromLabel)
+						.filter((code) => code !== null && code !== "ALL")
+						.map((code) => code as string);
+					if (genderCodes.length > 0) filterParams.genders = genderCodes;
+
+					const locationCodes = selectedLocations
+						.map(getRegionCodeFromLabel)
+						.filter((code): code is string => code !== null && code !== "ALL");
+					if (locationCodes.length > 0) filterParams.residences = locationCodes;
+
+					setFilters(filterParams);
+					setIsFilterOpen(false);
+				}}
 			/>
 		</div>
 	);

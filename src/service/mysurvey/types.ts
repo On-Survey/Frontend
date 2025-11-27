@@ -81,11 +81,23 @@ export interface SurveyAnswerDetailInfo {
 	rate?: number;
 }
 
+export interface SurveyInfo {
+	dueCount: number;
+	dueCountPrice: number;
+	gender: "ALL" | "MALE" | "FEMALE";
+	genderPrice: number;
+	ages: string[];
+	agePrice: number;
+	residence: "ALL" | string;
+	residencePrice: number;
+}
+
 export interface SurveyAnswerDetailResult {
 	surveyId: number;
 	memberId: number;
 	status: string;
 	currentCount: number;
+	surveyInfo: SurveyInfo;
 	detailInfoList: SurveyAnswerDetailInfo[];
 }
 
