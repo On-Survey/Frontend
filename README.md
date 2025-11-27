@@ -11,65 +11,13 @@ React + TypeScript + Vite 기반의 온라인 설문조사 플랫폼 프론트�
 - **Axios** - HTTP 클라이언트
 - **Biome** - 코드 포맷팅 & 린팅
 - **Husky** - Git 훅 관리
-- **CodeRabbit** - AI 코드 리뷰
+  
+---
+## ⭐️ 서비스 소개
 
-## 🤖 CodeRabbit 설정
-
-이 프로젝트는 CodeRabbit AI를 사용하여 자동 코드 리뷰를 제공합니다.
-
-### 설정 파일
-- `.coderabbit.yaml` - CodeRabbit 설정
-- `.github/workflows/coderabbit.yml` - GitHub Actions 워크플로우
-
-### 기능
-- ✅ **코드 품질 체크** - Biome 규칙 강제
-- ✅ **TypeScript 타입 체크** - 타입 안전성 검증
-- ✅ **보안 체크** - 보안 취약점 감지
-- ✅ **성능 개선 제안** - 최적화 방안 제안
-- ✅ **접근성 체크** - 웹 접근성 검증
-
-### 사용법
-1. PR 생성 시 자동으로 CodeRabbit이 리뷰 시작
-2. AI가 코드를 분석하여 개선사항 제안
-3. 한국어로 친근한 리뷰 제공
-
-## 🔧 개발 환경 설정
-
-### 설치
-```bash
-pnpm install
-```
-
-### 환경변수 설정
-`.env` 파일을 생성하고 다음 환경변수들을 설정하세요:
-
-```bash
-# API 서버 URL
-VITE_API_BASE_URL=http://localhost:3001/api
-
-# Sentry DSN (에러 추적)
-VITE_SENTRY_DSN=your_sentry_dsn_here
-```
-
-### 개발 서버 실행
-```bash
-pnpm dev
-```
-
-### 빌드
-```bash
-pnpm build
-```
-
-### 코드 품질 체크
-```bash
-pnpm lint        # Biome 체크
-pnpm lint:fix    # 자동 수정
-pnpm format      # 포맷팅
-```
-
-## 📋 Git 훅
-
-- **pre-commit**: Biome 코드 체크 & 포맷팅
-- **pre-push**: 빌드 성공 여부 확인
-- **post-checkout**: 의존성 자동 설치
+<img width="1920" height="1440" alt="01" src="https://github.com/user-attachments/assets/7ce75b14-108c-4f78-b5a1-e8c776697577" />
+<img width="1920" height="1059" alt="02" src="https://github.com/user-attachments/assets/5136a26f-bbc6-43ec-8c22-0d600f7de38b" />
+<img width="1920" height="2488" alt="03" src="https://github.com/user-attachments/assets/c8892fd5-4f53-4e0e-b492-2aa911db0334" />
+<img width="1920" height="4785" alt="04" src="https://github.com/user-attachments/assets/82c1cec3-78d9-47ff-8843-3260f37fe767" />
+<img width="1920" height="5136" alt="05" src="https://github.com/user-attachments/assets/465fd5ac-7a12-41e5-bc22-9d59e9737df1" />
+<img width="1920" alt="06" src="https://github.com/user-attachments/assets/4255e058-f44b-4557-8865-3b4eb6f9edd3" />
