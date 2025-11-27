@@ -203,6 +203,7 @@ export const MultipleChoiceMain = () => {
 					questionId={questionId}
 					isOpen={isOpen}
 					handleClose={handleClose}
+					maxOptionsCount={options.length}
 				/>
 			)}
 
