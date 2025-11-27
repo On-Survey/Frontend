@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
+import { useEffect, useRef } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createSurvey, patchSurvey } from "../../service/form";
@@ -15,6 +16,24 @@ export const FormTitleStep = () => {
 	const { handleStepChange } = useMultiStep();
 
 	const step = state.titleStepCompleted;
+	const hasInitialized = useRef(false);
+
+	useEffect(() => {
+		if (
+			!hasInitialized.current &&
+			!state.titleStepCompleted &&
+			state.survey.title.trim() &&
+			state.survey.description.trim()
+		) {
+			setTitleStepCompleted(true);
+			hasInitialized.current = true;
+		}
+	}, [
+		state.titleStepCompleted,
+		state.survey.title,
+		state.survey.description,
+		setTitleStepCompleted,
+	]);
 
 	const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setTitle(e.target.value);
