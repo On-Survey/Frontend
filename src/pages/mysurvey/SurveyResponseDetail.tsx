@@ -197,6 +197,8 @@ export const SurveyResponseDetail = () => {
 				surveyTitle: surveyResponse?.title || "",
 				surveyStatus: surveyResponse?.status || "active",
 				responseCount,
+				surveyId: Number(surveyId),
+				filters,
 			},
 		});
 	};

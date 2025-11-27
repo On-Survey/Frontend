@@ -41,4 +41,10 @@ export interface ResultPageState {
 	surveyTitle: string;
 	surveyStatus: "active" | "closed";
 	responseCount: number;
+	surveyId?: number;
+	filters?: {
+		ages?: string[];
+		genders?: string[];
+		residences?: string[];
+	};
 }
