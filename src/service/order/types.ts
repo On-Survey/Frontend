@@ -43,7 +43,7 @@ export interface SurveyInfo {
 	dueCountPrice: number;
 	gender: "ALL" | "MALE" | "FEMALE";
 	genderPrice: number;
-	age: "ALL" | string;
+	ages: string[];
 	agePrice: number;
 	residence: "ALL" | string;
 	residencePrice: number;

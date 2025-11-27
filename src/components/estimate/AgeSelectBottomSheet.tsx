@@ -77,6 +77,9 @@ export const AgeSelectBottomSheet = ({
 					})}
 				</List>
 			</div>
+			<BottomSheet.CTA loading={false} onClick={handleClose}>
+				확인
+			</BottomSheet.CTA>
 		</BottomSheet>
 	);
 };

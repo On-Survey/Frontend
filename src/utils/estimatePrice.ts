@@ -117,7 +117,7 @@ const getLocationDifficulty = (location: string): string => {
 	return "";
 };
 
-const formatAgeLabel = (ages: AgeCode[]): string => {
+export const formatAgeLabel = (ages: AgeCode[]): string => {
 	if (ages.length === 0 || (ages.length === 1 && ages[0] === "ALL")) {
 		return "전체";
 	}
@@ -149,9 +149,13 @@ const formatLocationLabel = (location: string): string => {
 	return getRegionLabel(location as RegionCode);
 };
 
-const formatDesiredParticipantsLabel = (participants: string): string => {
+export const formatDesiredParticipantsLabel = (
+	participants: string | number,
+): string => {
 	if (!participants) return "선택 안함";
-	return participants.endsWith("명") ? participants : `${participants}명`;
+	const countStr =
+		typeof participants === "number" ? String(participants) : participants;
+	return countStr.endsWith("명") ? countStr : `${countStr}명`;
 };
 
 export const calculateEstimatePrice = (estimate: Estimate): PriceBreakdown => {

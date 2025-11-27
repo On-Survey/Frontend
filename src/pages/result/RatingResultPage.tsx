@@ -82,7 +82,7 @@ export const RatingResultPage = () => {
 			/>
 
 			<div className="px-6 pb-12 flex justify-center">
-				{ratingDistribution.length === 0 ? (
+				{scores.length === 0 || maxCount === 0 ? (
 					<div className="py-8 text-center">
 						<p className="text-gray-500">아직 응답이 없습니다.</p>
 					</div>
@@ -105,8 +105,8 @@ export const RatingResultPage = () => {
 									<div
 										className={`w-8 rounded-full shadow-sm ${
 											isTop
-												? "bg-linear-to-t from-blue-200 via-blue-400 to-blue-500"
-												: "bg-linear-to-t from-gray-200 via-gray-300 to-gray-400"
+												? "bg-gradient-to-t from-blue-200 via-blue-400 to-blue-500"
+												: "bg-gradient-to-t from-gray-200 via-gray-300 to-gray-400"
 										}`}
 										style={{ height: getBarHeight(item.count, maxCount) }}
 									/>

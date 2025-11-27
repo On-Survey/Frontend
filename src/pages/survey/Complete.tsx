@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { issuePromotion } from "../../service/promotion";
 import { getMemberInfo } from "../../service/userInfo/api";
 
@@ -52,6 +53,10 @@ export const SurveyComplete = () => {
 
 		void fetchUserAndIssuePromotion();
 	}, [state.surveyId, surveyIdFromState]);
+
+	useBackEventListener(() => {
+		navigate("/home", { replace: true });
+	});
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-white">
@@ -107,7 +112,7 @@ export const SurveyComplete = () => {
 					</Text>
 				</div>
 			</div>
-			<FixedBottomCTA loading={false} onClick={() => navigate("/surveyList")}>
+			<FixedBottomCTA loading={false} onClick={() => navigate("/home")}>
 				다른 설문 참여하기
 			</FixedBottomCTA>
 		</div>
