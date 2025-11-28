@@ -1,6 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, Button, Tab } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SurveyInfo } from "../../../service/mysurvey/types";
 import { FilterContent } from "./FilterContent";
 
@@ -28,6 +28,16 @@ export const SurveyFilterBottomSheet = ({
 	const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
 	const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
+	// 바텀시트가 닫힐 때 상태 초기화
+	useEffect(() => {
+		if (!open) {
+			setSelectedAges([]);
+			setSelectedGenders([]);
+			setSelectedLocations([]);
+			setActiveTab("age");
+		}
+	}, [open]);
+
 	const handleTabChange = (index: number) => {
 		const tabs: FilterTab[] = ["age", "gender", "location"];
 		setActiveTab(tabs[index] || "age");
@@ -35,6 +45,7 @@ export const SurveyFilterBottomSheet = ({
 
 	const handleConfirm = () => {
 		onApplyFilters(selectedAges, selectedGenders, selectedLocations);
+		onClose();
 	};
 
 	return (
