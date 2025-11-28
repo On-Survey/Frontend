@@ -1,0 +1,260 @@
+import { colors } from "@toss/tds-colors";
+import { Asset, Border, FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { type InterestId, topics } from "../constants/topics";
+import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
+import { getSurveyParticipation } from "../service/surveyParticipation";
+import type { SurveyListItem } from "../types/surveyList";
+import { formatRemainingTime } from "../utils/FormatDate";
+import { getQuestionTypeRoute } from "../utils/questionRoute";
+
+export const Survey = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+	const [searchParams] = useSearchParams();
+	const locationState = location.state as
+		| {
+				survey?: SurveyListItem;
+				surveyId?: string;
+		  }
+		| undefined;
+	const surveyFromState = locationState?.survey;
+	const surveyIdFromState = locationState?.surveyId ?? surveyFromState?.id;
+	const surveyIdFromQuery = searchParams.get("surveyId");
+	const surveyId = surveyIdFromQuery ?? surveyIdFromState ?? null;
+
+	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [surveyInfo, setSurveyInfo] = useState<{
+		title: string;
+		description: string;
+		topicId?: InterestId;
+		remainingTimeText?: string;
+		isClosed?: boolean;
+	} | null>(null);
+
+	useEffect(() => {
+		if (!surveyId) {
+			return;
+		}
+
+		const numericSurveyId = Number(surveyId);
+		if (Number.isNaN(numericSurveyId)) {
+			setQuestions([]);
+			return;
+		}
+
+		let isMounted = true;
+
+		const fetchSurveyParticipation = async () => {
+			try {
+				setError(null);
+				const result = await getSurveyParticipation({
+					surveyId: numericSurveyId,
+				});
+				if (!isMounted) {
+					return;
+				}
+				setQuestions(result.info ?? []);
+
+				// API 응답에서 설문 메타 정보 설정
+				const remainingTimeText = result.deadline
+					? formatRemainingTime(result.deadline)
+					: undefined;
+				const isClosed = remainingTimeText === "마감됨";
+
+				setSurveyInfo({
+					title: result.title,
+					description: result.description,
+					topicId: (result.interests?.[0] ?? "CAREER") as InterestId,
+					remainingTimeText,
+					isClosed,
+				});
+			} catch (err) {
+				console.error("설문 조회 실패:", err);
+				if (!isMounted) {
+					return;
+				}
+				setError("설문 정보를 불러오지 못했습니다.");
+			}
+		};
+
+		void fetchSurveyParticipation();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [surveyId]);
+
+	const sortedQuestions = useMemo(
+		() =>
+			[...questions].sort(
+				(a, b) => (a.questionOrder ?? 0) - (b.questionOrder ?? 0),
+			),
+		[questions],
+	);
+
+	const questionCount = sortedQuestions.length;
+	const estimatedTime = useMemo(() => {
+		if (questionCount <= 10) {
+			return 2;
+		} else if (questionCount <= 20) {
+			return 4;
+		}
+		return 4;
+	}, [questionCount]);
+
+	const currentSurvey =
+		surveyFromState ??
+		(surveyInfo
+			? {
+					id: surveyId ?? "",
+					topicId: surveyInfo.topicId ?? "CAREER",
+					title: surveyInfo.title,
+					iconType: "icon" as const,
+					description: surveyInfo.description,
+					remainingTimeText: surveyInfo.remainingTimeText,
+					isClosed: surveyInfo.isClosed,
+				}
+			: null);
+
+	const surveyTitle = currentSurvey?.title;
+	const surveyDescription = currentSurvey?.description;
+	const surveyTopicName = currentSurvey?.topicId
+		? topics.find((topic) => topic.id === currentSurvey.topicId)?.name
+		: undefined;
+	const remainingTimeText = currentSurvey?.remainingTimeText;
+	const isClosed = currentSurvey?.isClosed || remainingTimeText === "마감됨";
+
+	const handleStart = () => {
+		if (sortedQuestions.length === 0 || isClosed) {
+			return;
+		}
+
+		const firstQuestion = sortedQuestions[0];
+		const questionTypeRoute = getQuestionTypeRoute(firstQuestion.type);
+
+		navigate(questionTypeRoute, {
+			state: {
+				surveyId,
+				questions: sortedQuestions,
+				currentQuestionIndex: 0,
+				answers: {},
+			},
+		});
+	};
+
+	return (
+		<div className="flex flex-col w-full h-screen">
+			<div className="flex-1 overflow-y-auto pb-0">
+				<Top
+					title={
+						surveyTitle ? (
+							<Top.TitleParagraph size={22} color={colors.grey900}>
+								{surveyTitle}
+							</Top.TitleParagraph>
+						) : undefined
+					}
+					subtitleBottom={
+						surveyTopicName ? (
+							<Top.SubtitleBadges
+								badges={[
+									{
+										text: `# ${surveyTopicName}`,
+										color: "blue",
+										variant: "weak",
+									},
+								]}
+							/>
+						) : undefined
+					}
+				/>
+
+				<div className="px-4">
+					<div className="w-full rounded-2xl border border-blue-500 p-5 shadow-sm">
+						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
+							참여 보상 : 300원
+						</Text>
+						<div className="h-2" />
+						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
+							소요 시간 : {estimatedTime}분
+						</Text>
+						{remainingTimeText ? (
+							<>
+								<div className="h-2" />
+								<Text
+									color={colors.grey700}
+									typography="t7"
+									fontWeight="regular"
+								>
+									{remainingTimeText}
+								</Text>
+							</>
+						) : null}
+					</div>
+				</div>
+
+				<div className="px-4">
+					<div className="flex items-center gap-3 my-6">
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							name="icon-man"
+							aria-hidden={true}
+							ratio="1/1"
+						/>
+						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
+							80명이 이 설문에 참여했어요!
+						</Text>
+					</div>
+				</div>
+
+				<Border variant="height16" className="w-full" />
+
+				{surveyDescription && (
+					<div className="px-4 mt-6">
+						<Text
+							display="block"
+							color={colors.grey700}
+							typography="t6"
+							fontWeight="regular"
+						>
+							{surveyDescription}
+						</Text>
+					</div>
+				)}
+				{error && (
+					<div className="px-4 mt-6">
+						<Text color={colors.red500} typography="t7">
+							{error}
+						</Text>
+					</div>
+				)}
+			</div>
+
+			<div className="fixed left-0 right-0 bottom-[120px] z-10 px-4">
+				<div className="rounded-2xl bg-gray-50 p-4 flex items-center gap-3">
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW24}
+						backgroundColor="transparent"
+						name="icon-loudspeaker"
+						aria-hidden={true}
+						ratio="1/1"
+					/>
+					<Text color={colors.grey800} typography="t6" fontWeight="semibold">
+						올바른 응답이 더 좋은 결과를 만들어요.
+					</Text>
+				</div>
+			</div>
+
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleStart}
+				disabled={isClosed || sortedQuestions.length === 0}
+			>
+				{isClosed ? "설문 마감" : "설문 참여하기"}
+			</FixedBottomCTA>
+		</div>
+	);
+};
