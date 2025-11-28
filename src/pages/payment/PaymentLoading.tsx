@@ -76,11 +76,26 @@ export const PaymentLoading = () => {
 
 		if (hasEnoughCoin) {
 			const processWithCoin = async () => {
-				try {
-					await submitForm();
-					handleSuccess();
-				} catch (error) {
-					console.error("코인으로 결제 처리 실패:", error);
+				const maxRetries = 2;
+				let attempt = 0;
+
+				while (attempt <= maxRetries) {
+					try {
+						await submitForm();
+						handleSuccess();
+						return;
+					} catch (error) {
+						attempt += 1;
+						console.error(
+							`코인으로 결제 처리 실패 (시도 ${attempt}/${maxRetries + 1}):`,
+							error,
+						);
+
+						if (attempt > maxRetries) {
+							// 최대 재시도 횟수 초과 시 루프 종료
+							break;
+						}
+					}
 				}
 			};
 			processWithCoin();
