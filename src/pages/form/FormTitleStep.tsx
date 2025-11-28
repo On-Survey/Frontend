@@ -1,6 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createSurvey, patchSurvey } from "../../service/form";
@@ -17,6 +17,7 @@ export const FormTitleStep = () => {
 
 	const step = state.titleStepCompleted;
 	const hasInitialized = useRef(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		if (
@@ -49,6 +50,9 @@ export const FormTitleStep = () => {
 	};
 
 	const handleNextPage = async () => {
+		if (isSubmitting) return;
+		setIsSubmitting(true);
+
 		if (state.surveyId) {
 			// 수정 모드
 			const result = await patchSurvey({
@@ -73,6 +77,8 @@ export const FormTitleStep = () => {
 				handleStepChange(1);
 			}
 		}
+
+		setIsSubmitting(false);
 	};
 
 	return (
@@ -143,7 +149,7 @@ export const FormTitleStep = () => {
 			)}
 			{step && (
 				<FixedBottomCTA
-					disabled={!state.survey.description.trim()}
+					disabled={isSubmitting || !state.survey.description.trim()}
 					onClick={handleNextPage}
 				>
 					확인
