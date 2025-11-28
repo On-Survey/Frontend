@@ -119,9 +119,8 @@ export const Survey = () => {
 				}
 			: null);
 
-	const surveyTitle = currentSurvey?.title ?? "설문 제목";
-	const surveyDescription =
-		currentSurvey?.description ?? "설문 참여를 통해 다양한 의견을 들려주세요.";
+	const surveyTitle = currentSurvey?.title;
+	const surveyDescription = currentSurvey?.description;
 	const surveyTopicName = currentSurvey?.topicId
 		? topics.find((topic) => topic.id === currentSurvey.topicId)?.name
 		: undefined;
@@ -151,9 +150,11 @@ export const Survey = () => {
 			<div className="flex-1 overflow-y-auto pb-0">
 				<Top
 					title={
-						<Top.TitleParagraph size={22} color={colors.grey900}>
-							{surveyTitle}
-						</Top.TitleParagraph>
+						surveyTitle ? (
+							<Top.TitleParagraph size={22} color={colors.grey900}>
+								{surveyTitle}
+							</Top.TitleParagraph>
+						) : undefined
 					}
 					subtitleBottom={
 						surveyTopicName ? (
@@ -166,17 +167,7 @@ export const Survey = () => {
 									},
 								]}
 							/>
-						) : (
-							<Top.SubtitleBadges
-								badges={[
-									{
-										text: `# 예시 주제`,
-										color: "blue",
-										variant: "weak",
-									},
-								]}
-							/>
-						)
+						) : undefined
 					}
 				/>
 
@@ -214,28 +205,32 @@ export const Survey = () => {
 							ratio="1/1"
 						/>
 						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							300명이 이 설문에 참여했어요!
+							80명이 이 설문에 참여했어요!
 						</Text>
 					</div>
 				</div>
 
 				<Border variant="height16" className="w-full" />
 
-				<div className="px-4 mt-6">
-					<Text
-						display="block"
-						color={colors.grey700}
-						typography="t6"
-						fontWeight="regular"
-					>
-						{surveyDescription}
-					</Text>
-					{error ? (
-						<Text color={colors.red500} typography="t7" className="mt-4">
+				{surveyDescription && (
+					<div className="px-4 mt-6">
+						<Text
+							display="block"
+							color={colors.grey700}
+							typography="t6"
+							fontWeight="regular"
+						>
+							{surveyDescription}
+						</Text>
+					</div>
+				)}
+				{error && (
+					<div className="px-4 mt-6">
+						<Text color={colors.red500} typography="t7">
 							{error}
 						</Text>
-					) : null}
-				</div>
+					</div>
+				)}
 			</div>
 
 			<div className="fixed left-0 right-0 bottom-[120px] z-10 px-4">
