@@ -2,10 +2,11 @@ import { colors } from "@toss/tds-colors";
 import { Asset, Border, FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { topics } from "../constants/topics";
+import { type InterestId, topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
+import { formatRemainingTime } from "../utils/FormatDate";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
 
 export const Survey = () => {
@@ -25,6 +26,13 @@ export const Survey = () => {
 
 	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const [surveyInfo, setSurveyInfo] = useState<{
+		title: string;
+		description: string;
+		topicId?: InterestId;
+		remainingTimeText?: string;
+		isClosed?: boolean;
+	} | null>(null);
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -49,6 +57,20 @@ export const Survey = () => {
 					return;
 				}
 				setQuestions(result.info ?? []);
+
+				// API 응답에서 설문 메타 정보 설정
+				const remainingTimeText = result.deadline
+					? formatRemainingTime(result.deadline)
+					: undefined;
+				const isClosed = remainingTimeText === "마감됨";
+
+				setSurveyInfo({
+					title: result.title,
+					description: result.description,
+					topicId: (result.interests?.[0] ?? "CAREER") as InterestId,
+					remainingTimeText,
+					isClosed,
+				});
 			} catch (err) {
 				console.error("설문 조회 실패:", err);
 				if (!isMounted) {
@@ -83,15 +105,28 @@ export const Survey = () => {
 		return 4;
 	}, [questionCount]);
 
-	const surveyTitle = surveyFromState?.title ?? "설문 제목";
+	const currentSurvey =
+		surveyFromState ??
+		(surveyInfo
+			? {
+					id: surveyId ?? "",
+					topicId: surveyInfo.topicId ?? "CAREER",
+					title: surveyInfo.title,
+					iconType: "icon" as const,
+					description: surveyInfo.description,
+					remainingTimeText: surveyInfo.remainingTimeText,
+					isClosed: surveyInfo.isClosed,
+				}
+			: null);
+
+	const surveyTitle = currentSurvey?.title ?? "설문 제목";
 	const surveyDescription =
-		surveyFromState?.description ??
-		"설문 참여를 통해 다양한 의견을 들려주세요.";
-	const surveyTopicName = surveyFromState?.topicId
-		? topics.find((topic) => topic.id === surveyFromState.topicId)?.name
+		currentSurvey?.description ?? "설문 참여를 통해 다양한 의견을 들려주세요.";
+	const surveyTopicName = currentSurvey?.topicId
+		? topics.find((topic) => topic.id === currentSurvey.topicId)?.name
 		: undefined;
-	const remainingTimeText = surveyFromState?.remainingTimeText;
-	const isClosed = surveyFromState?.isClosed || remainingTimeText === "마감됨";
+	const remainingTimeText = currentSurvey?.remainingTimeText;
+	const isClosed = currentSurvey?.isClosed || remainingTimeText === "마감됨";
 
 	const handleStart = () => {
 		if (sortedQuestions.length === 0 || isClosed) {

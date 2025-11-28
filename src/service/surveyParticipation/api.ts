@@ -18,7 +18,13 @@ export interface GetSurveyParticipationParams {
 //설문에 대한 응답 생성
 export const getSurveyParticipation = async (
 	params: GetSurveyParticipationParams,
-): Promise<{ info: TransformedSurveyQuestion[] }> => {
+): Promise<{
+	info: TransformedSurveyQuestion[];
+	title: string;
+	description: string;
+	interests: string[];
+	deadline: string;
+}> => {
 	const result = await apiCall<SurveyParticipationInfo>({
 		method: "GET",
 		url: "/v1/survey-participation/surveys",
@@ -58,7 +64,13 @@ export const getSurveyParticipation = async (
 		return base;
 	});
 
-	return { info: transformed };
+	return {
+		info: transformed,
+		title: result.title,
+		description: result.description,
+		interests: result.interests,
+		deadline: result.deadline,
+	};
 };
 
 //설문에 대한 응답 생성
