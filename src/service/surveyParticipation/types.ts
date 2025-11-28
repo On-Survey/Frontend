@@ -79,6 +79,12 @@ export const mapBackendQuestionType = (
 };
 
 export interface SurveyParticipationInfo {
+	surveyId: number;
+	memberId: number;
+	title: string;
+	description: string;
+	interests: string[];
+	deadline: string;
 	info: SurveyParticipationQuestion[];
 }
 

@@ -10,9 +10,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	getScreenings,
+	getSurveyParticipation,
 	submitScreeningResponse,
 } from "../service/surveyParticipation";
 import type { ScreeningQuestion } from "../service/surveyParticipation/types";
+import type { SurveyListItem } from "../types/surveyList";
+import { formatRemainingTime } from "../utils/FormatDate";
 
 export const OxScreening = () => {
 	const navigate = useNavigate();
@@ -82,9 +85,37 @@ export const OxScreening = () => {
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
 		if (nextSurveyId) {
-			navigate(`/survey?surveyId=${nextSurveyId}`, {
-				state: { surveyId: String(nextSurveyId) },
-			});
+			try {
+				// 설문 데이터를 미리 가져와서 SurveyListItem 형태로 변환
+				const surveyData = await getSurveyParticipation({
+					surveyId: nextSurveyId,
+				});
+				const remainingTimeText = surveyData.deadline
+					? formatRemainingTime(surveyData.deadline)
+					: undefined;
+				const isClosed = remainingTimeText === "마감됨";
+
+				const survey: SurveyListItem = {
+					id: String(nextSurveyId),
+					topicId: (surveyData.interests?.[0] ??
+						"CAREER") as SurveyListItem["topicId"],
+					title: surveyData.title,
+					iconType: "icon",
+					description: surveyData.description,
+					remainingTimeText,
+					isClosed,
+				};
+
+				navigate(`/survey?surveyId=${nextSurveyId}`, {
+					state: { surveyId: String(nextSurveyId), survey },
+				});
+			} catch (err) {
+				console.error("설문 데이터 조회 실패:", err);
+				// 실패하면 surveyId 전달
+				navigate(`/survey?surveyId=${nextSurveyId}`, {
+					state: { surveyId: String(nextSurveyId) },
+				});
+			}
 		} else {
 			navigate("/survey");
 		}

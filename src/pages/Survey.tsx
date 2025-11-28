@@ -2,10 +2,11 @@ import { colors } from "@toss/tds-colors";
 import { Asset, Border, FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { topics } from "../constants/topics";
+import { type InterestId, topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
+import { formatRemainingTime } from "../utils/FormatDate";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
 
 export const Survey = () => {
@@ -25,6 +26,13 @@ export const Survey = () => {
 
 	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const [surveyInfo, setSurveyInfo] = useState<{
+		title: string;
+		description: string;
+		topicId?: InterestId;
+		remainingTimeText?: string;
+		isClosed?: boolean;
+	} | null>(null);
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -49,6 +57,20 @@ export const Survey = () => {
 					return;
 				}
 				setQuestions(result.info ?? []);
+
+				// API 응답에서 설문 메타 정보 설정
+				const remainingTimeText = result.deadline
+					? formatRemainingTime(result.deadline)
+					: undefined;
+				const isClosed = remainingTimeText === "마감됨";
+
+				setSurveyInfo({
+					title: result.title,
+					description: result.description,
+					topicId: (result.interests?.[0] ?? "CAREER") as InterestId,
+					remainingTimeText,
+					isClosed,
+				});
 			} catch (err) {
 				console.error("설문 조회 실패:", err);
 				if (!isMounted) {
@@ -83,15 +105,27 @@ export const Survey = () => {
 		return 4;
 	}, [questionCount]);
 
-	const surveyTitle = surveyFromState?.title ?? "설문 제목";
-	const surveyDescription =
-		surveyFromState?.description ??
-		"설문 참여를 통해 다양한 의견을 들려주세요.";
-	const surveyTopicName = surveyFromState?.topicId
-		? topics.find((topic) => topic.id === surveyFromState.topicId)?.name
+	const currentSurvey =
+		surveyFromState ??
+		(surveyInfo
+			? {
+					id: surveyId ?? "",
+					topicId: surveyInfo.topicId ?? "CAREER",
+					title: surveyInfo.title,
+					iconType: "icon" as const,
+					description: surveyInfo.description,
+					remainingTimeText: surveyInfo.remainingTimeText,
+					isClosed: surveyInfo.isClosed,
+				}
+			: null);
+
+	const surveyTitle = currentSurvey?.title;
+	const surveyDescription = currentSurvey?.description;
+	const surveyTopicName = currentSurvey?.topicId
+		? topics.find((topic) => topic.id === currentSurvey.topicId)?.name
 		: undefined;
-	const remainingTimeText = surveyFromState?.remainingTimeText;
-	const isClosed = surveyFromState?.isClosed || remainingTimeText === "마감됨";
+	const remainingTimeText = currentSurvey?.remainingTimeText;
+	const isClosed = currentSurvey?.isClosed || remainingTimeText === "마감됨";
 
 	const handleStart = () => {
 		if (sortedQuestions.length === 0 || isClosed) {
@@ -116,9 +150,11 @@ export const Survey = () => {
 			<div className="flex-1 overflow-y-auto pb-0">
 				<Top
 					title={
-						<Top.TitleParagraph size={22} color={colors.grey900}>
-							{surveyTitle}
-						</Top.TitleParagraph>
+						surveyTitle ? (
+							<Top.TitleParagraph size={22} color={colors.grey900}>
+								{surveyTitle}
+							</Top.TitleParagraph>
+						) : undefined
 					}
 					subtitleBottom={
 						surveyTopicName ? (
@@ -131,17 +167,7 @@ export const Survey = () => {
 									},
 								]}
 							/>
-						) : (
-							<Top.SubtitleBadges
-								badges={[
-									{
-										text: `# 예시 주제`,
-										color: "blue",
-										variant: "weak",
-									},
-								]}
-							/>
-						)
+						) : undefined
 					}
 				/>
 
@@ -179,28 +205,32 @@ export const Survey = () => {
 							ratio="1/1"
 						/>
 						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							300명이 이 설문에 참여했어요!
+							80명이 이 설문에 참여했어요!
 						</Text>
 					</div>
 				</div>
 
 				<Border variant="height16" className="w-full" />
 
-				<div className="px-4 mt-6">
-					<Text
-						display="block"
-						color={colors.grey700}
-						typography="t6"
-						fontWeight="regular"
-					>
-						{surveyDescription}
-					</Text>
-					{error ? (
-						<Text color={colors.red500} typography="t7" className="mt-4">
+				{surveyDescription && (
+					<div className="px-4 mt-6">
+						<Text
+							display="block"
+							color={colors.grey700}
+							typography="t6"
+							fontWeight="regular"
+						>
+							{surveyDescription}
+						</Text>
+					</div>
+				)}
+				{error && (
+					<div className="px-4 mt-6">
+						<Text color={colors.red500} typography="t7">
 							{error}
 						</Text>
-					) : null}
-				</div>
+					</div>
+				)}
 			</div>
 
 			<div className="fixed left-0 right-0 bottom-[120px] z-10 px-4">

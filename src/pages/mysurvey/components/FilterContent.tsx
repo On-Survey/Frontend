@@ -39,8 +39,11 @@ export const FilterContent = ({
 
 	const getAvailableAges = () => {
 		if (!surveyInfo) return AGE_RANGES;
+
+		if (surveyInfo.ages.includes("ALL")) {
+			return AGE_RANGES;
+		}
 		const availableAgeLabels = surveyInfo.ages
-			.filter((age) => age !== "ALL")
 			.map((age) => getAgeLabelSimple(age as AgeCode))
 			.filter((label) => label !== "");
 		const sortedAges = availableAgeLabels.sort((a, b) => {

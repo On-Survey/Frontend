@@ -1,6 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, Button, Tab } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SurveyInfo } from "../../../service/mysurvey/types";
 import { FilterContent } from "./FilterContent";
 
@@ -8,6 +8,9 @@ interface SurveyFilterBottomSheetProps {
 	open: boolean;
 	onClose: () => void;
 	surveyInfo?: SurveyInfo;
+	initialAges?: string[];
+	initialGenders?: string[];
+	initialLocations?: string[];
 	onApplyFilters: (
 		ages: string[],
 		genders: string[],
@@ -21,12 +24,26 @@ export const SurveyFilterBottomSheet = ({
 	open,
 	onClose,
 	surveyInfo,
+	initialAges = [],
+	initialGenders = [],
+	initialLocations = [],
 	onApplyFilters,
 }: SurveyFilterBottomSheetProps) => {
 	const [activeTab, setActiveTab] = useState<FilterTab>("age");
-	const [selectedAges, setSelectedAges] = useState<string[]>([]);
-	const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
-	const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+	const [selectedAges, setSelectedAges] = useState<string[]>(initialAges);
+	const [selectedGenders, setSelectedGenders] =
+		useState<string[]>(initialGenders);
+	const [selectedLocations, setSelectedLocations] =
+		useState<string[]>(initialLocations);
+
+	// 바텀시트가 열릴 때 초기값 설정
+	useEffect(() => {
+		if (open) {
+			setSelectedAges(initialAges);
+			setSelectedGenders(initialGenders);
+			setSelectedLocations(initialLocations);
+		}
+	}, [open, initialAges, initialGenders, initialLocations]);
 
 	const handleTabChange = (index: number) => {
 		const tabs: FilterTab[] = ["age", "gender", "location"];
@@ -35,6 +52,7 @@ export const SurveyFilterBottomSheet = ({
 
 	const handleConfirm = () => {
 		onApplyFilters(selectedAges, selectedGenders, selectedLocations);
+		onClose();
 	};
 
 	return (
