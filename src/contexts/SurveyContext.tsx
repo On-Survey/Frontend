@@ -24,7 +24,6 @@ const initialState: SurveyFormState = {
 		description: "",
 		question: [],
 	},
-	titleStepCompleted: false,
 	screening: {
 		enabled: false,
 		question: "",
@@ -97,12 +96,6 @@ function surveyFormReducer(
 					...state.survey,
 					question: action.payload,
 				},
-			};
-
-		case "SET_TITLE_STEP_COMPLETED":
-			return {
-				...state,
-				titleStepCompleted: action.payload,
 			};
 
 		case "SET_SCREENING_ENABLED":
@@ -222,10 +215,6 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		dispatch({ type: "SET_DESCRIPTION", payload: description });
 	}, []);
 
-	const setTitleStepCompleted = useCallback((completed: boolean) => {
-		dispatch({ type: "SET_TITLE_STEP_COMPLETED", payload: completed });
-	}, []);
-
 	const setScreeningEnabled = useCallback((enabled: boolean) => {
 		dispatch({ type: "SET_SCREENING_ENABLED", payload: enabled });
 	}, []);
@@ -270,7 +259,6 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		reorderQuestions,
 		setTitle,
 		setDescription,
-		setTitleStepCompleted,
 		setScreeningEnabled,
 		setScreeningQuestion,
 		setScreeningAnswerType,

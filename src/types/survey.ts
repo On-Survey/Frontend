@@ -124,7 +124,6 @@ export interface TopicInfo {
 export interface SurveyFormState {
 	surveyId: number | null;
 	survey: Survey;
-	titleStepCompleted: boolean; // 제목 단계 완료 여부
 	screening: ScreeningInfo; // 스크리닝 정보
 	topics: TopicInfo[]; // 관심사 정보
 }
@@ -157,7 +156,6 @@ export type SurveyFormAction =
 	  }
 	| { type: "DELETE_QUESTION"; payload: string }
 	| { type: "REORDER_QUESTIONS"; payload: Question[] }
-	| { type: "SET_TITLE_STEP_COMPLETED"; payload: boolean }
 	| { type: "SET_SCREENING_ENABLED"; payload: boolean }
 	| { type: "SET_SCREENING_QUESTION"; payload: string }
 	| { type: "SET_SCREENING_ANSWER_TYPE"; payload: ScreeningAnswerType | null }
@@ -179,7 +177,6 @@ export interface SurveyContextType {
 	reorderQuestions: (questions: Question[]) => void;
 	setTitle: (title: string) => void;
 	setDescription: (description: string) => void;
-	setTitleStepCompleted: (completed: boolean) => void;
 	setScreeningEnabled: (enabled: boolean) => void;
 	setScreeningQuestion: (question: string) => void;
 	setScreeningAnswerType: (answerType: ScreeningAnswerType | null) => void;
