@@ -9,7 +9,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FormController } from "../../components/form/FormController";
 import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
@@ -21,22 +21,31 @@ import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
 } from "../../utils/questionFactory";
+import { useDelayedDisplayOrderMap } from "./hooks/useDelayedDisplayOrderMap";
+import { useQuestionReorder } from "./hooks/useQuestionReorder";
 
 export const QuestionHome = () => {
-	const [isReorderMode, setIsReorderMode] = useState(false);
-	const [displayOrderMap, setDisplayOrderMap] = useState<
-		Record<number, number>
-	>({});
-	const hasInitializedDisplayOrder = useRef(false);
 	const { state, deleteQuestion, reorderQuestions } = useSurvey();
 	const { setSurveyStep } = useMultiStep();
-	const navigate = useNavigate();
 
 	const {
 		isOpen: isConfirmDialogOpen,
 		handleOpen: handleConfirmDialogOpen,
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
+
+	const { sortedQuestions, handleMoveUp, handleMoveDown } = useQuestionReorder({
+		questions: state.survey.question,
+		onReorder: reorderQuestions,
+	});
+
+	const displayOrderMap = useDelayedDisplayOrderMap({
+		questions: state.survey.question,
+	});
+
+	const [isReorderMode, setIsReorderMode] = useState(false);
+
+	const navigate = useNavigate();
 
 	const handleConfirmDialogCancel = () => {
 		handleConfirmDialogClose();
@@ -51,77 +60,13 @@ export const QuestionHome = () => {
 		setSurveyStep(0);
 	};
 
-	const sortedQuestions = [...state.survey.question].sort(
-		(a, b) => a.questionOrder - b.questionOrder,
-	);
-
 	const handleQuestionClick = (questionType: string, questionId: number) => {
 		const route =
 			QUESTION_TYPE_ROUTES[questionType as keyof typeof QUESTION_TYPE_ROUTES];
 		if (route) {
-			console.log(`${route}?questionId=${questionId}`);
 			navigate(`${route}?questionId=${questionId}`);
 		}
 	};
-
-	const handleMoveUp = (e: React.MouseEvent, currentIndex: number) => {
-		e.stopPropagation();
-		if (currentIndex === 0) return;
-
-		const newQuestions = [...sortedQuestions];
-		const temp = newQuestions[currentIndex];
-		newQuestions[currentIndex] = newQuestions[currentIndex - 1];
-		newQuestions[currentIndex - 1] = temp;
-
-		const updatedQuestions = newQuestions.map((question, index) => ({
-			...question,
-			questionOrder: index,
-		}));
-
-		reorderQuestions(updatedQuestions);
-	};
-
-	const handleMoveDown = (e: React.MouseEvent, currentIndex: number) => {
-		e.stopPropagation();
-		if (currentIndex === sortedQuestions.length - 1) return;
-
-		const newQuestions = [...sortedQuestions];
-		const temp = newQuestions[currentIndex];
-		newQuestions[currentIndex] = newQuestions[currentIndex + 1];
-		newQuestions[currentIndex + 1] = temp;
-
-		const updatedQuestions = newQuestions.map((question, index) => ({
-			...question,
-			questionOrder: index,
-		}));
-
-		reorderQuestions(updatedQuestions);
-	};
-
-	useEffect(() => {
-		const sortedQuestionsList = [...state.survey.question].sort(
-			(a, b) => a.questionOrder - b.questionOrder,
-		);
-
-		const newOrderMap: Record<number, number> = {};
-		sortedQuestionsList.forEach((question, index) => {
-			newOrderMap[question.questionId] = index;
-		});
-
-		if (!hasInitializedDisplayOrder.current) {
-			setDisplayOrderMap(newOrderMap);
-			hasInitializedDisplayOrder.current = true;
-			return;
-		}
-
-		const timer = window.setTimeout(() => {
-			setDisplayOrderMap(newOrderMap);
-		}, 600);
-
-		return () => {
-			window.clearTimeout(timer);
-		};
-	}, [state.survey.question]);
 
 	useBackEventListener(handleConfirmDialogOpen);
 
