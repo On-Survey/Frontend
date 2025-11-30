@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import type { QuestionInfo } from "../../../types/survey";
+
 import {
 	createScreenings,
 	createSurveyInterests,
