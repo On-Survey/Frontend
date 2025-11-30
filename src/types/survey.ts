@@ -124,16 +124,11 @@ export interface TopicInfo {
 export interface SurveyFormState {
 	surveyId: number | null;
 	survey: Survey;
-	isDirty: boolean; // 변경사항이 있는지 여부
-	isSubmitting: boolean; // 제출 중인지 여부
-	isLoading: boolean; // 로딩 중인지 여부
-	error: string | null; // 에러 메시지
 	titleStepCompleted: boolean; // 제목 단계 완료 여부
 	screening: ScreeningInfo; // 스크리닝 정보
 	topics: TopicInfo[]; // 관심사 정보
 }
 
-// 문항 업데이트를 위한 타입 (공통 필드만)
 export type QuestionUpdateData = {
 	questionId?: number;
 	title?: string;
@@ -162,10 +157,6 @@ export type SurveyFormAction =
 	  }
 	| { type: "DELETE_QUESTION"; payload: string }
 	| { type: "REORDER_QUESTIONS"; payload: Question[] }
-	| { type: "SET_LOADING"; payload: boolean }
-	| { type: "SET_SUBMITTING"; payload: boolean }
-	| { type: "SET_ERROR"; payload: string | null }
-	| { type: "SET_DIRTY"; payload: boolean }
 	| { type: "SET_TITLE_STEP_COMPLETED"; payload: boolean }
 	| { type: "SET_SCREENING_ENABLED"; payload: boolean }
 	| { type: "SET_SCREENING_QUESTION"; payload: string }
@@ -182,7 +173,6 @@ export type SurveyFormAction =
 export interface SurveyContextType {
 	state: SurveyFormState;
 	dispatch: React.Dispatch<SurveyFormAction>;
-	// 편의 함수들
 	addQuestion: (question: Question) => void;
 	updateQuestion: (id: string, question: QuestionUpdateData) => void;
 	deleteQuestion: (id: string) => void;
@@ -193,8 +183,6 @@ export interface SurveyContextType {
 	setScreeningEnabled: (enabled: boolean) => void;
 	setScreeningQuestion: (question: string) => void;
 	setScreeningAnswerType: (answerType: ScreeningAnswerType | null) => void;
-	setScreening: (screening: ScreeningInfo) => void;
-	setTopics: (topics: TopicInfo[]) => void;
 	addTopic: (topic: TopicInfo) => void;
 	removeTopic: (topicId: string) => void;
 	resetForm: () => void;

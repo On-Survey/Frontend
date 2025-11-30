@@ -9,7 +9,6 @@ import type {
 	Question,
 	QuestionUpdateData,
 	ScreeningAnswerType,
-	ScreeningInfo,
 	Survey,
 	SurveyContextType,
 	SurveyFormAction,
@@ -25,10 +24,6 @@ const initialState: SurveyFormState = {
 		description: "",
 		question: [],
 	},
-	isDirty: false,
-	isSubmitting: false,
-	isLoading: false,
-	error: null,
 	titleStepCompleted: false,
 	screening: {
 		enabled: false,
@@ -51,7 +46,6 @@ function surveyFormReducer(
 					...state.survey,
 					title: action.payload,
 				},
-				isDirty: true,
 			};
 
 		case "SET_DESCRIPTION":
@@ -61,7 +55,6 @@ function surveyFormReducer(
 					...state.survey,
 					description: action.payload,
 				},
-				isDirty: true,
 			};
 
 		case "ADD_QUESTION":
@@ -71,7 +64,6 @@ function surveyFormReducer(
 					...state.survey,
 					question: [...state.survey.question, action.payload],
 				},
-				isDirty: true,
 			};
 
 		case "UPDATE_QUESTION":
@@ -85,7 +77,6 @@ function surveyFormReducer(
 							: question,
 					),
 				},
-				isDirty: true,
 			};
 
 		case "DELETE_QUESTION":
@@ -97,7 +88,6 @@ function surveyFormReducer(
 						(question) => question.questionId.toString() !== action.payload,
 					),
 				},
-				isDirty: true,
 			};
 
 		case "REORDER_QUESTIONS":
@@ -107,31 +97,6 @@ function surveyFormReducer(
 					...state.survey,
 					question: action.payload,
 				},
-				isDirty: true,
-			};
-
-		case "SET_LOADING":
-			return {
-				...state,
-				isLoading: action.payload,
-			};
-
-		case "SET_SUBMITTING":
-			return {
-				...state,
-				isSubmitting: action.payload,
-			};
-
-		case "SET_ERROR":
-			return {
-				...state,
-				error: action.payload,
-			};
-
-		case "SET_DIRTY":
-			return {
-				...state,
-				isDirty: action.payload,
 			};
 
 		case "SET_TITLE_STEP_COMPLETED":
@@ -147,7 +112,6 @@ function surveyFormReducer(
 					...state.screening,
 					enabled: action.payload,
 				},
-				isDirty: true,
 			};
 
 		case "SET_SCREENING_QUESTION":
@@ -157,7 +121,6 @@ function surveyFormReducer(
 					...state.screening,
 					question: action.payload,
 				},
-				isDirty: true,
 			};
 
 		case "SET_SCREENING_ANSWER_TYPE":
@@ -167,35 +130,30 @@ function surveyFormReducer(
 					...state.screening,
 					answerType: action.payload,
 				},
-				isDirty: true,
 			};
 
 		case "SET_SCREENING":
 			return {
 				...state,
 				screening: action.payload,
-				isDirty: true,
 			};
 
 		case "SET_TOPICS":
 			return {
 				...state,
 				topics: action.payload,
-				isDirty: true,
 			};
 
 		case "ADD_TOPIC":
 			return {
 				...state,
 				topics: [...state.topics, action.payload],
-				isDirty: true,
 			};
 
 		case "REMOVE_TOPIC":
 			return {
 				...state,
 				topics: state.topics.filter((topic) => topic.id !== action.payload),
-				isDirty: true,
 			};
 		case "RESET_FORM":
 			return initialState;
@@ -204,8 +162,6 @@ function surveyFormReducer(
 			return {
 				...state,
 				survey: action.payload,
-				isDirty: false,
-				error: null,
 			};
 
 		case "SET_SURVEY_ID":
@@ -233,7 +189,6 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 	// 편의 함수들
 	const addQuestion = useCallback(
 		(question: Question) => {
-			// 기존 질문들의 최대 questionOrder 값을 찾아서 +1
 			const maxOrder = state.survey.question.reduce(
 				(max, q) => Math.max(max, q.questionOrder),
 				-1,
@@ -286,14 +241,6 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		[],
 	);
 
-	const setScreening = useCallback((screening: ScreeningInfo) => {
-		dispatch({ type: "SET_SCREENING", payload: screening });
-	}, []);
-
-	const setTopics = useCallback((topics: TopicInfo[]) => {
-		dispatch({ type: "SET_TOPICS", payload: topics });
-	}, []);
-
 	const addTopic = useCallback((topic: TopicInfo) => {
 		dispatch({ type: "ADD_TOPIC", payload: topic });
 	}, []);
@@ -327,8 +274,6 @@ export function SurveyProvider({ children }: SurveyProviderProps) {
 		setScreeningEnabled,
 		setScreeningQuestion,
 		setScreeningAnswerType,
-		setScreening,
-		setTopics,
 		addTopic,
 		removeTopic,
 		resetForm,
