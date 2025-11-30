@@ -13,7 +13,6 @@ import { PaymentProvider } from "./contexts/PaymentContext";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { UserProvider } from "./contexts/UserContext";
 import {
-	CreateForm,
 	CreateFormStart,
 	DatePage,
 	EstimatePage,
@@ -35,6 +34,7 @@ import {
 	ShortAnswerPage,
 	Survey,
 	SurveyListPage,
+	SurveyMain,
 	TitleAndDescriptionEditPage,
 } from "./pages";
 import EstimateNavigationPage from "./pages/estimate/EstimatePage";
@@ -176,7 +176,7 @@ export const App = () => {
 						<Route element={<SurveyProviderLayout />}>
 							<Route element={<MultiStepProviderWrapper />}>
 								<Route element={<PaymentProviderLayout />}>
-									<Route path="/createForm" element={<CreateForm />} />
+									<Route path="/createForm" element={<SurveyMain />} />
 									<Route
 										path="/payment/location"
 										element={<LocationSelectPage />}
