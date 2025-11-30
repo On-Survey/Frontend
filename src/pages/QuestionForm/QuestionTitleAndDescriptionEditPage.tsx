@@ -2,7 +2,7 @@ import { FixedBottomCTA, TextArea } from "@toss/tds-mobile";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 
-export const TitleAndDescriptionEditPage = () => {
+export const QuestionTitleAndDescriptionEditPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
