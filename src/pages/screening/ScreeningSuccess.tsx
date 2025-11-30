@@ -5,7 +5,7 @@ import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 
 export const ScreeningSuccess = () => {
-	const { handleStepChange, goPrevScreening } = useMultiStep();
+	const { setSurveyStep, goPrevScreening } = useMultiStep();
 	const { state } = useSurvey();
 	const question = state.screening.question;
 	const selected = state.screening.answerType;
@@ -39,7 +39,7 @@ export const ScreeningSuccess = () => {
 					? `[${question}] 질문에 대해 ${selected} 선택을 한 타겟만 이 설문에 참여할 수 있어요`
 					: "스크리닝 설문이 구성되었습니다."}
 			</Text>
-			<FixedBottomCTA loading={false} onClick={() => handleStepChange(3)}>
+			<FixedBottomCTA loading={false} onClick={() => setSurveyStep(3)}>
 				다음
 			</FixedBottomCTA>
 		</>

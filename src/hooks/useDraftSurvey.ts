@@ -12,7 +12,7 @@ export const useDraftSurvey = () => {
 	const navigate = useNavigate();
 	const { openToast } = useToast();
 	const { loadSurvey, setSurveyId } = useSurvey();
-	const { setActiveStep } = useMultiStep();
+	const { setSurveyStep } = useMultiStep();
 
 	const handleDraftClick = async (surveyId: number, surveys: DraftSurvey[]) => {
 		console.log("handleDraftClick called with surveyId:", surveyId);
@@ -59,7 +59,7 @@ export const useDraftSurvey = () => {
 				question: questions,
 			});
 			setSurveyId(data.surveyId);
-			setActiveStep(1);
+			setSurveyStep(1);
 			navigate("/createForm");
 
 			openToast(`문항 ${data.questions.length}개 불러왔어요.`, {

@@ -26,7 +26,7 @@ export const FormController = ({
 	onReorderModeChange,
 }: FormControllerProps) => {
 	const hasVisitedControlsRef = useRef(false);
-	const { handleStepChange } = useMultiStep();
+	const { setSurveyStep } = useMultiStep();
 	const { setScreeningEnabled, state } = useSurvey();
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -127,11 +127,11 @@ export const FormController = ({
 	};
 
 	const handleNext = () => {
-		handleStepChange(2);
+		setSurveyStep(2);
 	};
 
 	const handleSkip = () => {
-		handleStepChange(3);
+		setSurveyStep(3);
 		handleConfirmDialogClose();
 	};
 

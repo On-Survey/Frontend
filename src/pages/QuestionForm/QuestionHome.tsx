@@ -29,7 +29,7 @@ export const QuestionHome = () => {
 	>({});
 	const hasInitializedDisplayOrder = useRef(false);
 	const { state, deleteQuestion, reorderQuestions } = useSurvey();
-	const { handleStepChange } = useMultiStep();
+	const { setSurveyStep } = useMultiStep();
 	const navigate = useNavigate();
 
 	const {
@@ -44,11 +44,11 @@ export const QuestionHome = () => {
 
 	const handleConfirmDialogConfirm = () => {
 		handleConfirmDialogClose();
-		handleStepChange(0);
+		setSurveyStep(0);
 	};
 
 	const handlePrevious = () => {
-		handleStepChange(0);
+		setSurveyStep(0);
 	};
 
 	const sortedQuestions = [...state.survey.question].sort(

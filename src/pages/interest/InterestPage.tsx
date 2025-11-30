@@ -7,7 +7,7 @@ import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createSurveyInterests } from "../../service/form";
 
 export const InterestPage = () => {
-	const { handleStepChange } = useMultiStep();
+	const { setSurveyStep } = useMultiStep();
 	const { state, addTopic, removeTopic } = useSurvey();
 	const selectedTopics = state.topics;
 
@@ -26,9 +26,9 @@ export const InterestPage = () => {
 
 	useBackEventListener(() => {
 		if (state.screening.enabled) {
-			handleStepChange(2);
+			setSurveyStep(2);
 		} else {
-			handleStepChange(1);
+			setSurveyStep(1);
 		}
 	});
 
@@ -40,7 +40,7 @@ export const InterestPage = () => {
 			interests: interests,
 		});
 		if (response.success) {
-			handleStepChange(4);
+			setSurveyStep(4);
 		}
 	};
 

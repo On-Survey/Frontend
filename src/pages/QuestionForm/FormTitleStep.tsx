@@ -13,7 +13,7 @@ export const FormTitleStep = () => {
 		setTitleStepCompleted,
 		setSurveyId,
 	} = useSurvey();
-	const { handleStepChange } = useMultiStep();
+	const { setSurveyStep } = useMultiStep();
 
 	const step = state.titleStepCompleted;
 	const hasInitialized = useRef(false);
@@ -62,7 +62,7 @@ export const FormTitleStep = () => {
 			});
 
 			if (result.success) {
-				handleStepChange(1);
+				setSurveyStep(1);
 			}
 		} else {
 			// 생성 모드
@@ -74,7 +74,7 @@ export const FormTitleStep = () => {
 			if (result.success) {
 				const { surveyId } = result.result;
 				setSurveyId(surveyId);
-				handleStepChange(1);
+				setSurveyStep(1);
 			}
 		}
 

@@ -5,7 +5,7 @@ import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 
 export const PaymentSuccessPage = () => {
-	const { resetScreening, resetActiveStep, resetPayment } = useMultiStep();
+	const { resetScreening, resetSurvey, resetPayment } = useMultiStep();
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -15,7 +15,7 @@ export const PaymentSuccessPage = () => {
 		const target = isChargeFlow ? "/mypage" : "/mysurvey";
 		navigate(target);
 		requestAnimationFrame(() => {
-			resetActiveStep();
+			resetSurvey();
 			resetScreening();
 			resetPayment();
 		});
