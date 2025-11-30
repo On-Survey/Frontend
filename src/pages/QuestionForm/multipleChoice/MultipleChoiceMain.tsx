@@ -9,12 +9,12 @@ import {
 	Switch,
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
-import { QuestionSelectionBottomSheet } from "../../../components/form/bottomSheet/QuestionSelectionBottomSheet";
-import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
-import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
 import { createSurveyQuestion } from "../api";
+import { QuestionSelectionBottomSheet } from "../components/bottomSheet/QuestionSelectionBottomSheet";
+import { CreateMultiChoiceBottomSheet } from "../components/multipleChoice/CreateMultiChoiceBottomSheet";
+import { SelectionLimitBottomSheet } from "../components/multipleChoice/SelectionLimitBottomSheet";
 import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const MultipleChoiceMain = () => {

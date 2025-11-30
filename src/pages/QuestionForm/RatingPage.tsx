@@ -9,10 +9,10 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
-import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { createSurveyQuestion } from "./api";
+import { RatingLabelEditBottomSheet } from "./components/bottomSheet/RatingLabelEditBottomSheete";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const RatingPage = () => {

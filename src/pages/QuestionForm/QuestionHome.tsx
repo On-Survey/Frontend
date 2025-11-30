@@ -11,7 +11,6 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FormController } from "../../components/form/FormController";
 import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -21,6 +20,7 @@ import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
 } from "../../utils/questionFactory";
+import { FormController } from "./components/controller/FormController";
 import { useQuestionReorder } from "./hooks/useQuestionReorder";
 
 export const QuestionHome = () => {

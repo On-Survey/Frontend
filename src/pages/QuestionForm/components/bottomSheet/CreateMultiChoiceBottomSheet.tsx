@@ -1,8 +1,8 @@
 import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, ListRow } from "@toss/tds-mobile";
 import { useMemo } from "react";
-import { useSurvey } from "../../../contexts/SurveyContext";
-import { isMultipleChoiceQuestion } from "../../../types/survey";
+import { useSurvey } from "../../../../contexts/SurveyContext";
+import { isMultipleChoiceQuestion } from "../../../../types/survey";
 
 interface CreateMultiChoiceBottomSheetProps {
 	questionId: string;

@@ -8,10 +8,10 @@ import {
 	ICON_PROPS,
 	QUESTION_TYPES,
 	TEXT_PROPS,
-} from "../../constants/formController";
-import { useModal } from "../../hooks/UseToggle";
-import type { QuestionType } from "../../types/survey";
-import { QuestionTitleBottomSheet } from "./bottomSheet/QuestionTitleBottomSheet";
+} from "../../../../constants/formController";
+import { useModal } from "../../../../hooks/UseToggle";
+import type { QuestionType } from "../../../../types/survey";
+import { QuestionTitleBottomSheet } from "../bottomSheet/QuestionTitleBottomSheet";
 
 interface QuestionControllerProps {
 	onPrevious: () => void;

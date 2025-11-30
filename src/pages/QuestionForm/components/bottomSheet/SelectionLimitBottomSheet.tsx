@@ -1,6 +1,6 @@
 import { BottomSheet, TextField } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useSurvey } from "../../../contexts/SurveyContext";
+import { useSurvey } from "../../../../contexts/SurveyContext";
 
 interface SelectionLimitBottomSheetProps {
 	questionId: string;

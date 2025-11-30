@@ -8,12 +8,12 @@ import {
 	ICON_PROPS,
 	MAIN_CONTROLS,
 	TEXT_PROPS,
-} from "../../constants/formController";
-import { useMultiStep } from "../../contexts/MultiStepContext";
-import { useSurvey } from "../../contexts/SurveyContext";
-import { useModal } from "../../hooks/UseToggle";
-import { saveQuestions } from "../../pages/QuestionForm/api";
-import { convertQuestionsToServerFormat } from "../../utils/questionConverter";
+} from "../../../../constants/formController";
+import { useMultiStep } from "../../../../contexts/MultiStepContext";
+import { useSurvey } from "../../../../contexts/SurveyContext";
+import { useModal } from "../../../../hooks/UseToggle";
+import { convertQuestionsToServerFormat } from "../../../../utils/questionConverter";
+import { saveQuestions } from "../../api";
 import { QuestionController } from "./QuestionController";
 
 interface FormControllerProps {

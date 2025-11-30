@@ -1,7 +1,7 @@
 import { BottomSheet, TextField } from "@toss/tds-mobile";
 import { useMemo, useState } from "react";
-import { useSurvey } from "../../../contexts/SurveyContext";
-import { isMultipleChoiceQuestion } from "../../../types/survey";
+import { useSurvey } from "../../../../contexts/SurveyContext";
+import { isMultipleChoiceQuestion } from "../../../../types/survey";
 
 interface QuestionSelectionBottomSheetProps {
 	questionId: string;
