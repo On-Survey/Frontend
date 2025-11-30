@@ -4,7 +4,6 @@ import {
 	createScreenings,
 	createSurveyInterests,
 	createSurveyQuestion,
-	saveAsDraft,
 	saveQuestions,
 } from "../api/api";
 import type {
@@ -41,15 +40,6 @@ export const useCreateScreenings = () => {
 	>({
 		mutationFn: ({ surveyId, content, answer }) =>
 			createScreenings({ surveyId, content, answer }),
-	});
-};
-
-/**
- * 임시 저장 mutation
- */
-export const useSaveAsDraft = () => {
-	return useMutation<CreateSurveyQuestionResponse, Error, QuestionInfo>({
-		mutationFn: (questionInfo) => saveAsDraft(questionInfo),
 	});
 };
 

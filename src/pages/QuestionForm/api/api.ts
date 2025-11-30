@@ -75,19 +75,6 @@ export const createForm = async ({
 	return data;
 };
 
-export const saveAsDraft = async (
-	questionInfo: QuestionInfo,
-): Promise<CreateSurveyQuestionResponse> => {
-	const { data } = await api.put<
-		CreateSurveyQuestionResponse,
-		QuestionInfo["info"]
-	>(
-		`/v1/survey-form/surveys/${questionInfo.surveyId}/questions`,
-		questionInfo.info,
-	);
-	return data;
-};
-
 /**
  * 질문들을 서버 형식으로 변환하여 저장
  */
