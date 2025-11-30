@@ -2,7 +2,7 @@ import { IAP } from "@apps-in-toss/web-framework";
 
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
@@ -60,25 +60,25 @@ export const PaymentLoading = () => {
 		}, 3000);
 	}, [resetForm, resetEstimate, goNextPayment]);
 
-	const submitForm = useCallback(() => {
-		if (!formPayload) return;
-		createFormMutation.mutate(formPayload, {
-			onSuccess: () => {
-				handleSuccess();
-			},
-			onError: (error) => {
-				console.error("폼 생성 실패:", error);
-			},
-		});
-	}, [formPayload, createFormMutation, handleSuccess]);
+	const hasSubmittedRef = useRef(false);
 
 	useEffect(() => {
-		if (!userInfo) return;
+		if (!userInfo || !formPayload || hasSubmittedRef.current) return;
+		if (createFormMutation.isPending) return;
 
 		const hasEnoughCoin = userInfo.result.coin >= priceBreakdown.totalPrice;
 
 		if (hasEnoughCoin) {
-			submitForm();
+			hasSubmittedRef.current = true;
+			createFormMutation.mutate(formPayload, {
+				onSuccess: () => {
+					handleSuccess();
+				},
+				onError: (error) => {
+					console.error("폼 생성 실패:", error);
+					hasSubmittedRef.current = false; // 실패 시 재시도 가능하도록
+				},
+			});
 			return;
 		}
 
@@ -100,8 +100,17 @@ export const PaymentLoading = () => {
 								),
 							});
 
-							if (response.success && formPayload) {
-								submitForm();
+							if (response.success && formPayload && !hasSubmittedRef.current) {
+								hasSubmittedRef.current = true;
+								createFormMutation.mutate(formPayload, {
+									onSuccess: () => {
+										handleSuccess();
+									},
+									onError: (error) => {
+										console.error("폼 생성 실패:", error);
+										hasSubmittedRef.current = false;
+									},
+								});
 							}
 							return true;
 						} catch (error) {
@@ -130,7 +139,7 @@ export const PaymentLoading = () => {
 		selectedCoinAmount,
 		formPayload,
 		handleSuccess,
-		submitForm,
+		createFormMutation,
 	]);
 
 	useBackEventListener(() => {});
