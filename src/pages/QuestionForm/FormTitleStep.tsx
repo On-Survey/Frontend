@@ -3,14 +3,17 @@ import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { createSurvey, patchSurvey } from "./api";
+import { useCreateSurvey, usePatchSurvey } from "./hooks/useSurveyMutation";
 
 export const FormTitleStep = () => {
 	const { state, setTitle, setDescription, setSurveyId } = useSurvey();
 	const { setSurveyStep } = useMultiStep();
+	const { mutate: createSurvey, isPending: isCreateSurveyPending } =
+		useCreateSurvey();
+	const { mutate: patchSurvey, isPending: isPatchSurveyPending } =
+		usePatchSurvey();
 
 	const [step, setStep] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		if (!step && state.survey.title.trim() && state.survey.description.trim()) {
@@ -32,35 +35,44 @@ export const FormTitleStep = () => {
 	};
 
 	const handleNextPage = async () => {
-		if (isSubmitting) return;
-		setIsSubmitting(true);
+		if (isCreateSurveyPending || isPatchSurveyPending) return;
 
 		if (state.surveyId) {
 			// 수정 모드
-			const result = await patchSurvey({
-				surveyId: state.surveyId,
-				title: state.survey.title,
-				description: state.survey.description,
-			});
-
-			if (result.success) {
-				setSurveyStep(1);
-			}
+			patchSurvey(
+				{
+					surveyId: state.surveyId,
+					title: state.survey.title,
+					description: state.survey.description,
+				},
+				{
+					onSuccess: (data) => {
+						setSurveyId(data.result.surveyId);
+						setSurveyStep(1);
+					},
+					onError: (error) => {
+						console.error("설문 수정 실패:", error);
+					},
+				},
+			);
 		} else {
 			// 생성 모드
-			const result = await createSurvey({
-				title: state.survey.title,
-				description: state.survey.description,
-			});
-
-			if (result.success) {
-				const { surveyId } = result.result;
-				setSurveyId(surveyId);
-				setSurveyStep(1);
-			}
+			createSurvey(
+				{
+					title: state.survey.title,
+					description: state.survey.description,
+				},
+				{
+					onSuccess: (data) => {
+						setSurveyId(data.result.surveyId);
+						setSurveyStep(1);
+					},
+					onError: (error) => {
+						console.error("설문 생성 실패:", error);
+					},
+				},
+			);
 		}
-
-		setIsSubmitting(false);
 	};
 
 	return (
@@ -131,7 +143,11 @@ export const FormTitleStep = () => {
 			)}
 			{step && (
 				<FixedBottomCTA
-					disabled={isSubmitting || !state.survey.description.trim()}
+					disabled={
+						isCreateSurveyPending ||
+						isPatchSurveyPending ||
+						!state.survey.description.trim()
+					}
 					onClick={handleNextPage}
 				>
 					확인
