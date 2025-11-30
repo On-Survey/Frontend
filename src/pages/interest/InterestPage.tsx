@@ -4,7 +4,7 @@ import { topics } from "../../constants/topics";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { createSurveyInterests } from "../../service/form";
+import { createSurveyInterests } from "../QuestionForm/api";
 
 export const InterestPage = () => {
 	const { setSurveyStep } = useMultiStep();

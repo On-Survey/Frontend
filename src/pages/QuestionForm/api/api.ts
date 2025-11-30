@@ -1,5 +1,5 @@
-import type { QuestionInfo } from "../../types/survey";
-import { api } from "../axios";
+import { api } from "../../../service/axios";
+import type { QuestionInfo } from "../../../types/survey";
 import type {
 	CreateFormRequest,
 	CreateFormResponse,

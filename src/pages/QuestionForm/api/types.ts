@@ -1,5 +1,5 @@
-import type { AgeCode } from "../../constants/payment";
-import type { QuestionInfo } from "../../types/survey";
+import type { AgeCode } from "../../../constants/payment";
+import type { QuestionInfo } from "../../../types/survey";
 
 export interface createSurveyQuestionRequest {
 	questionType:
@@ -117,29 +117,25 @@ export interface CreateSurveyQuestionResponse extends BaseResponse {
 }
 
 export interface CreateScreeningsResponse extends BaseResponse {
-	result:
-		| {
-				screeningId: number;
-				surveyId: number;
-				content: string;
-				answer: boolean;
-				errorClass?: string;
-				errorMessage?: string;
-		  }
-		| string;
+	result: {
+		screeningId: number;
+		surveyId: number;
+		content: string;
+		answer: boolean;
+		errorClass?: string;
+		errorMessage?: string;
+	};
 	success: boolean;
 }
 
 export interface CreateFormResponse extends BaseResponse {
-	result:
-		| {
-				formId: number;
-				surveyId: number;
-				errorClass?: string;
-				errorMessage?: string;
-		  }
-		| string
-		| boolean;
+	result: {
+		formId: number;
+		surveyId: number;
+		errorClass?: string;
+		errorMessage?: string;
+	};
+
 	success: boolean;
 }
 
@@ -157,15 +153,12 @@ export interface CreateFormRequest {
 }
 
 export interface SaveAsDraftResponse extends BaseResponse {
-	result:
-		| {
-				surveyId: number;
-				errorClass?: string;
-				errorMessage?: string;
-				info?: QuestionInfo;
-		  }
-		| string
-		| boolean;
+	result: {
+		surveyId: number;
+		errorClass?: string;
+		errorMessage?: string;
+		info?: QuestionInfo;
+	};
 	success: boolean;
 }
 

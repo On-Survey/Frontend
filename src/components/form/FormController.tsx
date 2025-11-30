@@ -12,7 +12,7 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
-import { saveQuestions } from "../../service/form";
+import { saveQuestions } from "../../pages/QuestionForm/api";
 import { convertQuestionsToServerFormat } from "../../utils/questionConverter";
 import { QuestionController } from "./QuestionController";
 

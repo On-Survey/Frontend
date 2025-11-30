@@ -14,7 +14,7 @@ import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleC
 import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
-import { createSurveyQuestion } from "../../../service/form";
+import { createSurveyQuestion } from "../api";
 import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const MultipleChoiceMain = () => {

@@ -3,7 +3,7 @@ import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { createSurvey, patchSurvey } from "../../service/form";
+import { createSurvey, patchSurvey } from "./api";
 
 export const FormTitleStep = () => {
 	const { state, setTitle, setDescription, setSurveyId } = useSurvey();

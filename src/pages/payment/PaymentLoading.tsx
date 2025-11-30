@@ -9,9 +9,9 @@ import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { createForm } from "../../service/form";
 import { createPayment } from "../../service/payments";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
+import { createForm } from "../QuestionForm/api";
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();

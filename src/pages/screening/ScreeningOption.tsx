@@ -3,7 +3,7 @@ import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { createScreenings } from "../../service/form";
+import { createScreenings } from "../QuestionForm/api";
 
 export const ScreeningOption = () => {
 	const { goNextScreening, goPrevScreening } = useMultiStep();

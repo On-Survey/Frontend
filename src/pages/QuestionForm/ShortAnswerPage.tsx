@@ -9,7 +9,7 @@ import {
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { createSurveyQuestion } from "../../service/form";
+import { createSurveyQuestion } from "./api";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const ShortAnswerPage = () => {

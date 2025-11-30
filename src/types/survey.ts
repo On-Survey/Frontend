@@ -1,4 +1,4 @@
-import type { Interest } from "../service/form";
+import type { Interest } from "../pages/QuestionForm/api";
 
 export type QuestionType =
 	| "multipleChoice" // 객관식

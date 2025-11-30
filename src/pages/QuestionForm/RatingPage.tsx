@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
-import { createSurveyQuestion } from "../../service/form";
+import { createSurveyQuestion } from "./api";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const RatingPage = () => {
