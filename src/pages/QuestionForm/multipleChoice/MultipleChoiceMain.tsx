@@ -8,41 +8,25 @@ import {
 	ListRow,
 	Switch,
 } from "@toss/tds-mobile";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { QuestionSelectionBottomSheet } from "../../../components/form/bottomSheet/QuestionSelectionBottomSheet";
 import { CreateMultiChoiceBottomSheet } from "../../../components/form/multipleChoice/CreateMultiChoiceBottomSheet";
 import { SelectionLimitBottomSheet } from "../../../components/form/multipleChoice/SelectionLimitBottomSheet";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
 import { createSurveyQuestion } from "../../../service/form";
-import { isMultipleChoiceQuestion } from "../../../types/survey";
+import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const MultipleChoiceMain = () => {
 	const { state, updateQuestion } = useSurvey();
 
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
 
-	const questions = state.survey.question;
-	const targetQuestion = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl &&
-					q.type === "multipleChoice",
-			)
-		: questions
-				.filter((q) => q.type === "multipleChoice")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+	const { question, questionId, isRequired, title, description } =
+		useQuestionByType("multipleChoice");
 
-	const question = isMultipleChoiceQuestion(targetQuestion)
-		? targetQuestion
-		: undefined;
-
-	const questionId = question?.questionId.toString();
 	const maxChoice = question?.maxChoice;
 	const options = question?.option ?? [];
-	const isRequired = question?.isRequired ?? false;
 
 	const { isOpen, handleOpen, handleClose } = useModal(false);
 
@@ -97,12 +81,11 @@ export const MultipleChoiceMain = () => {
 			surveyId: state.surveyId ?? 0,
 			questionInfo: {
 				questionType: "CHOICE",
-				title: question?.title ?? "",
-				description: question?.description ?? "",
+				title: title ?? "",
+				description: description ?? "",
 				questionOrder: question?.questionOrder ?? 0,
 			},
 		});
-		console.log(result);
 		if (result.success && typeof result !== "string") {
 			updateQuestion(questionId, {
 				questionId: result.result.questionId,

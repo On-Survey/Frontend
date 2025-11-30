@@ -8,35 +8,25 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createSurveyQuestion } from "../../service/form";
-import { isNPSQuestion } from "../../types/survey";
+import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const NPSPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
 
 	const [score, setScore] = useState<number | null>(null);
 
-	const questions = state.survey.question;
-	const targetQuestion = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl && q.type === "nps",
-			)
-		: questions
-				.filter((q) => q.type === "nps")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-
-	const question = isNPSQuestion(targetQuestion) ? targetQuestion : undefined;
-
-	const questionId = question?.questionId.toString();
-	const isRequired = question?.isRequired;
-	const title = question?.title;
-	const description = question?.description;
+	const {
+		question,
+		questionId,
+		questionIdFromUrl,
+		isRequired,
+		title,
+		description,
+	} = useQuestionByType("nps");
 
 	const handleRequiredChange = (checked: boolean) => {
 		if (questionId) {

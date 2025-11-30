@@ -7,36 +7,23 @@ import {
 	TextArea,
 	Top,
 } from "@toss/tds-mobile";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createSurveyQuestion } from "../../service/form";
-import { isLongAnswerQuestion } from "../../types/survey";
+import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const LongAnswerPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
 
-	const questions = state.survey.question;
-	const targetQuestion = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl &&
-					q.type === "longAnswer",
-			)
-		: questions
-				.filter((q) => q.type === "longAnswer")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-
-	const question = isLongAnswerQuestion(targetQuestion)
-		? targetQuestion
-		: undefined;
-
-	const questionId = question?.questionId.toString();
-	const isRequired = question?.isRequired ?? false;
-	const title = question?.title;
-	const description = question?.description;
+	const {
+		question,
+		questionId,
+		questionIdFromUrl,
+		isRequired,
+		title,
+		description,
+	} = useQuestionByType("longAnswer");
 
 	const handleRequiredChange = (checked: boolean) => {
 		if (questionId) {

@@ -6,34 +6,25 @@ import {
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { createSurveyQuestion } from "../../service/form";
-import { isDateQuestion } from "../../types/survey";
+import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const DatePage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
 
-	const questions = state.survey.question;
-	const targetQuestion = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl && q.type === "date",
-			)
-		: questions
-				.filter((q) => q.type === "date")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+	const {
+		question,
+		questionId,
+		questionIdFromUrl,
+		isRequired,
+		title,
+		description,
+	} = useQuestionByType("date");
 
-	const question = isDateQuestion(targetQuestion) ? targetQuestion : undefined;
-
-	const questionId = question?.questionId.toString();
-	const date = question?.date ?? new Date();
-	const isRequired = question?.isRequired ?? false;
-	const title = question?.title;
-	const description = question?.description;
+	const date = question?.date;
 
 	const handleDateChange = (newDate: Date) => {
 		if (questionId) {

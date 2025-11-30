@@ -8,35 +8,26 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RatingLabelEditBottomSheet } from "../../components/form/bottomSheet/RatingLabelEditBottomSheete";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { createSurveyQuestion } from "../../service/form";
-import { isRatingQuestion } from "../../types/survey";
+import { useQuestionByType } from "./hooks/useQuestionByType";
 
 export const RatingPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
 
-	const questions = state.survey.question;
-	const targetQuestion = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl && q.type === "rating",
-			)
-		: questions
-				.filter((q) => q.type === "rating")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
+	const {
+		question,
+		questionId,
+		questionIdFromUrl,
+		isRequired,
+		title,
+		description,
+	} = useQuestionByType("rating");
 
-	const question = isRatingQuestion(targetQuestion)
-		? targetQuestion
-		: undefined;
-
-	const questionId = question?.questionId.toString();
-	const isRequired = question?.isRequired ?? false;
 	const minValue = question?.minValue ?? "내용 입력하기";
 	const maxValue = question?.maxValue ?? "내용 입력하기";
 	const ratingCount = question?.rate ?? 10;
@@ -91,9 +82,6 @@ export const RatingPage = () => {
 			});
 		}
 	};
-
-	const title = question?.title;
-	const description = question?.description;
 
 	const handleTitleAndDescriptionEdit = () => {
 		if (questionIdFromUrl) {
