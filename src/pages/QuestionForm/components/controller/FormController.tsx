@@ -13,7 +13,7 @@ import { useMultiStep } from "../../../../contexts/MultiStepContext";
 import { useSurvey } from "../../../../contexts/SurveyContext";
 import { useModal } from "../../../../hooks/UseToggle";
 import { convertQuestionsToServerFormat } from "../../../../utils/questionConverter";
-import { saveQuestions } from "../../api";
+import { useSaveQuestions } from "../../hooks/useQuestionMutations";
 import { QuestionController } from "./QuestionController";
 
 interface FormControllerProps {
@@ -28,9 +28,7 @@ export const FormController = ({
 	const hasVisitedControlsRef = useRef(false);
 	const { setSurveyStep } = useMultiStep();
 	const { setScreeningEnabled, state } = useSurvey();
-
-	const [isOpen, setIsOpen] = useState(false);
-
+	const { mutate: saveQuestions } = useSaveQuestions();
 	const { openToast } = useToast();
 
 	const {
@@ -39,7 +37,9 @@ export const FormController = ({
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
 
-	const handleSaveAndIsConfirmDialogOpen = async () => {
+	const [isOpen, setIsOpen] = useState(false);
+
+	const handleSaveAndIsConfirmDialogOpen = () => {
 		generateHapticFeedback({ type: "tap" });
 		if (state.survey.question.length === 0) {
 			openToast("문항을 추가해주세요.", {
@@ -55,15 +55,24 @@ export const FormController = ({
 			surveyId,
 		);
 
-		const result = await saveQuestions({
-			surveyId,
-			questions: {
-				questions: serverQuestions,
+		saveQuestions(
+			{
+				surveyId,
+				questions: {
+					questions: serverQuestions,
+				},
 			},
-		});
-		if (result.success) {
-			handleConfirmDialogOpen();
-		}
+			{
+				onSuccess: (result) => {
+					if (result.success) {
+						handleConfirmDialogOpen();
+					}
+				},
+				onError: (error) => {
+					console.error("질문 저장 실패:", error);
+				},
+			},
+		);
 	};
 
 	const handleOpen = () => {
@@ -76,7 +85,7 @@ export const FormController = ({
 		setIsOpen(false);
 	};
 
-	const handleSave = async () => {
+	const handleSave = () => {
 		generateHapticFeedback({ type: "tap" });
 		if (state.survey.question.length === 0) {
 			openToast("문항을 추가해주세요.", {
@@ -91,20 +100,29 @@ export const FormController = ({
 			state.survey.question,
 			surveyId,
 		);
-		const result = await saveQuestions({
-			surveyId,
-			questions: {
-				questions: serverQuestions,
+		saveQuestions(
+			{
+				surveyId,
+				questions: {
+					questions: serverQuestions,
+				},
 			},
-		});
-
-		if (result.success) {
-			openToast("임시 저장됐어요.", {
-				type: "bottom",
-				lottie: "https://static.toss.im/lotties-common/check-green-spot.json",
-				higherThanCTA: true,
-			});
-		}
+			{
+				onSuccess: (result) => {
+					if (result.success) {
+						openToast("임시 저장됐어요.", {
+							type: "bottom",
+							lottie:
+								"https://static.toss.im/lotties-common/check-green-spot.json",
+							higherThanCTA: true,
+						});
+					}
+				},
+				onError: (error) => {
+					console.error("질문 저장 실패:", error);
+				},
+			},
+		);
 	};
 
 	const handleAddQuestion = () => {
