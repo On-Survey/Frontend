@@ -30,12 +30,12 @@ import {
 	PaymentMain,
 	QuestionListPage,
 	QuestionOptionsPage,
+	QuestionTitleAndDescriptionEditPage,
 	RatingPage,
 	ShortAnswerPage,
 	Survey,
 	SurveyListPage,
 	SurveyMain,
-	TitleAndDescriptionEditPage,
 } from "./pages";
 import EstimateNavigationPage from "./pages/estimate/EstimatePage";
 import { LocationSelectPage as EstimateLocationSelectPage } from "./pages/estimate/LocationSelectPage";
@@ -215,7 +215,7 @@ export const App = () => {
 									<Route path="/createForm/number" element={<NumberPage />} />
 									<Route
 										path="/createForm/:questionType/edit"
-										element={<TitleAndDescriptionEditPage />}
+										element={<QuestionTitleAndDescriptionEditPage />}
 									/>
 								</Route>
 							</Route>
