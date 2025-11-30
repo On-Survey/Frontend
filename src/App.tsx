@@ -1,4 +1,5 @@
 import { tdsEvent } from "@apps-in-toss/web-framework";
+import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import {
@@ -10,6 +11,7 @@ import {
 } from "react-router-dom";
 import { MultiStepProvider } from "./contexts/MultiStepContext";
 import { PaymentProvider } from "./contexts/PaymentContext";
+import { queryClient } from "./contexts/queryClient";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { UserProvider } from "./contexts/UserContext";
 import {
@@ -96,134 +98,139 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 
 export const App = () => {
 	return (
-		<Router>
-			<UserProvider>
-				<GlobalNavigationLayout>
-					<Routes>
-						<Route path="/" element={<Intro />} />
-						<Route path="/home" element={<Home />} />
-						<Route path="/onboarding" element={<Onboarding />} />
-						<Route path="/main" element={<Main />} />
-						<Route path="/createFormStart" element={<CreateFormStart />} />
-						<Route element={<SurveyProviderLayout />}>
-							<Route element={<MultiStepProviderWrapper />}>
-								<Route path="/mysurvey" element={<MySurvey />} />
-							</Route>
-						</Route>
-						<Route
-							path="/mysurvey/:surveyId"
-							element={<SurveyResponseDetail />}
-						/>
-						<Route element={<MultiStepProviderWrapper />}>
-							<Route element={<PaymentProviderLayout />}>
-								<Route path="/mypage" element={<Mypage />} />
-							</Route>
-						</Route>
-						<Route path="/mypage/orderHistory" element={<OrderHistory />} />
-						<Route
-							path="/mypage/orderHistory/:orderId"
-							element={<OrderDetail />}
-						/>
-						<Route path="/mypage/coinHistory" element={<CoinHistory />} />
-						<Route
-							path="/mypage/coinHistory/:coinId"
-							element={<CoinDetail />}
-						/>
-						<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
-						<Route path="/mypage/privacyPolicy" element={<PrivacyPolicy />} />
-						<Route path="/mypage/termsOfService" element={<TermsOfService />} />
-						<Route path="/mypage/businessInfo" element={<BusinessInfo />} />
-						<Route
-							path="/mypage/promotionNotice"
-							element={<PromotionNotice />}
-						/>
-						<Route path="/oxScreening" element={<OxScreening />} />
-						<Route path="/survey" element={<Survey />} />
-						<Route path="/surveyList" element={<SurveyListPage />} />
-						<Route element={<SurveyProviderLayout />}>
-							<Route
-								path="/survey/singleChoice"
-								element={<SurveySingleChoice />}
-							/>
-							<Route path="/survey/essay" element={<SurveyEssay />} />
-							<Route
-								path="/survey/shortAnswer"
-								element={<SurveyShortAnswer />}
-							/>
-							<Route path="/survey/rating" element={<SurveyRating />} />
-							<Route path="/survey/nps" element={<SurveyNPS />} />
-							<Route path="/survey/number" element={<SurveyNumber />} />
-							<Route path="/survey/date" element={<SurveyDate />} />
-							<Route path="/survey/complete" element={<SurveyComplete />} />
-						</Route>
-						<Route
-							path="/result/shortAnswer"
-							element={<ShortAnswerResultPage />}
-						/>
-						<Route
-							path="/result/longAnswer"
-							element={<LongAnswerResultPage />}
-						/>
-						<Route
-							path="/result/multipleChoice"
-							element={<MultipleChoiceResultPage />}
-						/>
-						<Route path="/result/rating" element={<RatingResultPage />} />
-						<Route path="/result/nps" element={<NpsResultPage />} />
-						<Route path="/result/date" element={<DateResultPage />} />
-						<Route path="/result/number" element={<NumberResultPage />} />
-						<Route path="/estimate" element={<EstimatePage />} />
-						<Route element={<SurveyProviderLayout />}>
-							<Route element={<MultiStepProviderWrapper />}>
-								<Route element={<PaymentProviderLayout />}>
-									<Route path="/createForm" element={<SurveyMain />} />
-									<Route
-										path="/payment/location"
-										element={<LocationSelectPage />}
-									/>
-									<Route
-										path="/estimate/location"
-										element={<EstimateLocationSelectPage />}
-									/>
-									<Route
-										path="/estimateNavigation"
-										element={<EstimateNavigationPage />}
-									/>
-									<Route path="/payment/charge" element={<PaymentMain />} />
-									<Route
-										path="/createForm/multipleChoice"
-										element={<MultipleChoicePage />}
-									>
-										<Route index element={<MultipleChoiceMain />} />
-										<Route path="questions" element={<QuestionListPage />} />
-										<Route
-											path="questions/:questionId"
-											element={<QuestionOptionsPage />}
-										/>
-									</Route>
-									<Route path="/createForm/rating" element={<RatingPage />} />
-									<Route path="/createForm/nps" element={<NPSPage />} />
-									<Route
-										path="/createForm/shortAnswer"
-										element={<ShortAnswerPage />}
-									/>
-									<Route
-										path="/createForm/longAnswer"
-										element={<LongAnswerPage />}
-									/>
-									<Route path="/createForm/date" element={<DatePage />} />
-									<Route path="/createForm/number" element={<NumberPage />} />
-									<Route
-										path="/createForm/:questionType/edit"
-										element={<QuestionTitleAndDescriptionEditPage />}
-									/>
+		<QueryClientProvider client={queryClient}>
+			<Router>
+				<UserProvider>
+					<GlobalNavigationLayout>
+						<Routes>
+							<Route path="/" element={<Intro />} />
+							<Route path="/home" element={<Home />} />
+							<Route path="/onboarding" element={<Onboarding />} />
+							<Route path="/main" element={<Main />} />
+							<Route path="/createFormStart" element={<CreateFormStart />} />
+							<Route element={<SurveyProviderLayout />}>
+								<Route element={<MultiStepProviderWrapper />}>
+									<Route path="/mysurvey" element={<MySurvey />} />
 								</Route>
 							</Route>
-						</Route>
-					</Routes>
-				</GlobalNavigationLayout>
-			</UserProvider>
-		</Router>
+							<Route
+								path="/mysurvey/:surveyId"
+								element={<SurveyResponseDetail />}
+							/>
+							<Route element={<MultiStepProviderWrapper />}>
+								<Route element={<PaymentProviderLayout />}>
+									<Route path="/mypage" element={<Mypage />} />
+								</Route>
+							</Route>
+							<Route path="/mypage/orderHistory" element={<OrderHistory />} />
+							<Route
+								path="/mypage/orderHistory/:orderId"
+								element={<OrderDetail />}
+							/>
+							<Route path="/mypage/coinHistory" element={<CoinHistory />} />
+							<Route
+								path="/mypage/coinHistory/:coinId"
+								element={<CoinDetail />}
+							/>
+							<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
+							<Route path="/mypage/privacyPolicy" element={<PrivacyPolicy />} />
+							<Route
+								path="/mypage/termsOfService"
+								element={<TermsOfService />}
+							/>
+							<Route path="/mypage/businessInfo" element={<BusinessInfo />} />
+							<Route
+								path="/mypage/promotionNotice"
+								element={<PromotionNotice />}
+							/>
+							<Route path="/oxScreening" element={<OxScreening />} />
+							<Route path="/survey" element={<Survey />} />
+							<Route path="/surveyList" element={<SurveyListPage />} />
+							<Route element={<SurveyProviderLayout />}>
+								<Route
+									path="/survey/singleChoice"
+									element={<SurveySingleChoice />}
+								/>
+								<Route path="/survey/essay" element={<SurveyEssay />} />
+								<Route
+									path="/survey/shortAnswer"
+									element={<SurveyShortAnswer />}
+								/>
+								<Route path="/survey/rating" element={<SurveyRating />} />
+								<Route path="/survey/nps" element={<SurveyNPS />} />
+								<Route path="/survey/number" element={<SurveyNumber />} />
+								<Route path="/survey/date" element={<SurveyDate />} />
+								<Route path="/survey/complete" element={<SurveyComplete />} />
+							</Route>
+							<Route
+								path="/result/shortAnswer"
+								element={<ShortAnswerResultPage />}
+							/>
+							<Route
+								path="/result/longAnswer"
+								element={<LongAnswerResultPage />}
+							/>
+							<Route
+								path="/result/multipleChoice"
+								element={<MultipleChoiceResultPage />}
+							/>
+							<Route path="/result/rating" element={<RatingResultPage />} />
+							<Route path="/result/nps" element={<NpsResultPage />} />
+							<Route path="/result/date" element={<DateResultPage />} />
+							<Route path="/result/number" element={<NumberResultPage />} />
+							<Route path="/estimate" element={<EstimatePage />} />
+							<Route element={<SurveyProviderLayout />}>
+								<Route element={<MultiStepProviderWrapper />}>
+									<Route element={<PaymentProviderLayout />}>
+										<Route path="/createForm" element={<SurveyMain />} />
+										<Route
+											path="/payment/location"
+											element={<LocationSelectPage />}
+										/>
+										<Route
+											path="/estimate/location"
+											element={<EstimateLocationSelectPage />}
+										/>
+										<Route
+											path="/estimateNavigation"
+											element={<EstimateNavigationPage />}
+										/>
+										<Route path="/payment/charge" element={<PaymentMain />} />
+										<Route
+											path="/createForm/multipleChoice"
+											element={<MultipleChoicePage />}
+										>
+											<Route index element={<MultipleChoiceMain />} />
+											<Route path="questions" element={<QuestionListPage />} />
+											<Route
+												path="questions/:questionId"
+												element={<QuestionOptionsPage />}
+											/>
+										</Route>
+										<Route path="/createForm/rating" element={<RatingPage />} />
+										<Route path="/createForm/nps" element={<NPSPage />} />
+										<Route
+											path="/createForm/shortAnswer"
+											element={<ShortAnswerPage />}
+										/>
+										<Route
+											path="/createForm/longAnswer"
+											element={<LongAnswerPage />}
+										/>
+										<Route path="/createForm/date" element={<DatePage />} />
+										<Route path="/createForm/number" element={<NumberPage />} />
+										<Route
+											path="/createForm/:questionType/edit"
+											element={<QuestionTitleAndDescriptionEditPage />}
+										/>
+									</Route>
+								</Route>
+							</Route>
+						</Routes>
+					</GlobalNavigationLayout>
+				</UserProvider>
+			</Router>
+		</QueryClientProvider>
 	);
 };
 
