@@ -11,13 +11,14 @@ import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createPayment } from "../../service/payments";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
-import { createForm } from "../QuestionForm/api";
+import { useCreateForm } from "../QuestionForm/hooks/useSurveyMutation";
 
 export const PaymentLoading = () => {
 	const { goNextPayment } = useMultiStep();
 	const { state, resetForm } = useSurvey();
 	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
 	const { userInfo } = useUserInfo();
+	const createFormMutation = useCreateForm();
 
 	const location = useLocation();
 
@@ -59,15 +60,17 @@ export const PaymentLoading = () => {
 		}, 3000);
 	}, [resetForm, resetEstimate, goNextPayment]);
 
-	const submitForm = useCallback(async () => {
+	const submitForm = useCallback(() => {
 		if (!formPayload) return;
-		try {
-			await createForm(formPayload);
-		} catch (error) {
-			console.error("폼 생성 실패:", error);
-			throw error;
-		}
-	}, [formPayload]);
+		createFormMutation.mutate(formPayload, {
+			onSuccess: () => {
+				handleSuccess();
+			},
+			onError: (error) => {
+				console.error("폼 생성 실패:", error);
+			},
+		});
+	}, [formPayload, createFormMutation, handleSuccess]);
 
 	useEffect(() => {
 		if (!userInfo) return;
@@ -75,30 +78,7 @@ export const PaymentLoading = () => {
 		const hasEnoughCoin = userInfo.result.coin >= priceBreakdown.totalPrice;
 
 		if (hasEnoughCoin) {
-			const processWithCoin = async () => {
-				const maxRetries = 2;
-				let attempt = 0;
-
-				while (attempt <= maxRetries) {
-					try {
-						await submitForm();
-						handleSuccess();
-						return;
-					} catch (error) {
-						attempt += 1;
-						console.error(
-							`코인으로 결제 처리 실패 (시도 ${attempt}/${maxRetries + 1}):`,
-							error,
-						);
-
-						if (attempt > maxRetries) {
-							// 최대 재시도 횟수 초과 시 루프 종료
-							break;
-						}
-					}
-				}
-			};
-			processWithCoin();
+			submitForm();
 			return;
 		}
 
@@ -121,7 +101,7 @@ export const PaymentLoading = () => {
 							});
 
 							if (response.success && formPayload) {
-								await submitForm();
+								submitForm();
 							}
 							return true;
 						} catch (error) {

@@ -34,7 +34,7 @@ export const FormTitleStep = () => {
 		setStep(true);
 	};
 
-	const handleNextPage = async () => {
+	const handleNextPage = () => {
 		if (isCreateSurveyPending || isPatchSurveyPending) return;
 
 		if (state.surveyId) {
