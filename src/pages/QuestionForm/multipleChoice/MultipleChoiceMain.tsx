@@ -11,14 +11,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
-import { createSurveyQuestion } from "../api";
 import { CreateMultiChoiceBottomSheet } from "../components/bottomSheet/CreateMultiChoiceBottomSheet";
 import { QuestionSelectionBottomSheet } from "../components/bottomSheet/QuestionSelectionBottomSheet";
 import { SelectionLimitBottomSheet } from "../components/bottomSheet/SelectionLimitBottomSheet";
 import { useQuestionByType } from "../hooks/useQuestionByType";
+import { useCreateSurveyQuestion } from "../hooks/useQuestionMutations";
 
 export const MultipleChoiceMain = () => {
 	const { state, updateQuestion } = useSurvey();
+	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
 
 	const navigate = useNavigate();
 
@@ -72,27 +73,36 @@ export const MultipleChoiceMain = () => {
 		}
 	};
 
-	const handleConfirm = async () => {
+	const handleConfirm = () => {
 		if (!questionId) {
 			return;
 		}
 
-		const result = await createSurveyQuestion({
-			surveyId: state.surveyId ?? 0,
-			questionInfo: {
-				questionType: "CHOICE",
-				title: title ?? "",
-				description: description ?? "",
-				questionOrder: question?.questionOrder ?? 0,
+		createSurveyQuestion(
+			{
+				surveyId: state.surveyId ?? 0,
+				questionInfo: {
+					questionType: "CHOICE",
+					title: title ?? "",
+					description: description ?? "",
+					questionOrder: question?.questionOrder ?? 0,
+				},
 			},
-		});
-		if (result.success && typeof result !== "string") {
-			updateQuestion(questionId, {
-				questionId: result.result.questionId,
-			});
+			{
+				onSuccess: (result) => {
+					if (result.success) {
+						updateQuestion(questionId, {
+							questionId: result.result.questionId,
+						});
 
-			navigate(-1);
-		}
+						navigate(-1);
+					}
+				},
+				onError: (error) => {
+					console.error("질문 생성 실패:", error);
+				},
+			},
+		);
 	};
 
 	return (

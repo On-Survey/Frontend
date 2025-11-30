@@ -8,11 +8,12 @@ import {
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { createSurveyQuestion } from "./api";
 import { useQuestionByType } from "./hooks/useQuestionByType";
+import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
 export const DatePage = () => {
 	const { state, updateQuestion } = useSurvey();
+	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
 	const navigate = useNavigate();
 
 	const {
@@ -50,28 +51,36 @@ export const DatePage = () => {
 		}
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = () => {
 		if (!questionId) {
 			return;
 		}
 
-		const result = await createSurveyQuestion({
-			surveyId: state.surveyId ?? 0,
-			questionInfo: {
-				questionType: "DATE",
-				title: title ?? "",
-				description: description ?? "",
-				questionOrder: question?.questionOrder ?? 0,
+		createSurveyQuestion(
+			{
+				surveyId: state.surveyId ?? 0,
+				questionInfo: {
+					questionType: "DATE",
+					title: title ?? "",
+					description: description ?? "",
+					questionOrder: question?.questionOrder ?? 0,
+				},
 			},
-		});
+			{
+				onSuccess: (result) => {
+					if (result.success && typeof result !== "string") {
+						updateQuestion(questionId, {
+							questionId: result.result.questionId,
+						});
 
-		if (result.success && typeof result !== "string") {
-			updateQuestion(questionId, {
-				questionId: result.result.questionId,
-			});
-
-			navigate(-1);
-		}
+						navigate(-1);
+					}
+				},
+				onError: (error) => {
+					console.error("질문 생성 실패:", error);
+				},
+			},
+		);
 	};
 
 	return (
