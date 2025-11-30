@@ -1,5 +1,3 @@
-export * from "./CreateForm";
-export * from "./CreateFormStart";
 export * from "./Home";
 export * from "./Intro";
 export * from "./interest";

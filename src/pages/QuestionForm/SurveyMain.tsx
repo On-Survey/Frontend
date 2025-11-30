@@ -1,11 +1,11 @@
 import { ProgressStep, ProgressStepper } from "@toss/tds-mobile";
-import { useMultiStep } from "../contexts/MultiStepContext";
-import { PaymentMain } from ".";
-import { InterestPage } from "./interest";
-import { FormTitleStep, QuestionHome } from "./QuestionForm";
-import { ScreeningMain } from "./screening";
+import { useMultiStep } from "../../contexts/MultiStepContext";
+import { PaymentMain } from "..";
+import { InterestPage } from "../interest";
+import { ScreeningMain } from "../screening";
+import { FormTitleStep, QuestionHome } from ".";
 
-export const CreateForm = () => {
+export const SurveyMain = () => {
 	const { activeStep, paymentStep } = useMultiStep();
 
 	return (

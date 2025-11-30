@@ -7,4 +7,6 @@ export * from "./NumberPage";
 export * from "./QuestionHome";
 export * from "./RatingPage";
 export * from "./ShortAnswerPage";
+export * from "./SurveyMain";
+export * from "./SurveyStart";
 export * from "./TitleAndDescriptionEditPage";
