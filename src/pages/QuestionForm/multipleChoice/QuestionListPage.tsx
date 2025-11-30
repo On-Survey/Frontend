@@ -1,33 +1,18 @@
 import { adaptive } from "@toss/tds-colors";
 import { Button, List, ListRow } from "@toss/tds-mobile";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
-import { isMultipleChoiceQuestion } from "../../../types/survey";
 import { formatQuestionNumber } from "../../../utils/questionFactory";
+import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const QuestionListPage = () => {
 	const { state } = useSurvey();
+	const { question } = useQuestionByType("multipleChoice");
+
 	const navigate = useNavigate();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
-
-	const questions = state.survey.question;
-	const targetQuestion = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl &&
-					q.type === "multipleChoice",
-			)
-		: questions
-				.filter((q) => q.type === "multipleChoice")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-
-	const question = isMultipleChoiceQuestion(targetQuestion)
-		? targetQuestion
-		: undefined;
 
 	const options = question?.option ?? [];
-	const allQuestions = questions.sort(
+	const allQuestions = state.survey.question.sort(
 		(a, b) => a.questionOrder - b.questionOrder,
 	);
 

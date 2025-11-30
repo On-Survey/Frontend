@@ -1,34 +1,14 @@
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
-import {
-	Outlet,
-	useLocation,
-	useNavigate,
-	useSearchParams,
-} from "react-router-dom";
-import { useSurvey } from "../../../contexts/SurveyContext";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const MultipleChoicePage = () => {
-	const { state } = useSurvey();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const [searchParams] = useSearchParams();
-	const questionIdFromUrl = searchParams.get("questionId");
 
-	const questions = state.survey.question;
-
-	const targetMultipleChoice = questionIdFromUrl
-		? questions.find(
-				(q) =>
-					q.questionId.toString() === questionIdFromUrl &&
-					q.type === "multipleChoice",
-			)
-		: questions
-				.filter((q) => q.type === "multipleChoice")
-				.sort((a, b) => b.questionOrder - a.questionOrder)[0];
-
-	const title = targetMultipleChoice?.title;
-	const description = targetMultipleChoice?.description;
+	const { questionIdFromUrl, title, description } =
+		useQuestionByType("multipleChoice");
 
 	const handleTitleAndDescriptionEdit = () => {
 		if (questionIdFromUrl) {
