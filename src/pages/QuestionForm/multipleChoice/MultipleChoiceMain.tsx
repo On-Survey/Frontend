@@ -12,9 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
 import { createSurveyQuestion } from "../api";
+import { CreateMultiChoiceBottomSheet } from "../components/bottomSheet/CreateMultiChoiceBottomSheet";
 import { QuestionSelectionBottomSheet } from "../components/bottomSheet/QuestionSelectionBottomSheet";
-import { CreateMultiChoiceBottomSheet } from "../components/multipleChoice/CreateMultiChoiceBottomSheet";
-import { SelectionLimitBottomSheet } from "../components/multipleChoice/SelectionLimitBottomSheet";
+import { SelectionLimitBottomSheet } from "../components/bottomSheet/SelectionLimitBottomSheet";
 import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const MultipleChoiceMain = () => {
