@@ -21,7 +21,6 @@ import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
 } from "../../utils/questionFactory";
-import { useDelayedDisplayOrderMap } from "./hooks/useDelayedDisplayOrderMap";
 import { useQuestionReorder } from "./hooks/useQuestionReorder";
 
 export const QuestionHome = () => {
@@ -34,14 +33,11 @@ export const QuestionHome = () => {
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
 
-	const { sortedQuestions, handleMoveUp, handleMoveDown } = useQuestionReorder({
-		questions: state.survey.question,
-		onReorder: reorderQuestions,
-	});
-
-	const displayOrderMap = useDelayedDisplayOrderMap({
-		questions: state.survey.question,
-	});
+	const { sortedQuestions, displayOrderMap, handleMoveUp, handleMoveDown } =
+		useQuestionReorder({
+			questions: state.survey.question,
+			onReorder: reorderQuestions,
+		});
 
 	const [isReorderMode, setIsReorderMode] = useState(false);
 
