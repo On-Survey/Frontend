@@ -16,28 +16,6 @@ import type { OrderDetail as OrderDetailType } from "../../types/order";
 import { mapSurveyDetailToOrderDetail } from "../../utils/orderUtils";
 import { OrderCancelBottomSheet } from "./components/OrderCancelBottomSheet";
 
-// Mock 데이터 - 추후 삭제 예정
-const getMockOrderDetail = (orderId: string | undefined): OrderDetailType => ({
-	id: Number(orderId) || 1,
-	title: "반려동물 외모 취향에 관한 설문",
-	status: "active",
-	orderDate: "2024 . 10. 21",
-	paymentInfo: {
-		responseCount: 50,
-		responseCountPrice: 200,
-		gender: "단일",
-		genderPrice: 200,
-		ageRange: "10대",
-		ageRangePrice: 700,
-		location: "서울(쉬움)",
-		locationPrice: 70,
-	},
-	totalPrice: "23,400원",
-	approvalNumber: "303503544",
-	paymentStatus: "승인",
-	paymentDateTime: "2020년 7월 29일 15:14",
-});
-
 export const OrderDetail = () => {
 	const navigate = useNavigate();
 	const { orderId } = useParams<{ orderId: string }>();
@@ -53,7 +31,6 @@ export const OrderDetail = () => {
 			try {
 				const surveyId = Number(orderId);
 				if (!surveyId) {
-					setOrderDetail(getMockOrderDetail(orderId));
 					return;
 				}
 
@@ -62,7 +39,6 @@ export const OrderDetail = () => {
 				setOrderDetail(orderDetail);
 			} catch (error) {
 				console.error("설문 상세 조회 실패:", error);
-				setOrderDetail(getMockOrderDetail(orderId));
 			}
 		};
 
@@ -145,7 +121,17 @@ export const OrderDetail = () => {
 				}
 				subtitleTop={
 					<Top.SubtitleBadges
-						badges={[{ text: "노출중", color: "blue", variant: "weak" }]}
+						badges={[
+							{
+								text:
+									orderDetail.status === "refund_completed"
+										? "환불 완료"
+										: "노출중",
+								color:
+									orderDetail.status === "refund_completed" ? "red" : "blue",
+								variant: "weak",
+							},
+						]}
 					/>
 				}
 				subtitleBottom={
