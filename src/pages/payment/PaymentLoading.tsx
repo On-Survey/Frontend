@@ -72,6 +72,51 @@ export const PaymentLoading = () => {
 	useEffect(() => {
 		if (!userInfo) return;
 
+		// 충전 플로우일 때는 바로 IAP 결제 진행
+		if (isChargeFlow) {
+			const buyIapProduct = async () => {
+				if (!selectedCoinAmount?.sku) {
+					console.error("상품 정보가 없습니다");
+					return;
+				}
+
+				IAP.createOneTimePurchaseOrder({
+					options: {
+						sku: selectedCoinAmount.sku,
+						processProductGrant: async ({ orderId }) => {
+							try {
+								const response = await createPayment({
+									orderId,
+									price: Number(
+										selectedCoinAmount.displayAmount.replace("원", ""),
+									),
+								});
+
+								return response.success;
+							} catch (error) {
+								console.error("결제 정보 전송 실패:", error);
+								return false;
+							}
+						},
+					},
+					onEvent: async (event) => {
+						if (event.type === "success") {
+							const { orderId } = event.data;
+							console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+							handleSuccess();
+						}
+					},
+					onError: (error) => {
+						console.error("인앱결제에 실패했어요:", error);
+					},
+				});
+			};
+
+			buyIapProduct();
+			return;
+		}
+
+		// 설문 등록 플로우
 		const hasEnoughCoin = userInfo.result.coin >= priceBreakdown.totalPrice;
 
 		if (hasEnoughCoin) {
@@ -151,6 +196,7 @@ export const PaymentLoading = () => {
 		formPayload,
 		handleSuccess,
 		submitForm,
+		isChargeFlow,
 	]);
 
 	useBackEventListener(() => {});
