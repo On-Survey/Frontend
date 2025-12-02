@@ -1,5 +1,3 @@
-import { colors } from "@toss/tds-colors";
-import { Text } from "@toss/tds-mobile";
 import { SurveyCard } from "./SurveyCard";
 import type { ActiveSurvey } from "./types";
 
@@ -9,11 +7,7 @@ interface ActiveTabProps {
 
 export const ActiveTab = ({ surveys }: ActiveTabProps) => {
 	if (surveys.length === 0) {
-		return (
-			<Text color={colors.grey700} typography="t7">
-				노출 중인 설문이 없습니다.
-			</Text>
-		);
+		return null;
 	}
 
 	return (
