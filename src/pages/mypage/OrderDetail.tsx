@@ -202,10 +202,18 @@ export const OrderDetail = () => {
 			<FixedBottomCTA
 				color="danger"
 				loading={false}
-				disabled={isSurveyCancelled}
-				onClick={isSurveyCancelled ? undefined : handleCancelSurveyClick}
+				disabled={
+					isSurveyCancelled || orderDetail.status === "refund_completed"
+				}
+				onClick={
+					isSurveyCancelled || orderDetail.status === "refund_completed"
+						? undefined
+						: handleCancelSurveyClick
+				}
 			>
-				{isSurveyCancelled ? "설문 취소 완료" : "설문 취소하기"}
+				{isSurveyCancelled || orderDetail.status === "refund_completed"
+					? "설문 취소 완료"
+					: "설문 취소하기"}
 			</FixedBottomCTA>
 
 			<OrderCancelBottomSheet
