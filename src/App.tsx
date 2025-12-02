@@ -6,6 +6,7 @@ import {
 	Route,
 	BrowserRouter as Router,
 	Routes,
+	useLocation,
 	useNavigate,
 } from "react-router-dom";
 import { MultiStepProvider } from "./contexts/MultiStepContext";
@@ -66,6 +67,7 @@ import SurveyNumber from "./pages/survey/Number";
 import SurveyRating from "./pages/survey/Rating";
 import SurveyShortAnswer from "./pages/survey/ShortAnswer";
 import SurveySingleChoice from "./pages/survey/SingleChoice";
+import { logPageView } from "./utils/firebase";
 
 // 전역 네비게이션 바 이벤트 리스너 레이아웃 (granite.config.ts에서 설정한 하트 버튼 이벤트 처리)
 const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
@@ -94,10 +96,21 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 	return <>{children}</>;
 };
 
+const AnalyticsTracker = () => {
+	const location = useLocation();
+
+	useEffect(() => {
+		void logPageView(location.pathname + location.search);
+	}, [location]);
+
+	return null;
+};
+
 export const App = () => {
 	return (
 		<Router>
 			<UserProvider>
+				<AnalyticsTracker />
 				<GlobalNavigationLayout>
 					<Routes>
 						<Route path="/" element={<Intro />} />
