@@ -9,22 +9,51 @@ import {
 	Top,
 	useToast,
 } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getPaymentHistory } from "../../service/payments";
+import type { PaymentHistoryItem } from "../../service/payments/types";
 import { OrderCancelBottomSheet } from "./components/OrderCancelBottomSheet";
 
 export const CoinDetail = () => {
 	const platform = getPlatformOS();
 	const { openToast } = useToast();
-	useParams<{ coinId: string }>();
+	const { coinId } = useParams<{ coinId: string }>();
 
-	// 환불 완료 여부
+	const [paymentInfo, setPaymentInfo] = useState<PaymentHistoryItem | null>(
+		null,
+	);
+
 	const [isRefunded, setIsRefunded] = useState(false);
-
-	// 안드로이드 전용 바텀시트
 	const [isAndroidSheetOpen, setIsAndroidSheetOpen] = useState(false);
-	// iOS 전용 바텀시트
 	const [isIOSSheetOpen, setIsIOSSheetOpen] = useState(false);
+
+	useEffect(() => {
+		const fetchPaymentDetail = async () => {
+			if (!coinId) return;
+
+			try {
+				const paymentId = Number.parseInt(coinId, 10);
+				const history = await getPaymentHistory();
+				const payment = history.find((item) => item.paymentId === paymentId);
+
+				if (payment) {
+					setPaymentInfo(payment);
+				} else {
+					openToast("결제 내역을 찾을 수 없어요", {
+						type: "bottom",
+					});
+				}
+			} catch (err) {
+				console.error("결제 내역 조회 실패:", err);
+				openToast("결제 내역을 불러오는데 실패했어요", {
+					type: "bottom",
+				});
+			}
+		};
+
+		void fetchPaymentDetail();
+	}, [coinId, openToast]);
 
 	const handleRefundClick = () => {
 		if (platform === "android") {
@@ -50,6 +79,12 @@ export const CoinDetail = () => {
 		setIsIOSSheetOpen(false);
 	};
 
+	if (!paymentInfo) {
+		return null;
+	}
+
+	const formattedAmount = `${paymentInfo.totalAmount.toLocaleString()}원`;
+
 	return (
 		<>
 			<Top
@@ -61,7 +96,7 @@ export const CoinDetail = () => {
 				subtitleTop={<Top.SubtitleParagraph></Top.SubtitleParagraph>}
 				subtitleBottom={
 					<Top.SubtitleParagraph size={15}>
-						주문 일자 : 2024 . 10. 21
+						주문 일자 : {paymentInfo.paymentDate}
 					</Top.SubtitleParagraph>
 				}
 			/>
@@ -82,7 +117,7 @@ export const CoinDetail = () => {
 					fontWeight="medium"
 					textAlign="right"
 				>
-					23,400원
+					{formattedAmount}
 				</Text>
 			</div>
 
