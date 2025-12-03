@@ -2,7 +2,7 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
-export const CreateFormStart = () => {
+export const SurveyStart = () => {
 	const navigate = useNavigate();
 
 	const handleRegister = () => {

@@ -16,7 +16,6 @@ import { queryClient } from "./contexts/queryClient";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { UserProvider } from "./contexts/UserContext";
 import {
-	CreateFormStart,
 	DatePage,
 	EstimatePage,
 	Home,
@@ -39,6 +38,7 @@ import {
 	Survey,
 	SurveyListPage,
 	SurveyMain,
+	SurveyStart,
 } from "./pages";
 import EstimateNavigationPage from "./pages/estimate/EstimatePage";
 import { LocationSelectPage as EstimateLocationSelectPage } from "./pages/estimate/LocationSelectPage";
@@ -130,7 +130,7 @@ export const App = () => {
 							<Route path="/home" element={<Home />} />
 							<Route path="/onboarding" element={<Onboarding />} />
 							<Route path="/main" element={<Main />} />
-							<Route path="/createFormStart" element={<CreateFormStart />} />
+							<Route path="/createFormStart" element={<SurveyStart />} />
 							<Route element={<SurveyProviderLayout />}>
 								<Route element={<MultiStepProviderWrapper />}>
 									<Route path="/mysurvey" element={<MySurvey />} />
