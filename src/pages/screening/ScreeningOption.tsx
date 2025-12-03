@@ -3,27 +3,37 @@ import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { createScreenings } from "../../service/form";
+import { useCreateScreenings } from "../QuestionForm/hooks/useQuestionMutations";
 
 export const ScreeningOption = () => {
 	const { goNextScreening, goPrevScreening } = useMultiStep();
 	const { state, setScreeningAnswerType } = useSurvey();
+	const { mutate: createScreenings } = useCreateScreenings();
 	const selected = state.screening.answerType;
 
 	const handleSelectedChange = (answerType: "O" | "X") => {
 		setScreeningAnswerType(answerType);
 	};
 
-	const handleNext = async () => {
+	const handleNext = () => {
 		if (!selected) return;
-		const result = await createScreenings({
-			surveyId: state.surveyId ?? 0,
-			content: state.screening.question,
-			answer: selected === "O",
-		});
-		if (result.success) {
-			goNextScreening();
-		}
+		createScreenings(
+			{
+				surveyId: state.surveyId ?? 0,
+				content: state.screening.question,
+				answer: selected === "O",
+			},
+			{
+				onSuccess: (result) => {
+					if (result.success) {
+						goNextScreening();
+					}
+				},
+				onError: (error) => {
+					console.error("스크리닝 생성 실패:", error);
+				},
+			},
+		);
 	};
 
 	useBackEventListener(goPrevScreening);

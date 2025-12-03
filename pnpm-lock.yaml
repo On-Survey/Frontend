@@ -23,6 +23,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.14
         version: 4.1.16(rolldown-vite@7.1.14(@types/node@24.9.1)(esbuild@0.25.11)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1))
+      '@tanstack/react-query':
+        specifier: ^5.90.11
+        version: 5.90.11(react@18.3.1)
       '@toss/tds-colors':
         specifier: ^0.1.0
         version: 0.1.0
@@ -2749,6 +2752,14 @@ packages:
     resolution: {integrity: sha512-bbguNBcDxsRmi9nnlWJxhfDWamY3lmcyACHcdO1crxfzuLpOhHLLtEIN/nCbbAtj5rchUgQD17QVAKi1f7IsKg==}
     peerDependencies:
       vite: npm:rolldown-vite@7.1.14
+
+  '@tanstack/query-core@5.90.11':
+    resolution: {integrity: sha512-f9z/nXhCgWDF4lHqgIE30jxLe4sYv15QodfdPDKYAk7nAEjNcndy4dHz3ezhdUaR23BpWa4I2EH4/DZ0//Uf8A==}
+
+  '@tanstack/react-query@5.90.11':
+    resolution: {integrity: sha512-3uyzz01D1fkTLXuxF3JfoJoHQMU2fxsfJwE+6N5hHy0dVNoZOvwKP8Z2k7k1KDeD54N20apcJnG75TBAStIrBA==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@toss/tds-color-utils@0.0.2':
     resolution: {integrity: sha512-cdq+kvMT8XgGRxDPDPte+ddt/q9zoevI+DoYYLzrak7MYkUNZnQPNkwDx5OCZIzRRou68b1NFgu7ljOZK1Q2mA==}
@@ -9923,6 +9934,13 @@ snapshots:
       '@tailwindcss/oxide': 4.1.16
       tailwindcss: 4.1.16
       vite: rolldown-vite@7.1.14(@types/node@24.9.1)(esbuild@0.25.11)(jiti@2.6.1)(terser@5.44.0)(yaml@2.8.1)
+
+  '@tanstack/query-core@5.90.11': {}
+
+  '@tanstack/react-query@5.90.11(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.90.11
+      react: 18.3.1
 
   '@toss/tds-color-utils@0.0.2':
     dependencies:

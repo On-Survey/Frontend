@@ -8,10 +8,9 @@ import {
 } from "react";
 
 type MultiStepContextValue = {
-	activeStep: number;
-	handleStepChange: (step: number) => void;
-	handlePrevious: () => void;
-	setActiveStep: (step: number) => void;
+	surveyStep: number;
+	setSurveyStep: (step: number) => void;
+	goPrevSurvey: () => void;
 	screeningStep: number;
 	setScreeningStep: (step: number) => void;
 	goNextScreening: () => void;
@@ -22,7 +21,7 @@ type MultiStepContextValue = {
 	goNextPayment: () => void;
 	goPrevPayment: () => void;
 	resetPayment: () => void;
-	resetActiveStep: () => void;
+	resetSurvey: () => void;
 };
 
 const MultiStepContext = createContext<MultiStepContextValue | undefined>(
@@ -30,16 +29,12 @@ const MultiStepContext = createContext<MultiStepContextValue | undefined>(
 );
 
 export const MultiStepProvider = ({ children }: PropsWithChildren) => {
-	const [activeStep, setActiveStep] = useState(0);
+	const [surveyStep, setSurveyStep] = useState(0);
 	const [screeningStep, setScreeningStep] = useState(0);
 	const [paymentStep, setPaymentStep] = useState(0);
 
-	const handleStepChange = useCallback((step: number) => {
-		setActiveStep(step);
-	}, []);
-
-	const handlePrevious = useCallback(() => {
-		setActiveStep((prev) => Math.max(prev - 1, 0));
+	const goPrevSurvey = useCallback(() => {
+		setSurveyStep((prev) => Math.max(prev - 1, 0));
 	}, []);
 
 	const goNextScreening = useCallback(() => {
@@ -66,17 +61,16 @@ export const MultiStepProvider = ({ children }: PropsWithChildren) => {
 		setPaymentStep(0);
 	}, []);
 
-	const resetActiveStep = useCallback(() => {
-		setActiveStep(0);
+	const resetSurvey = useCallback(() => {
+		setSurveyStep(0);
 	}, []);
 
 	const value = useMemo(
 		() => ({
-			activeStep,
-			handleStepChange,
-			handlePrevious,
-			setActiveStep,
-			resetActiveStep,
+			surveyStep,
+			setSurveyStep,
+			goPrevSurvey,
+			resetSurvey,
 			screeningStep,
 			setScreeningStep,
 			goNextScreening,
@@ -89,10 +83,9 @@ export const MultiStepProvider = ({ children }: PropsWithChildren) => {
 			resetPayment,
 		}),
 		[
-			activeStep,
-			handleStepChange,
-			handlePrevious,
-			resetActiveStep,
+			surveyStep,
+			goPrevSurvey,
+			resetSurvey,
 			screeningStep,
 			goNextScreening,
 			goPrevScreening,

@@ -4,11 +4,12 @@ import { topics } from "../../constants/topics";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { createSurveyInterests } from "../../service/form";
+import { useCreateSurveyInterests } from "../QuestionForm/hooks/useQuestionMutations";
 
 export const InterestPage = () => {
-	const { handleStepChange } = useMultiStep();
+	const { setSurveyStep } = useMultiStep();
 	const { state, addTopic, removeTopic } = useSurvey();
+	const { mutate: createSurveyInterests } = useCreateSurveyInterests();
 	const selectedTopics = state.topics;
 
 	const handleTopicToggle = (topicId: string) => {
@@ -26,22 +27,31 @@ export const InterestPage = () => {
 
 	useBackEventListener(() => {
 		if (state.screening.enabled) {
-			handleStepChange(2);
+			setSurveyStep(2);
 		} else {
-			handleStepChange(1);
+			setSurveyStep(1);
 		}
 	});
 
-	const handleNext = async () => {
+	const handleNext = () => {
 		const interests = selectedTopics.map((topic) => topic.value);
 		if (interests.length === 0) return;
-		const response = await createSurveyInterests({
-			surveyId: state.surveyId ?? 0,
-			interests: interests,
-		});
-		if (response.success) {
-			handleStepChange(4);
-		}
+		createSurveyInterests(
+			{
+				surveyId: state.surveyId ?? 0,
+				interests: interests,
+			},
+			{
+				onSuccess: (response) => {
+					if (response.success) {
+						setSurveyStep(4);
+					}
+				},
+				onError: (error) => {
+					console.error("관심사 생성 실패:", error);
+				},
+			},
+		);
 	};
 
 	return (

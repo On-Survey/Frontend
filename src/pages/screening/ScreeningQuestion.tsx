@@ -5,7 +5,7 @@ import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 
 export const ScreeningQuestion = () => {
-	const { goNextScreening, handleStepChange } = useMultiStep();
+	const { goNextScreening, setSurveyStep } = useMultiStep();
 	const { state, setScreeningQuestion } = useSurvey();
 
 	const question = state.screening.question;
@@ -14,7 +14,7 @@ export const ScreeningQuestion = () => {
 		setScreeningQuestion(e.target.value);
 	};
 
-	useBackEventListener(() => handleStepChange(1));
+	useBackEventListener(() => setSurveyStep(1));
 
 	return (
 		<>

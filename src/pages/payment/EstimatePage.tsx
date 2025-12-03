@@ -37,7 +37,7 @@ import {
 export const EstimatePage = () => {
 	const { estimate, handleEstimateChange, handleTotalPriceChange } =
 		usePaymentEstimate();
-	const { handleStepChange, setPaymentStep } = useMultiStep();
+	const { setSurveyStep, setPaymentStep } = useMultiStep();
 	const navigate = useNavigate();
 
 	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
@@ -133,7 +133,7 @@ export const EstimatePage = () => {
 		handleEstimateChange({ ...estimate, ages });
 	};
 
-	useBackEventListener(() => handleStepChange(3));
+	useBackEventListener(() => setSurveyStep(3));
 
 	return (
 		<>

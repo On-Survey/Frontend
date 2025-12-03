@@ -1,7 +1,7 @@
 import type {
 	ServerQuestion,
 	ServerQuestionOption,
-} from "../service/form/types";
+} from "../pages/QuestionForm/api/types";
 import type { MultipleChoiceQuestion, Question } from "../types/survey";
 import { isMultipleChoiceQuestion, isRatingQuestion } from "../types/survey";
 import { mapQuestionTypeToServerFormat } from "./questionTypeUtils";

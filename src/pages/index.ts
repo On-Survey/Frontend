@@ -1,6 +1,3 @@
-export * from "./CreateForm";
-export * from "./CreateFormStart";
-export * from "./form";
 export * from "./Home";
 export * from "./Intro";
 export * from "./interest";
@@ -8,6 +5,7 @@ export * from "./Main";
 export * from "./mysurvey";
 export * from "./Onboarding";
 export * from "./payment";
+export * from "./QuestionForm";
 export * from "./Survey";
 export * from "./SurveyList";
 export * from "./screening";

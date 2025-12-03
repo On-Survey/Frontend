@@ -1,4 +1,4 @@
-import { Interest } from "../service/form";
+import { Interest } from "../pages/QuestionForm/api";
 
 // 주제 데이터 타입 정의
 export type InterestId =
