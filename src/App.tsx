@@ -100,7 +100,17 @@ const AnalyticsTracker = () => {
 	const location = useLocation();
 
 	useEffect(() => {
+		// Firebase Analytics로 직접 page_view 전송
 		void logPageView(location.pathname + location.search);
+
+		// GTM으로 SPA 라우트 변경 이벤트 전송
+		if (typeof window === "undefined") return;
+		const w = window as unknown as { dataLayer?: unknown[] };
+		w.dataLayer = w.dataLayer || [];
+		w.dataLayer.push({
+			event: "route_change",
+			page_path: location.pathname + location.search,
+		});
 	}, [location]);
 
 	return null;

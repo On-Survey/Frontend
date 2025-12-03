@@ -3,14 +3,11 @@ import "./index.css";
 import * as Sentry from "@sentry/react";
 import { TDSMobileAITProvider } from "@toss/tds-mobile-ait";
 import { App } from "./App.tsx";
-import { initFirebase } from "./utils/firebase";
 
 Sentry.init({
 	dsn: import.meta.env.VITE_SENTRY_DSN,
 	sendDefaultPii: true,
 });
-
-void initFirebase();
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element not found");
