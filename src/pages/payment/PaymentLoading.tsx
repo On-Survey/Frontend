@@ -1,5 +1,4 @@
 import { IAP } from "@apps-in-toss/web-framework";
-
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
 import { useCallback, useEffect, useMemo, useRef } from "react";

@@ -64,8 +64,8 @@ export const createQuestion = (
 			return {
 				...baseQuestion,
 				type: "rating",
-				minValue: "입력",
-				maxValue: "입력",
+				minValue: "낮음",
+				maxValue: "높음",
 				rate: 10,
 			};
 		case "nps":
