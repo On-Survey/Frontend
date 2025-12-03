@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.granite
+onsurvey.ait
+.env
+tsconfig.app.tsbuildinfo
+
+# Maestro
+.maestro/
