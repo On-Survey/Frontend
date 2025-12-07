@@ -74,6 +74,7 @@ import { logPageView } from "./utils/firebase";
 // 전역 네비게이션 바 이벤트 리스너 레이아웃 (granite.config.ts에서 설정한 하트 버튼 이벤트 처리)
 const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		const cleanup = tdsEvent.addEventListener("navigationAccessoryEvent", {
@@ -93,7 +94,7 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 		});
 
 		return cleanup;
-	}, [navigate]);
+	}, [navigate, location.pathname]);
 
 	return <>{children}</>;
 };
@@ -121,8 +122,8 @@ const AnalyticsTracker = () => {
 export const App = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<AnalyticsTracker />
 			<Router>
+				<AnalyticsTracker />
 				<UserProvider>
 					<GlobalNavigationLayout>
 						<Routes>
