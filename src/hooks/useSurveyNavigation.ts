@@ -1,3 +1,4 @@
+import { useToast } from "@toss/tds-mobile";
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
@@ -27,6 +28,7 @@ export const useSurveyNavigation = ({
 }: UseSurveyNavigationOptions) => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { openToast } = useToast();
 	const locationState = location.state as UseSurveyNavigationState | undefined;
 
 	const surveyId = useMemo(() => {
@@ -132,7 +134,11 @@ export const useSurveyNavigation = ({
 			});
 		} catch (error) {
 			console.error("설문 응답 제출 실패:", error);
-			alert("설문 제출을 실패했어요. 다시 시도해주세요.");
+			openToast("설문 제출을 실패했어요. 다시 시도해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
 		} finally {
 			setSubmitting(false);
 		}

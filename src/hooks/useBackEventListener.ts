@@ -20,11 +20,7 @@ export const useBackEventListener = (
 				onBack();
 			},
 			onError: (error) => {
-				if (onError) {
-					onError(error);
-				} else {
-					alert(`에러가 발생했어요: ${error}`);
-				}
+				onError?.(error);
 			},
 		});
 
