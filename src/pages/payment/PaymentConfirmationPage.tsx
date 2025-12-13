@@ -1,3 +1,4 @@
+import { IAP } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -7,16 +8,106 @@ import {
 	Post,
 	Top,
 } from "@toss/tds-mobile";
+import { useCallback, useMemo } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { useSurvey } from "../../contexts/SurveyContext";
+import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { createPayment } from "../../service/payments";
+import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
+import { useCreateForm } from "../QuestionForm/hooks/useSurveyMutation";
 
 export const PaymentConfirmationPage = () => {
-	const { selectedCoinAmount } = usePaymentEstimate();
-	const { goNextPayment, goPrevPayment } = useMultiStep();
+	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
+	const { state, resetForm } = useSurvey();
+	const { setPaymentStep, goPrevPayment } = useMultiStep();
+	const { userInfo } = useUserInfo();
+	const createFormMutation = useCreateForm();
+
+	const priceBreakdown = useMemo(
+		() => calculatePriceBreakdown(estimate),
+		[estimate],
+	);
+
+	const formPayload = useMemo(() => {
+		if (!state.surveyId) return null;
+		return {
+			surveyId: state.surveyId,
+			deadline: estimate.date?.toISOString() ?? "",
+			gender: estimate.gender,
+			genderPrice: priceBreakdown.genderPrice,
+			ages: estimate.ages,
+			agePrice: priceBreakdown.agePrice,
+			residence: estimate.location,
+			residencePrice: priceBreakdown.residencePrice,
+			dueCount: priceBreakdown.dueCount,
+			dueCountPrice: priceBreakdown.dueCountPrice,
+			totalCoin: priceBreakdown.totalPrice,
+		};
+	}, [
+		state.surveyId,
+		estimate.date,
+		estimate.gender,
+		estimate.ages,
+		estimate.location,
+		priceBreakdown,
+	]);
+
+	const handleSuccess = useCallback(() => {
+		resetForm();
+		resetEstimate();
+		setPaymentStep(3); // PaymentLoading으로 이동
+	}, [resetForm, resetEstimate, setPaymentStep]);
 
 	const handleNext = () => {
-		goNextPayment();
+		if (!selectedCoinAmount?.sku) {
+			console.error("상품 정보가 없습니다");
+			return;
+		}
+		if (!userInfo) {
+			console.error("사용자 정보가 없습니다");
+			return;
+		}
+
+		IAP.createOneTimePurchaseOrder({
+			options: {
+				sku: selectedCoinAmount.sku,
+				processProductGrant: async ({ orderId }) => {
+					try {
+						await createPayment({
+							orderId,
+							price: Number(selectedCoinAmount.displayAmount.replace("원", "")),
+						});
+						return true;
+					} catch (error) {
+						console.error("결제 정보 전송 실패:", error);
+						return false;
+					}
+				},
+			},
+			onEvent: async (event) => {
+				if (event.type === "success") {
+					const { orderId } = event.data;
+					console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+
+					// 결제 성공 시 바로 폼 생성 시작
+					if (formPayload) {
+						createFormMutation.mutate(formPayload, {
+							onSuccess: () => {
+								handleSuccess();
+							},
+							onError: (error) => {
+								console.error("폼 생성 실패:", error);
+							},
+						});
+					}
+				}
+			},
+			onError: (error) => {
+				console.error("인앱결제에 실패했어요:", error);
+			},
+		});
 	};
 
 	useBackEventListener(goPrevPayment);

@@ -37,13 +37,7 @@ export const PaymentProductPage = () => {
 	}, [userInfo, totalPrice]);
 
 	const handleNext = () => {
-		// 충전 플로우면 PaymentConfirmationPage를 건너뛰고 바로 PaymentLoading으로
-		if (isChargeFlow) {
-			// paymentStep을 2로 설정 (PaymentLoading)
-			goNextPayment(); // 1 -> 2
-		} else {
-			goNextPayment(); // 1 -> 2 (PaymentConfirmationPage)
-		}
+		goNextPayment();
 	};
 
 	useEffect(() => {

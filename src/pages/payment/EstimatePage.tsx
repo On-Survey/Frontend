@@ -6,7 +6,7 @@ import {
 	FixedBottomCTA,
 	TextField,
 } from "@toss/tds-mobile";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	DateSelectBottomSheet,
@@ -26,19 +26,28 @@ import {
 } from "../../constants/payment";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { type createUserResponse, getUserInfo } from "../../service/user";
 import {
+	calculatePriceBreakdown,
 	calculateTotalPrice,
 	formatPriceAsCoin,
 } from "../../utils/paymentCalculator";
+import { useCreateForm } from "../QuestionForm/hooks/useSurveyMutation";
 
 export const EstimatePage = () => {
-	const { estimate, handleEstimateChange, handleTotalPriceChange } =
-		usePaymentEstimate();
+	const {
+		estimate,
+		handleEstimateChange,
+		handleTotalPriceChange,
+		resetEstimate,
+	} = usePaymentEstimate();
+	const { state, resetForm } = useSurvey();
 	const { setSurveyStep, setPaymentStep } = useMultiStep();
 	const navigate = useNavigate();
+	const createFormMutation = useCreateForm();
 
 	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
 
@@ -77,9 +86,18 @@ export const EstimatePage = () => {
 	const handleSubmit = () => {
 		handleConfirmDialogClose();
 		if (userInfo && totalPrice > userInfo?.result.coin) {
+			// 코인이 부족하면 코인 모달 표시
 			handleCoinBottomSheetOpen();
 		} else {
-			setPaymentStep(3);
+			// 코인이 충분하면 폼 생성
+			if (formPayload && !createFormMutation.isPending) {
+				createFormMutation.mutate(formPayload, {
+					onSuccess: handleSuccess,
+					onError: (error) => {
+						console.error("폼 생성 실패:", error);
+					},
+				});
+			}
 		}
 	};
 
@@ -103,6 +121,41 @@ export const EstimatePage = () => {
 	useEffect(() => {
 		handleTotalPriceChange(totalPrice);
 	}, [totalPrice, handleTotalPriceChange]);
+
+	const priceBreakdown = useMemo(
+		() => calculatePriceBreakdown(estimate),
+		[estimate],
+	);
+
+	const formPayload = useMemo(() => {
+		if (!state.surveyId) return null;
+		return {
+			surveyId: state.surveyId,
+			deadline: estimate.date?.toISOString() ?? "",
+			gender: estimate.gender,
+			genderPrice: priceBreakdown.genderPrice,
+			ages: estimate.ages,
+			agePrice: priceBreakdown.agePrice,
+			residence: estimate.location,
+			residencePrice: priceBreakdown.residencePrice,
+			dueCount: priceBreakdown.dueCount,
+			dueCountPrice: priceBreakdown.dueCountPrice,
+			totalCoin: priceBreakdown.totalPrice,
+		};
+	}, [
+		state.surveyId,
+		estimate.date,
+		estimate.gender,
+		estimate.ages,
+		estimate.location,
+		priceBreakdown,
+	]);
+
+	const handleSuccess = useCallback(() => {
+		resetForm();
+		resetEstimate();
+		setPaymentStep(3); // PaymentLoading으로 이동
+	}, [resetForm, resetEstimate, setPaymentStep]);
 
 	const genderDisplay = getGenderLabel(estimate.gender);
 	const ageDisplay = formatAgeDisplay(estimate.ages);
