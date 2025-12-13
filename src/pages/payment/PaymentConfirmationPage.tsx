@@ -101,8 +101,6 @@ export const PaymentConfirmationPage = () => {
 								console.error("폼 생성 실패:", error);
 							},
 						});
-					} else {
-						setPaymentStep(3);
 					}
 				}
 			},
