@@ -4,7 +4,6 @@ import {
 	getSurveyAnswerDetail,
 	type SurveyAnswerDetailFilters,
 } from "../service/mysurvey/api";
-import type { SurveyAnswerDetailResult } from "../service/mysurvey/types";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../types/surveyResponse";
 import { mapApiQuestionTypeToComponentType } from "../utils/questionFactory";
 import { useUserSurveys } from "./useUserSurveys";
