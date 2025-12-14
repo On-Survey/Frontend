@@ -1,145 +1,20 @@
-import { IAP } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Top } from "@toss/tds-mobile";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
-import { usePaymentEstimate } from "../../contexts/PaymentContext";
-import { useSurvey } from "../../contexts/SurveyContext";
-import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { createPayment } from "../../service/payments";
-import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
-import { useCreateForm } from "../QuestionForm/hooks/useSurveyMutation";
 
 export const PaymentLoading = () => {
-	const { goNextPayment } = useMultiStep();
-	const { state, resetForm } = useSurvey();
-	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
-	const { userInfo } = useUserInfo();
-	const createFormMutation = useCreateForm();
-
 	const location = useLocation();
-
 	const isChargeFlow = location.pathname === "/payment/charge";
-	const priceBreakdown = useMemo(
-		() => calculatePriceBreakdown(estimate),
-		[estimate],
-	);
+	const { goNextPayment } = useMultiStep();
 
-	const formPayload = useMemo(() => {
-		if (!state.surveyId) return null;
-		return {
-			surveyId: state.surveyId,
-			deadline: estimate.date?.toISOString() ?? "",
-			gender: estimate.gender,
-			genderPrice: priceBreakdown.genderPrice,
-			ages: estimate.ages,
-			agePrice: priceBreakdown.agePrice,
-			residence: estimate.location,
-			residencePrice: priceBreakdown.residencePrice,
-			dueCount: priceBreakdown.dueCount,
-			dueCountPrice: priceBreakdown.dueCountPrice,
-			totalCoin: priceBreakdown.totalPrice,
-		};
-	}, [
-		state.surveyId,
-		estimate.date,
-		estimate.gender,
-		estimate.ages,
-		estimate.location,
-		priceBreakdown,
-	]);
-
-	const handleSuccess = useCallback(() => {
-		resetForm();
-		resetEstimate();
+	useEffect(() => {
 		setTimeout(() => {
 			goNextPayment();
 		}, 3000);
-	}, [resetForm, resetEstimate, goNextPayment]);
-
-	const hasSubmittedRef = useRef(false);
-
-	useEffect(() => {
-		if (!userInfo || !formPayload || hasSubmittedRef.current) return;
-		if (createFormMutation.isPending) return;
-
-		const hasEnoughCoin = userInfo.result.coin >= priceBreakdown.totalPrice;
-
-		if (hasEnoughCoin) {
-			hasSubmittedRef.current = true;
-			createFormMutation.mutate(formPayload, {
-				onSuccess: () => {
-					handleSuccess();
-				},
-				onError: (error) => {
-					console.error("폼 생성 실패:", error);
-					hasSubmittedRef.current = false; // 실패 시 재시도 가능하도록
-				},
-			});
-			return;
-		}
-
-		const buyIapProduct = async () => {
-			if (!selectedCoinAmount?.sku) {
-				console.error("상품 정보가 없습니다");
-				return;
-			}
-
-			IAP.createOneTimePurchaseOrder({
-				options: {
-					sku: selectedCoinAmount.sku,
-					processProductGrant: async ({ orderId }) => {
-						try {
-							const response = await createPayment({
-								orderId,
-								price: Number(
-									selectedCoinAmount.displayAmount.replace("원", ""),
-								),
-							});
-
-							if (response.success && formPayload && !hasSubmittedRef.current) {
-								hasSubmittedRef.current = true;
-								createFormMutation.mutate(formPayload, {
-									onSuccess: () => {
-										handleSuccess();
-									},
-									onError: (error) => {
-										console.error("폼 생성 실패:", error);
-										hasSubmittedRef.current = false;
-									},
-								});
-							}
-							return true;
-						} catch (error) {
-							console.error("결제 정보 전송 실패:", error);
-							return false;
-						}
-					},
-				},
-				onEvent: async (event) => {
-					if (event.type === "success") {
-						const { orderId } = event.data;
-						console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
-						handleSuccess();
-					}
-				},
-				onError: (error) => {
-					console.error("인앱결제에 실패했어요:", error);
-				},
-			});
-		};
-
-		buyIapProduct();
-	}, [
-		userInfo,
-		priceBreakdown.totalPrice,
-		selectedCoinAmount,
-		formPayload,
-		handleSuccess,
-		createFormMutation,
-	]);
+	}, [goNextPayment]);
 
 	useBackEventListener(() => {});
 
