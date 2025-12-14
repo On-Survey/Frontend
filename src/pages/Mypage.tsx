@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { adaptive } from "@toss/tds-colors";
 import { Border, Button, List, ListRow, Text } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { useMultiStep } from "../contexts/MultiStepContext";
@@ -10,36 +11,27 @@ import type { MypageData } from "../types/mypage";
 
 export const Mypage = () => {
 	const navigate = useNavigate();
-	const [mypageData, setMypageData] = useState<MypageData | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 	const { setPaymentStep } = useMultiStep();
 	const { handleTotalPriceChange } = usePaymentEstimate();
 
-	useEffect(() => {
-		const fetchMemberInfo = async () => {
-			try {
-				setIsLoading(true);
-				setError(null);
-				const memberInfo = await getMemberInfo();
-				const mypageData: MypageData = {
-					profileImage:
-						memberInfo.profileUrl ||
-						"https://static.toss.im/illusts/img-profile-03.png",
-					chargeCash: memberInfo.coin,
-					points: memberInfo.promotionPoint,
-				};
-				setMypageData(mypageData);
-			} catch (err) {
-				console.error("회원 정보 조회 실패:", err);
-				setError("회원 정보를 불러오지 못했습니다.");
-			} finally {
-				setIsLoading(false);
-			}
-		};
+	const { data: memberInfo, error } = useQuery({
+		queryKey: ["memberInfo"],
+		queryFn: getMemberInfo,
+		staleTime: 2 * 60 * 1000,
+		gcTime: 5 * 60 * 1000,
+		refetchOnWindowFocus: false,
+	});
 
-		void fetchMemberInfo();
-	}, []);
+	const mypageData = useMemo<MypageData | null>(() => {
+		if (!memberInfo) return null;
+		return {
+			profileImage:
+				memberInfo.profileUrl ||
+				"https://static.toss.im/illusts/img-profile-03.png",
+			chargeCash: memberInfo.coin,
+			points: memberInfo.promotionPoint,
+		};
+	}, [memberInfo]);
 
 	const handleHome = () => {
 		navigate("/home");
@@ -84,28 +76,12 @@ export const Mypage = () => {
 		navigate("/payment/charge");
 	};
 
-	if (isLoading) {
-		return (
-			<div className="flex flex-col w-full h-screen">
-				<div className="flex-1 flex items-center justify-center">
-					<Text color={adaptive.grey600} typography="t7">
-						회원 정보를 불러오는 중입니다...
-					</Text>
-				</div>
-			</div>
-		);
+	if (error) {
+		console.error("회원 정보 조회 실패:", error);
 	}
 
-	if (error || !mypageData) {
-		return (
-			<div className="flex flex-col w-full h-screen">
-				<div className="flex-1 flex items-center justify-center">
-					<Text color={adaptive.red500} typography="t7">
-						{error || "회원 정보를 불러올 수 없습니다."}
-					</Text>
-				</div>
-			</div>
-		);
+	if (!mypageData) {
+		return null;
 	}
 
 	return (
