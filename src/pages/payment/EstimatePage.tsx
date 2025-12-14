@@ -285,6 +285,8 @@ export const EstimatePage = () => {
 				labelOption="sustain"
 				value={locationDisplay}
 				placeholder="거주지를 선택해주세요"
+				help="현재 준비 중이에요"
+				disabled={true}
 				right={
 					<Asset.Icon
 						frameShape={Asset.frameShape.CleanW24}
