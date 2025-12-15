@@ -1,74 +1,37 @@
+import { useQuery } from "@tanstack/react-query";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, Border, Button, List, ListRow, Text } from "@toss/tds-mobile";
-import { useCallback, useEffect, useState } from "react";
+import { Border, Button, List, ListRow, Text } from "@toss/tds-mobile";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { useMultiStep } from "../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../contexts/PaymentContext";
-import { useImagePicker } from "../hooks/useImagePicker";
-import { getMemberInfo, updateProfileImage } from "../service/userInfo";
+import { getMemberInfo } from "../service/userInfo";
 import type { MypageData } from "../types/mypage";
 
 export const Mypage = () => {
 	const navigate = useNavigate();
-	const [mypageData, setMypageData] = useState<MypageData | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 	const { setPaymentStep } = useMultiStep();
 	const { handleTotalPriceChange } = usePaymentEstimate();
 
-	const handleImageUploaded = useCallback(
-		async (url: string) => {
-			const updatedUrl = await updateProfileImage(url);
-			if (mypageData) {
-				setMypageData({
-					...mypageData,
-					profileImage: updatedUrl || url,
-				});
-			}
-		},
-		[mypageData],
-	);
-
-	const {
-		selectedImage: profileImage,
-		fileInputRef,
-		handleImageClick,
-		handleFileChange,
-		setSelectedImage,
-		isUploading: isUpdatingImage,
-	} = useImagePicker({
-		defaultImage: mypageData?.profileImage,
-		onImageUploaded: handleImageUploaded,
-		autoUpload: true,
-		originalImageUrl: mypageData?.profileImage,
+	const { data: memberInfo, error } = useQuery({
+		queryKey: ["memberInfo"],
+		queryFn: getMemberInfo,
+		staleTime: 2 * 60 * 1000,
+		gcTime: 5 * 60 * 1000,
+		refetchOnWindowFocus: false,
 	});
 
-	useEffect(() => {
-		const fetchMemberInfo = async () => {
-			try {
-				setIsLoading(true);
-				setError(null);
-				const memberInfo = await getMemberInfo();
-				const mypageData: MypageData = {
-					profileImage:
-						memberInfo.profileUrl ||
-						"https://static.toss.im/illusts/img-profile-03.png",
-					chargeCash: memberInfo.coin,
-					points: memberInfo.promotionPoint,
-				};
-				setMypageData(mypageData);
-				setSelectedImage(mypageData.profileImage);
-			} catch (err) {
-				console.error("회원 정보 조회 실패:", err);
-				setError("회원 정보를 불러오지 못했습니다.");
-			} finally {
-				setIsLoading(false);
-			}
+	const mypageData = useMemo<MypageData | null>(() => {
+		if (!memberInfo) return null;
+		return {
+			profileImage:
+				memberInfo.profileUrl ||
+				"https://static.toss.im/illusts/img-profile-03.png",
+			chargeCash: memberInfo.coin,
+			points: memberInfo.promotionPoint,
 		};
-
-		void fetchMemberInfo();
-	}, [setSelectedImage]);
+	}, [memberInfo]);
 
 	const handleHome = () => {
 		navigate("/home");
@@ -113,74 +76,18 @@ export const Mypage = () => {
 		navigate("/payment/charge");
 	};
 
-	if (isLoading) {
-		return (
-			<div className="flex flex-col w-full h-screen">
-				<div className="flex-1 flex items-center justify-center">
-					<Text color={adaptive.grey600} typography="t7">
-						회원 정보를 불러오는 중입니다...
-					</Text>
-				</div>
-			</div>
-		);
+	if (error) {
+		console.error("회원 정보 조회 실패:", error);
 	}
 
-	if (error || !mypageData) {
-		return (
-			<div className="flex flex-col w-full h-screen">
-				<div className="flex-1 flex items-center justify-center">
-					<Text color={adaptive.red500} typography="t7">
-						{error || "회원 정보를 불러올 수 없습니다."}
-					</Text>
-				</div>
-			</div>
-		);
+	if (!mypageData) {
+		return null;
 	}
 
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<div className="flex-1 overflow-y-auto p-2 pb-20">
 				<div className="px-4">
-					<div className="relative flex items-center justify-center">
-						<button
-							type="button"
-							onClick={handleImageClick}
-							disabled={isUpdatingImage}
-							className="cursor-pointer relative disabled:opacity-50 disabled:cursor-not-allowed"
-							aria-label="프로필 이미지 변경"
-						>
-							<img
-								src={
-									profileImage ||
-									"https://static.toss.im/illusts/img-profile-03.png"
-								}
-								alt="프로필"
-								className="w-24 h-24 rounded-full object-cover"
-							/>
-							<div className="absolute bottom-0 right-0">
-								<Asset.Icon
-									frameShape={{ width: 24, height: 24 }}
-									name="icon-plus-circle-grey"
-									aria-hidden={true}
-								/>
-							</div>
-							{isUpdatingImage && (
-								<div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full">
-									<Text color="white" typography="t7">
-										업데이트 중...
-									</Text>
-								</div>
-							)}
-						</button>
-						<input
-							ref={fileInputRef}
-							type="file"
-							accept="image/*"
-							onChange={handleFileChange}
-							className="hidden"
-							aria-label="프로필 이미지 선택"
-						/>
-					</div>
 					<div className="bg-gray-100 rounded-xl p-4 mt-4">
 						<div className="flex justify-between items-center">
 							<Text

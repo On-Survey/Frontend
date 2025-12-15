@@ -15,11 +15,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { createPayment } from "../../service/payments";
 import { type createUserResponse, getUserInfo } from "../../service/user";
 import { calculateRequiredCoinAmount } from "../../utils/paymentCalculator";
 
 export const PaymentProductPage = () => {
-	const { goNextPayment, goPrevPayment } = useMultiStep();
+	const { goNextPayment, goPrevPayment, setPaymentStep } = useMultiStep();
 	const { selectedCoinAmount, handleSelectedCoinAmountChange, totalPrice } =
 		usePaymentEstimate();
 	const location = useLocation();
@@ -37,13 +38,49 @@ export const PaymentProductPage = () => {
 	}, [userInfo, totalPrice]);
 
 	const handleNext = () => {
-		// 충전 플로우면 PaymentConfirmationPage를 건너뛰고 바로 PaymentLoading으로
-		if (isChargeFlow) {
-			// paymentStep을 2로 설정 (PaymentLoading)
-			goNextPayment(); // 1 -> 2
-		} else {
-			goNextPayment(); // 1 -> 2 (PaymentConfirmationPage)
+		if (!selectedCoinAmount?.sku) {
+			console.error("상품 정보가 없습니다");
+			return;
 		}
+
+		// 코인 충전 플로우 즉시 결제
+		if (isChargeFlow) {
+			IAP.createOneTimePurchaseOrder({
+				options: {
+					sku: selectedCoinAmount.sku,
+					processProductGrant: async ({ orderId }) => {
+						try {
+							await createPayment({
+								orderId,
+								price: Number(
+									selectedCoinAmount.displayAmount.replace("원", ""),
+								),
+							});
+							return true;
+						} catch (error) {
+							console.error("결제 정보 전송 실패:", error);
+							return false;
+						}
+					},
+				},
+				onEvent: (event) => {
+					if (event.type === "success") {
+						console.log(
+							"코인 충전 결제에 성공했어요. 주문 번호:",
+							event.data.orderId,
+						);
+						setPaymentStep(2);
+					}
+				},
+				onError: (error) => {
+					console.error("코인 충전 결제에 실패했어요:", error);
+				},
+			});
+			return;
+		}
+
+		// 설문 생성 플로우 기존 단계 진행
+		goNextPayment();
 	};
 
 	useEffect(() => {
