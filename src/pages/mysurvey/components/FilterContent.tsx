@@ -7,7 +7,6 @@ import {
 	getAgeLabelSimple,
 	getGenderLabel,
 } from "../../../constants/payment";
-import { getRegionLabelFromCode, regions } from "../../../constants/regions";
 import type { SurveyInfo } from "../../../service/mysurvey/types";
 
 type FilterTab = "age" | "gender" | "location";
@@ -33,6 +32,9 @@ export const FilterContent = ({
 	onLocationChange,
 	surveyInfo,
 }: FilterContentProps) => {
+	// 거주지 탭 임시 제거로 인해 사용하지 않는 props를 소거
+	void selectedLocations;
+	void onLocationChange;
 	if (!activeTab) {
 		return null;
 	}
@@ -61,12 +63,13 @@ export const FilterContent = ({
 		return ["전체", getGenderLabel(surveyInfo.gender as GenderCode)];
 	};
 
-	const getAvailableLocations = () => {
-		if (!surveyInfo || surveyInfo.residence === "ALL") {
-			return ["전체", ...regions.map((r) => r.name)];
-		}
-		return ["전체", getRegionLabelFromCode(surveyInfo.residence)];
-	};
+	// 거주지 탭 임시 제거
+	// const getAvailableLocations = () => {
+	// 	if (!surveyInfo || surveyInfo.residence === "ALL") {
+	// 		return ["전체", ...regions.map((r) => r.name)];
+	// 	}
+	// 	return ["전체", getRegionLabelFromCode(surveyInfo.residence)];
+	// };
 
 	switch (activeTab) {
 		case "age": {
@@ -174,27 +177,28 @@ export const FilterContent = ({
 				</div>
 			);
 		}
-		case "location": {
-			const availableLocations = getAvailableLocations();
-			return (
-				<div className="p-4 grid grid-cols-3 gap-2">
-					{availableLocations.map((location) => {
-						const isSelected = selectedLocations.includes(location);
-						return (
-							<Button
-								key={location}
-								size="large"
-								color={isSelected ? "primary" : "dark"}
-								variant={isSelected ? "fill" : "weak"}
-								onClick={() => onLocationChange(location)}
-							>
-								{location}
-							</Button>
-						);
-					})}
-				</div>
-			);
-		}
+		// 거주지 탭 임시 제거
+		// case "location": {
+		// 	const availableLocations = getAvailableLocations();
+		// 	return (
+		// 		<div className="p-4 grid grid-cols-3 gap-2">
+		// 			{availableLocations.map((location) => {
+		// 				const isSelected = selectedLocations.includes(location);
+		// 				return (
+		// 					<Button
+		// 						key={location}
+		// 						size="large"
+		// 						color={isSelected ? "primary" : "dark"}
+		// 						variant={isSelected ? "fill" : "weak"}
+		// 						onClick={() => onLocationChange(location)}
+		// 					>
+		// 						{location}
+		// 					</Button>
+		// 				);
+		// 			})}
+		// 		</div>
+		// 	);
+		// }
 		default:
 			return null;
 	}
