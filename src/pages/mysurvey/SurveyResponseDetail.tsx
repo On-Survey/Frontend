@@ -33,17 +33,13 @@ export const SurveyResponseDetail = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 	const { filters, applyFilters } = useSurveyFilters();
-	const { surveyResponse, answerDetails, isLoading } = useSurveyAnswerDetail(
+	const { surveyResponse, answerDetails } = useSurveyAnswerDetail(
 		surveyId,
 		filters,
 	);
 
-	if (isLoading || !surveyResponse) {
-		return (
-			<div className="flex flex-col w-full h-screen bg-white items-center justify-center text-gray-500">
-				<div>설문 결과를 불러오는 중이에요</div>
-			</div>
-		);
+	if (!surveyResponse) {
+		return null;
 	}
 
 	const badge = SURVEY_BADGE_CONFIG[surveyResponse.status];
