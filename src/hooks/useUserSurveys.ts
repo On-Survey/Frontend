@@ -7,10 +7,6 @@ import type {
 } from "../pages/mysurvey/components/types";
 import { getUserSurveys } from "../service/mysurvey/api";
 
-/**
- * 사용자 설문 목록 조회 및 로딩 상태 관리 커스텀 훅
- * React Query를 사용하여 캐싱 적용
- */
 export const useUserSurveys = () => {
 	const {
 		data: resultObj,
@@ -19,9 +15,6 @@ export const useUserSurveys = () => {
 	} = useQuery({
 		queryKey: ["userSurveys"],
 		queryFn: getUserSurveys,
-		staleTime: 2 * 60 * 1000,
-		gcTime: 5 * 60 * 1000,
-		refetchOnWindowFocus: false,
 	});
 
 	const { draftSurveys, activeSurveys, closedSurveys } = useMemo(() => {

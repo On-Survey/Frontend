@@ -8,8 +8,6 @@ import type { SurveyResponseDetail as SurveyResponseDetailType } from "../types/
 import { mapApiQuestionTypeToComponentType } from "../utils/questionFactory";
 import { useUserSurveys } from "./useUserSurveys";
 
-// 설문 응답 상세 정보를 가져오는 훅
-// React Query를 사용하여 캐싱 적용
 export const useSurveyAnswerDetail = (
 	surveyId: string | undefined,
 	filters: SurveyAnswerDetailFilters,
@@ -47,9 +45,6 @@ export const useSurveyAnswerDetail = (
 			return getSurveyAnswerDetail(Number(surveyId), filters);
 		},
 		enabled: !!surveyId,
-		staleTime: 2 * 60 * 1000, // 2분간 fresh 상태 유지
-		gcTime: 5 * 60 * 1000, // 5분간 캐시 유지
-		refetchOnWindowFocus: false, // 윈도우 포커스 시 자동 refetch 비활성화
 	});
 
 	const surveyResponse = useMemo<SurveyResponseDetailType | null>(() => {
