@@ -44,7 +44,6 @@ export const useSurveyAnswerDetail = (
 	} = useQuery({
 		queryKey: ["surveyAnswerDetail", surveyId, filters],
 		queryFn: () => {
-			if (!surveyId) throw new Error("surveyId is required");
 			return getSurveyAnswerDetail(Number(surveyId), filters);
 		},
 		enabled: !!surveyId,
