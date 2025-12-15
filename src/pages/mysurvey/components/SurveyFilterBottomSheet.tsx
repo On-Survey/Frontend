@@ -46,12 +46,15 @@ export const SurveyFilterBottomSheet = ({
 	}, [open, initialAges, initialGenders, initialLocations]);
 
 	const handleTabChange = (index: number) => {
-		const tabs: FilterTab[] = ["age", "gender", "location"];
+		// const tabs: FilterTab[] = ["age", "gender", "location"];
+		const tabs: FilterTab[] = ["age", "gender"];
 		setActiveTab(tabs[index] || "age");
 	};
 
 	const handleConfirm = () => {
-		onApplyFilters(selectedAges, selectedGenders, selectedLocations);
+		// // 거주지 탭 임시 제거로 인해 항상 빈 배열 전달
+		// onApplyFilters(selectedAges, selectedGenders, []);
+		onApplyFilters(selectedAges, selectedGenders, []);
 		onClose();
 	};
 
@@ -81,7 +84,7 @@ export const SurveyFilterBottomSheet = ({
 					>
 						<Tab.Item selected={activeTab === "age"}>연령대</Tab.Item>
 						<Tab.Item selected={activeTab === "gender"}>성별</Tab.Item>
-						<Tab.Item selected={activeTab === "location"}>거주지</Tab.Item>
+						{/* <Tab.Item selected={activeTab === "location"}>거주지</Tab.Item> */}
 					</Tab>
 				</div>
 				<div className="flex-1 overflow-y-auto min-h-0">
