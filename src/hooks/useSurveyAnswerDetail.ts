@@ -6,35 +6,11 @@ import {
 } from "../service/mysurvey/api";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../types/surveyResponse";
 import { mapApiQuestionTypeToComponentType } from "../utils/questionFactory";
-import { useUserSurveys } from "./useUserSurveys";
 
 export const useSurveyAnswerDetail = (
 	surveyId: string | undefined,
 	filters: SurveyAnswerDetailFilters,
 ) => {
-	const { draftSurveys, activeSurveys, closedSurveys } = useUserSurveys();
-	const userSurveysResult = useMemo(() => {
-		return {
-			infoList: [
-				...draftSurveys.map((s) => ({
-					surveyId: s.id,
-					title: s.title,
-					currentCount: 0,
-				})),
-				...activeSurveys.map((s) => ({
-					surveyId: s.id,
-					title: s.title,
-					currentCount: s.progress,
-				})),
-				...closedSurveys.map((s) => ({
-					surveyId: s.id,
-					title: s.title,
-					currentCount: 0,
-				})),
-			],
-		};
-	}, [draftSurveys, activeSurveys, closedSurveys]);
-
 	const {
 		data: answerDetails,
 		isLoading,
@@ -50,22 +26,8 @@ export const useSurveyAnswerDetail = (
 	const surveyResponse = useMemo<SurveyResponseDetailType | null>(() => {
 		if (!surveyId) return null;
 
-		if (error || !answerDetails) {
-			const survey = userSurveysResult.infoList.find(
-				(s) => s.surveyId === Number(surveyId),
-			);
-			return {
-				id: Number(surveyId),
-				title: survey?.title || "설문",
-				status: "active",
-				responseCount: survey?.currentCount ?? 0,
-				questions: [],
-			};
-		}
+		if (error || !answerDetails) return null;
 
-		const survey = userSurveysResult.infoList.find(
-			(s) => s.surveyId === answerDetails.surveyId,
-		);
 		const status: "active" | "closed" =
 			answerDetails.status === "ONGOING" || answerDetails.status === "ACTIVE"
 				? "active"
@@ -93,12 +55,12 @@ export const useSurveyAnswerDetail = (
 
 		return {
 			id: answerDetails.surveyId,
-			title: survey?.title || answerDetails.surveyId.toString() || "설문",
+			title: answerDetails.surveyId.toString() || "설문",
 			status,
 			responseCount: answerDetails.currentCount,
 			questions,
 		};
-	}, [surveyId, answerDetails, error, userSurveysResult]);
+	}, [surveyId, answerDetails, error]);
 
 	return {
 		surveyResponse,
