@@ -40,9 +40,10 @@ export const useSurveyAnswerDetail = (
 
 		const questions = answerDetails.detailInfoList.map((detail) => {
 			const questionType = mapApiQuestionTypeToComponentType(detail.type);
-			// CHOICE와 RATING 타입은 answerMap 사용
 			const responseCount =
-				(detail.type === "CHOICE" || detail.type === "RATING") &&
+				(detail.type === "CHOICE" ||
+					detail.type === "RATING" ||
+					detail.type === "NPS") &&
 				detail.answerMap
 					? Object.values(detail.answerMap).reduce(
 							(sum, count) => sum + count,
