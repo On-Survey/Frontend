@@ -6,11 +6,13 @@ import {
 } from "../service/mysurvey/api";
 import type { SurveyResponseDetail as SurveyResponseDetailType } from "../types/surveyResponse";
 import { mapApiQuestionTypeToComponentType } from "../utils/questionFactory";
+import { useUserSurveys } from "./useUserSurveys";
 
 export const useSurveyAnswerDetail = (
 	surveyId: string | undefined,
 	filters: SurveyAnswerDetailFilters,
 ) => {
+	const { draftSurveys, activeSurveys, closedSurveys } = useUserSurveys();
 	const {
 		data: answerDetails,
 		isLoading,
@@ -27,6 +29,9 @@ export const useSurveyAnswerDetail = (
 		if (!surveyId) return null;
 
 		if (error || !answerDetails) return null;
+
+		const allSurveys = [...draftSurveys, ...activeSurveys, ...closedSurveys];
+		const survey = allSurveys.find((s) => s.id === Number(surveyId));
 
 		const status: "active" | "closed" =
 			answerDetails.status === "ONGOING" || answerDetails.status === "ACTIVE"
@@ -55,12 +60,19 @@ export const useSurveyAnswerDetail = (
 
 		return {
 			id: answerDetails.surveyId,
-			title: answerDetails.surveyId.toString() || "설문",
+			title: survey?.title || "설문",
 			status,
 			responseCount: answerDetails.currentCount,
 			questions,
 		};
-	}, [surveyId, answerDetails, error]);
+	}, [
+		surveyId,
+		answerDetails,
+		error,
+		draftSurveys,
+		activeSurveys,
+		closedSurveys,
+	]);
 
 	return {
 		surveyResponse,
