@@ -6,18 +6,10 @@ import {
 } from "../../constants/survey";
 import { useResultPageData } from "../../hooks/useResultPageData";
 
-const getBarHeight = (count: number, maxCount: number) => {
-	if (maxCount <= 0) {
-		return "0px";
-	}
-	const ratio = count / maxCount;
-	const height = 72 + ratio * 140;
-	return `${Math.round(height)}px`;
-};
-
 export const RatingResultPage = () => {
 	const {
 		question,
+		answerMap,
 		answerList,
 		surveyTitle,
 		surveyStatus,
@@ -27,19 +19,32 @@ export const RatingResultPage = () => {
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
 	const ratingCount = question?.rate ?? 10;
-	const scores = answerList
-		.map((answer) => Number(answer))
-		.filter(
-			(score) => !Number.isNaN(score) && score >= 1 && score <= ratingCount,
-		);
+
+	const scores =
+		answerMap && Object.keys(answerMap).length > 0
+			? Object.entries(answerMap)
+					.flatMap(([score, count]) => Array(count).fill(Number(score)))
+					.filter(
+						(score) =>
+							!Number.isNaN(score) && score >= 1 && score <= ratingCount,
+					)
+			: answerList
+					.map((answer) => Number(answer))
+					.filter(
+						(score) =>
+							!Number.isNaN(score) && score >= 1 && score <= ratingCount,
+					);
 
 	const ratingDistribution = Array.from({ length: ratingCount }, (_, idx) => {
 		const score = idx + 1;
-		const count = scores.filter((s) => s === score).length;
+		const count =
+			answerMap && Object.keys(answerMap).length > 0
+				? Number(answerMap[String(score)] || 0)
+				: scores.filter((s) => s === score).length;
 		return { score, count, label: `${score}점` };
-	}).sort((a, b) => b.count - a.count || b.score - a.score);
+	});
 
-	const maxCount = ratingDistribution[0]?.count ?? 0;
+	const maxCount = Math.max(...ratingDistribution.map((r) => r.count), 0);
 	const average =
 		scores.length > 0
 			? scores.reduce((sum, score) => sum + score, 0) / scores.length
@@ -81,47 +86,47 @@ export const RatingResultPage = () => {
 				}
 			/>
 
-			<div className="px-6 pb-12 flex justify-center">
-				{scores.length === 0 || maxCount === 0 ? (
-					<div className="py-8 text-center">
-						<p className="text-gray-500">아직 응답이 없습니다.</p>
-					</div>
-				) : (
-					<div className="flex items-end gap-4">
-						{ratingDistribution.map((item) => {
-							const isTop = item.count === maxCount && maxCount > 0;
-							return (
-								<div
-									key={item.score}
-									className="flex flex-col items-center gap-2"
+			<div className="px-6 pb-12">
+				<div className="flex flex-col gap-3">
+					{ratingDistribution.map((item) => {
+						const isTop = item.count === maxCount && maxCount > 0;
+						const barWidth =
+							maxCount > 0 ? Math.max((item.count / maxCount) * 100, 0) : 0;
+						const minWidth = 4;
+						const finalWidth = barWidth > 0 ? `${barWidth}%` : `${minWidth}px`;
+
+						return (
+							<div key={item.score} className="flex items-center gap-4">
+								<Text
+									color={isTop ? adaptive.blue500 : adaptive.grey600}
+									typography="t6"
+									fontWeight="semibold"
+									className="w-12"
 								>
-									<Text
-										color={isTop ? adaptive.blue500 : adaptive.grey600}
-										typography="t6"
-										fontWeight="semibold"
-									>
-										{item.label}
-									</Text>
+									{item.label}
+								</Text>
+								<div className="flex-1 flex items-center gap-2">
 									<div
-										className={`w-8 rounded-full shadow-sm ${
+										className={`h-8 rounded-full shadow-sm ${
 											isTop
-												? "bg-gradient-to-t from-blue-200 via-blue-400 to-blue-500"
-												: "bg-gradient-to-t from-gray-200 via-gray-300 to-gray-400"
+												? "bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500"
+												: "bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400"
 										}`}
-										style={{ height: getBarHeight(item.count, maxCount) }}
+										style={{ width: finalWidth }}
 									/>
 									<Text
 										color={adaptive.grey700}
 										typography="t7"
 										fontWeight="medium"
+										className="w-12 text-right"
 									>
 										{item.count}명
 									</Text>
 								</div>
-							);
-						})}
-					</div>
-				)}
+							</div>
+						);
+					})}
+				</div>
 			</div>
 		</div>
 	);

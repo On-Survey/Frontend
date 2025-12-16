@@ -69,8 +69,10 @@ export const SurveyResponseDetail = () => {
 
 		const path = getQuestionResultRoute(type);
 
+		// CHOICE와 RATING 타입은 answerMap 사용
 		const responseCount =
-			questionDetail.type === "CHOICE" && questionDetail.answerMap
+			(questionDetail.type === "CHOICE" || questionDetail.type === "RATING") &&
+			questionDetail.answerMap
 				? Object.values(questionDetail.answerMap).reduce(
 						(sum, count) => sum + count,
 						0,
