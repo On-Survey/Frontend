@@ -70,7 +70,10 @@ export const SurveyResponseDetail = () => {
 		const path = getQuestionResultRoute(type);
 
 		const responseCount =
-			questionDetail.type === "CHOICE" && questionDetail.answerMap
+			(questionDetail.type === "CHOICE" ||
+				questionDetail.type === "RATING" ||
+				questionDetail.type === "NPS") &&
+			questionDetail.answerMap
 				? Object.values(questionDetail.answerMap).reduce(
 						(sum, count) => sum + count,
 						0,

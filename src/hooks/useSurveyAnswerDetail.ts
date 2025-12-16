@@ -41,7 +41,10 @@ export const useSurveyAnswerDetail = (
 		const questions = answerDetails.detailInfoList.map((detail) => {
 			const questionType = mapApiQuestionTypeToComponentType(detail.type);
 			const responseCount =
-				detail.type === "CHOICE" && detail.answerMap
+				(detail.type === "CHOICE" ||
+					detail.type === "RATING" ||
+					detail.type === "NPS") &&
+				detail.answerMap
 					? Object.values(detail.answerMap).reduce(
 							(sum, count) => sum + count,
 							0,
