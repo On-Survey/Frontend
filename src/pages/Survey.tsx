@@ -116,9 +116,9 @@ export const Survey = () => {
 						// 권한 없음 - 메인 페이지로 이동
 						setErrorDialog({
 							open: true,
-							title: "접근 권한이 없습니다",
+							title: "권한이 없는 설문입니다",
 							description: "해당 설문에 참여할 권한이 없습니다",
-							redirectTo: "/home",
+							redirectTo: "/survey/ineligible",
 						});
 						return;
 					}
