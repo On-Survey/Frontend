@@ -2,43 +2,55 @@
 
 /* FormController 애니메이션 */
 @keyframes slideInFromLeft {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+	from {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }
 
 @keyframes slideInFromRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }
 
 .animate-slide-in-left {
-  animation: slideInFromLeft 0.4s ease-out;
+	animation: slideInFromLeft 0.4s ease-out;
 }
 
 .animate-slide-in-right {
-  animation: slideInFromRight 0.4s ease-out;
+	animation: slideInFromRight 0.4s ease-out;
 }
 
 /* Home.tsx 배너 배경 스타일 */
 .home-banner-gradient {
-  background: linear-gradient(180deg, #59b5e8 3.52%, #37a6e4 15.71%, #d9d0ee 46.77%, #f1cfd6 59.46%, #ffe1e7 68.61%);
-  filter: blur(10px);
+	background: linear-gradient(
+		180deg,
+		#59b5e8 3.52%,
+		#37a6e4 15.71%,
+		#d9d0ee 46.77%,
+		#f1cfd6 59.46%,
+		#ffe1e7 68.61%
+	);
+	filter: blur(10px);
 }
 
 .home-banner-overlay {
-  background: linear-gradient(180deg, rgba(71, 117, 178, 0) 60.95%, rgba(58, 95, 143, 0.6) 80.12%, #3a5f8f 90.2%);
-  filter: blur(2px);
-  height: 100%;
+	background: linear-gradient(
+		180deg,
+		rgba(71, 117, 178, 0) 60.95%,
+		rgba(58, 95, 143, 0.6) 80.12%,
+		#3a5f8f 90.2%
+	);
+	filter: blur(2px);
+	height: 100%;
 }
