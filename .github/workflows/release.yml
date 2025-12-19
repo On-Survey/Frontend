@@ -7,9 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  build-and-upload:
-    name: 빌드 및 구글 드라이브 업로드
+  build-and-release:
+    name: 빌드 및 GitHub Release 생성
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: 📥 코드 체크아웃
@@ -33,134 +35,76 @@ jobs:
       - name: 📝 빌드 파일 확인
         run: |
           echo "빌드된 파일 목록:"
-          ls -lh dist/ || ls -lh build/ || echo "빌드 디렉토리를 찾을 수 없습니다"
+          find . -name "*.ait" -type f
+          
+      - name: 📦 버전 정보 추출
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "📌 현재 버전: v${VERSION}"
 
-      - name: 🐍 Python 설정
-        uses: actions/setup-python@v5
+      - name: 📦 .ait 파일 찾기
+        id: find_file
+        run: |
+          AIT_FILE=$(find . -name "*.ait" -type f | head -n 1)
+          if [ -z "$AIT_FILE" ]; then
+            echo "❌ .ait 파일을 찾을 수 없습니다!"
+            exit 1
+          fi
+          echo "file_path=${AIT_FILE}" >> $GITHUB_OUTPUT
+          echo "file_name=onsurvey_v${{ steps.version.outputs.version }}.ait" >> $GITHUB_OUTPUT
+          echo "📦 발견된 파일: ${AIT_FILE}"
+
+      - name: 🏷️ 파일명 변경
+        run: |
+          cp "${{ steps.find_file.outputs.file_path }}" "${{ steps.find_file.outputs.file_name }}"
+          ls -lh "${{ steps.find_file.outputs.file_name }}"
+
+      - name: 🚀 GitHub Release 생성 및 파일 업로드
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
-          python-version: '3.11'
-
-      - name: 📦 Google API 클라이언트 설치
-        run: |
-          pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-
-      - name: 📤 구글 드라이브에 업로드
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.tag }}
+          body: |
+            ## 📦 OnSurvey v${{ steps.version.outputs.version }}
+            
+            ### 다운로드
+            아래 Assets에서 `${{ steps.find_file.outputs.file_name }}`을 다운로드하세요.
+            
+            ### 빌드 정보
+            - **버전**: v${{ steps.version.outputs.version }}
+            - **빌드 날짜**: ${{ github.event.head_commit.timestamp }}
+            - **커밋**: ${{ github.sha }}
+            
+            ---
+            _자동으로 생성된 릴리즈입니다._
+          files: |
+            ${{ steps.find_file.outputs.file_name }}
+          draft: false
+          prerelease: false
         env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ✅ 릴리즈 완료 (Main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          cat > upload_to_drive.py << 'EOF'
-          import os
-          import json
-          from datetime import datetime
-          from google.oauth2 import service_account
-          from googleapiclient.discovery import build
-          from googleapiclient.http import MediaFileUpload
-          import glob
-
-          # 서비스 계정 인증
-          credentials_json = os.environ['GOOGLE_CREDENTIALS']
-          credentials_dict = json.loads(credentials_json)
-          credentials = service_account.Credentials.from_service_account_info(
-              credentials_dict,
-              scopes=['https://www.googleapis.com/auth/drive.file']
-          )
-
-          # Drive API 클라이언트 생성
-          service = build('drive', 'v3', credentials=credentials)
-
-          # 루트 폴더 ID
-          root_folder_id = os.environ['GOOGLE_DRIVE_FOLDER_ID']
-
-          # package.json에서 버전 읽기
-          with open('package.json', 'r') as f:
-              package_data = json.load(f)
-              version = package_data.get('version', '0.0.0')
-          
-          print(f"📌 현재 버전: v{version}")
-
-          # .ait 파일 찾기
-          ait_files = glob.glob('**/*.ait', recursive=True)
-          
-          if not ait_files:
-              print("❌ .ait 파일을 찾을 수 없습니다!")
-              exit(1)
-
-          ait_file = ait_files[0]
-          print(f"📦 업로드할 파일: {ait_file}")
-
-          # 날짜별 폴더명 생성
-          now = datetime.now()
-          date_folder_name = now.strftime('%Y-%m-%d')
-          date_str = now.strftime('%Y-%m-%d %H:%M:%S')
-          time_str = now.strftime('%H%M%S')
-          
-          print(f"📁 폴더 생성/확인: {date_folder_name}")
-
-          # 날짜 폴더 찾기 또는 생성
-          query = f"name='{date_folder_name}' and '{root_folder_id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false"
-          results = service.files().list(q=query, fields='files(id, name)').execute()
-          folders = results.get('files', [])
-
-          if folders:
-              date_folder_id = folders[0]['id']
-              print(f"✓ 기존 폴더 사용: {date_folder_name}")
-          else:
-              folder_metadata = {
-                  'name': date_folder_name,
-                  'mimeType': 'application/vnd.google-apps.folder',
-                  'parents': [root_folder_id]
-              }
-              folder = service.files().create(body=folder_metadata, fields='id').execute()
-              date_folder_id = folder['id']
-              print(f"✓ 새 폴더 생성: {date_folder_name}")
-
-          # 파일명 생성 (버전 포함)
-          file_name = f"onsurvey_v{version}_{time_str}.ait"
-
-          # 파일 메타데이터
-          file_metadata = {
-              'name': file_name,
-              'parents': [date_folder_id],
-              'description': f'Version: v{version}\nBuild Date: {date_str}\nBuild from GitHub Actions'
-          }
-
-          # 파일 업로드
-          print(f"⬆️  업로드 중...")
-          media = MediaFileUpload(ait_file, resumable=True)
-          file = service.files().create(
-              body=file_metadata,
-              media_body=media,
-              fields='id, name, webViewLink, webContentLink'
-          ).execute()
-
-          print(f"\n✅ 업로드 완료!")
-          print(f"📁 폴더: {date_folder_name}")
-          print(f"📦 파일명: {file.get('name')}")
-          print(f"🔗 보기 링크: {file.get('webViewLink')}")
-          print(f"⬇️  다운로드 링크: {file.get('webContentLink')}")
-          print(f"📌 파일 ID: {file.get('id')}")
-
-          # GitHub Actions 출력으로 저장
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-              f.write(f"version=v{version}\n")
-              f.write(f"folder_name={date_folder_name}\n")
-              f.write(f"file_id={file.get('id')}\n")
-              f.write(f"file_name={file.get('name')}\n")
-              f.write(f"file_link={file.get('webViewLink')}\n")
-              f.write(f"download_link={file.get('webContentLink', 'N/A')}\n")
-          EOF
-
-          python upload_to_drive.py
-        id: upload
-
-      - name: ✅ 업로드 완료
-        run: |
-          echo "🎉 빌드 파일이 구글 드라이브에 업로드되었습니다!"
+          echo "🎉 GitHub Release가 생성되었습니다!"
           echo ""
-          echo "📌 버전: ${{ steps.upload.outputs.version }}"
-          echo "📁 폴더: ${{ steps.upload.outputs.folder_name }}"
-          echo "📦 파일명: ${{ steps.upload.outputs.file_name }}"
-          echo "🔗 보기 링크: ${{ steps.upload.outputs.file_link }}"
-          echo "⬇️  다운로드: ${{ steps.upload.outputs.download_link }}"
+          echo "📌 버전: ${{ steps.version.outputs.tag }}"
+          echo "📦 파일명: ${{ steps.find_file.outputs.file_name }}"
+          echo "🔗 릴리즈 페이지: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}"
+          echo "⬇️  직접 다운로드: https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/${{ steps.find_file.outputs.file_name }}"
+
+      - name: ✅ 빌드 테스트 완료 (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "✨ 빌드 테스트가 성공적으로 완료되었습니다!"
+          echo "📌 버전: ${{ steps.version.outputs.tag }}"
+          echo "📦 파일명: ${{ steps.find_file.outputs.file_name }}"
+          echo ""
+          echo "ℹ️  PR이므로 Release는 생성되지 않았습니다."
+          echo "ℹ️  main 브랜치에 머지되면 자동으로 Release가 생성됩니다."
 
