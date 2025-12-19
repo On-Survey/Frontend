@@ -1,0 +1,40 @@
+name: Biome Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  biome-check:
+    name: 코드 포맷팅 및 린트 검사
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 코드 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 pnpm 설치
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: 🟢 Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 📚 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 Biome로 코드 검사
+        run: pnpm run lint
+
+      - name: ✅ 검사 완료
+        if: success()
+        run: echo "✨ 모든 코드가 올바르게 포맷팅되어 있습니다!"
+
