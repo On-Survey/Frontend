@@ -1,0 +1,36 @@
+name: Type Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  type-check:
+    name: TypeScript 타입 검사
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 📦 pnpm 설치
+        uses: pnpm/action-setup@v4
+
+      - name: 🟢 Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 📚 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 TypeScript 타입 검사
+        run: pnpm run type-check
+
+      - name: ✅ 타입 검사 완료
+        if: success()
+        run: echo "✨ 모든 타입이 올바릅니다!"
+

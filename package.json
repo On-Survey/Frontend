@@ -8,6 +8,7 @@
 		"build": "granite build",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
+		"type-check": "tsc --noEmit",
 		"preview": "vite preview",
 		"prepare": "husky",
 		"deploy": "ait deploy",
