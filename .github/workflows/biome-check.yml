@@ -19,8 +19,6 @@ jobs:
 
       - name: 📦 pnpm 설치
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: 🟢 Node.js 설정
         uses: actions/setup-node@v4
