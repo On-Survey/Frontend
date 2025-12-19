@@ -110,7 +110,7 @@ export const FormController = ({
 			{
 				onSuccess: (result) => {
 					if (result.success) {
-						openToast("임시 저장됐어요.", {
+						openToast("진행 상황이 저장됐어요.", {
 							type: "bottom",
 							lottie:
 								"https://static.toss.im/lotties-common/check-green-spot.json",

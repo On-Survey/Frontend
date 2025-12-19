@@ -90,8 +90,9 @@ export const FormTitleStep = () => {
 					}
 					subtitleBottom={
 						<Top.SubtitleParagraph size={15}>
-							고객이 설문의 목표를 명확하게 인지할 수 있도록 짧지만 간결한
-							설명을 작성해주세요.
+							고객이 설문의 목표를 명확하게 인지할 수 있도록
+							<br />
+							짧지만 간결한 설명을 작성해주세요.
 						</Top.SubtitleParagraph>
 					}
 					lowerGap={0}

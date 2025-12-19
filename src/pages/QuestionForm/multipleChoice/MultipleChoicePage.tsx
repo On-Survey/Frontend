@@ -1,13 +1,14 @@
 import { adaptive } from "@toss/tds-colors";
-import { Top } from "@toss/tds-mobile";
+import { Text, Top } from "@toss/tds-mobile";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { formatQuestionNumber } from "../../../utils/questionFactory";
 import { useQuestionByType } from "../hooks/useQuestionByType";
 
 export const MultipleChoicePage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	const { questionIdFromUrl, title, description } =
+	const { questionIdFromUrl, title, description, question } =
 		useQuestionByType("multipleChoice");
 
 	const handleTitleAndDescriptionEdit = () => {
@@ -26,6 +27,11 @@ export const MultipleChoicePage = () => {
 		<div>
 			{!isQuestionOptionsPage && (
 				<Top
+					subtitleTop={
+						<Text typography="t5" fontWeight="medium" color={adaptive.grey700}>
+							{formatQuestionNumber((question?.questionOrder ?? 0) + 1)}
+						</Text>
+					}
 					title={
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
 							{title}
@@ -44,7 +50,7 @@ export const MultipleChoicePage = () => {
 							display="inline"
 							onClick={handleTitleAndDescriptionEdit}
 						>
-							문항 제목 및 설명 수정하기
+							수정하기
 						</Top.LowerButton>
 					}
 				/>

@@ -55,7 +55,7 @@ export const QuestionSelectionBottomSheet = ({
 	return (
 		<BottomSheet
 			header={
-				<BottomSheet.Header>추가할 항목을 입력해 주세요</BottomSheet.Header>
+				<BottomSheet.Header>추가할 옵션을 입력해 주세요</BottomSheet.Header>
 			}
 			open={isOpen}
 			onClose={handleCloseWithReset}
