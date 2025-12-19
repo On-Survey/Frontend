@@ -3,12 +3,9 @@ import { colors } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, StepperRow, Top } from "@toss/tds-mobile";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginApi, reissueToken } from "../service/login";
-import {
-	clearTokens,
-	getRefreshToken,
-	saveTokens,
-} from "../utils/tokenManager";
+import { loginApi } from "../service/login";
+import { getMemberInfo } from "../service/userInfo/api";
+import { saveTokens } from "../utils/tokenManager";
 
 export const Intro = () => {
 	const navigate = useNavigate();
@@ -16,17 +13,12 @@ export const Intro = () => {
 	// 이전에 로그인한 사용자인지 확인
 	useEffect(() => {
 		const checkAuth = async () => {
-			const storedRefreshToken = await getRefreshToken();
-			if (!storedRefreshToken) return;
-
 			try {
-				const { accessToken, refreshToken } =
-					await reissueToken(storedRefreshToken);
-				await saveTokens(accessToken, refreshToken);
+				await getMemberInfo();
 				navigate("/home", { replace: true });
 			} catch (error) {
-				console.error("토큰 재발급 실패:", error);
-				await clearTokens();
+				// 인증 실패 (토큰 없거나 만료 등) 시에는 로그인 페이지 유지
+				console.error("자동 로그인 확인 실패:", error);
 			}
 		};
 		checkAuth();

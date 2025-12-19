@@ -4,7 +4,13 @@ import axios, {
 	type AxiosResponse,
 	type InternalAxiosRequestConfig,
 } from "axios";
-import { getAccessToken } from "../../utils/tokenManager";
+import {
+	clearTokens,
+	getAccessToken,
+	getRefreshToken,
+	saveTokens,
+} from "../../utils/tokenManager";
+import { reissueToken } from "../login";
 import type { ApiResponse } from "./type";
 
 /**
@@ -82,6 +88,10 @@ apiClient.interceptors.request.use(
 	},
 );
 
+interface RetryConfig extends InternalAxiosRequestConfig {
+	_retry?: boolean;
+}
+
 /**
  * 응답 인터셉터
  */
@@ -95,31 +105,46 @@ apiClient.interceptors.response.use(
 		return response;
 	},
 	async (error) => {
-		// 에러 처리
-		if (error.response) {
-			const { status, data } = error.response;
+		const originalRequest = error.config as RetryConfig;
 
-			// // 인증 에러 처리
-			// if (status === 401) {
-			// 	const refreshToken = await getRefreshToken();
+		// /auth/ 엔드포인트인지 확인 (무한 루프 방지)
+		const isAuthEndpoint = originalRequest?.url?.startsWith("/auth/");
 
-			// 	if (!refreshToken) {
-			// 		throw new Error("리프레시 토큰이 없습니다.");
-			// 	}
+		// 2. 서버 응답이 없는 경우 (ERR_NETWORK) - 401일 수도 있으니 토큰 재발급 시도
+		if (
+			error.code === "ERR_NETWORK" &&
+			originalRequest &&
+			!originalRequest._retry &&
+			!isAuthEndpoint
+		) {
+			originalRequest._retry = true;
+			const refreshToken = await getRefreshToken();
 
-			// 	const newRefreshToken = await reissueToken(refreshToken);
-			// 	if (newRefreshToken) {
-			// 		apiClient.defaults.headers.common["x-refresh-token"] =
-			// 			`Bearer ${newRefreshToken}`;
-			// 	}
-			// }
+			if (refreshToken) {
+				try {
+					console.log(
+						"🔄 Network Error 발생 - 토큰 만료 가능성으로 재발급 시도",
+					);
+					const { accessToken, refreshToken: newRefreshToken } =
+						await reissueToken(refreshToken);
+					await saveTokens(accessToken, newRefreshToken);
 
-			// 에러 로깅
-			console.error(`❌ API Error: ${status}`, data);
-		} else if (error.request) {
-			console.error("❌ Network Error:", error.request);
+					originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+					// 토큰 갱신 후 원래 요청 재시도
+					return apiClient(originalRequest);
+				} catch {
+					console.error(
+						"❌ 토큰 재발급 실패 - 진짜 Network Error:",
+						error.message,
+					);
+					await clearTokens();
+					return Promise.reject(error);
+				}
+			} else {
+				console.error("❌ Network Error (토큰 없음):", error.message);
+			}
 		} else {
-			console.error("❌ Request Setup Error:", error.message);
+			console.error("❌ Unknown Error:", error.code || error.message);
 		}
 
 		return Promise.reject(error);
