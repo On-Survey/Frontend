@@ -1,5 +1,12 @@
 import { colors } from "@toss/tds-colors";
-import { Asset, Border, FixedBottomCTA, Text, Top } from "@toss/tds-mobile";
+import {
+	Asset,
+	Border,
+	ConfirmDialog,
+	FixedBottomCTA,
+	Text,
+	Top,
+} from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
@@ -33,6 +40,17 @@ export const Survey = () => {
 		remainingTimeText?: string;
 		isClosed?: boolean;
 	} | null>(null);
+
+	// 에러 다이얼로그 상태
+	const [errorDialog, setErrorDialog] = useState<{
+		open: boolean;
+		title: string;
+		description?: string;
+		redirectTo?: string;
+	}>({
+		open: false,
+		title: "",
+	});
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -72,10 +90,41 @@ export const Survey = () => {
 					isClosed,
 				});
 			} catch (err) {
+				console.log("err", err);
 				console.error("설문 조회 실패:", err);
 				if (!isMounted) {
 					return;
 				}
+
+				// HTTP 상태 코드별 분기 처리
+				const error = err as { response?: { status: number } };
+				if (error.response) {
+					const status = error.response.status;
+
+					if (status === 401) {
+						// 인증 실패 - 로그인 페이지로 이동
+						setErrorDialog({
+							open: true,
+							title: "로그인이 필요합니다",
+							description: "로그인 후 이용해주세요",
+							redirectTo: "/intro",
+						});
+						return;
+					}
+
+					if (status === 403) {
+						// 권한 없음 - 메인 페이지로 이동
+						setErrorDialog({
+							open: true,
+							title: "권한이 없는 설문입니다",
+							description: "해당 설문에 참여할 권한이 없습니다",
+							redirectTo: "/survey/ineligible",
+						});
+						return;
+					}
+				}
+
+				// 기타 에러
 				setError("설문 정보를 불러오지 못했습니다.");
 			}
 		};
@@ -145,116 +194,151 @@ export const Survey = () => {
 		});
 	};
 
-	return (
-		<div className="flex flex-col w-full h-screen">
-			<div className="flex-1 overflow-y-auto pb-0">
-				<Top
-					title={
-						surveyTitle ? (
-							<Top.TitleParagraph size={22} color={colors.grey900}>
-								{surveyTitle}
-							</Top.TitleParagraph>
-						) : undefined
-					}
-					subtitleBottom={
-						surveyTopicName ? (
-							<Top.SubtitleBadges
-								badges={[
-									{
-										text: `# ${surveyTopicName}`,
-										color: "blue",
-										variant: "weak",
-									},
-								]}
-							/>
-						) : undefined
-					}
-				/>
+	const handleErrorDialogConfirm = () => {
+		setErrorDialog({ open: false, title: "" });
+		if (errorDialog.redirectTo) {
+			navigate(errorDialog.redirectTo, { replace: true });
+		}
+	};
 
-				<div className="px-4">
-					<div className="w-full rounded-2xl border border-blue-500 p-5 shadow-sm">
-						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							참여 보상 : 300원
-						</Text>
-						<div className="h-2" />
-						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							소요 시간 : {estimatedTime}분
-						</Text>
-						{remainingTimeText ? (
-							<>
-								<div className="h-2" />
-								<Text
-									color={colors.grey700}
-									typography="t7"
-									fontWeight="regular"
-								>
-									{remainingTimeText}
-								</Text>
-							</>
-						) : null}
+	return (
+		<>
+			<ConfirmDialog
+				open={errorDialog.open}
+				onClose={handleErrorDialogConfirm}
+				title={errorDialog.title}
+				description={errorDialog.description}
+				confirmButton={
+					<ConfirmDialog.ConfirmButton
+						size="xlarge"
+						onClick={handleErrorDialogConfirm}
+					>
+						확인
+					</ConfirmDialog.ConfirmButton>
+				}
+			/>
+			<div className="flex flex-col w-full h-screen">
+				<div className="flex-1 overflow-y-auto pb-0">
+					<Top
+						title={
+							surveyTitle ? (
+								<Top.TitleParagraph size={22} color={colors.grey900}>
+									{surveyTitle}
+								</Top.TitleParagraph>
+							) : undefined
+						}
+						subtitleBottom={
+							surveyTopicName ? (
+								<Top.SubtitleBadges
+									badges={[
+										{
+											text: `# ${surveyTopicName}`,
+											color: "blue",
+											variant: "weak",
+										},
+									]}
+								/>
+							) : undefined
+						}
+					/>
+
+					<div className="px-4">
+						<div className="w-full rounded-2xl border border-blue-500 p-5 shadow-sm">
+							<Text
+								color={colors.grey900}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								참여 보상 : 300원
+							</Text>
+							<div className="h-2" />
+							<Text
+								color={colors.grey900}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								소요 시간 : {estimatedTime}분
+							</Text>
+							{remainingTimeText ? (
+								<>
+									<div className="h-2" />
+									<Text
+										color={colors.grey700}
+										typography="t7"
+										fontWeight="regular"
+									>
+										{remainingTimeText}
+									</Text>
+								</>
+							) : null}
+						</div>
 					</div>
+
+					<div className="px-4">
+						<div className="flex items-center gap-3 my-6">
+							<Asset.Icon
+								frameShape={Asset.frameShape.CleanW24}
+								backgroundColor="transparent"
+								name="icon-man"
+								aria-hidden={true}
+								ratio="1/1"
+							/>
+							<Text
+								color={colors.grey900}
+								typography="t5"
+								fontWeight="semibold"
+							>
+								80명이 이 설문에 참여했어요!
+							</Text>
+						</div>
+					</div>
+
+					<Border variant="height16" className="w-full" />
+
+					{surveyDescription && (
+						<div className="px-4 mt-6">
+							<Text
+								display="block"
+								color={colors.grey700}
+								typography="t6"
+								fontWeight="regular"
+							>
+								{surveyDescription}
+							</Text>
+						</div>
+					)}
+					{error && (
+						<div className="px-4 mt-6">
+							<Text color={colors.red500} typography="t7">
+								{error}
+							</Text>
+						</div>
+					)}
 				</div>
 
-				<div className="px-4">
-					<div className="flex items-center gap-3 my-6">
+				<div className="fixed left-0 right-0 bottom-[120px] z-10 px-4">
+					<div className="rounded-2xl bg-gray-50 p-4 flex items-center gap-3">
 						<Asset.Icon
 							frameShape={Asset.frameShape.CleanW24}
 							backgroundColor="transparent"
-							name="icon-man"
+							name="icon-loudspeaker"
 							aria-hidden={true}
 							ratio="1/1"
 						/>
-						<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-							80명이 이 설문에 참여했어요!
+						<Text color={colors.grey800} typography="t6" fontWeight="semibold">
+							올바른 응답이 더 좋은 결과를 만들어요.
 						</Text>
 					</div>
 				</div>
 
-				<Border variant="height16" className="w-full" />
-
-				{surveyDescription && (
-					<div className="px-4 mt-6">
-						<Text
-							display="block"
-							color={colors.grey700}
-							typography="t6"
-							fontWeight="regular"
-						>
-							{surveyDescription}
-						</Text>
-					</div>
-				)}
-				{error && (
-					<div className="px-4 mt-6">
-						<Text color={colors.red500} typography="t7">
-							{error}
-						</Text>
-					</div>
-				)}
+				<FixedBottomCTA
+					loading={false}
+					onClick={handleStart}
+					disabled={isClosed || sortedQuestions.length === 0}
+				>
+					{isClosed ? "설문 마감" : "설문 참여하기"}
+				</FixedBottomCTA>
 			</div>
-
-			<div className="fixed left-0 right-0 bottom-[120px] z-10 px-4">
-				<div className="rounded-2xl bg-gray-50 p-4 flex items-center gap-3">
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						backgroundColor="transparent"
-						name="icon-loudspeaker"
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-					<Text color={colors.grey800} typography="t6" fontWeight="semibold">
-						올바른 응답이 더 좋은 결과를 만들어요.
-					</Text>
-				</div>
-			</div>
-
-			<FixedBottomCTA
-				loading={false}
-				onClick={handleStart}
-				disabled={isClosed || sortedQuestions.length === 0}
-			>
-				{isClosed ? "설문 마감" : "설문 참여하기"}
-			</FixedBottomCTA>
-		</div>
+		</>
 	);
 };
