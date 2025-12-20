@@ -9,6 +9,7 @@ import {
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { formatQuestionNumber } from "../../utils/questionFactory";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
@@ -77,6 +78,11 @@ export const NumberPage = () => {
 	return (
 		<div>
 			<Top
+				subtitleTop={
+					<p className="text-sm font-medium text-gray-500">
+						{formatQuestionNumber((question?.questionOrder ?? 0) + 1)}
+					</p>
+				}
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
 						{title}
@@ -95,7 +101,7 @@ export const NumberPage = () => {
 						display="inline"
 						onClick={handleTitleAndDescriptionEdit}
 					>
-						문항 제목 및 설명 수정하기
+						수정하기
 					</Top.LowerButton>
 				}
 			/>

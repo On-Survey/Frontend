@@ -59,7 +59,7 @@ export const CreateMultiChoiceBottomSheet = ({
 
 	return (
 		<BottomSheet
-			header={<BottomSheet.Header>어떤 항목을 추가할까요?</BottomSheet.Header>}
+			header={<BottomSheet.Header>어떤 옵션을 추가할까요?</BottomSheet.Header>}
 			open={isOpen}
 			onClose={handleClose}
 			cta={[]}

@@ -139,7 +139,7 @@ export const MultipleChoiceMain = () => {
 					display="block"
 					onClick={handleCreateMultiChoiceOpen}
 				>
-					옵션 추가하기
+					옵션 추가
 				</Button>
 				<Button
 					size="large"
@@ -147,8 +147,9 @@ export const MultipleChoiceMain = () => {
 					variant="weak"
 					display="block"
 					onClick={handleQuestionNavigation}
+					disabled={options.length === 0 || true}
 				>
-					응답에 따라 문항 이동하기
+					응답에 따라 문항 이동
 				</Button>
 			</div>
 			<div className="h-4" />

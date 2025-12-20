@@ -4,6 +4,7 @@ import {
 	ConfirmDialog,
 	IconButton,
 	List,
+	ListHeader,
 	ListRow,
 	Text,
 	Top,
@@ -72,7 +73,7 @@ export const QuestionHome = () => {
 				open={isConfirmDialogOpen}
 				onClose={handleConfirmDialogCancel}
 				title="지금 뒤로가면 문항이 사라져요"
-				description="현재 항목을 추가로 작성하지 않았어요.
+				description="현재 옵션을 추가로 작성하지 않았어요.
 여기서 뒤로간다면, 문항이 사라지게 돼요."
 				cancelButton={
 					<ConfirmDialog.CancelButton
@@ -111,11 +112,29 @@ export const QuestionHome = () => {
 						display="inline"
 						onClick={handlePrevious}
 					>
-						시작 정보 수정하기
+						수정하기
 					</Top.LowerButton>
 				}
 			/>
 			<Border variant="height16" />
+			<ListHeader
+				title={
+					<ListHeader.TitleParagraph
+						color={adaptive.grey800}
+						fontWeight="bold"
+						typography="t5"
+					>
+						문항 목록
+					</ListHeader.TitleParagraph>
+				}
+				description={
+					<ListHeader.DescriptionParagraph>
+						최대 20개까지 가능
+					</ListHeader.DescriptionParagraph>
+				}
+				descriptionPosition="bottom"
+				className="-mt-4"
+			/>
 			<List>
 				<AnimatePresence initial={false}>
 					{sortedQuestions.map((question, index) => (
@@ -140,7 +159,7 @@ export const QuestionHome = () => {
 												typography="t5"
 												fontWeight="semibold"
 												textAlign="center"
-												className="w-10 shrink-0"
+												className="w-8 shrink-0"
 											>
 												{formatQuestionNumber(
 													(displayOrderMap[question.questionId] ??
@@ -158,7 +177,7 @@ export const QuestionHome = () => {
 												{question.title}
 											</Text>
 										</div>
-										<div className="flex items-center gap-1 pl-11">
+										<div className="flex items-center gap-1 pl-9">
 											<Text
 												color={adaptive.grey600}
 												typography="t7"

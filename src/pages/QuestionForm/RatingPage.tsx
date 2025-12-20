@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
+import { formatQuestionNumber } from "../../utils/questionFactory";
 import { RatingLabelEditBottomSheet } from "./components/bottomSheet/RatingLabelEditBottomSheete";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
@@ -141,12 +142,16 @@ export const RatingPage = () => {
 				onChange={handleMaxValueChange}
 			/>
 			<Top
+				subtitleTop={
+					<Text typography="t5" fontWeight="medium" color={adaptive.grey700}>
+						{formatQuestionNumber((question?.questionOrder ?? 0) + 1)}
+					</Text>
+				}
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
 						{title}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={<Top.SubtitleBadges badges={[]} />}
 				subtitleBottom={
 					<Top.SubtitleParagraph size={15}>
 						{description || "보조설명은 이런식으로 들어갈 것 같아요"}
@@ -160,7 +165,7 @@ export const RatingPage = () => {
 						display="inline"
 						onClick={handleTitleAndDescriptionEdit}
 					>
-						문항 제목 및 설명 수정하기
+						수정하기
 					</Top.LowerButton>
 				}
 			/>
