@@ -30,10 +30,11 @@ export const initFirebase = async () => {
 		return null;
 	}
 
-	if (!getApps().length) {
+	const existingApps = getApps();
+	if (!existingApps.length) {
 		app = initializeApp(firebaseConfig);
 	} else {
-		app = getApps()[0]!;
+		app = existingApps[0];
 	}
 
 	const supported = await isSupported();
