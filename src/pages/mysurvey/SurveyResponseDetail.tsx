@@ -127,6 +127,11 @@ export const SurveyResponseDetail = () => {
 					</Top.SubtitleParagraph>
 				}
 			/>
+			<div className="px-4">
+				<Button variant="weak" display="block">
+					CSV로 결과받기
+				</Button>
+			</div>
 			<div className="h-4" />
 
 			<div className="flex-1 overflow-y-auto pb-24">
