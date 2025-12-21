@@ -1,0 +1,108 @@
+name: Release Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-release:
+    name: 빌드 및 GitHub Release 생성
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 📦 pnpm 설치
+        uses: pnpm/action-setup@v4
+
+      - name: 🟢 Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 📚 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔨 빌드 실행
+        run: pnpm run build
+
+      - name: 📝 빌드 파일 확인
+        run: |
+          echo "빌드된 파일 목록:"
+          find . -name "*.ait" -type f
+          
+      - name: 📦 버전 정보 추출
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "📌 현재 버전: v${VERSION}"
+
+      - name: 📦 .ait 파일 찾기
+        id: find_file
+        run: |
+          AIT_FILE=$(find . -name "*.ait" -type f | head -n 1)
+          if [ -z "$AIT_FILE" ]; then
+            echo "❌ .ait 파일을 찾을 수 없습니다!"
+            exit 1
+          fi
+          echo "file_path=${AIT_FILE}" >> $GITHUB_OUTPUT
+          echo "file_name=onsurvey_v${{ steps.version.outputs.version }}.ait" >> $GITHUB_OUTPUT
+          echo "📦 발견된 파일: ${AIT_FILE}"
+
+      - name: 🏷️ 파일명 변경
+        run: |
+          cp "${{ steps.find_file.outputs.file_path }}" "${{ steps.find_file.outputs.file_name }}"
+          ls -lh "${{ steps.find_file.outputs.file_name }}"
+
+      - name: 🚀 GitHub Release 생성 및 파일 업로드
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.tag }}
+          body: |
+            ## 📦 OnSurvey v${{ steps.version.outputs.version }}
+            
+            ### 다운로드
+            아래 Assets에서 `${{ steps.find_file.outputs.file_name }}`을 다운로드하세요.
+            
+            ### 빌드 정보
+            - **버전**: v${{ steps.version.outputs.version }}
+            - **빌드 날짜**: ${{ github.event.head_commit.timestamp }}
+            - **커밋**: ${{ github.sha }}
+            
+            ---
+            _자동으로 생성된 릴리즈입니다._
+          files: |
+            ${{ steps.find_file.outputs.file_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ✅ 릴리즈 완료 (Main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "🎉 GitHub Release가 생성되었습니다!"
+          echo ""
+          echo "📌 버전: ${{ steps.version.outputs.tag }}"
+          echo "📦 파일명: ${{ steps.find_file.outputs.file_name }}"
+          echo "🔗 릴리즈 페이지: https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.tag }}"
+          echo "⬇️  직접 다운로드: https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/${{ steps.find_file.outputs.file_name }}"
+
+      - name: ✅ 빌드 테스트 완료 (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "✨ 빌드 테스트가 성공적으로 완료되었습니다!"
+          echo "📌 버전: ${{ steps.version.outputs.tag }}"
+          echo "📦 파일명: ${{ steps.find_file.outputs.file_name }}"
+          echo ""
+          echo "ℹ️  PR이므로 Release는 생성되지 않았습니다."
+          echo "ℹ️  main 브랜치에 머지되면 자동으로 Release가 생성됩니다."
+
