@@ -1,11 +1,5 @@
 import { adaptive, colors } from "@toss/tds-colors";
-import {
-	Asset,
-	FixedBottomCTA,
-	ProgressBar,
-	Text,
-	Toast,
-} from "@toss/tds-mobile";
+import { Asset, Button, ProgressBar, Text, Toast } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -56,6 +50,7 @@ export const SurveyComplete = () => {
 
 	useBackEventListener(() => {
 		navigate("/home", { replace: true });
+		navigate("/surveyList", { replace: true });
 	});
 
 	return (
@@ -98,8 +93,8 @@ export const SurveyComplete = () => {
 				<div className="mt-10" />
 			</div>
 
-			<div className="px-4 pb-4">
-				<div className="mb-4 flex items-center gap-2 rounded-[18px] bg-gray-100 px-4 py-3">
+			<div className="fixed bottom-6 left-0 right-0 flex flex-col gap-2 px-4 pb-4 bg-white">
+				<div className="mb-6 flex items-center gap-2 rounded-[18px] bg-gray-100 px-4 py-3">
 					<Asset.Icon
 						frameShape={Asset.frameShape.CleanW24}
 						backgroundColor="transparent"
@@ -111,10 +106,22 @@ export const SurveyComplete = () => {
 						리워드 지급이 지연될 수 있어요
 					</Text>
 				</div>
+				<Button
+					color="primary"
+					display="block"
+					onClick={() => navigate("/surveyList")}
+				>
+					다른 설문 참여하기
+				</Button>
+				<Button
+					color="dark"
+					variant="weak"
+					display="block"
+					onClick={() => navigate("/home")}
+				>
+					홈으로 가기
+				</Button>
 			</div>
-			<FixedBottomCTA loading={false} onClick={() => navigate("/home")}>
-				다른 설문 참여하기
-			</FixedBottomCTA>
 		</div>
 	);
 };
