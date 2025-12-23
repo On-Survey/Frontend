@@ -121,3 +121,54 @@ export const getWritingSurvey = async (
 		params: { surveyId },
 	});
 };
+
+// 설문 응답 결과 CSV 다운로드
+export const downloadSurveyAnswerCsv = async (
+	surveyId: number,
+): Promise<{ blob: Blob; filename: string }> => {
+	const { apiClient } = await import("../axios/apiClient");
+
+	const response = await apiClient.get(`/v1/surveys/${surveyId}/export`, {
+		responseType: "blob",
+	});
+
+	const blob = response.data;
+
+	// 응답 헤더에서 파일명 추출
+	const contentDisposition = response.headers["content-disposition"];
+	let filename = "survey-results.csv";
+
+	if (contentDisposition) {
+		const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;,\s]+)/);
+		if (utf8Match?.[1]) {
+			try {
+				filename = decodeURIComponent(utf8Match[1].trim());
+			} catch {
+				filename = utf8Match[1].trim();
+			}
+		} else {
+			const quotedMatch = contentDisposition.match(/filename="([^"]+)"/);
+			if (quotedMatch?.[1]) {
+				let extracted = quotedMatch[1];
+
+				if (extracted.startsWith("=?UTF-8?Q?") && extracted.endsWith("?=")) {
+					extracted = extracted
+						.replace(/^=\?UTF-8\?Q\?/, "")
+						.replace(/\?=$/, "")
+						.replace(/_/g, " ")
+						.replace(/=([0-9A-F]{2})/gi, (_: string, hex: string) =>
+							String.fromCharCode(parseInt(hex, 16)),
+						);
+				}
+				filename = extracted;
+			} else {
+				const unquotedMatch = contentDisposition.match(/filename=([^;,\s]+)/);
+				if (unquotedMatch?.[1]) {
+					filename = unquotedMatch[1].trim();
+				}
+			}
+		}
+	}
+
+	return { blob, filename };
+};

@@ -1,3 +1,4 @@
+import { saveBase64Data } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, List, ListRow, Top } from "@toss/tds-mobile";
 import { useState } from "react";
@@ -22,7 +23,11 @@ import {
 } from "../../constants/survey";
 import { useSurveyAnswerDetail } from "../../hooks/useSurveyAnswerDetail";
 import { useSurveyFilters } from "../../hooks/useSurveyFilters";
-import type { SurveyAnswerDetailFilters } from "../../service/mysurvey/api";
+import {
+	downloadSurveyAnswerCsv,
+	type SurveyAnswerDetailFilters,
+} from "../../service/mysurvey/api";
+import type { SurveyAnswerDetailInfo } from "../../service/mysurvey/types";
 import type { QuestionType } from "../../types/survey";
 import { getQuestionResultRoute } from "../../utils/questionRoute";
 import { SurveyFilterBottomSheet } from "./components/SurveyFilterBottomSheet";
@@ -37,6 +42,44 @@ export const SurveyResponseDetail = () => {
 		surveyId,
 		filters,
 	);
+	const [isDownloading, setIsDownloading] = useState(false);
+
+	const handleDownloadCsv = async () => {
+		if (!surveyId || !surveyResponse || isDownloading) {
+			return;
+		}
+
+		try {
+			setIsDownloading(true);
+
+			const { blob, filename } = await downloadSurveyAnswerCsv(
+				Number(surveyId),
+			);
+
+			// blob을 base64로 변환하여 saveBase64Data로 저장
+			const base64data = await new Promise<string>((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onloadend = () => {
+					const result = reader.result as string;
+					// data:application/octet-stream;base64, 부분 제거
+					const base64 = result.split(",")[1];
+					resolve(base64);
+				};
+				reader.onerror = reject;
+				reader.readAsDataURL(blob);
+			});
+
+			await saveBase64Data({
+				data: base64data,
+				fileName: filename,
+				mimeType: "text/csv",
+			});
+		} catch (error) {
+			console.error("CSV 다운로드 실패:", error);
+		} finally {
+			setIsDownloading(false);
+		}
+	};
 
 	if (!surveyResponse) {
 		return null;
@@ -62,7 +105,8 @@ export const SurveyResponseDetail = () => {
 		if (!answerDetails) return;
 
 		const questionDetail = answerDetails.detailInfoList.find(
-			(detail) => String(detail.questionId) === questionId,
+			(detail: SurveyAnswerDetailInfo) =>
+				String(detail.questionId) === questionId,
 		);
 
 		if (!questionDetail) return;
@@ -74,8 +118,8 @@ export const SurveyResponseDetail = () => {
 				questionDetail.type === "RATING" ||
 				questionDetail.type === "NPS") &&
 			questionDetail.answerMap
-				? Object.values(questionDetail.answerMap).reduce(
-						(sum, count) => sum + count,
+				? (Object.values(questionDetail.answerMap) as number[]).reduce(
+						(sum, count) => sum + (count as number),
 						0,
 					)
 				: questionDetail.answerList?.length || 0;
@@ -128,8 +172,13 @@ export const SurveyResponseDetail = () => {
 				}
 			/>
 			<div className="px-4">
-				<Button variant="weak" display="block">
-					CSV로 결과받기
+				<Button
+					variant="weak"
+					display="block"
+					disabled={isDownloading || !surveyResponse}
+					onClick={handleDownloadCsv}
+				>
+					CSV로 결과 받기
 				</Button>
 			</div>
 			<div className="h-4" />
