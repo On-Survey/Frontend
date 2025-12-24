@@ -27,9 +27,9 @@ import {
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { useUserInfo } from "../../contexts/UserContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
-import { type createUserResponse, getUserInfo } from "../../service/user";
 import {
 	calculatePriceBreakdown,
 	calculateTotalPrice,
@@ -49,15 +49,7 @@ export const EstimatePage = () => {
 	const navigate = useNavigate();
 	const createFormMutation = useCreateForm();
 
-	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
-
-	useEffect(() => {
-		async function fetchUserInfo() {
-			const userInfoResult = await getUserInfo();
-			setUserInfo(userInfoResult);
-		}
-		fetchUserInfo();
-	}, []);
+	const { userInfo } = useUserInfo();
 
 	const {
 		isOpen: isBottomSheetOpen,

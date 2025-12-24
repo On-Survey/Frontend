@@ -9,32 +9,23 @@ import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
 import { CustomSurveyList } from "../components/surveyList/CustomSurveyList";
 import { UrgentSurveyList } from "../components/surveyList/UrgentSurveyList";
 import { topics } from "../constants/topics";
+import { useUserInfo } from "../contexts/UserContext";
 import { useModal } from "../hooks/UseToggle";
 import { useBackEventListener } from "../hooks/useBackEventListener";
 import { getGlobalStats, getOngoingSurveys } from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
-import { getMemberInfo } from "../service/userInfo";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
 import { getUniqueSurveyIdsFromArrays } from "../utils/surveyListUtils";
 
 export const Home = () => {
 	const navigate = useNavigate();
-	const [userName, setUserName] = useState<string>("");
+
+	const { userInfo, fetchUserInfo } = useUserInfo();
 
 	useEffect(() => {
-		const fetchMemberInfo = async () => {
-			try {
-				const memberInfo = await getMemberInfo();
-				setUserName(memberInfo.name);
-			} catch (err) {
-				console.error("회원 정보 조회 실패:", err);
-				setUserName("회원");
-			}
-		};
-
-		void fetchMemberInfo();
-	}, []);
+		fetchUserInfo();
+	}, [fetchUserInfo]);
 
 	const [recommended, setRecommended] = useState<SurveyListItem[]>([]);
 	const [impending, setImpending] = useState<SurveyListItem[]>([]);
@@ -277,7 +268,7 @@ export const Home = () => {
 
 				<CustomSurveyList
 					surveys={customSurveysToShow}
-					userName={userName || "온서베이"}
+					userName={userInfo?.result.name || "온서베이"}
 					onViewAll={handleViewAllRecommended}
 				/>
 
