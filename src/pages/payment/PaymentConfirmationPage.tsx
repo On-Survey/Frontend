@@ -12,7 +12,6 @@ import { useCallback, useMemo } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
-import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createPayment } from "../../service/payments";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
@@ -22,7 +21,7 @@ export const PaymentConfirmationPage = () => {
 	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
 	const { state, resetForm } = useSurvey();
 	const { setPaymentStep, goPrevPayment } = useMultiStep();
-	const { userInfo } = useUserInfo();
+
 	const createFormMutation = useCreateForm();
 
 	const priceBreakdown = useMemo(
@@ -63,10 +62,6 @@ export const PaymentConfirmationPage = () => {
 	const handleNext = () => {
 		if (!selectedCoinAmount?.sku) {
 			console.error("상품 정보가 없습니다");
-			return;
-		}
-		if (!userInfo) {
-			console.error("사용자 정보가 없습니다");
 			return;
 		}
 
