@@ -7,5 +7,5 @@ export * from "./Onboarding";
 export * from "./payment";
 export * from "./QuestionForm";
 export * from "./Survey";
-export * from "./SurveyList";
 export * from "./screening";
+export * from "./surveyList/SurveyList";

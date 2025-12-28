@@ -2,14 +2,14 @@ import { adaptive } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
 import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SurveyList } from "../components/surveyList/SurveyList";
-import { topics } from "../constants/topics";
-import type { OngoingSurveySummary } from "../service/surveyList/types";
-import type { SurveyListItem } from "../types/surveyList";
-import { formatRemainingTime } from "../utils/FormatDate";
-import { useImpendingSurveys } from "./surveyList/hooks/useImpendingSurveys";
-import { useOngoingSurveysList } from "./surveyList/hooks/useOngoingSurveysList";
-import { useRecommendedSurveys } from "./surveyList/hooks/useRecommendedSurveys";
+import { SurveyList } from "../../components/surveyList/SurveyList";
+import { topics } from "../../constants/topics";
+import type { OngoingSurveySummary } from "../../service/surveyList/types";
+import type { SurveyListItem } from "../../types/surveyList";
+import { formatRemainingTime } from "../../utils/FormatDate";
+import { useImpendingSurveys } from "./hooks/useImpendingSurveys";
+import { useOngoingSurveysList } from "./hooks/useOngoingSurveysList";
+import { useRecommendedSurveys } from "./hooks/useRecommendedSurveys";
 
 const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
