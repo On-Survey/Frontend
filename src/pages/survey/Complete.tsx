@@ -2,13 +2,16 @@ import { adaptive, colors } from "@toss/tds-colors";
 import { Asset, Button, ProgressBar, Text, Toast } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { useUserInfo } from "../../contexts/UserContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { issuePromotion } from "../../service/promotion";
-import { getMemberInfo } from "../../service/userInfo/api";
 
 export const SurveyComplete = () => {
+	const { userInfo } = useUserInfo();
+
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { isOpen: toastOpen, handleClose } = useModal(true);
@@ -27,14 +30,16 @@ export const SurveyComplete = () => {
 
 	// 사용자 정보 가져오기 및 토스포인트 지급
 	useEffect(() => {
+		if (!userInfo) return;
 		const fetchUserAndIssuePromotion = async () => {
 			try {
-				const memberInfo = await getMemberInfo();
-				setUserName(memberInfo.name || "");
+				setUserName(userInfo?.result.name);
 				const surveyId = state.surveyId || surveyIdFromState;
 				if (surveyId) {
 					try {
 						await issuePromotion({ surveyId });
+						queryClient.invalidateQueries({ queryKey: ["globalStats"] });
+						queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] });
 						console.log("토스포인트 지급 완료");
 					} catch (error) {
 						console.error("토스포인트 지급 실패:", error);
@@ -46,7 +51,7 @@ export const SurveyComplete = () => {
 		};
 
 		void fetchUserAndIssuePromotion();
-	}, [state.surveyId, surveyIdFromState]);
+	}, [state.surveyId, surveyIdFromState, userInfo]);
 
 	useBackEventListener(() => {
 		navigate("/home", { replace: true });

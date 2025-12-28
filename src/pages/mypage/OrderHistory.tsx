@@ -67,7 +67,7 @@ export const OrderHistory = () => {
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<div className="flex-shrink-0 p-6 pb-4">
+			<div className="p-6 pb-4">
 				<div className="flex gap-6">
 					{tabs.map((tab) => {
 						const isActive = activeTab === tab.id;

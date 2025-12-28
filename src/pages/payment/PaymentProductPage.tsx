@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { queryClient } from "../../contexts/queryClient";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createPayment } from "../../service/payments";
 import { type createUserResponse, getUserInfo } from "../../service/user";
@@ -69,6 +70,7 @@ export const PaymentProductPage = () => {
 							"코인 충전 결제에 성공했어요. 주문 번호:",
 							event.data.orderId,
 						);
+						queryClient.invalidateQueries({ queryKey: ["memberInfo"] });
 						setPaymentStep(2);
 					}
 				},
