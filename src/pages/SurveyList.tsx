@@ -1,17 +1,15 @@
 import { adaptive } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SurveyList } from "../components/surveyList/SurveyList";
 import { topics } from "../constants/topics";
-import {
-	getImpendingSurveys,
-	getOngoingSurveys,
-	getRecommendedSurveys,
-} from "../service/surveyList";
 import type { OngoingSurveySummary } from "../service/surveyList/types";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
+import { useImpendingSurveys } from "./surveyList/hooks/useImpendingSurveys";
+import { useOngoingSurveysList } from "./surveyList/hooks/useOngoingSurveysList";
+import { useRecommendedSurveys } from "./surveyList/hooks/useRecommendedSurveys";
 
 const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
@@ -19,17 +17,62 @@ export const SurveyListPage = () => {
 	const [searchParams] = useSearchParams();
 	const listType = searchParams.get("type"); // "recommended" | "impending" | null
 
-	const [surveys, setSurveys] = useState<SurveyListItem[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [hasNext, setHasNext] = useState(true);
-	const [lastSurveyId, setLastSurveyId] = useState<number>(0);
-	const [lastDeadline, setLastDeadline] = useState<string | undefined>(
-		undefined,
-	);
 	const loadingRef = useRef<HTMLDivElement | null>(null);
 
-	const mapSurveyToItem = useCallback(
-		(survey: OngoingSurveySummary): SurveyListItem => {
+	// React Query hooks - listType에 따라 조건부 활성화
+	const recommendedQuery = useRecommendedSurveys(listType === "recommended");
+	const impendingQuery = useImpendingSurveys(listType === "impending");
+	const ongoingQuery = useOngoingSurveysList(
+		!listType || (listType !== "recommended" && listType !== "impending"),
+	);
+
+	// 현재 활성화된 쿼리의 isLoading, isFetching, isFetchingNextPage 선택
+	const isLoading =
+		listType === "recommended"
+			? recommendedQuery.isLoading ||
+				recommendedQuery.isFetching ||
+				recommendedQuery.isFetchingNextPage
+			: listType === "impending"
+				? impendingQuery.isLoading ||
+					impendingQuery.isFetching ||
+					impendingQuery.isFetchingNextPage
+				: ongoingQuery.isLoading ||
+					ongoingQuery.isFetching ||
+					ongoingQuery.isFetchingNextPage;
+
+	// 데이터 가공 - useInfiniteQuery의 pages를 flatten
+	const { surveys, hasNext } = useMemo(() => {
+		const allFetchedSurveys: OngoingSurveySummary[] = [];
+		let hasNextValue = false;
+
+		if (listType === "recommended" && recommendedQuery.data) {
+			recommendedQuery.data.pages.forEach((page) => {
+				const pageSurveys = page.data ?? page.recommended ?? [];
+				allFetchedSurveys.push(...pageSurveys);
+			});
+			hasNextValue = recommendedQuery.hasNextPage ?? false;
+		} else if (listType === "impending" && impendingQuery.data) {
+			impendingQuery.data.pages.forEach((page) => {
+				const pageSurveys = page.data ?? page.impending ?? [];
+				allFetchedSurveys.push(...pageSurveys);
+			});
+			hasNextValue = impendingQuery.hasNextPage ?? false;
+		} else if (!listType && ongoingQuery.data) {
+			ongoingQuery.data.pages.forEach((page) => {
+				allFetchedSurveys.push(
+					...(page.recommended ?? []),
+					...(page.impending ?? []),
+				);
+			});
+			hasNextValue = ongoingQuery.hasNextPage ?? false;
+		}
+
+		const activeSurveys = allFetchedSurveys.filter((survey) => {
+			const remainingTime = formatRemainingTime(survey.deadline);
+			return remainingTime !== "마감됨";
+		});
+
+		const mapSurveyToItem = (survey: OngoingSurveySummary): SurveyListItem => {
 			const topicId =
 				(survey.interests && survey.interests.length > 0
 					? survey.interests[0]
@@ -46,179 +89,24 @@ export const SurveyListPage = () => {
 				iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
 				description: survey.description,
 			};
-		},
-		[],
-	);
-
-	const fetchSurveys = useCallback(
-		async (reset = false) => {
-			setIsLoading(true);
-
-			try {
-				const currentLastId = reset ? 0 : lastSurveyId;
-				const currentLastDeadline = reset ? undefined : lastDeadline;
-
-				let fetchedSurveys: OngoingSurveySummary[] = [];
-
-				if (listType === "recommended") {
-					const recommendedResult = await getRecommendedSurveys({
-						lastSurveyId: currentLastId,
-						size: 15,
-					});
-					fetchedSurveys =
-						recommendedResult.data ?? recommendedResult.recommended ?? [];
-					setHasNext(
-						recommendedResult.hasNext ??
-							recommendedResult.recommendedHasNext ??
-							false,
-					);
-				} else if (listType === "impending") {
-					const impendingResult = await getImpendingSurveys({
-						lastSurveyId: currentLastId,
-						lastDeadline: currentLastDeadline,
-						size: 15,
-					});
-					fetchedSurveys =
-						impendingResult.data ?? impendingResult.impending ?? [];
-					setHasNext(
-						impendingResult.hasNext ??
-							impendingResult.impendingHasNext ??
-							false,
-					);
-				} else {
-					const result = await getOngoingSurveys({
-						lastSurveyId: currentLastId,
-						size: 15,
-					});
-					fetchedSurveys = [
-						...(result.recommended ?? []),
-						...(result.impending ?? []),
-					];
-					// 전체 목록의 경우 hasNext는 둘 중 하나라도 true면 true
-					setHasNext(
-						(result.recommendedHasNext ?? false) ||
-							(result.impendingHasNext ?? false),
-					);
-				}
-
-				const activeSurveys = fetchedSurveys.filter((survey) => {
-					const remainingTime = formatRemainingTime(survey.deadline);
-					return remainingTime !== "마감됨";
-				});
-
-				const mappedSurveys = activeSurveys.map(mapSurveyToItem);
-				const uniqueSurveys = mappedSurveys.filter(
-					(survey, index, self) =>
-						index === self.findIndex((s) => s.id === survey.id),
-				);
-
-				if (reset) {
-					setSurveys(uniqueSurveys);
-				} else {
-					setSurveys((prev) => {
-						const combined = [...prev, ...uniqueSurveys];
-						return combined.filter(
-							(survey, index, self) =>
-								index === self.findIndex((s) => s.id === survey.id),
-						);
-					});
-				}
-
-				if (activeSurveys.length > 0) {
-					const lastSurvey = activeSurveys[activeSurveys.length - 1];
-					setLastSurveyId(lastSurvey.surveyId);
-					// 마감 임박 설문의 경우 lastDeadline도 업데이트
-					if (listType === "impending" && lastSurvey.deadline) {
-						setLastDeadline(lastSurvey.deadline);
-					}
-				}
-			} catch (err) {
-				console.error("설문 목록 조회 실패:", err);
-			} finally {
-				setIsLoading(false);
-			}
-		},
-		[lastSurveyId, lastDeadline, listType, mapSurveyToItem],
-	);
-
-	// listType이 변경되면 초기화하고 다시 불러오기
-	useEffect(() => {
-		setSurveys([]);
-		setLastSurveyId(0);
-		setLastDeadline(undefined);
-		setHasNext(true);
-		const fetch = async () => {
-			setIsLoading(true);
-			try {
-				let fetchedSurveys: OngoingSurveySummary[] = [];
-
-				if (listType === "recommended") {
-					const recommendedResult = await getRecommendedSurveys({
-						lastSurveyId: 0,
-						size: 15,
-					});
-					fetchedSurveys =
-						recommendedResult.data ?? recommendedResult.recommended ?? [];
-					setHasNext(
-						recommendedResult.hasNext ??
-							recommendedResult.recommendedHasNext ??
-							false,
-					);
-				} else if (listType === "impending") {
-					const impendingResult = await getImpendingSurveys({
-						lastSurveyId: 0,
-						size: 15,
-					});
-					fetchedSurveys =
-						impendingResult.data ?? impendingResult.impending ?? [];
-					setHasNext(
-						impendingResult.hasNext ??
-							impendingResult.impendingHasNext ??
-							false,
-					);
-				} else {
-					const result = await getOngoingSurveys({
-						lastSurveyId: 0,
-						size: 15,
-					});
-					fetchedSurveys = [
-						...(result.recommended ?? []),
-						...(result.impending ?? []),
-					];
-					setHasNext(
-						(result.recommendedHasNext ?? false) ||
-							(result.impendingHasNext ?? false),
-					);
-				}
-
-				const activeSurveys = fetchedSurveys.filter((survey) => {
-					const remainingTime = formatRemainingTime(survey.deadline);
-					return remainingTime !== "마감됨";
-				});
-
-				const mappedSurveys = activeSurveys.map(mapSurveyToItem);
-				const uniqueSurveys = mappedSurveys.filter(
-					(survey, index, self) =>
-						index === self.findIndex((s) => s.id === survey.id),
-				);
-
-				setSurveys(uniqueSurveys);
-
-				if (activeSurveys.length > 0) {
-					const lastSurvey = activeSurveys[activeSurveys.length - 1];
-					setLastSurveyId(lastSurvey.surveyId);
-					if (listType === "impending" && lastSurvey.deadline) {
-						setLastDeadline(lastSurvey.deadline);
-					}
-				}
-			} catch (err) {
-				console.error("설문 목록 조회 실패:", err);
-			} finally {
-				setIsLoading(false);
-			}
 		};
-		void fetch();
-	}, [listType, mapSurveyToItem]);
+
+		const mappedSurveys = activeSurveys.map(mapSurveyToItem);
+		const uniqueSurveys = mappedSurveys.filter(
+			(survey, index, self) =>
+				index === self.findIndex((s) => s.id === survey.id),
+		);
+
+		return { surveys: uniqueSurveys, hasNext: hasNextValue };
+	}, [
+		listType,
+		recommendedQuery.data,
+		recommendedQuery.hasNextPage,
+		impendingQuery.data,
+		impendingQuery.hasNextPage,
+		ongoingQuery.data,
+		ongoingQuery.hasNextPage,
+	]);
 
 	useEffect(() => {
 		if (!loadingRef.current || !hasNext || isLoading) return;
@@ -226,7 +114,13 @@ export const SurveyListPage = () => {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0].isIntersecting && hasNext && !isLoading) {
-					void fetchSurveys(false);
+					if (listType === "recommended") {
+						recommendedQuery.fetchNextPage();
+					} else if (listType === "impending") {
+						impendingQuery.fetchNextPage();
+					} else {
+						ongoingQuery.fetchNextPage();
+					}
 				}
 			},
 			{ threshold: 0.1 },
@@ -242,7 +136,14 @@ export const SurveyListPage = () => {
 				observer.unobserve(currentLoadingRef);
 			}
 		};
-	}, [hasNext, isLoading, fetchSurveys]);
+	}, [
+		hasNext,
+		isLoading,
+		listType,
+		recommendedQuery,
+		impendingQuery,
+		ongoingQuery,
+	]);
 
 	return (
 		<div className="flex flex-col w-full min-h-screen bg-white">
