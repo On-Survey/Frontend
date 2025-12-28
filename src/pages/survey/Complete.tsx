@@ -40,6 +40,9 @@ export const SurveyComplete = () => {
 						await issuePromotion({ surveyId });
 						queryClient.invalidateQueries({ queryKey: ["globalStats"] });
 						queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] });
+						queryClient.refetchQueries({ queryKey: ["recommendedSurveys"] });
+						queryClient.refetchQueries({ queryKey: ["impendingSurveys"] });
+						queryClient.refetchQueries({ queryKey: ["ongoingSurveysList"] });
 						console.log("토스포인트 지급 완료");
 					} catch (error) {
 						console.error("토스포인트 지급 실패:", error);
