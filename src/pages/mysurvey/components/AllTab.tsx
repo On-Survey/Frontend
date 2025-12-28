@@ -26,7 +26,7 @@ export const AllTab = ({
 					onClick={(id) => handleDraftClick(id, draftSurveys)}
 				/>
 			))}
-			{/* 노출중 */}
+			{/* 수집중 */}
 			{activeSurveys.map((survey) => (
 				<SurveyCard key={`active-${survey.id}`} survey={survey} type="active" />
 			))}

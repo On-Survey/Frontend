@@ -126,7 +126,7 @@ export const OrderDetail = () => {
 								text:
 									orderDetail.status === "refund_completed"
 										? "환불 완료"
-										: "노출중",
+										: "수집중",
 								color:
 									orderDetail.status === "refund_completed" ? "red" : "blue",
 								variant: "weak",
