@@ -60,6 +60,19 @@ jobs:
           cp "${{ steps.find_file.outputs.file_path }}" "${{ steps.find_file.outputs.file_name }}"
           ls -lh "${{ steps.find_file.outputs.file_name }}"
 
+      - name: 📱 앱 번들 자동 배포
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          AIT_API_KEY: ${{ secrets.AIT_API_KEY }}
+        run: |
+          if [ -z "$AIT_API_KEY" ]; then
+            echo "⚠️  AIT_API_KEY가 설정되지 않았습니다. 배포를 건너뜁니다."
+            exit 0
+          fi
+          echo "🚀 앱 번들을 배포합니다..."
+          npx ait deploy --api-key "$AIT_API_KEY"
+          echo "✅ 배포가 완료되었습니다!"
+
       - name: 🚀 GitHub Release 생성 및 파일 업로드
         uses: softprops/action-gh-release@v2
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
