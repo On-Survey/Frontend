@@ -20,7 +20,7 @@ export const SurveyTabNavigation = ({
 			>
 				<Tab.Item selected={selectedTab === 0}>전체</Tab.Item>
 				<Tab.Item selected={selectedTab === 1}>작성중</Tab.Item>
-				<Tab.Item selected={selectedTab === 2}>노출중</Tab.Item>
+				<Tab.Item selected={selectedTab === 2}>수집중</Tab.Item>
 				<Tab.Item selected={selectedTab === 3}>마감</Tab.Item>
 			</Tab>
 		</div>

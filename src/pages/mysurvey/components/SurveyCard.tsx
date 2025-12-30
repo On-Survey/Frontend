@@ -27,7 +27,7 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	const badgeConfig: Record<SurveyState, { color: BadgeColor; label: string }> =
 		{
 			draft: { color: "green", label: "작성중" },
-			active: { color: "blue", label: "노출중" },
+			active: { color: "blue", label: "수집중" },
 			closed: { color: "elephant", label: "마감" },
 		};
 

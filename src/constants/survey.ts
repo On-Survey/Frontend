@@ -8,7 +8,7 @@ export const SURVEY_BADGE_CONFIG: Record<SurveyStatus, BadgeConfig> = {
 
 // 설문 상태별 라벨
 export const SURVEY_STATUS_LABELS: Record<SurveyStatus, string> = {
-	active: "노출중",
+	active: "수집중",
 	closed: "마감",
 };
 
