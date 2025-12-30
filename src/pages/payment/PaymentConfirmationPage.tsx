@@ -11,6 +11,7 @@ import {
 import { useCallback, useMemo } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createPayment } from "../../service/payments";
@@ -90,6 +91,8 @@ export const PaymentConfirmationPage = () => {
 					if (formPayload) {
 						createFormMutation.mutate(formPayload, {
 							onSuccess: () => {
+								queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
+								queryClient.invalidateQueries({ queryKey: ["memberInfo"] });
 								handleSuccess();
 							},
 							onError: (error) => {
