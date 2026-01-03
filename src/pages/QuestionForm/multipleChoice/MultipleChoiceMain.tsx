@@ -23,8 +23,14 @@ export const MultipleChoiceMain = () => {
 
 	const navigate = useNavigate();
 
-	const { question, questionId, isRequired, title, description } =
-		useQuestionByType("multipleChoice");
+	const {
+		question,
+		questionId,
+		questionIdFromUrl,
+		isRequired,
+		title,
+		description,
+	} = useQuestionByType("multipleChoice");
 
 	const maxChoice = question?.maxChoice;
 	const options = question?.option ?? [];
@@ -74,7 +80,8 @@ export const MultipleChoiceMain = () => {
 	};
 
 	const handleConfirm = () => {
-		if (!questionId) {
+		if (questionIdFromUrl) {
+			navigate(-1);
 			return;
 		}
 
@@ -90,10 +97,12 @@ export const MultipleChoiceMain = () => {
 			},
 			{
 				onSuccess: (result) => {
-					if (result.success) {
-						updateQuestion(questionId, {
-							questionId: result.result.questionId,
-						});
+					if (result.success && typeof result !== "string") {
+						if (questionId) {
+							updateQuestion(questionId, {
+								questionId: result.result.questionId,
+							});
+						}
 
 						navigate(-1);
 					}

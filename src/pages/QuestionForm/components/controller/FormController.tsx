@@ -10,6 +10,7 @@ import {
 	TEXT_PROPS,
 } from "../../../../constants/formController";
 import { useMultiStep } from "../../../../contexts/MultiStepContext";
+import { queryClient } from "../../../../contexts/queryClient";
 import { useSurvey } from "../../../../contexts/SurveyContext";
 import { useModal } from "../../../../hooks/UseToggle";
 import { convertQuestionsToServerFormat } from "../../../../utils/questionConverter";
@@ -66,6 +67,7 @@ export const FormController = ({
 				onSuccess: (result) => {
 					if (result.success) {
 						handleConfirmDialogOpen();
+						queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
 					}
 				},
 				onError: (error) => {
@@ -116,6 +118,7 @@ export const FormController = ({
 								"https://static.toss.im/lotties-common/check-green-spot.json",
 							higherThanCTA: true,
 						});
+						queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
 					}
 				},
 				onError: (error) => {

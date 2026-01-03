@@ -2,6 +2,7 @@ import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useCreateSurvey, usePatchSurvey } from "./hooks/useSurveyMutation";
 
@@ -49,6 +50,7 @@ export const FormTitleStep = () => {
 					onSuccess: (data) => {
 						setSurveyId(data.result.surveyId);
 						setSurveyStep(1);
+						queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
 					},
 					onError: (error) => {
 						console.error("설문 수정 실패:", error);

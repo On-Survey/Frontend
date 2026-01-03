@@ -53,7 +53,8 @@ export const DatePage = () => {
 	};
 
 	const handleSubmit = () => {
-		if (!questionId) {
+		if (questionIdFromUrl) {
+			navigate(-1);
 			return;
 		}
 
@@ -70,9 +71,11 @@ export const DatePage = () => {
 			{
 				onSuccess: (result) => {
 					if (result.success && typeof result !== "string") {
-						updateQuestion(questionId, {
-							questionId: result.result.questionId,
-						});
+						if (questionId) {
+							updateQuestion(questionId, {
+								questionId: result.result.questionId,
+							});
+						}
 
 						navigate(-1);
 					}
