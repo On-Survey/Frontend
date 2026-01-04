@@ -185,6 +185,18 @@ export const FormController = ({
 	};
 
 	const handleNext = () => {
+		const source = locationState?.source ?? "main_cta";
+		const questionCount = state.survey.question.length;
+
+		pushGtmEvent({
+			event: "survey_create_next",
+			pagePath: "/createForm",
+			source,
+			step: "confirm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			question_count: questionCount,
+		});
+
 		setSurveyStep(2);
 	};
 
