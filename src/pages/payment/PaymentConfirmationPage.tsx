@@ -108,6 +108,27 @@ export const PaymentConfirmationPage = () => {
 					const { orderId } = event.data;
 					console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
 
+					const source = locationState?.source ?? "main_cta";
+					const transactionId = orderId;
+					const value = Number(
+						selectedCoinAmount.displayAmount.replace("원", ""),
+					);
+					const price = priceBreakdown.totalPrice;
+					const itemName = selectedCoinAmount.displayName;
+					const entryType = "settlement";
+
+					pushGtmEvent({
+						event: "purchase",
+						pagePath: "/createForm",
+						...(state.surveyId && { survey_id: String(state.surveyId) }),
+						transaction_id: transactionId,
+						value,
+						price,
+						item_name: itemName,
+						entry_type: entryType,
+						source,
+					});
+
 					// 결제 성공 시 바로 폼 생성 시작
 					if (formPayload) {
 						createFormMutation.mutate(formPayload, {
