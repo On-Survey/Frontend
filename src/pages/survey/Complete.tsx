@@ -8,6 +8,7 @@ import { useUserInfo } from "../../contexts/UserContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { issuePromotion } from "../../service/promotion";
+import { pushGtmEvent } from "../../utils/gtm";
 
 export const SurveyComplete = () => {
 	const { userInfo } = useUserInfo();
@@ -18,8 +19,13 @@ export const SurveyComplete = () => {
 	const { state, setSurveyId } = useSurvey();
 	const [userName, setUserName] = useState<string>("");
 
-	// location state에서 surveyId 가져오기
-	const surveyIdFromState = (location.state as { surveyId?: number })?.surveyId;
+	const locationState = location.state as
+		| {
+				surveyId?: number;
+				source?: "main" | "quiz" | "after_complete";
+		  }
+		| undefined;
+	const surveyIdFromState = locationState?.surveyId;
 
 	// surveyId를 context에 설정
 	useEffect(() => {
@@ -27,6 +33,22 @@ export const SurveyComplete = () => {
 			setSurveyId(surveyIdFromState);
 		}
 	}, [surveyIdFromState, state.surveyId, setSurveyId]);
+
+	useEffect(() => {
+		const surveyId = state.surveyId || surveyIdFromState;
+		if (!surveyId) return;
+
+		const source = locationState?.source ?? "main";
+
+		pushGtmEvent({
+			event: "survey_complete",
+			pagePath: "/survey/complete",
+			survey_id: String(surveyId),
+			source,
+			progress_percent: 100,
+			reward_amount: 200,
+		});
+	}, [state.surveyId, surveyIdFromState, locationState?.source]);
 
 	// 사용자 정보 가져오기 및 토스포인트 지급
 	useEffect(() => {
