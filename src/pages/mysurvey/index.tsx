@@ -12,7 +12,8 @@ export const MySurvey = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
 	const { draftSurveys, activeSurveys, closedSurveys } = useUserSurveys();
 
-	const handleAddSurvey = () => navigate("/createFormStart");
+	const handleAddSurvey = () =>
+		navigate("/createFormStart", { state: { source: "mysurvey_button" } });
 	const handleMyPage = () => navigate("/mypage");
 
 	return (

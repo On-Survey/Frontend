@@ -60,7 +60,7 @@ export const useDraftSurvey = () => {
 			});
 			setSurveyId(data.surveyId);
 			setSurveyStep(1);
-			navigate("/createForm");
+			navigate("/createForm", { state: { source: "mysurvey_edit" } });
 
 			openToast(`문항 ${data.questions.length}개 불러왔어요.`, {
 				type: "bottom",

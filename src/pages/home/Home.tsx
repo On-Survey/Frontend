@@ -33,7 +33,8 @@ export const Home = () => {
 	const handleViewAllRecommended = () =>
 		navigate("/surveyList?type=recommended");
 	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
-	const handleCreateSurvey = () => navigate("/createFormStart");
+	const handleCreateSurvey = () =>
+		navigate("/createFormStart", { state: { source: "main_cta" } });
 	const handleQuizClick = () => {
 		pushGtmEvent({
 			event: "start_screening_quiz",
