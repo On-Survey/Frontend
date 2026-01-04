@@ -112,6 +112,22 @@ export const EstimatePage = () => {
 
 		if (userInfo && totalPrice > userInfo?.result.coin) {
 			// 코인이 부족하면 코인 모달 표시
+			const entryType = state.screening.enabled
+				? "screening_complete"
+				: "screening_skip";
+			const ownedCoin = userInfo.result.coin;
+
+			pushGtmEvent({
+				event: "coin_charge_prompt",
+				pagePath: "/createForm",
+				...(state.surveyId && { survey_id: String(state.surveyId) }),
+				step: "view",
+				required_coin: totalPrice,
+				owned_coin: ownedCoin,
+				source,
+				entry_type: entryType,
+			});
+
 			handleCoinBottomSheetOpen();
 		} else {
 			// 코인이 충분하면 폼 생성

@@ -9,12 +9,14 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useCallback, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createPayment } from "../../service/payments";
+import { pushGtmEvent } from "../../utils/gtm";
 import { calculatePriceBreakdown } from "../../utils/paymentCalculator";
 import { useCreateForm } from "../QuestionForm/hooks/useSurveyMutation";
 
@@ -22,8 +24,13 @@ export const PaymentConfirmationPage = () => {
 	const { selectedCoinAmount, estimate, resetEstimate } = usePaymentEstimate();
 	const { state, resetForm } = useSurvey();
 	const { setPaymentStep, goPrevPayment } = useMultiStep();
+	const location = useLocation();
 
 	const createFormMutation = useCreateForm();
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const priceBreakdown = useMemo(
 		() => calculatePriceBreakdown(estimate),
@@ -65,6 +72,20 @@ export const PaymentConfirmationPage = () => {
 			console.error("상품 정보가 없습니다");
 			return;
 		}
+
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "coin_charge",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "confirm",
+			source,
+			entry_type: entryType,
+		});
 
 		IAP.createOneTimePurchaseOrder({
 			options: {
