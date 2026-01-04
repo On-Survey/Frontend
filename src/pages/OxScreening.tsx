@@ -16,6 +16,7 @@ import {
 import type { ScreeningQuestion } from "../service/surveyParticipation/types";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
+import { pushGtmEvent } from "../utils/gtm";
 
 export const OxScreening = () => {
 	const navigate = useNavigate();
@@ -77,6 +78,12 @@ export const OxScreening = () => {
 				await submitScreeningResponse(currentQuestion.screeningId, {
 					content,
 				});
+				pushGtmEvent({
+					event: "complete_screening_quiz",
+					pagePath: "/screening",
+					quiz_id: currentQuestion.screeningId,
+					result: "pass",
+				});
 			} catch (err) {
 				console.error("스크리닝 응답 제출 실패:", err);
 			}
@@ -128,6 +135,12 @@ export const OxScreening = () => {
 				await submitScreeningResponse(currentQuestion.screeningId, {
 					content,
 				});
+				pushGtmEvent({
+					event: "complete_screening_quiz",
+					pagePath: "/screening",
+					quiz_id: currentQuestion.screeningId,
+					result: "fail",
+				});
 			} catch (err) {
 				console.error("스크리닝 응답 제출 실패:", err);
 			}
@@ -137,9 +150,20 @@ export const OxScreening = () => {
 
 		if (!isLastQuestion) {
 			const nextIndex = currentQuestionIndex + 1;
+			const nextQuestion = screeningQuestions[nextIndex];
+			if (currentQuestion && nextQuestion) {
+				pushGtmEvent({
+					event: "redirect_to_another_quiz",
+					pagePath: "/screening",
+					from_quiz_id: currentQuestion.screeningId,
+					to_quiz_id: nextQuestion.screeningId,
+					reason: "screening_fail",
+				});
+			}
+
 			setCurrentQuestionIndex(nextIndex);
-			if (screeningQuestions[nextIndex]) {
-				setNextSurveyId(screeningQuestions[nextIndex].surveyId);
+			if (nextQuestion) {
+				setNextSurveyId(nextQuestion.surveyId);
 			}
 		} else {
 			setShowNoQuiz(true);
@@ -297,7 +321,22 @@ export const OxScreening = () => {
 				loading={false}
 				onClick={async () => {
 					if (selectedOption === null || !currentQuestion) return;
+					pushGtmEvent({
+						event: "answer_screening_quiz",
+						pagePath: "/screening",
+						quiz_id: currentQuestion.screeningId,
+					});
+
 					if (selectedOption === currentQuestion.answer) {
+						if (nextSurveyId) {
+							pushGtmEvent({
+								event: "unlock_survey",
+								pagePath: "/screening",
+								quiz_id: currentQuestion.screeningId,
+								survey_id: nextSurveyId,
+								source: "screening_quiz",
+							});
+						}
 						setIsBottomSheetOpen(true);
 					} else {
 						await handleSkipToNextScreening();
