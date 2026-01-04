@@ -201,11 +201,33 @@ export const FormController = ({
 	};
 
 	const handleSkip = () => {
+		const source = locationState?.source ?? "main_cta";
+
+		pushGtmEvent({
+			event: "screening_modal_action",
+			pagePath: "/createForm",
+			action: "skip",
+			step: "decision",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+		});
+
 		setSurveyStep(3);
 		handleConfirmDialogClose();
 	};
 
 	const handleDialogConfirm = () => {
+		const source = locationState?.source ?? "main_cta";
+
+		pushGtmEvent({
+			event: "screening_modal_action",
+			pagePath: "/createForm",
+			action: "next",
+			step: "decision",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+		});
+
 		setScreeningEnabled(true);
 		handleNext();
 		handleConfirmDialogClose();
