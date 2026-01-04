@@ -1,6 +1,6 @@
 import { adaptive, colors } from "@toss/tds-colors";
 import { Asset, Button, ProgressBar, Text, Toast } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
@@ -34,10 +34,13 @@ export const SurveyComplete = () => {
 		}
 	}, [surveyIdFromState, state.surveyId, setSurveyId]);
 
+	const hasSentCompleteEvent = useRef(false);
+
 	useEffect(() => {
 		const surveyId = state.surveyId || surveyIdFromState;
-		if (!surveyId) return;
+		if (!surveyId || hasSentCompleteEvent.current) return;
 
+		hasSentCompleteEvent.current = true;
 		const source = locationState?.source ?? "main";
 
 		pushGtmEvent({

@@ -1,5 +1,5 @@
 import { useToast } from "@toss/tds-mobile";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import {
@@ -54,8 +54,16 @@ export const useSurveyNavigation = ({
 	const progress =
 		totalQuestions > 0 ? (initialQuestionIndex + 1) / totalQuestions : 0;
 
+	const progressEventSentRef = useRef<string>("");
+
 	useEffect(() => {
 		if (!isCurrentQuestionType || !surveyId) return;
+
+		// 같은 문항 인덱스에서는 한 번만 실행
+		const eventKey = `${surveyId}-${initialQuestionIndex}`;
+		if (progressEventSentRef.current === eventKey) return;
+
+		progressEventSentRef.current = eventKey;
 
 		// progress_percent 계산 (10, 30, 50, 70, 90 중 하나)
 		const getProgressPercent = (index: number, total: number): number => {

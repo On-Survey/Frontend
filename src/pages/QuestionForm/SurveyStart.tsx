@@ -1,6 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { pushGtmEvent } from "../../utils/gtm";
 
@@ -10,8 +10,12 @@ export const SurveyStart = () => {
 	const locationState = location.state as
 		| { source?: "main_cta" | "mysurvey_button" }
 		| undefined;
+	const hasSentEvent = useRef(false);
 
 	useEffect(() => {
+		if (hasSentEvent.current) return;
+
+		hasSentEvent.current = true;
 		const source = locationState?.source ?? "main_cta";
 
 		pushGtmEvent({

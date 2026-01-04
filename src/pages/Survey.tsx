@@ -7,7 +7,7 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
@@ -55,9 +55,12 @@ export const Survey = () => {
 		title: "",
 	});
 
-	useEffect(() => {
-		if (!surveyId) return;
+	const hasSentStartEvent = useRef(false);
 
+	useEffect(() => {
+		if (!surveyId || hasSentStartEvent.current) return;
+
+		hasSentStartEvent.current = true;
 		const source = locationState?.source ?? "main";
 		const quizId = locationState?.quiz_id;
 
