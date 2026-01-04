@@ -165,6 +165,20 @@ export const FormController = ({
 			});
 			return;
 		}
+		if (isReorderMode && onReorderModeChange) {
+			const source = locationState?.source ?? "main_cta";
+			const status = state.surveyId ? "editing" : "draft";
+
+			pushGtmEvent({
+				event: "survey_question_reorder",
+				pagePath: "/createForm",
+				source,
+				step: "question",
+				status,
+				...(state.surveyId && { survey_id: String(state.surveyId) }),
+			});
+		}
+
 		if (onReorderModeChange) {
 			onReorderModeChange(!isReorderMode);
 		}
