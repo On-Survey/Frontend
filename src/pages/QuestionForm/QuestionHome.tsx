@@ -10,13 +10,14 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { QUESTION_TYPE_ROUTES } from "../../constants/routes";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
@@ -27,6 +28,29 @@ import { useQuestionReorder } from "./hooks/useQuestionReorder";
 export const QuestionHome = () => {
 	const { state, deleteQuestion, reorderQuestions } = useSurvey();
 	const { setSurveyStep } = useMultiStep();
+	const location = useLocation();
+	const hasSentQuestionEvent = useRef(false);
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
+	useEffect(() => {
+		if (hasSentQuestionEvent.current) return;
+
+		hasSentQuestionEvent.current = true;
+		const source = locationState?.source ?? "main_cta";
+		const status = state.surveyId ? "editing" : "draft";
+
+		pushGtmEvent({
+			event: "survey_create_question",
+			pagePath: "/createForm",
+			source,
+			step: "question",
+			status,
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+		});
+	}, [locationState?.source, state.surveyId]);
 
 	const {
 		isOpen: isConfirmDialogOpen,

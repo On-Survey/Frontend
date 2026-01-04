@@ -1,17 +1,38 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextField, Top } from "@toss/tds-mobile";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 
 export const ScreeningQuestion = () => {
 	const { goNextScreening, setSurveyStep } = useMultiStep();
 	const { state, setScreeningQuestion } = useSurvey();
+	const location = useLocation();
 
 	const question = state.screening.question;
 
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
 	const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setScreeningQuestion(e.target.value);
+	};
+
+	const handleNext = () => {
+		const source = locationState?.source ?? "main_cta";
+
+		pushGtmEvent({
+			event: "screening_question",
+			pagePath: "/createForm",
+			source,
+			step: "confirm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+		});
+
+		goNextScreening();
 	};
 
 	useBackEventListener(() => setSurveyStep(1));
@@ -41,7 +62,7 @@ export const ScreeningQuestion = () => {
 				autoFocus={true}
 				onChange={handleQuestionChange}
 			/>
-			<FixedBottomCTA disabled={!question.trim()} onClick={goNextScreening}>
+			<FixedBottomCTA disabled={!question.trim()} onClick={handleNext}>
 				다음
 			</FixedBottomCTA>
 		</>

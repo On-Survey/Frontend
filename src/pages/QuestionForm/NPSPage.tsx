@@ -8,8 +8,9 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { pushGtmEvent } from "../../utils/gtm";
 import { formatQuestionNumber } from "../../utils/questionFactory";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
@@ -17,7 +18,12 @@ import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 export const NPSPage = () => {
 	const { state, updateQuestion } = useSurvey();
 	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
+	const location = useLocation();
 	const navigate = useNavigate();
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const [score, setScore] = useState<number | null>(null);
 
@@ -70,6 +76,21 @@ export const NPSPage = () => {
 								questionId: result.result.questionId,
 							});
 						}
+
+						const source = locationState?.source ?? "main_cta";
+						const status = state.surveyId ? "editing" : "draft";
+						const questionIndex = (question?.questionOrder ?? 0) + 1;
+
+						pushGtmEvent({
+							event: "survey_question_add",
+							pagePath: "/createForm",
+							source,
+							step: "question",
+							status,
+							...(state.surveyId && { survey_id: String(state.surveyId) }),
+							question_type: "nps",
+							question_index: questionIndex,
+						});
 
 						navigate(-1);
 					}

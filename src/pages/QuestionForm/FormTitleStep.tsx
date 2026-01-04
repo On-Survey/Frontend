@@ -1,9 +1,10 @@
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
+import { pushGtmEvent } from "../../utils/gtm";
 import { useCreateSurvey, usePatchSurvey } from "./hooks/useSurveyMutation";
 
 export const FormTitleStep = () => {
@@ -15,6 +16,19 @@ export const FormTitleStep = () => {
 		usePatchSurvey();
 
 	const [step, setStep] = useState(false);
+	const hasSentTitleEvent = useRef(false);
+
+	useEffect(() => {
+		if (hasSentTitleEvent.current) return;
+
+		hasSentTitleEvent.current = true;
+		pushGtmEvent({
+			event: "survey_intro",
+			pagePath: "/createForm",
+			step: "title",
+			status: "new",
+		});
+	}, []);
 
 	useEffect(() => {
 		if (!step && state.survey.title.trim() && state.survey.description.trim()) {
@@ -32,11 +46,23 @@ export const FormTitleStep = () => {
 	};
 
 	const handleNext = () => {
+		pushGtmEvent({
+			event: "survey_intro",
+			pagePath: "/createForm",
+			step: "description",
+			status: "new",
+		});
 		setStep(true);
 	};
 
 	const handleNextPage = () => {
 		if (isCreateSurveyPending || isPatchSurveyPending) return;
+		pushGtmEvent({
+			event: "survey_intro",
+			pagePath: "/createForm",
+			step: "description",
+			status: "new",
+		});
 
 		if (state.surveyId) {
 			// 수정 모드
