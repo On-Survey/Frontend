@@ -6,8 +6,8 @@ import {
 	FixedBottomCTA,
 	TextField,
 } from "@toss/tds-mobile";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
 	DateSelectBottomSheet,
 	PaymentBottomSheet,
@@ -30,6 +30,7 @@ import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 import {
 	calculatePriceBreakdown,
 	calculateTotalPrice,
@@ -46,10 +47,16 @@ export const EstimatePage = () => {
 	} = usePaymentEstimate();
 	const { state, resetForm } = useSurvey();
 	const { setSurveyStep, setPaymentStep } = useMultiStep();
+	const location = useLocation();
 	const navigate = useNavigate();
 	const createFormMutation = useCreateForm();
+	const hasSentEvent = useRef(false);
 
 	const { userInfo } = useUserInfo();
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const {
 		isOpen: isBottomSheetOpen,
@@ -77,6 +84,32 @@ export const EstimatePage = () => {
 
 	const handleSubmit = () => {
 		handleConfirmDialogClose();
+
+		const source = locationState?.source ?? "main_cta";
+		const respondentTarget = estimate.desiredParticipants;
+		const ageGroup = estimate.ages.length > 0 ? estimate.ages.join(",") : "";
+		const gender =
+			estimate.gender === "MALE"
+				? "male"
+				: estimate.gender === "FEMALE"
+					? "female"
+					: "";
+		const region = estimate.location ? "true" : "false";
+		const priceCoin = totalPrice;
+
+		pushGtmEvent({
+			event: "survey_settlement",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "confirm",
+			respondent_target: respondentTarget,
+			...(ageGroup && { age_group: ageGroup }),
+			...(gender && { gender }),
+			region,
+			price_coin: priceCoin,
+			source,
+		});
+
 		if (userInfo && totalPrice > userInfo?.result.coin) {
 			// 코인이 부족하면 코인 모달 표시
 			handleCoinBottomSheetOpen();
@@ -113,6 +146,25 @@ export const EstimatePage = () => {
 	useEffect(() => {
 		handleTotalPriceChange(totalPrice);
 	}, [totalPrice, handleTotalPriceChange]);
+
+	useEffect(() => {
+		if (hasSentEvent.current) return;
+
+		hasSentEvent.current = true;
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "survey_settlement",
+			pagePath: "/createForm",
+			step: "view",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+			entry_type: entryType,
+		});
+	}, [locationState?.source, state.surveyId, state.screening.enabled]);
 
 	const priceBreakdown = useMemo(
 		() => calculatePriceBreakdown(estimate),
