@@ -205,6 +205,18 @@ export const EstimatePage = () => {
 							entry_type: entryType,
 						});
 
+						// 구매 이벤트 전송 (코인으로 직접 결제)
+						pushGtmEvent({
+							event: "purchase",
+							pagePath: "/createForm",
+							...(state.surveyId && { survey_id: String(state.surveyId) }),
+							value: totalPrice,
+							price: totalPrice,
+							item_name: "설문 등록",
+							entry_type: "settlement",
+							source,
+						});
+
 						handleSuccess();
 					},
 					onError: (error) => {
