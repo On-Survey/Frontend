@@ -5,13 +5,7 @@ import {
 	SURVEY_STATUS_LABELS,
 } from "../../constants/survey";
 import { useResultPageData } from "../../hooks/useResultPageData";
-
-const calcNps = (scores: number[]) => {
-	if (scores.length === 0) return 0;
-	const promoters = scores.filter((s) => s >= 9).length;
-	const detractors = scores.filter((s) => s <= 6).length;
-	return ((promoters - detractors) / scores.length) * 100;
-};
+import { calculateNps, calculateTotalResponses } from "../../utils/nps";
 
 export const NpsResultPage = () => {
 	const {
@@ -25,6 +19,12 @@ export const NpsResultPage = () => {
 	} = useResultPageData();
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+
+	const totalResponses = calculateTotalResponses(
+		answerMap,
+		answerList,
+		responseCount,
+	);
 
 	const scores =
 		answerMap && Object.keys(answerMap).length > 0
@@ -45,7 +45,7 @@ export const NpsResultPage = () => {
 	});
 
 	const maxCount = Math.max(...npsDistribution.map(({ count }) => count), 0);
-	const npsScore = calcNps(scores);
+	const npsScore = calculateNps(answerMap, answerList, totalResponses);
 
 	return (
 		<div className="min-h-screen">
