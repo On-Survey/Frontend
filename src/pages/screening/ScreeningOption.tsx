@@ -61,14 +61,16 @@ export const ScreeningOption = () => {
 						aria-label="O"
 						onClick={() => handleSelectedChange("O")}
 						className={`flex justify-center  items-center p-4 transition-colors gap-3 cursor-pointer w-full rounded-2xl! ${
-							selected === "O" ? "bg-blue-200" : "bg-blue-100 hover:bg-blue-200"
+							selected === "O"
+								? "bg-green-200"
+								: "bg-green-100 hover:bg-green-200"
 						}`}
 					>
 						<Asset.Icon
 							frameShape={Asset.frameShape.CleanW24}
 							backgroundColor="transparent"
 							name="icon-o-mono"
-							color={adaptive.blue500}
+							color={adaptive.green500}
 							aria-hidden={true}
 							ratio="1/1"
 						/>
@@ -96,7 +98,14 @@ export const ScreeningOption = () => {
 				</div>
 			</div>
 
-			<FixedBottomCTA loading={false} disabled={!selected} onClick={handleNext}>
+			<FixedBottomCTA
+				loading={false}
+				disabled={!selected}
+				onClick={handleNext}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				다음
 			</FixedBottomCTA>
 		</>

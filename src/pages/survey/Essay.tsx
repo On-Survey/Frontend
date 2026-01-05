@@ -33,7 +33,7 @@ export const SurveyEssay = () => {
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
+			<ProgressBar size="normal" color={colors.green500} progress={progress} />
 
 			<Top
 				title={
@@ -56,7 +56,7 @@ export const SurveyEssay = () => {
 					value={currentAnswer}
 					onChange={(e) => handleAnswerChange(e.target.value)}
 					placeholder="내용을 입력해주세요"
-					className="w-full border border-solid border-gray-200 rounded-xl p-4 text-[15px] leading-6 outline-none focus:border-blue-400 min-h-[160px]"
+					className="w-full border border-solid border-gray-200 rounded-xl p-4 text-[15px] leading-6 outline-none focus:border-green-400 min-h-[160px]"
 					aria-label="서술형 답변 입력"
 				/>
 				<div className="mt-2 text-right text-[12px] text-gray-500">
@@ -81,6 +81,9 @@ export const SurveyEssay = () => {
 						disabled={isInvalid || submitting}
 						loading={submitting}
 						onClick={handleNext}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
 					>
 						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
 					</CTAButton>

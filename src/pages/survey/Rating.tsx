@@ -35,7 +35,7 @@ export const SurveyRating = () => {
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
+			<ProgressBar size="normal" color={colors.green500} progress={progress} />
 
 			<Top
 				title={
@@ -67,7 +67,7 @@ export const SurveyRating = () => {
 							<div key={v} className="flex flex-col items-center gap-2">
 								<button
 									type="button"
-									className={`w-8 h-8 rounded-full! ${isActive ? "bg-blue-400" : "bg-gray-100"}`}
+									className={`w-8 h-8 rounded-full! ${isActive ? "bg-green-400" : "bg-gray-100"}`}
 									aria-label={`${v}점`}
 									onClick={() => handleScoreChange(v)}
 								/>
@@ -108,6 +108,9 @@ export const SurveyRating = () => {
 						disabled={isInvalid || submitting}
 						loading={submitting}
 						onClick={handleNext}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
 					>
 						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
 					</CTAButton>

@@ -60,6 +60,9 @@ export const QuestionTitleAndDescriptionEditPage = () => {
 				loading={false}
 				onClick={handleComplete}
 				disabled={!title}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
 			>
 				완료
 			</FixedBottomCTA>

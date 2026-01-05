@@ -195,7 +195,13 @@ export const Ineligible = () => {
 				</div>
 			</div>
 
-			<FixedBottomCTA loading={false} onClick={() => navigate("/home")}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={() => navigate("/home")}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				다른 설문 더보기
 			</FixedBottomCTA>
 		</div>

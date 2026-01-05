@@ -1,11 +1,10 @@
 import { adaptive, colors } from "@toss/tds-colors";
-import { Asset, Button, ProgressBar, Text, Toast } from "@toss/tds-mobile";
+import { Asset, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryClient } from "../../contexts/queryClient";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
-import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { issuePromotion } from "../../service/promotion";
 
@@ -14,7 +13,6 @@ export const SurveyComplete = () => {
 
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { isOpen: toastOpen, handleClose } = useModal(true);
 	const { state, setSurveyId } = useSurvey();
 	const [userName, setUserName] = useState<string>("");
 
@@ -63,22 +61,9 @@ export const SurveyComplete = () => {
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-white">
-			<ProgressBar size="normal" color={colors.blue500} progress={1} />
+			<ProgressBar size="normal" color={colors.green500} progress={1} />
 
 			<div className="flex flex-1 flex-col items-center px-4">
-				<Toast
-					position="top"
-					open={toastOpen}
-					text="300원 받았어요."
-					style={{ top: "350px" }}
-					leftAddon={
-						<div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-sm font-semibold text-white ">
-							P
-						</div>
-					}
-					duration={3000}
-					onClose={handleClose}
-				/>
 				<div className="h-[168px]" />
 				<Text
 					display="block"
@@ -93,7 +78,7 @@ export const SurveyComplete = () => {
 				<Asset.Icon
 					frameShape={Asset.frameShape.CleanW100}
 					backgroundColor="transparent"
-					name="icon-check-circle-blue"
+					name="icon-check-circle-green"
 					ratio="1/1"
 					aria-hidden={true}
 				/>
@@ -118,6 +103,9 @@ export const SurveyComplete = () => {
 					color="primary"
 					display="block"
 					onClick={() => navigate("/surveyList")}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					다른 설문 참여하기
 				</Button>

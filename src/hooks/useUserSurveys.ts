@@ -30,18 +30,21 @@ export const useUserSurveys = () => {
 				description: survey.description,
 			}));
 
-		const activeStatuses = new Set(["ACTIVE", "ONGOING"]);
 		const active: ActiveSurvey[] = userSurveys
-			.filter((survey): survey is typeof survey & { deadLine: string } => {
-				if (!survey.deadLine) return false;
-				const deadline = new Date(survey.deadLine);
-				return activeStatuses.has(survey.status) && deadline > now;
+			.filter((survey) => {
+				if (survey.status === "ONGOING") return true;
+				if (survey.status === "ACTIVE") {
+					if (!survey.deadLine) return false;
+					const deadline = new Date(survey.deadLine);
+					return deadline > now;
+				}
+				return false;
 			})
 			.map((survey) => ({
 				id: survey.surveyId,
 				title: survey.title,
 				description: survey.description,
-				deadline: survey.deadLine,
+				deadline: survey.deadLine ?? undefined,
 				progress: survey.currentCount ?? 0,
 				total: survey.dueCount ?? 0,
 			}));
@@ -50,6 +53,7 @@ export const useUserSurveys = () => {
 			.filter((survey): survey is typeof survey & { deadLine: string } => {
 				if (!survey.deadLine) return false;
 				if (draftStatuses.has(survey.status)) return false;
+				if (survey.status === "ONGOING") return false;
 				const deadline = new Date(survey.deadLine);
 				return deadline <= now;
 			})

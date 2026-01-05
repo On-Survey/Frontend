@@ -37,7 +37,13 @@ export const MySurvey = () => {
 			</div>
 
 			<div className="fixed bottom-25 right-4">
-				<Button size="medium" onClick={handleAddSurvey}>
+				<Button
+					size="medium"
+					onClick={handleAddSurvey}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
+				>
 					설문 추가하기
 				</Button>
 			</div>

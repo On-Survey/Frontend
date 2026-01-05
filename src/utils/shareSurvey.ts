@@ -10,7 +10,7 @@ export const shareSurveyById = async (
 	const baseUrl =
 		import.meta.env.DEV || import.meta.env.MODE === "development"
 			? window.location.origin
-			: "https://onsurvey.apps.tossmini.com";
+			: "https://minion.toss.im/onsurvey";
 	const shareUrl = `${baseUrl}${path}`;
 	const schemeUrl = `intoss://onsurvey?path=${encodeURIComponent(path)}`;
 

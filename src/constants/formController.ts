@@ -68,7 +68,7 @@ export const BUTTON_STYLES = {
 	mainControl:
 		"flex flex-col items-center gap-1 transition-transform duration-150 ease-in-out active:scale-95 cursor-pointer select-none bg-transparent border-none p-0 min-w-[60px] shrink-0",
 	nextButton:
-		"flex flex-col justify-center items-center bg-[#3E8CF5] rounded-full! w-[75px] h-[60px] transition-all duration-150 ease-in-out active:bg-[#2D6BC7] active:scale-95 hover:bg-[#4A9AFF] select-none border-none p-0",
+		"flex flex-col justify-center items-center bg-[#15c67f] rounded-full! w-[75px] h-[60px] transition-all duration-150 ease-in-out active:bg-[#2D6BC7] active:scale-95 hover:bg-[#4A9AFF] select-none border-none p-0",
 };
 
 // 아이콘 공통 속성

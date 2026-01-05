@@ -120,7 +120,7 @@ export const NPSPage = () => {
 						<div key={v} className="flex flex-col items-center gap-2">
 							<button
 								type="button"
-								className={`w-6 h-6 rounded-full ${isActive ? "bg-blue-400" : "bg-gray-100"} rounded-full!`}
+								className={`w-6 h-6 rounded-full ${isActive ? "bg-green-400" : "bg-gray-100"} rounded-full!`}
 								aria-label={`$v점`}
 								onClick={() => setScore(v)}
 							></button>
@@ -158,7 +158,13 @@ export const NPSPage = () => {
 					/>
 				</List>
 			</div>
-			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleConfirm}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				확인
 			</FixedBottomCTA>
 		</div>

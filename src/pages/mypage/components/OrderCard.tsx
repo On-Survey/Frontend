@@ -7,7 +7,7 @@ interface OrderCardProps {
 	order: Order;
 }
 
-type BadgeColor = "blue" | "elephant" | "red";
+type BadgeColor = "green" | "elephant" | "red";
 
 interface BadgeConfig {
 	color: BadgeColor;

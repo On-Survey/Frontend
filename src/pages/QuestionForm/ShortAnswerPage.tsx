@@ -137,7 +137,13 @@ export const ShortAnswerPage = () => {
 				}
 				verticalPadding="large"
 			/>
-			<FixedBottomCTA loading={false} onClick={handleConfirm}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleConfirm}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				확인
 			</FixedBottomCTA>
 		</div>

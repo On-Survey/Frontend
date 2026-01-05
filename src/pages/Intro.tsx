@@ -54,12 +54,11 @@ export const Intro = () => {
 				}
 			/>
 			<div className="flex justify-center items-center my-10">
-				<Asset.Icon
+				<Asset.Image
 					frameShape={{ width: 160, height: 160 }}
 					backgroundColor="transparent"
-					name="icon-document-blue-check"
+					src="https://static.toss.im/ml-product/typing-laptop-apng.png"
 					aria-hidden={true}
-					ratio="1/1"
 				/>
 			</div>
 			<StepperRow
@@ -85,7 +84,13 @@ export const Intro = () => {
 				}
 				hideLine={true}
 			/>
-			<FixedBottomCTA loading={false} onClick={handleLogin}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleLogin}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				다음
 			</FixedBottomCTA>
 		</section>

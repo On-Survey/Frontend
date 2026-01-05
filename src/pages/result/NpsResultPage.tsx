@@ -95,7 +95,7 @@ export const NpsResultPage = () => {
 						return (
 							<div key={item.score} className="flex items-center gap-4">
 								<Text
-									color={isTop ? adaptive.blue500 : adaptive.grey600}
+									color={isTop ? adaptive.green500 : adaptive.grey600}
 									typography="t6"
 									fontWeight="semibold"
 									className="w-12"
@@ -104,18 +104,19 @@ export const NpsResultPage = () => {
 								</Text>
 								<div className="flex-1 flex items-center gap-2">
 									<div
-										className={`h-8 rounded-full shadow-sm ${
-											isTop
-												? "bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500"
-												: "bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400"
-										}`}
-										style={{ width: finalWidth }}
+										className="h-8 rounded-[8px] shadow-sm"
+										style={{
+											width: finalWidth,
+											background: isTop
+												? "linear-gradient(90deg, #00c7fc 0%, #04CB98ff 64.61094705033995%)"
+												: "linear-gradient(90deg, #e5e7eb 0%, #9ca3af 64.61094705033995%)",
+										}}
 									/>
 									<Text
 										color={adaptive.grey700}
 										typography="t7"
 										fontWeight="medium"
-										className="w-12 text-right"
+										className="text-right"
 									>
 										{item.count}명
 									</Text>
