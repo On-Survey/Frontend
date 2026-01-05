@@ -5,7 +5,12 @@ import { usePaymentEstimate } from "../../../contexts/PaymentContext";
 interface PaymentBottomSheetProps {
 	isOpen: boolean;
 	handleClose: () => void;
-	options: { name: string; value: string; hideUnCheckedCheckBox?: boolean }[];
+	options: {
+		name: string;
+		value: string;
+		hideUnCheckedCheckBox?: boolean;
+		disabled?: boolean;
+	}[];
 	value: string;
 	title: string;
 	field: keyof Estimate;
@@ -32,14 +37,21 @@ export const PaymentBottomSheet = ({
 			onClose={handleClose}
 			cta={[]}
 		>
-			<BottomSheet.Select
-				className="mb-4"
-				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-					handleEstimateChange({ ...estimate, [field]: e.target.value })
-				}
-				value={value}
-				options={computedOptions}
-			/>
+			<div className="mb-4 payment-bottom-sheet-select">
+				<BottomSheet.Select
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+						const selectedOption = options.find(
+							(opt) => opt.value === e.target.value,
+						);
+						if (selectedOption?.disabled) {
+							return;
+						}
+						handleEstimateChange({ ...estimate, [field]: e.target.value });
+					}}
+					value={value}
+					options={computedOptions}
+				/>
+			</div>
 			<BottomSheet.CTA
 				loading={false}
 				onClick={handleClose}

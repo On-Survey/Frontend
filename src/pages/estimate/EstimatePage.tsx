@@ -194,6 +194,8 @@ const EstimatePageContent = () => {
 						labelOption="sustain"
 						value={getRegionLabel(estimate.location as RegionCode)}
 						placeholder="거주지를 선택해주세요"
+						help="현재 준비 중이에요"
+						disabled={true}
 						right={
 							<Asset.Icon
 								frameShape={assetFrameShape.CleanW24}
