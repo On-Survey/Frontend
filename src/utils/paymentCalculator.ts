@@ -14,18 +14,36 @@ const parseParticipantsCount = (participants: string): number => {
 };
 
 /**
- * 희망 응답자 수에 따른 기본가 계산
+ * 기본 가격 계산: 리워드(200원 × 인원수) + 서비스 이용료
+ * 서비스 이용료: 50명=5,000원, 100명=10,000원, 150명=15,000원, 200명=20,000원
  */
 const getBasePrice = (participants: string): number => {
 	const count = parseParticipantsCount(participants);
-	return count * 550; // 건당 550원
+	if (count === 0) return 0;
+
+	// 리워드: 200원 × 인원수
+	const reward = count * 200;
+
+	// 서비스 이용료
+	const serviceFee =
+		count === 50
+			? 5000
+			: count === 100
+				? 10000
+				: count === 150
+					? 15000
+					: count === 200
+						? 20000
+						: 0;
+
+	return reward + serviceFee;
 };
 
 /**
- * 연령대에 따른 추가금 계산
+ * 연령대 타겟팅 추가금 계산
+ * - 단일 연령대: +200원/건
+ * - 복수 연령대: +100원/건
  * - 전체: 0원
- * - 단일 연령대: +15% (건당 105원)
- * - 복수 연령대: +20% (건당 140원)
  */
 const getAgeSurcharge = (ages: AgeCode[], participants: string): number => {
 	// "전체" 또는 빈 배열
@@ -34,23 +52,29 @@ const getAgeSurcharge = (ages: AgeCode[], participants: string): number => {
 	}
 
 	const count = parseParticipantsCount(participants);
+	if (count === 0) return 0;
+
 	const filteredAges = ages.filter((age) => age !== "ALL");
 
-	// 단일 연령대: +15% (건당 105원)
+	// 단일 연령대: +200원/건
 	if (filteredAges.length === 1) {
-		return count * 105;
+		return count * 200;
 	}
 
-	// 복수 연령대: +20% (건당 140원)
+	// 복수 연령대: +100원/건
 	if (filteredAges.length >= 2) {
-		return count * 140;
+		return count * 100;
 	}
 
 	return 0;
 };
 
 /**
- * 거주지에 따른 추가금 계산
+ * 거주지 타겟팅 추가금 계산
+ * - 쉬움 (서울/경기): +100원/건
+ * - 보통 (광역시 단위): +200원/건
+ * - 어려움 (도 단위): +300원/건
+ * - 전체: 0원
  */
 const getLocationSurcharge = (
 	location: RegionCode,
@@ -61,27 +85,32 @@ const getLocationSurcharge = (
 	}
 
 	const count = parseParticipantsCount(participants);
+	if (count === 0) return 0;
 
+	// 쉬움 (서울/경기): +100원/건
 	if (REGIONS_5_PERCENT_SURCHARGE.some((region) => region.value === location)) {
-		// 쉬움 (서울/경기): +5% (건당 35원)
-		return count * 35;
-	} else if (
+		return count * 100;
+	}
+	// 보통 (광역시 단위): +200원/건
+	if (
 		REGIONS_10_PERCENT_SURCHARGE.some((region) => region.value === location)
 	) {
-		// 보통 (광역시): +10% (건당 70원)
-		return count * 70;
-	} else if (
+		return count * 200;
+	}
+	// 어려움 (도 단위): +300원/건
+	if (
 		REGIONS_15_PERCENT_SURCHARGE.some((region) => region.value === location)
 	) {
-		// 어려움 (도 단위): +15% (건당 105원)
-		return count * 105;
+		return count * 300;
 	}
 
 	return 0;
 };
 
 /**
- * 성별에 따른 추가금 계산
+ * 성별 타겟팅 추가금 계산
+ * - 단일 성별 (남/여): +100원/건
+ * - 성별 무관: 0원
  */
 const getGenderSurcharge = (
 	gender: GenderCode,
@@ -92,8 +121,8 @@ const getGenderSurcharge = (
 	}
 
 	const count = parseParticipantsCount(participants);
-	// 단일 성별: +10% (건당 70원)
-	return count * 70;
+	if (count === 0) return 0;
+	return count * 100;
 };
 
 /**
