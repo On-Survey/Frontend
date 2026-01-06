@@ -185,7 +185,7 @@ export const Home = () => {
 								</Text>
 								<ProgressBar
 									size="normal"
-									color="#FFFFFF"
+									color="#15c67f"
 									progress={
 										globalStats && globalStats.totalCompletedCount > 0
 											? globalStats.totalPromotionCount /
@@ -226,7 +226,7 @@ export const Home = () => {
 						<Asset.Icon
 							frameShape={Asset.frameShape.CleanW60}
 							backgroundColor="transparent"
-							name="icon-equals-square-green"
+							name="icon-document-check-lines-fill"
 							aria-hidden={true}
 							ratio="1/1"
 						/>

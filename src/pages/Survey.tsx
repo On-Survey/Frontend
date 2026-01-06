@@ -279,12 +279,12 @@ export const Survey = () => {
 
 					<div className="px-4">
 						<div className="flex items-center gap-3 my-6">
-							<Asset.Icon
+							<Asset.Image
 								frameShape={Asset.frameShape.CleanW24}
 								backgroundColor="transparent"
-								name="icon-man"
+								src="https://static.toss.im/2d-emojis/png/4x/u1F469_u1F3FB_u200D_u1F4BB.png"
 								aria-hidden={true}
-								ratio="1/1"
+								style={{ aspectRatio: `1/1` }}
 							/>
 							<Text
 								color={colors.grey900}
