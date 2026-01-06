@@ -129,7 +129,7 @@ export const QuestionHome = () => {
 				}
 				description={
 					<ListHeader.DescriptionParagraph>
-						최대 20개까지 가능
+						최대 15개까지 가능
 					</ListHeader.DescriptionParagraph>
 				}
 				descriptionPosition="bottom"
