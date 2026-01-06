@@ -1,7 +1,5 @@
 import { getTossShareLink, share } from "@apps-in-toss/web-framework";
 
-const OG_IMAGE_URL = "https://minion.toss.im/onsurvey/og/shareImage.png";
-
 export const shareSurveyById = async (
 	surveyId: number,
 	onShareSuccess?: () => void,
@@ -16,6 +14,11 @@ export const shareSurveyById = async (
 			? window.location.origin
 			: "https://minion.toss.im/onsurvey";
 	const shareUrl = `${webBaseUrl}${path}`;
+
+	const OG_IMAGE_URL =
+		import.meta.env.DEV || import.meta.env.MODE === "development"
+			? `${window.location.origin}/og/shareImage.png`
+			: "https://minion.toss.im/onsurvey/og/shareImage.png";
 
 	if (import.meta.env.DEV || import.meta.env.MODE === "development") {
 		try {
