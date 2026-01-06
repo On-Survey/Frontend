@@ -25,7 +25,7 @@ export const RefundPolicyNotice = () => {
 	const [isFormulaOpen, setIsFormulaOpen] = useState(false);
 
 	return (
-		<div className="px-4 py-4 mb-4 bg-blue-50 rounded-xl">
+		<div className="px-4 py-4 mb-4 bg-green-50 rounded-xl">
 			<Text
 				color={adaptive.grey800}
 				typography="t6"

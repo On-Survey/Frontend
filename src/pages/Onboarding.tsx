@@ -88,6 +88,7 @@ const OnboardingStep1 = ({
 					disabled={selectedRegion === null}
 					onClick={onNext}
 					loading={false}
+					className="button-background-color-green"
 				>
 					다음
 				</FixedBottomCTA>
@@ -193,7 +194,7 @@ const OnboardingProgressBar = ({
 	totalSteps: number;
 }) => {
 	const progress = (step - 1) / (totalSteps - 1) - 0.5;
-	return <ProgressBar size="normal" color="#3182f6" progress={progress} />;
+	return <ProgressBar size="normal" color="#15c67f" progress={progress} />;
 };
 
 export const Onboarding = () => {

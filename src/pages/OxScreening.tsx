@@ -235,15 +235,15 @@ export const OxScreening = () => {
 							onClick={() => handleOptionSelect(true)}
 							className={`flex items-center p-4 transition-colors gap-3 cursor-pointer w-full rounded-2xl! ${
 								selectedOption === true
-									? "bg-blue-200"
-									: "bg-blue-100 hover:bg-blue-200"
+									? "bg-green-200"
+									: "bg-green-100 hover:bg-green-200"
 							}`}
 						>
 							<Asset.Icon
 								frameShape={Asset.frameShape.CleanW24}
 								backgroundColor="transparent"
 								name="icon-o-mono"
-								color={adaptive.blue500}
+								color={adaptive.green500}
 								aria-hidden={true}
 								ratio="1/1"
 							/>
@@ -304,6 +304,9 @@ export const OxScreening = () => {
 					}
 				}}
 				disabled={selectedOption === null}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
 			>
 				확인
 			</FixedBottomCTA>
@@ -331,14 +334,25 @@ export const OxScreening = () => {
 								닫기
 							</Button>
 						}
-						rightButton={<Button onClick={handleNextQuestion}>다음</Button>}
+						rightButton={
+							<Button
+								onClick={handleNextQuestion}
+								style={
+									{
+										"--button-background-color": "#15c67f",
+									} as React.CSSProperties
+								}
+							>
+								다음
+							</Button>
+						}
 					/>
 				}
 			>
 				<div className="flex justify-center items-center">
 					<Asset.Icon
 						frameShape={{ width: 100 }}
-						name="icon-double-line-circle"
+						name="icon-equals-square-green"
 						aria-hidden={true}
 					/>
 				</div>

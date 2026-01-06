@@ -192,6 +192,9 @@ export const FormController = ({
 					<ConfirmDialog.ConfirmButton
 						size="xlarge"
 						onClick={handleDialogConfirm}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
 					>
 						추가하기
 					</ConfirmDialog.ConfirmButton>

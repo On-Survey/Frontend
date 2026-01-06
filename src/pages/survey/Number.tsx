@@ -59,7 +59,7 @@ export const SurveyNumber = () => {
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<ProgressBar size="normal" color={colors.blue500} progress={progress} />
+			<ProgressBar size="normal" color={colors.green500} progress={progress} />
 
 			<Top
 				title={
@@ -128,6 +128,9 @@ export const SurveyNumber = () => {
 						disabled={isInvalid || submitting}
 						loading={submitting}
 						onClick={handleSubmit(onSubmit)}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
 					>
 						{currentQuestionIndex < totalQuestions - 1 ? "다음" : "제출"}
 					</CTAButton>

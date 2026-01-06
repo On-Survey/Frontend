@@ -146,7 +146,7 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 					<div className="mb-4">
 						<ProgressBar
 							size="normal"
-							color={colors.blue500}
+							color={colors.green500}
 							progress={
 								hasProgress
 									? (activeSurvey.progress ?? 0) / (activeSurvey.total ?? 1)

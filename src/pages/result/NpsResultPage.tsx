@@ -5,13 +5,7 @@ import {
 	SURVEY_STATUS_LABELS,
 } from "../../constants/survey";
 import { useResultPageData } from "../../hooks/useResultPageData";
-
-const calcNps = (scores: number[]) => {
-	if (scores.length === 0) return 0;
-	const promoters = scores.filter((s) => s >= 9).length;
-	const detractors = scores.filter((s) => s <= 6).length;
-	return ((promoters - detractors) / scores.length) * 100;
-};
+import { calculateNps, calculateTotalResponses } from "../../utils/nps";
 
 export const NpsResultPage = () => {
 	const {
@@ -25,6 +19,12 @@ export const NpsResultPage = () => {
 	} = useResultPageData();
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+
+	const totalResponses = calculateTotalResponses(
+		answerMap,
+		answerList,
+		responseCount,
+	);
 
 	const scores =
 		answerMap && Object.keys(answerMap).length > 0
@@ -45,7 +45,7 @@ export const NpsResultPage = () => {
 	});
 
 	const maxCount = Math.max(...npsDistribution.map(({ count }) => count), 0);
-	const npsScore = calcNps(scores);
+	const npsScore = calculateNps(answerMap, answerList, totalResponses);
 
 	return (
 		<div className="min-h-screen">
@@ -95,7 +95,7 @@ export const NpsResultPage = () => {
 						return (
 							<div key={item.score} className="flex items-center gap-4">
 								<Text
-									color={isTop ? adaptive.blue500 : adaptive.grey600}
+									color={isTop ? adaptive.green500 : adaptive.grey600}
 									typography="t6"
 									fontWeight="semibold"
 									className="w-12"
@@ -104,18 +104,19 @@ export const NpsResultPage = () => {
 								</Text>
 								<div className="flex-1 flex items-center gap-2">
 									<div
-										className={`h-8 rounded-full shadow-sm ${
-											isTop
-												? "bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500"
-												: "bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400"
-										}`}
-										style={{ width: finalWidth }}
+										className="h-8 rounded-[8px] shadow-sm"
+										style={{
+											width: finalWidth,
+											background: isTop
+												? "linear-gradient(90deg, #00c7fc 0%, #04CB98ff 64.61094705033995%)"
+												: "linear-gradient(90deg, #e5e7eb 0%, #9ca3af 64.61094705033995%)",
+										}}
 									/>
 									<Text
 										color={adaptive.grey700}
 										typography="t7"
 										fontWeight="medium"
-										className="w-12 text-right"
+										className="text-right"
 									>
 										{item.count}명
 									</Text>

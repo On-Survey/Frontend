@@ -70,7 +70,18 @@ export const SurveyFilterBottomSheet = ({
 							닫기
 						</Button>
 					}
-					rightButton={<Button onClick={handleConfirm}>확인</Button>}
+					rightButton={
+						<Button
+							onClick={handleConfirm}
+							style={
+								{
+									"--button-background-color": "#15c67f",
+								} as React.CSSProperties
+							}
+						>
+							확인
+						</Button>
+					}
 				/>
 			}
 		>
@@ -93,6 +104,9 @@ export const SurveyFilterBottomSheet = ({
 						selectedAges={selectedAges}
 						selectedGenders={selectedGenders}
 						selectedLocations={selectedLocations}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
 						onAgeChange={(age) => {
 							setSelectedAges((prev) =>
 								prev.includes(age)

@@ -195,7 +195,13 @@ export const EstimatePage = () => {
 					</ConfirmDialog.CancelButton>
 				}
 				confirmButton={
-					<ConfirmDialog.ConfirmButton size="xlarge" onClick={handleSubmit}>
+					<ConfirmDialog.ConfirmButton
+						size="xlarge"
+						onClick={handleSubmit}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
+					>
 						결제하기
 					</ConfirmDialog.ConfirmButton>
 				}
@@ -296,7 +302,13 @@ export const EstimatePage = () => {
 				value={estimate.date ?? new Date()}
 				onChange={handleDateBottomSheetConfirm}
 			/>
-			<FixedBottomCTA loading={false} onClick={handleConfirmDialogOpen}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleConfirmDialogOpen}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				{formatPriceAsCoin(totalPrice)} 결제하기
 			</FixedBottomCTA>
 		</>

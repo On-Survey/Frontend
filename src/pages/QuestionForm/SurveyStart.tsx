@@ -82,7 +82,13 @@ export const SurveyStart = () => {
 				/>
 			</List>
 
-			<FixedBottomCTA loading={false} onClick={handleRegister}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleRegister}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				설문 등록하기
 			</FixedBottomCTA>
 		</div>

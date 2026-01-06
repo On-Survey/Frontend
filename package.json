@@ -16,7 +16,7 @@
 		"test:e2e:watch": "maestro test --watch e2e/survey/"
 	},
 	"dependencies": {
-		"@apps-in-toss/web-framework": "1.4.7",
+		"@apps-in-toss/web-framework": "1.5.3",
 		"@emotion/react": "^11",
 		"@sentry/react": "^10.17.0",
 		"@tailwindcss/vite": "^4.1.14",

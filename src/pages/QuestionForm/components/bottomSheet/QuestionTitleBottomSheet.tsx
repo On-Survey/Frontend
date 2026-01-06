@@ -54,6 +54,9 @@ export const QuestionTitleBottomSheet = ({
 					variant="fill"
 					disabled={!title.trim()}
 					onClick={handleConfirm}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인
 				</BottomSheet.CTA>

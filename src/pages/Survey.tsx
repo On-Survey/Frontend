@@ -212,6 +212,9 @@ export const Survey = () => {
 					<ConfirmDialog.ConfirmButton
 						size="xlarge"
 						onClick={handleErrorDialogConfirm}
+						style={
+							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+						}
 					>
 						확인
 					</ConfirmDialog.ConfirmButton>
@@ -233,7 +236,7 @@ export const Survey = () => {
 									badges={[
 										{
 											text: `# ${surveyTopicName}`,
-											color: "blue",
+											color: "green",
 											variant: "weak",
 										},
 									]}
@@ -243,13 +246,13 @@ export const Survey = () => {
 					/>
 
 					<div className="px-4">
-						<div className="w-full rounded-2xl border border-blue-500 p-5 shadow-sm">
+						<div className="w-full rounded-2xl border border-green-500 p-5 shadow-sm">
 							<Text
 								color={colors.grey900}
 								typography="t5"
 								fontWeight="semibold"
 							>
-								참여 보상 : 300원
+								참여 보상 : 200원
 							</Text>
 							<div className="h-2" />
 							<Text
@@ -276,12 +279,12 @@ export const Survey = () => {
 
 					<div className="px-4">
 						<div className="flex items-center gap-3 my-6">
-							<Asset.Icon
+							<Asset.Image
 								frameShape={Asset.frameShape.CleanW24}
 								backgroundColor="transparent"
-								name="icon-man"
+								src="https://static.toss.im/2d-emojis/png/4x/u1F469_u1F3FB_u200D_u1F4BB.png"
 								aria-hidden={true}
-								ratio="1/1"
+								style={{ aspectRatio: `1/1` }}
 							/>
 							<Text
 								color={colors.grey900}
@@ -335,6 +338,9 @@ export const Survey = () => {
 					loading={false}
 					onClick={handleStart}
 					disabled={isClosed || sortedQuestions.length === 0}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					{isClosed ? "설문 마감" : "설문 참여하기"}
 				</FixedBottomCTA>

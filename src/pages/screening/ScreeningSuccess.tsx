@@ -39,7 +39,13 @@ export const ScreeningSuccess = () => {
 					? `[${question}] 질문에 대해 ${selected} 선택을 한 타겟만 이 설문에 참여할 수 있어요`
 					: "스크리닝 설문이 구성되었습니다."}
 			</Text>
-			<FixedBottomCTA loading={false} onClick={() => setSurveyStep(3)}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={() => setSurveyStep(3)}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				다음
 			</FixedBottomCTA>
 		</>

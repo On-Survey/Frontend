@@ -147,7 +147,10 @@ export const SurveyResponseDetail = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full h-screen bg-white">
+		<div
+			className="flex flex-col w-full h-screen bg-white"
+			style={{ "--top-background-color": badge.color } as React.CSSProperties}
+		>
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
@@ -173,12 +176,14 @@ export const SurveyResponseDetail = () => {
 			/>
 			<div className="px-4">
 				<Button
-					variant="weak"
 					display="block"
 					disabled={isDownloading || !surveyResponse}
 					onClick={handleDownloadCsv}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
-					CSV로 결과 받기
+					결과 다운받기
 				</Button>
 			</div>
 			<div className="h-4" />
@@ -228,15 +233,22 @@ export const SurveyResponseDetail = () => {
 								/>
 							}
 							right={
-								<Button
-									size="medium"
-									variant="weak"
-									onClick={() =>
-										handleResultNavigation(question.type, question.id)
-									}
-								>
-									{question.responseCount}명
-								</Button>
+								<div className="[&_button]:!text-[#15c67f]">
+									<Button
+										size="medium"
+										variant="weak"
+										onClick={() =>
+											handleResultNavigation(question.type, question.id)
+										}
+										style={
+											{
+												"--button-background-color": "#f0faf6",
+											} as React.CSSProperties
+										}
+									>
+										{question.responseCount}명
+									</Button>
+								</div>
 							}
 							verticalPadding="large"
 						/>

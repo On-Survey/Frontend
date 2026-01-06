@@ -177,6 +177,9 @@ export const LocationSelectPage = () => {
 			<FixedBottomCTA
 				loading={false}
 				onClick={() => navigate("/estimateNavigation")}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
 			>
 				다음
 			</FixedBottomCTA>

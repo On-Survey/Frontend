@@ -66,6 +66,9 @@ export const QuestionSelectionBottomSheet = ({
 					variant="fill"
 					disabled={!selection.trim()}
 					onClick={handleConfirm}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인
 				</BottomSheet.CTA>
