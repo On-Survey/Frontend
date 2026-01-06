@@ -61,6 +61,9 @@ export const OrderCancelBottomSheet = ({
 					variant="fill"
 					disabled={false}
 					onClick={onConfirm}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인했어요
 				</BottomSheet.CTA>

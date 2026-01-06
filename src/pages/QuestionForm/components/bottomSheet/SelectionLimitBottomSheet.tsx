@@ -52,6 +52,9 @@ export const SelectionLimitBottomSheet = ({
 					variant="fill"
 					disabled={selectionLimit <= 0 || isError}
 					onClick={handleConfirm}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인
 				</BottomSheet.CTA>

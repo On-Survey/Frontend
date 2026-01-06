@@ -214,7 +214,7 @@ export const PaymentProductPage = () => {
 								충전 필요 코인
 							</Text>
 							<Text
-								color={adaptive.blue500}
+								color={adaptive.green500}
 								typography="t5"
 								fontWeight="semibold"
 							>
@@ -273,6 +273,9 @@ export const PaymentProductPage = () => {
 				disabled={!selectedCoinAmount}
 				loading={false}
 				onClick={handleNext}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
 			>
 				다음
 			</FixedBottomCTA>

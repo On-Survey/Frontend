@@ -26,6 +26,9 @@ export const RatingLabelEditBottomSheet = ({
 					variant="fill"
 					disabled={!value.trim()}
 					onClick={handleClose}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인
 				</BottomSheet.CTA>

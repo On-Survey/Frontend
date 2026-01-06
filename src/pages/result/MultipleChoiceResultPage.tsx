@@ -96,7 +96,7 @@ export const MultipleChoiceResultPage = () => {
 								<div
 									className={`rounded-xl px-4 py-2 text-base font-semibold leading-non text-white ${
 										isTop
-											? "bg-linear-to-r from-blue-300 to-blue-500 "
+											? "bg-linear-to-r from-green-300 to-green-500 "
 											: "bg-linear-to-r from-gray-300 to-gray-400 "
 									}`}
 									style={{ width: getBarWidth(option.count, maxCount) }}

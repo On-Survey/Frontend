@@ -1,8 +1,13 @@
 export const DESIRED_PARTICIPANTS = [
-	{ name: "50명", value: "50", hideUnCheckedCheckBox: false },
-	{ name: "100명", value: "100", hideUnCheckedCheckBox: false },
-	{ name: "150명", value: "150", hideUnCheckedCheckBox: false },
-	{ name: "200명", value: "200", hideUnCheckedCheckBox: false },
+	{ name: "50명", value: "50", hideUnCheckedCheckBox: false, disabled: false },
+	{
+		name: "100명",
+		value: "100",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{ name: "150명", value: "150", hideUnCheckedCheckBox: false, disabled: true },
+	{ name: "200명", value: "200", hideUnCheckedCheckBox: false, disabled: true },
 ];
 
 export type GenderCode = "ALL" | "MALE" | "FEMALE";

@@ -9,8 +9,8 @@ export const QuestionBadge = ({ isRequired }: QuestionBadgeProps) => {
 		<Top.SubtitleBadges
 			badges={[
 				{
-					text: isRequired ? "필수문항" : "선택문항",
-					color: isRequired ? "blue" : "elephant",
+					text: isRequired ? "필수" : "선택",
+					color: isRequired ? "green" : "elephant",
 					variant: "fill",
 				},
 			]}

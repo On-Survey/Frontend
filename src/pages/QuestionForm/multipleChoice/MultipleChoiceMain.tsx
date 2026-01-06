@@ -205,7 +205,7 @@ export const MultipleChoiceMain = () => {
 						<ListRow.Texts
 							type="Right1RowTypeB"
 							top={maxChoice?.toString() || "1"}
-							topProps={{ color: "#3182f6" }}
+							topProps={{ color: "#15c67f" }}
 							marginTop={0}
 						/>
 					}

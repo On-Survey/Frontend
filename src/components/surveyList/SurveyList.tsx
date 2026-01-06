@@ -55,10 +55,10 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 							<ListRow.Texts
 								type="3RowTypeC"
 								top={getTopicTag(survey.topicId)}
-								topProps={{ color: adaptive.blue500 }}
+								topProps={{ color: adaptive.green500 }}
 								middle={survey.title}
 								middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
-								bottom="3분이면 300원 획득"
+								bottom="3분이면 200원 획득"
 								bottomProps={{ color: adaptive.grey600 }}
 							/>
 						}

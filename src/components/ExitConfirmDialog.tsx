@@ -20,7 +20,13 @@ export const ExitConfirmDialog = ({
 				</ConfirmDialog.CancelButton>
 			}
 			confirmButton={
-				<ConfirmDialog.ConfirmButton size="xlarge" onClick={onConfirm}>
+				<ConfirmDialog.ConfirmButton
+					size="xlarge"
+					onClick={onConfirm}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
+				>
 					종료하기
 				</ConfirmDialog.ConfirmButton>
 			}

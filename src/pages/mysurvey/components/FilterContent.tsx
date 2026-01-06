@@ -20,6 +20,7 @@ interface FilterContentProps {
 	onGenderChange: (gender: string) => void;
 	onLocationChange: (location: string) => void;
 	surveyInfo?: SurveyInfo;
+	style?: React.CSSProperties;
 }
 
 export const FilterContent = ({
@@ -31,6 +32,7 @@ export const FilterContent = ({
 	onGenderChange,
 	onLocationChange,
 	surveyInfo,
+	style,
 }: FilterContentProps) => {
 	// 거주지 탭 임시 제거로 인해 사용하지 않는 props를 소거
 	void selectedLocations;
@@ -75,7 +77,7 @@ export const FilterContent = ({
 		case "age": {
 			const availableAges = getAvailableAges();
 			return (
-				<div className="p-4 grid grid-cols-3 gap-2">
+				<div className="p-4 grid grid-cols-3 gap-2" style={style}>
 					{availableAges.map((ageRange) => {
 						const isSelected = selectedAges.includes(ageRange);
 						return (
@@ -85,6 +87,7 @@ export const FilterContent = ({
 								color={isSelected ? "primary" : "dark"}
 								variant={isSelected ? "fill" : "weak"}
 								onClick={() => onAgeChange(ageRange)}
+								style={isSelected ? style : undefined}
 							>
 								{ageRange}
 							</Button>
@@ -96,7 +99,7 @@ export const FilterContent = ({
 		case "gender": {
 			const availableGenders = getAvailableGenders();
 			return (
-				<div className="p-4 space-y-2">
+				<div className="p-4 space-y-2" style={style}>
 					{availableGenders.includes("전체") && (
 						<Button
 							size="large"
@@ -104,6 +107,7 @@ export const FilterContent = ({
 							variant={selectedGenders.includes("전체") ? "fill" : "weak"}
 							display="block"
 							onClick={() => onGenderChange("전체")}
+							style={selectedGenders.includes("전체") ? style : undefined}
 						>
 							전체
 						</Button>
@@ -113,7 +117,12 @@ export const FilterContent = ({
 							<button
 								type="button"
 								onClick={() => onGenderChange("남성")}
-								className={`flex flex-col items-center justify-center p-4 rounded-xl!  ${selectedGenders.includes("남성") ? " bg-blue-500" : "bg-gray-100"}`}
+								className={`flex flex-col items-center justify-center p-4 rounded-xl!  ${selectedGenders.includes("남성") ? "" : "bg-gray-100"}`}
+								style={
+									selectedGenders.includes("남성")
+										? { backgroundColor: "#15c67f" }
+										: undefined
+								}
 								aria-label="남성"
 							>
 								<Asset.Image
@@ -144,10 +153,13 @@ export const FilterContent = ({
 								type="button"
 								onClick={() => onGenderChange("여성")}
 								className={`flex flex-col items-center justify-center p-4 rounded-xl! transition-colors ${
-									selectedGenders.includes("여성")
-										? " bg-blue-500"
-										: " bg-gray-100"
+									selectedGenders.includes("여성") ? "" : " bg-gray-100"
 								}`}
+								style={
+									selectedGenders.includes("여성")
+										? { backgroundColor: "#15c67f" }
+										: undefined
+								}
 								aria-label="여성"
 							>
 								<Asset.Image

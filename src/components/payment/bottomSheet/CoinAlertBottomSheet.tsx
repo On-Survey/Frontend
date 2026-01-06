@@ -34,7 +34,18 @@ export const CoinAlertBottomSheet = ({
 							닫기
 						</Button>
 					}
-					rightButton={<Button onClick={handleNextPayment}>충전하기</Button>}
+					rightButton={
+						<Button
+							onClick={handleNextPayment}
+							style={
+								{
+									"--button-background-color": "#15c67f",
+								} as React.CSSProperties
+							}
+						>
+							충전하기
+						</Button>
+					}
 				/>
 			}
 		>

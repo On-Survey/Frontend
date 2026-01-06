@@ -77,7 +77,13 @@ export const AgeSelectBottomSheet = ({
 					})}
 				</List>
 			</div>
-			<BottomSheet.CTA loading={false} onClick={handleClose}>
+			<BottomSheet.CTA
+				loading={false}
+				onClick={handleClose}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				확인
 			</BottomSheet.CTA>
 		</BottomSheet>
