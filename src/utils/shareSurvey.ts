@@ -16,9 +16,7 @@ export const shareSurveyById = async (
 	const shareUrl = `${webBaseUrl}${path}`;
 
 	const OG_IMAGE_URL =
-		import.meta.env.DEV || import.meta.env.MODE === "development"
-			? `${window.location.origin}/og/shareImage.png`
-			: "https://minion.toss.im/onsurvey/og/shareImage.png";
+		"https://toss-storegroup.s3.us-east-1.amazonaws.com/image+(2).png";
 
 	if (import.meta.env.DEV || import.meta.env.MODE === "development") {
 		try {
