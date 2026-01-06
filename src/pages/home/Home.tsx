@@ -88,7 +88,7 @@ export const Home = () => {
 			result.impending,
 		);
 
-		const totalAmount = uniqueSurveyIds.size * 300;
+		const totalAmount = uniqueSurveyIds.size * 200;
 
 		return {
 			recommended: rec,
