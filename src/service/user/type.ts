@@ -6,6 +6,7 @@ export interface createUserResponse {
 		profileUrl: string;
 		coin: number;
 		promotionPoint: number;
+		isOnboardingCompleted: boolean;
 	};
 	success: boolean;
 }

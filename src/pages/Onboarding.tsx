@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
 import { type RegionData, regions } from "../constants/regions";
 import { type TopicData, topics } from "../constants/topics";
+import { useUserInfo } from "../contexts/UserContext";
 import { useModal } from "../hooks/UseToggle";
 import { useBackEventListener } from "../hooks/useBackEventListener";
 import { OnboardingApi } from "../service/onboading";
@@ -107,6 +108,7 @@ const OnboardingStep2 = ({
 	handleTopicToggle: (topic: TopicData) => void;
 }) => {
 	const navigate = useNavigate();
+	const { fetchUserInfo } = useUserInfo();
 
 	const handleSubmit = async () => {
 		if (!selectedRegion) return;
@@ -121,6 +123,8 @@ const OnboardingStep2 = ({
 		});
 
 		if (response.success) {
+			// 온보딩 완료 후 사용자 정보 갱신
+			await fetchUserInfo();
 			navigate("/home");
 		}
 	};
