@@ -14,8 +14,13 @@ export const Intro = () => {
 	useEffect(() => {
 		const checkAuth = async () => {
 			try {
-				await getMemberInfo();
-				navigate("/home", { replace: true });
+				const memberInfo = await getMemberInfo();
+				// 온보딩 완료된 사용자는 홈으로, 미완료 사용자는 온보딩으로
+				if (memberInfo.onboardingCompleted) {
+					navigate("/home", { replace: true });
+				} else {
+					navigate("/onboarding", { replace: true });
+				}
 			} catch (error) {
 				// 인증 실패 (토큰 없거나 만료 등) 시에는 로그인 페이지 유지
 				console.error("자동 로그인 확인 실패:", error);
