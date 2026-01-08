@@ -6,5 +6,5 @@ export interface MemberInfo {
 	profileUrl: string;
 	coin: number;
 	promotionPoint: number;
-	onboardingCompleted: boolean;
+	isOnboardingCompleted: boolean;
 }

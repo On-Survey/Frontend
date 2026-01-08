@@ -29,7 +29,7 @@ export const Home = () => {
 
 	// 온보딩 미완료 시 온보딩 페이지로 리다이렉트
 	useEffect(() => {
-		if (userInfo?.result && userInfo.result.onboardingCompleted === false) {
+		if (userInfo?.result && userInfo.result.isOnboardingCompleted === false) {
 			navigate("/onboarding", { replace: true });
 		}
 	}, [userInfo, navigate]);

@@ -15,8 +15,8 @@ export const Intro = () => {
 		const checkAuth = async () => {
 			try {
 				const memberInfo = await getMemberInfo();
-				// 온보딩 완료된 사용자는 홈으로, 미완료 사용자는 온보딩으로
-				if (memberInfo.onboardingCompleted) {
+				// isOnboardingCompleted 상태에 따라 분기
+				if (memberInfo.isOnboardingCompleted) {
 					navigate("/home", { replace: true });
 				} else {
 					navigate("/onboarding", { replace: true });
@@ -38,6 +38,7 @@ export const Intro = () => {
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
+				// 로그인 API 응답에 onboardingCompleted가 포함되어 있음
 				if (loginApiResponse.onboardingCompleted) {
 					navigate("/home", { replace: true });
 				} else {
