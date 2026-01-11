@@ -247,11 +247,13 @@ export const Home = () => {
 					</div>
 				)}
 
-				<CustomSurveyList
-					surveys={customSurveysToShow}
-					userName={userInfo?.result.name || "온서베이"}
-					onViewAll={handleViewAllRecommended}
-				/>
+				{userInfo?.result?.name && (
+					<CustomSurveyList
+						surveys={customSurveysToShow}
+						userName={userInfo.result.name}
+						onViewAll={handleViewAllRecommended}
+					/>
+				)}
 
 				<Border variant="height16" />
 
