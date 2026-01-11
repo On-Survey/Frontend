@@ -17,6 +17,7 @@ import { useUserInfo } from "../contexts/UserContext";
 import { useModal } from "../hooks/UseToggle";
 import { useBackEventListener } from "../hooks/useBackEventListener";
 import { OnboardingApi } from "../service/onboading";
+import { pushGtmEvent } from "../utils/gtm";
 
 const OnboardingStep1 = ({
 	onNext,
@@ -125,6 +126,12 @@ const OnboardingStep2 = ({
 		if (response.success) {
 			// 온보딩 완료 후 사용자 정보 갱신
 			await fetchUserInfo();
+			pushGtmEvent({
+				event: "signup",
+				pagePath: "/onboarding",
+				signup: "로그인 유무",
+			});
+
 			navigate("/home");
 		}
 	};

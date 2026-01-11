@@ -1,8 +1,8 @@
 import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { ExitConfirmDialog } from "../../components/ExitConfirmDialog";
@@ -22,6 +22,8 @@ import { useOngoingSurveys } from "./hooks/useOngoingSurveys";
 
 export const Home = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
+	const hasSentAutoLoginEvent = useRef(false);
 
 	const { userInfo } = useUserInfo();
 
@@ -37,6 +39,26 @@ export const Home = () => {
 
 	// 자동 로그인 완료 시 이벤트 로깅
 	useEffect(() => {
+		const locationState = location.state as
+			| { isAutoLogin?: boolean }
+			| undefined;
+		if (
+			hasSentAutoLoginEvent.current ||
+			!locationState?.isAutoLogin ||
+			!userInfo
+		) {
+			return;
+		}
+
+		hasSentAutoLoginEvent.current = true;
+
+		// 자동 로그인 이벤트 로깅
+		pushGtmEvent({
+			event: "login",
+			pagePath: "/home",
+			Method: "로그인 수단 (Toss)",
+		});
+
 		// 사용자 속성 로깅
 		const logUserProperties = async () => {
 			try {
@@ -53,7 +75,7 @@ export const Home = () => {
 		};
 
 		void logUserProperties();
-	}, [userInfo]);
+	}, [location.state, userInfo]);
 
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");

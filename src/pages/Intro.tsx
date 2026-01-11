@@ -46,6 +46,12 @@ export const Intro = () => {
 					loginApiResponse.refreshToken,
 				);
 
+				pushGtmEvent({
+					event: "login",
+					pagePath: "/intro",
+					Method: "로그인 수단 (Toss)",
+				});
+
 				// 로그인 완료 시 사용자 속성 로깅
 				try {
 					pushGtmEvent({
