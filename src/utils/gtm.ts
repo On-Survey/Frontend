@@ -25,9 +25,11 @@ export const pushGtmEvent = (params: GtmEventParams): void => {
 
 	const { event, pagePath, ...restParams } = params;
 
-	window.dataLayer.push({
+	const gtmData = {
 		event,
 		page_path: pagePath ?? window.location.pathname + window.location.search,
 		...restParams,
-	});
+	};
+
+	window.dataLayer.push(gtmData);
 };

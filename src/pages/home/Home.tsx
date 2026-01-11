@@ -1,8 +1,8 @@
 import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useMemo, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { ExitConfirmDialog } from "../../components/ExitConfirmDialog";
@@ -22,8 +22,6 @@ import { useOngoingSurveys } from "./hooks/useOngoingSurveys";
 
 export const Home = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const hasSentAutoLoginEvent = useRef(false);
 
 	const { userInfo } = useUserInfo();
 
@@ -39,43 +37,20 @@ export const Home = () => {
 
 	// 자동 로그인 완료 시 이벤트 로깅
 	useEffect(() => {
-		const locationState = location.state as
-			| { isAutoLogin?: boolean }
-			| undefined;
-		if (
-			hasSentAutoLoginEvent.current ||
-			!locationState?.isAutoLogin ||
-			!userInfo
-		) {
-			return;
-		}
-
-		hasSentAutoLoginEvent.current = true;
-
-		// 자동 로그인 이벤트 로깅
 		pushGtmEvent({
 			event: "login",
 			pagePath: "/home",
-			Method: "로그인 수단 (Toss)",
+			method: "로그인 수단 (Toss)",
 		});
 
-		// 사용자 속성 로깅
-		const logUserProperties = async () => {
-			try {
-				pushGtmEvent({
-					event: "user_info",
-					login_method: "toss",
-					user_region: userInfo?.result.residence ?? "",
-					user_age: userInfo?.result.age ?? "",
-					user_gender: userInfo?.result.gender ?? "",
-				});
-			} catch (error) {
-				console.error("사용자 속성 로깅 실패:", error);
-			}
-		};
-
-		void logUserProperties();
-	}, [location.state, userInfo]);
+		// pushGtmEvent({
+		// 	event: "user_info",
+		// 	login_method: "toss",
+		// 	user_region: userInfo?.result.residence ?? "",
+		// 	user_age: userInfo?.result.age ?? "",
+		// 	user_gender: userInfo?.result.gender ?? "",
+		// });
+	}, []);
 
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
@@ -87,7 +62,7 @@ export const Home = () => {
 	const handleQuizClick = () => {
 		pushGtmEvent({
 			event: "start_screening_quiz",
-			pagePath: "/home",
+			// pagePath: "/home",
 			source: "메인에서 진입(main)",
 		});
 		navigate("/oxScreening");

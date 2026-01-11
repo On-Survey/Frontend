@@ -76,16 +76,18 @@ export const InterestPage = () => {
 						const entryType = state.screening.enabled
 							? "screening_complete"
 							: "screening_skip";
-						const interestSelected = interests.join(",");
 
-						pushGtmEvent({
-							event: "survey_interest",
-							pagePath: "/createForm",
-							step: "confirm",
-							...(state.surveyId && { survey_id: String(state.surveyId) }),
-							source,
-							entry_type: entryType,
-							interest_selected: interestSelected,
+						// 각 interest마다 개별 이벤트 전송
+						interests.forEach((interest) => {
+							pushGtmEvent({
+								event: "survey_interest",
+								pagePath: "/createForm",
+								step: "confirm",
+								...(state.surveyId && { survey_id: String(state.surveyId) }),
+								source,
+								entry_type: entryType,
+								interest_selected: interest,
+							});
 						});
 
 						setSurveyStep(4);
