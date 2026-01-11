@@ -50,18 +50,12 @@ export const useUserSurveys = () => {
 			}));
 
 		const closed: ClosedSurvey[] = userSurveys
-			.filter((survey): survey is typeof survey & { deadLine: string } => {
-				if (!survey.deadLine) return false;
-				if (draftStatuses.has(survey.status)) return false;
-				if (survey.status === "ONGOING") return false;
-				const deadline = new Date(survey.deadLine);
-				return deadline <= now;
-			})
+			.filter((survey) => survey.status === "CLOSED")
 			.map((survey) => ({
 				id: survey.surveyId,
 				title: survey.title,
 				description: survey.description,
-				closedAt: survey.deadLine,
+				closedAt: survey.deadLine ?? undefined,
 			}));
 
 		return {
