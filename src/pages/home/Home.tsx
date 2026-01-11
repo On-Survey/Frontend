@@ -1,7 +1,7 @@
 import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
@@ -27,6 +27,13 @@ export const Home = () => {
 
 	const { data: globalStats } = useGlobalStats();
 	const { data: result, error: ongoingSurveysError } = useOngoingSurveys();
+
+	// 온보딩 미완료 시 온보딩 페이지로 리다이렉트
+	useEffect(() => {
+		if (userInfo?.result && userInfo.result.isOnboardingCompleted === false) {
+			navigate("/onboarding", { replace: true });
+		}
+	}, [userInfo, navigate]);
 
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
