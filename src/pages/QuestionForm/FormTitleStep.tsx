@@ -139,7 +139,7 @@ export const FormTitleStep = () => {
 					label="상세 설명"
 					help="200자 이내로 작성할 수 있어요"
 					value={state.survey.description}
-					placeholder="상세 설명"
+					placeholder="상세 설명을 입력해주세요"
 					onChange={handleDescriptionChange}
 					autoFocus={step}
 					maxLength={200}
@@ -166,6 +166,9 @@ export const FormTitleStep = () => {
 				<FixedBottomCTA
 					disabled={!state.survey.title.trim()}
 					onClick={handleNext}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인
 				</FixedBottomCTA>
@@ -178,6 +181,9 @@ export const FormTitleStep = () => {
 						!state.survey.description.trim()
 					}
 					onClick={handleNextPage}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					확인
 				</FixedBottomCTA>

@@ -48,7 +48,14 @@ export const EstimateDetailBottomSheet = ({
 			open={isOpen}
 			onClose={handleClose}
 			cta={
-				<BottomSheet.CTA color="primary" variant="fill" onClick={handleClose}>
+				<BottomSheet.CTA
+					color="primary"
+					variant="fill"
+					onClick={handleClose}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
+				>
 					확인
 				</BottomSheet.CTA>
 			}
@@ -82,7 +89,11 @@ export const EstimateDetailBottomSheet = ({
 					<Text color={adaptive.grey700} typography="t5" fontWeight="regular">
 						총액
 					</Text>
-					<Text color={adaptive.blue500} typography="st8" fontWeight="semibold">
+					<Text
+						color={adaptive.green500}
+						typography="st8"
+						fontWeight="semibold"
+					>
 						{breakdown.total.toLocaleString()}원
 					</Text>
 				</div>

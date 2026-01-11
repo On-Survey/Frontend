@@ -348,7 +348,15 @@ export const EstimatePage = () => {
 					</ConfirmDialog.CancelButton>
 				}
 				confirmButton={
-					<ConfirmDialog.ConfirmButton size="xlarge" onClick={handleSubmit}>
+					<ConfirmDialog.ConfirmButton
+						size="xlarge"
+						onClick={handleSubmit}
+						style={
+							{
+								"--button-background-color": "#15c67f",
+							} as any
+						}
+					>
 						결제하기
 					</ConfirmDialog.ConfirmButton>
 				}
@@ -452,6 +460,7 @@ export const EstimatePage = () => {
 			<FixedBottomCTA
 				loading={false}
 				onClick={handleConfirmDialogOpenWithEvent}
+				style={{ "--button-background-color": "#15c67f" } as any}
 			>
 				{formatPriceAsCoin(totalPrice)} 결제하기
 			</FixedBottomCTA>

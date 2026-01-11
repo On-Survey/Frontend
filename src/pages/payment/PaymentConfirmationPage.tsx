@@ -202,7 +202,13 @@ export const PaymentConfirmationPage = () => {
 				</Post.Paragraph>
 			</BottomInfo>
 
-			<FixedBottomCTA loading={false} onClick={handleNext}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleNext}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				다음
 			</FixedBottomCTA>
 		</>

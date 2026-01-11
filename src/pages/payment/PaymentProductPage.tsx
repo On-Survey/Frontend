@@ -9,6 +9,7 @@ import {
 	Paragraph,
 	Text,
 	Top,
+	useToast,
 } from "@toss/tds-mobile";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,6 +28,7 @@ export const PaymentProductPage = () => {
 	const { selectedCoinAmount, handleSelectedCoinAmountChange, totalPrice } =
 		usePaymentEstimate();
 	const { state } = useSurvey();
+	const { openToast } = useToast();
 	const location = useLocation();
 	const navigate = useNavigate();
 	const isChargeFlow = location.pathname === "/payment/charge";
@@ -87,6 +89,30 @@ export const PaymentProductPage = () => {
 				},
 			});
 			return;
+		}
+
+		// 코인 검증
+		if (!isChargeFlow && userInfo) {
+			const selectedCoinValue = parseInt(
+				selectedCoinAmount.displayName.replace(/[^\d]/g, ""),
+				10,
+			);
+			const currentCoin = userInfo.result.coin;
+			const totalAvailableCoin = currentCoin + selectedCoinValue;
+
+			// 현재 보유 코인 + 선택한 코인 값이 총 필요 코인보다 적으면
+			if (totalAvailableCoin < totalPrice) {
+				openToast(
+					"충전할 코인과 보유 코인을 합쳐도 설문 생성 비용보다 적어요.",
+					{
+						type: "bottom",
+						lottie:
+							"https://static.toss.im/lotties-common/error-yellow-spot.json",
+						higherThanCTA: true,
+					},
+				);
+				return;
+			}
 		}
 
 		// 설문 생성 플로우 기존 단계 진행
@@ -223,7 +249,7 @@ export const PaymentProductPage = () => {
 								충전 필요 코인
 							</Text>
 							<Text
-								color={adaptive.blue500}
+								color={adaptive.green500}
 								typography="t5"
 								fontWeight="semibold"
 							>
@@ -282,6 +308,7 @@ export const PaymentProductPage = () => {
 				disabled={!selectedCoinAmount}
 				loading={false}
 				onClick={handleNext}
+				style={{ "--button-background-color": "#15c67f" } as any}
 			>
 				다음
 			</FixedBottomCTA>

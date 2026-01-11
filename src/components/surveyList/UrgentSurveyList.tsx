@@ -16,8 +16,8 @@ export const UrgentSurveyList = ({
 	const navigate = useNavigate();
 
 	const cardGradients = [
-		"from-[#FFF4C2] to-[#FFE08A]",
-		"from-[#E5DCFF] to-[#C9B7FF]",
+		"linear-gradient(180deg, var(--token-tds-color-grey-100, var(--adaptiveGrey100, #f2f4f6)) 0%, rgba(254, 237, 255, 1) 100%)",
+		"linear-gradient(180deg, var(--token-tds-color-grey-100, var(--adaptiveGrey100, #f2f4f6)) 0%, rgba(255, 251, 236, 1) 100%)",
 	];
 
 	const handleSurveyClick = (survey: SurveyListItem) => {
@@ -90,15 +90,16 @@ export const UrgentSurveyList = ({
 							type="button"
 							onClick={() => !survey.isClosed && handleSurveyClick(survey)}
 							disabled={survey.isClosed}
-							className={`rounded-2xl p-4 flex-shrink-0 flex flex-col w-[198px] min-h-[166px] text-left bg-gradient-to-b rounded-2xl! ${
-								cardGradients[index % cardGradients.length]
-							} shadow-[0_8px_24px_rgba(15,23,42,0.05)] ${
+							className={`rounded-2xl! p-4 shrink-0 flex flex-col w-[198px] min-h-[166px] text-left shadow-[0_8px_24px_rgba(15,23,42,0.05)] ${
 								survey.isClosed
 									? "cursor-not-allowed"
-									: "cursor-pointer focus-visible:outline focus-visible:outline-2 "
+									: "cursor-pointer focus-visible:outline-2 "
 							}`}
+							style={{
+								background: cardGradients[index % cardGradients.length],
+							}}
 						>
-							<div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center mb-3">
+							<div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center mb-3">
 								{renderIcon(survey)}
 							</div>
 							<Text
@@ -110,13 +111,23 @@ export const UrgentSurveyList = ({
 								{survey.title}
 							</Text>
 							{survey.iconType === "image" && survey.remainingTimeText ? (
-								<Text
-									color={adaptive.grey700}
-									typography="t7"
-									className="mb-3 line-clamp-2"
-								>
-									{survey.remainingTimeText}
-								</Text>
+								<div className="flex items-center gap-1 mb-3">
+									<Asset.Icon
+										frameShape={Asset.frameShape.CleanW16}
+										backgroundColor="transparent"
+										name="icon-clock-mono"
+										color={adaptive.grey600}
+										aria-hidden={true}
+										ratio="1/1"
+									/>
+									<Text
+										color={adaptive.grey700}
+										typography="t7"
+										className="line-clamp-2"
+									>
+										{survey.remainingTimeText}
+									</Text>
+								</div>
 							) : (
 								<div className="mb-3" />
 							)}

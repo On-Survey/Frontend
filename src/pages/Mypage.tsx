@@ -108,7 +108,15 @@ export const Mypage = () => {
 								>
 									{mypageData.chargeCash.toLocaleString()}원
 								</Text>
-								<Button size="small" onClick={handleCharge}>
+								<Button
+									size="small"
+									onClick={handleCharge}
+									style={
+										{
+											"--button-background-color": "#15c67f",
+										} as React.CSSProperties
+									}
+								>
 									충전하기
 								</Button>
 							</div>

@@ -1,3 +1,4 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -8,7 +9,9 @@ import {
 	ListRow,
 	Switch,
 } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import { useSurvey } from "../../../contexts/SurveyContext";
 import { useModal } from "../../../hooks/UseToggle";
 import { pushGtmEvent } from "../../../utils/gtm";
@@ -19,10 +22,10 @@ import { useQuestionByType } from "../hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "../hooks/useQuestionMutations";
 
 export const MultipleChoiceMain = () => {
-	const { state, updateQuestion } = useSurvey();
+	const { state, updateQuestion, deleteQuestion } = useSurvey();
 	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
-	const location = useLocation();
 
+	const location = useLocation();
 	const navigate = useNavigate();
 
 	const locationState = location.state as
@@ -40,6 +43,19 @@ export const MultipleChoiceMain = () => {
 
 	const maxChoice = question?.maxChoice;
 	const options = question?.option ?? [];
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				if (options.length === 0 && questionId) {
+					deleteQuestion(questionId);
+				}
+				navigate(-1);
+			},
+		});
+
+		return unsubscription;
+	}, [navigate, options.length, questionId, deleteQuestion]);
 
 	const { isOpen, handleOpen, handleClose } = useModal(false);
 
@@ -212,7 +228,7 @@ export const MultipleChoiceMain = () => {
 						<ListRow.Texts
 							type="Right1RowTypeB"
 							top={maxChoice?.toString() || "1"}
-							topProps={{ color: "#3182f6" }}
+							topProps={{ color: "#15c67f" }}
 							marginTop={0}
 						/>
 					}

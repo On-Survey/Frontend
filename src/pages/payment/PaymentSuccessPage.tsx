@@ -75,10 +75,11 @@ export const PaymentSuccessPage = () => {
 	return (
 		<div className="flex flex-col h-screen">
 			<div className="flex-1 flex flex-col items-center justify-center gap-3">
-				<Asset.Image
-					frameShape={{ width: 100 }}
-					src="https://static.toss.im/lotties/check-spot-apng.png"
+				<Asset.Icon
+					frameShape={Asset.frameShape.CleanW100}
+					name="icon-check-circle-green"
 					aria-hidden={true}
+					ratio="1/1"
 				/>
 				<div className="h-3" />
 				<Text color={adaptive.grey800} typography="t2" fontWeight="bold">
@@ -95,7 +96,13 @@ export const PaymentSuccessPage = () => {
 					{isChargeFlow ? "충전한 코인으로 설문을 등록할 수 있어요." : ""}
 				</Text>
 			</div>
-			<FixedBottomCTA loading={false} onClick={handleNavigate}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleNavigate}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				확인했어요
 			</FixedBottomCTA>
 		</div>

@@ -88,7 +88,13 @@ export const AgeMultiSelectBottomSheet = ({
 				</List>
 			</div>
 
-			<BottomSheet.CTA loading={false} onClick={handleConfirm}>
+			<BottomSheet.CTA
+				loading={false}
+				onClick={handleConfirm}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				확인
 			</BottomSheet.CTA>
 		</BottomSheet>

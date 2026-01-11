@@ -124,7 +124,7 @@ const EstimatePageContent = () => {
 						</Top.TitleParagraph>
 					}
 					subtitleTop={
-						<Top.SubtitleParagraph color={adaptive.blue500}>
+						<Top.SubtitleParagraph color={adaptive.green500}>
 							견적 계산기
 						</Top.SubtitleParagraph>
 					}
@@ -194,6 +194,8 @@ const EstimatePageContent = () => {
 						labelOption="sustain"
 						value={getRegionLabel(estimate.location as RegionCode)}
 						placeholder="거주지를 선택해주세요"
+						help="현재 준비 중이에요"
+						disabled={true}
 						right={
 							<Asset.Icon
 								frameShape={assetFrameShape.CleanW24}
@@ -208,7 +210,13 @@ const EstimatePageContent = () => {
 					/>
 				</div>
 
-				<FixedBottomCTA loading={false} onClick={handleDetailBottomSheetOpen}>
+				<FixedBottomCTA
+					loading={false}
+					onClick={handleDetailBottomSheetOpen}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
+				>
 					{formatPrice(calculateTotalPrice(estimate))} 상세 내역 보기
 				</FixedBottomCTA>
 			</div>

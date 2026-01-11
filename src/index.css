@@ -31,19 +31,6 @@
 	animation: slideInFromRight 0.4s ease-out;
 }
 
-/* Home.tsx 배너 배경 스타일 */
-.home-banner-gradient {
-	background: linear-gradient(
-		180deg,
-		#59b5e8 3.52%,
-		#37a6e4 15.71%,
-		#d9d0ee 46.77%,
-		#f1cfd6 59.46%,
-		#ffe1e7 68.61%
-	);
-	filter: blur(10px);
-}
-
 .home-banner-overlay {
 	background: linear-gradient(
 		180deg,
@@ -53,4 +40,15 @@
 	);
 	filter: blur(2px);
 	height: 100%;
+}
+
+:root {
+	--main-green: #15c67f;
+	--button-color: var(--main-green);
+}
+
+.payment-bottom-sheet-select label:has(input[value="150"]),
+.payment-bottom-sheet-select label:has(input[value="200"]) {
+	color: #d1d5db !important;
+	opacity: 0.6 !important;
 }

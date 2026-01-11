@@ -7,7 +7,7 @@ interface OrderCardProps {
 	order: Order;
 }
 
-type BadgeColor = "blue" | "elephant" | "red";
+type BadgeColor = "green" | "elephant" | "red";
 
 interface BadgeConfig {
 	color: BadgeColor;
@@ -15,7 +15,7 @@ interface BadgeConfig {
 }
 
 const BADGE_CONFIG: Record<Order["status"], BadgeConfig> = {
-	active: { color: "blue", label: "수집중" },
+	active: { color: "green", label: "수집중" },
 	closed: { color: "elephant", label: "마감" },
 	refund_requested: { color: "red", label: "환불 접수" },
 	refund_rejected: { color: "red", label: "환불 반려" },

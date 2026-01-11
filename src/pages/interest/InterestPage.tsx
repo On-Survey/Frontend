@@ -164,6 +164,9 @@ export const InterestPage = () => {
 					loading={false}
 					onClick={handleNext}
 					disabled={selectedTopics.length === 0}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					다음
 				</FixedBottomCTA>

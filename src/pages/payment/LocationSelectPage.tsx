@@ -174,7 +174,13 @@ export const LocationSelectPage = () => {
 					/>
 				))}
 			</div>
-			<FixedBottomCTA loading={false} onClick={() => navigate("/createForm")}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={() => navigate("/createForm")}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				다음
 			</FixedBottomCTA>
 		</>

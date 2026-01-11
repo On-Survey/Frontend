@@ -3,7 +3,7 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import mainBanner from "../../assets/mainBanner.svg";
+import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { ExitConfirmDialog } from "../../components/ExitConfirmDialog";
 import { CustomSurveyList } from "../../components/surveyList/CustomSurveyList";
@@ -97,7 +97,7 @@ export const Home = () => {
 			result.impending,
 		);
 
-		const totalAmount = uniqueSurveyIds.size * 300;
+		const totalAmount = uniqueSurveyIds.size * 200;
 
 		return {
 			recommended: rec,
@@ -148,7 +148,7 @@ export const Home = () => {
 									color="white"
 									typography="t2"
 									fontWeight="bold"
-									className="mb-2!"
+									className="mb-2! z-999"
 								>
 									간단한 OX 퀴즈 풀고 <br />
 									설문 참여 하기
@@ -194,7 +194,7 @@ export const Home = () => {
 								</Text>
 								<ProgressBar
 									size="normal"
-									color="#FFFFFF"
+									color="#15c67f"
 									progress={
 										globalStats && globalStats.totalCompletedCount > 0
 											? globalStats.totalPromotionCount /
@@ -206,7 +206,7 @@ export const Home = () => {
 							</div>
 						</div>
 						<img
-							src={mainBanner}
+							src={homeBanner}
 							alt="메인 배너"
 							className="absolute bottom-0 right-0 h-100 object-contain opacity-90 z-1"
 						/>
@@ -214,7 +214,7 @@ export const Home = () => {
 				</div>
 
 				<div className="px-4 pb-4">
-					<div className="bg-blue-50 rounded-2xl p-4 flex items-center justify-between ">
+					<div className="bg-green-50 rounded-2xl p-4 flex items-center justify-between ">
 						<button
 							type="button"
 							onClick={handleCreateSurvey}
@@ -235,7 +235,7 @@ export const Home = () => {
 						<Asset.Icon
 							frameShape={Asset.frameShape.CleanW60}
 							backgroundColor="transparent"
-							name="icon-document-lines-blue"
+							name="icon-document-check-lines-fill"
 							aria-hidden={true}
 							ratio="1/1"
 						/>

@@ -62,7 +62,12 @@ export const ScreeningQuestion = () => {
 				autoFocus={true}
 				onChange={handleQuestionChange}
 			/>
-			<FixedBottomCTA disabled={!question.trim()} onClick={handleNext}>
+
+			<FixedBottomCTA
+				disabled={!question.trim()}
+				onClick={handleNext}
+				style={{ "--button-background-color": "#15c67f" } as any}
+			>
 				다음
 			</FixedBottomCTA>
 		</>

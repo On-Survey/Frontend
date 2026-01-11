@@ -1,6 +1,6 @@
 import { generateHapticFeedback } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, Text } from "@toss/tds-mobile";
+import { Asset, Text, useToast } from "@toss/tds-mobile";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -23,6 +23,7 @@ export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 	const { isOpen, handleOpen, handleClose } = useModal();
 	const location = useLocation();
 	const { state } = useSurvey();
+	const { openToast } = useToast();
 	const [selectedQuestionType, setSelectedQuestionType] =
 		useState<QuestionType | null>(null);
 
@@ -64,6 +65,14 @@ export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 			question_type: questionTypeForEvent,
 		});
 
+		if (state.survey.question.length >= 15) {
+			openToast("문항은 최대 15개까지 생성이 가능해요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
 		setSelectedQuestionType(questionType as QuestionType);
 		handleOpen();
 	};

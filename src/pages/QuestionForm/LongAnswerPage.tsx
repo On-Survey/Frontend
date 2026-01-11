@@ -158,7 +158,13 @@ export const LongAnswerPage = () => {
 				}
 				verticalPadding="large"
 			/>
-			<FixedBottomCTA loading={false} onClick={handleSubmit}>
+			<FixedBottomCTA
+				loading={false}
+				onClick={handleSubmit}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
+			>
 				확인
 			</FixedBottomCTA>
 		</div>
