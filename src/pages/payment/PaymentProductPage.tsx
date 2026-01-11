@@ -115,7 +115,16 @@ export const PaymentProductPage = () => {
 		async function fetchProducts() {
 			try {
 				const response = await IAP.getProductItemList();
-				setProducts(response?.products ?? []);
+				const products = response?.products ?? [];
+
+				// 가격 기준 오름차순 sorting
+				const sortedProducts = [...products].sort((a, b) => {
+					const priceA = parseInt(a.displayAmount.replace(/[^\d]/g, ""), 10);
+					const priceB = parseInt(b.displayAmount.replace(/[^\d]/g, ""), 10);
+					return priceA - priceB;
+				});
+
+				setProducts(sortedProducts);
 				const userInfoResult = await getUserInfo();
 				setUserInfo(userInfoResult);
 			} catch (error) {
