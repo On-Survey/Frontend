@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../service/login";
 import { getMemberInfo } from "../service/userInfo/api";
+import { pushGtmEvent } from "../utils/gtm";
 import { saveTokens } from "../utils/tokenManager";
 
 export const Intro = () => {
@@ -38,7 +39,13 @@ export const Intro = () => {
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
-				// 로그인 API 응답에 onboardingCompleted가 포함되어 있음
+
+				pushGtmEvent({
+					event: "login",
+					pagePath: "/intro",
+					Method: "로그인 수단 (Toss)",
+				});
+
 				if (loginApiResponse.onboardingCompleted) {
 					navigate("/home", { replace: true });
 				} else {

@@ -6,8 +6,8 @@ import {
 	FixedBottomCTA,
 	TextField,
 } from "@toss/tds-mobile";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
 	DateSelectBottomSheet,
 	PaymentBottomSheet,
@@ -30,6 +30,7 @@ import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
 import { useModal } from "../../hooks/UseToggle";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 import {
 	calculatePriceBreakdown,
 	calculateTotalPrice,
@@ -46,10 +47,16 @@ export const EstimatePage = () => {
 	} = usePaymentEstimate();
 	const { state, resetForm } = useSurvey();
 	const { setSurveyStep, setPaymentStep } = useMultiStep();
+	const location = useLocation();
 	const navigate = useNavigate();
 	const createFormMutation = useCreateForm();
+	const hasSentEvent = useRef(false);
 
 	const { userInfo } = useUserInfo();
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const {
 		isOpen: isBottomSheetOpen,
@@ -75,16 +82,143 @@ export const EstimatePage = () => {
 		handleClose: handleConfirmDialogClose,
 	} = useModal(false);
 
+	const handleConfirmDialogOpenWithEvent = () => {
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "survey_payment_modal",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "view",
+			source,
+			entry_type: entryType,
+		});
+
+		handleConfirmDialogOpen();
+	};
+
+	const handleConfirmDialogCloseWithEvent = () => {
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "survey_payment_confirm",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "decision",
+			action: "skip",
+			source,
+			entry_type: entryType,
+		});
+
+		handleConfirmDialogClose();
+	};
+
 	const handleSubmit = () => {
 		handleConfirmDialogClose();
+
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+		const ownedCoin = userInfo?.result.coin ?? 0;
+
+		pushGtmEvent({
+			event: "survey_payment_confirm",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "decision",
+			action: "next",
+			source,
+			entry_type: entryType,
+		});
+
+		const respondentTarget = estimate.desiredParticipants;
+		const ageGroup = estimate.ages.length > 0 ? estimate.ages.join(",") : "";
+		const gender =
+			estimate.gender === "MALE"
+				? "male"
+				: estimate.gender === "FEMALE"
+					? "female"
+					: "";
+		const region = estimate.location ? "true" : "false";
+		const priceCoin = totalPrice;
+
+		pushGtmEvent({
+			event: "survey_settlement",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "confirm",
+			respondent_target: respondentTarget,
+			...(ageGroup && { age_group: ageGroup }),
+			...(gender && { gender }),
+			region,
+			price_coin: String(priceCoin),
+			source,
+		});
+
 		if (userInfo && totalPrice > userInfo?.result.coin) {
 			// 코인이 부족하면 코인 모달 표시
+			pushGtmEvent({
+				event: "survey_register_attempt",
+				pagePath: "/createForm",
+				...(state.surveyId && { survey_id: String(state.surveyId) }),
+				step: "decision",
+				result: "coin_insufficient",
+				required_coin: String(totalPrice),
+				owned_coin: String(ownedCoin),
+				source,
+				entry_type: entryType,
+			});
+
+			pushGtmEvent({
+				event: "coin_charge_prompt",
+				pagePath: "/createForm",
+				...(state.surveyId && { survey_id: String(state.surveyId) }),
+				step: "view",
+				required_coin: String(totalPrice),
+				owned_coin: String(ownedCoin),
+				source,
+				entry_type: entryType,
+			});
+
 			handleCoinBottomSheetOpen();
 		} else {
 			// 코인이 충분하면 폼 생성
 			if (formPayload && !createFormMutation.isPending) {
 				createFormMutation.mutate(formPayload, {
-					onSuccess: handleSuccess,
+					onSuccess: () => {
+						pushGtmEvent({
+							event: "survey_register_attempt",
+							pagePath: "/createForm",
+							...(state.surveyId && { survey_id: String(state.surveyId) }),
+							step: "decision",
+							result: "registered",
+							required_coin: String(totalPrice),
+							owned_coin: String(ownedCoin),
+							source,
+							entry_type: entryType,
+						});
+
+						// 구매 이벤트 전송 (코인으로 직접 결제)
+						pushGtmEvent({
+							event: "purchase",
+							pagePath: "/createForm",
+							...(state.surveyId && { survey_id: String(state.surveyId) }),
+							value: String(totalPrice),
+							price: String(totalPrice),
+							item_name: "설문 등록",
+							entry_type: "settlement",
+							source,
+						});
+
+						handleSuccess();
+					},
 					onError: (error) => {
 						console.error("폼 생성 실패:", error);
 					},
@@ -113,6 +247,25 @@ export const EstimatePage = () => {
 	useEffect(() => {
 		handleTotalPriceChange(totalPrice);
 	}, [totalPrice, handleTotalPriceChange]);
+
+	useEffect(() => {
+		if (hasSentEvent.current) return;
+
+		hasSentEvent.current = true;
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "survey_settlement",
+			pagePath: "/createForm",
+			step: "view",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+			entry_type: entryType,
+		});
+	}, [locationState?.source, state.surveyId, state.screening.enabled]);
 
 	const priceBreakdown = useMemo(
 		() => calculatePriceBreakdown(estimate),
@@ -189,7 +342,7 @@ export const EstimatePage = () => {
 				cancelButton={
 					<ConfirmDialog.CancelButton
 						size="xlarge"
-						onClick={handleConfirmDialogClose}
+						onClick={handleConfirmDialogCloseWithEvent}
 					>
 						닫기
 					</ConfirmDialog.CancelButton>
@@ -199,7 +352,9 @@ export const EstimatePage = () => {
 						size="xlarge"
 						onClick={handleSubmit}
 						style={
-							{ "--button-background-color": "#15c67f" } as React.CSSProperties
+							{
+								"--button-background-color": "#15c67f",
+							} as any
 						}
 					>
 						결제하기
@@ -304,10 +459,8 @@ export const EstimatePage = () => {
 			/>
 			<FixedBottomCTA
 				loading={false}
-				onClick={handleConfirmDialogOpen}
-				style={
-					{ "--button-background-color": "#15c67f" } as React.CSSProperties
-				}
+				onClick={handleConfirmDialogOpenWithEvent}
+				style={{ "--button-background-color": "#15c67f" } as any}
 			>
 				{formatPriceAsCoin(totalPrice)} 결제하기
 			</FixedBottomCTA>

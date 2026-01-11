@@ -7,13 +7,14 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
+import { pushGtmEvent } from "../utils/gtm";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
 
 export const Survey = () => {
@@ -24,6 +25,8 @@ export const Survey = () => {
 		| {
 				survey?: SurveyListItem;
 				surveyId?: string;
+				source?: "main" | "quiz" | "after_complete";
+				quiz_id?: number;
 		  }
 		| undefined;
 	const surveyFromState = locationState?.survey;
@@ -51,6 +54,25 @@ export const Survey = () => {
 		open: false,
 		title: "",
 	});
+
+	const hasSentStartEvent = useRef(false);
+
+	useEffect(() => {
+		if (!surveyId || hasSentStartEvent.current) return;
+
+		hasSentStartEvent.current = true;
+		const source = locationState?.source ?? "main";
+		const quizId = locationState?.quiz_id;
+
+		pushGtmEvent({
+			event: "survey_start",
+			pagePath: "/survey",
+			survey_id: String(surveyId),
+			source,
+			progress_percent: "0",
+			...(quizId && { quiz_id: String(quizId) }),
+		});
+	}, [surveyId, locationState?.source, locationState?.quiz_id]);
 
 	useEffect(() => {
 		if (!surveyId) {
@@ -184,12 +206,14 @@ export const Survey = () => {
 		const firstQuestion = sortedQuestions[0];
 		const questionTypeRoute = getQuestionTypeRoute(firstQuestion.type);
 
+		const source = locationState?.source ?? "main";
 		navigate(questionTypeRoute, {
 			state: {
 				surveyId,
 				questions: sortedQuestions,
 				currentQuestionIndex: 0,
 				answers: {},
+				source,
 			},
 		});
 	};

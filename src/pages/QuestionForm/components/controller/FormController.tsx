@@ -3,6 +3,7 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, ConfirmDialog, Text, useToast } from "@toss/tds-mobile";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
 	BUTTON_STYLES,
 	ICON_PROPS,
@@ -13,6 +14,7 @@ import { useMultiStep } from "../../../../contexts/MultiStepContext";
 import { queryClient } from "../../../../contexts/queryClient";
 import { useSurvey } from "../../../../contexts/SurveyContext";
 import { useModal } from "../../../../hooks/UseToggle";
+import { pushGtmEvent } from "../../../../utils/gtm";
 import { convertQuestionsToServerFormat } from "../../../../utils/questionConverter";
 import { useSaveQuestions } from "../../hooks/useQuestionMutations";
 import { QuestionController } from "./QuestionController";
@@ -31,6 +33,11 @@ export const FormController = ({
 	const { setScreeningEnabled, state } = useSurvey();
 	const { mutate: saveQuestions } = useSaveQuestions();
 	const { openToast } = useToast();
+	const location = useLocation();
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const {
 		isOpen: isConfirmDialogOpen,
@@ -102,6 +109,22 @@ export const FormController = ({
 			state.survey.question,
 			surveyId,
 		);
+
+		// 임시 저장 버튼 클릭 시 survey_draft_save 이벤트 전송
+		const source = locationState?.source ?? "main_cta";
+		const status = state.surveyId ? "editing" : "draft";
+		const questionCount = state.survey.question.length;
+
+		pushGtmEvent({
+			event: "survey_draft_save",
+			pagePath: "/createForm",
+			source,
+			step: "question",
+			status,
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			question_count: String(questionCount),
+		});
+
 		saveQuestions(
 			{
 				surveyId,
@@ -142,21 +165,69 @@ export const FormController = ({
 			});
 			return;
 		}
+		if (isReorderMode && onReorderModeChange) {
+			const source = locationState?.source ?? "main_cta";
+			const status = state.surveyId ? "editing" : "draft";
+
+			pushGtmEvent({
+				event: "survey_question_reorder",
+				pagePath: "/createForm",
+				source,
+				step: "question",
+				status,
+				...(state.surveyId && { survey_id: String(state.surveyId) }),
+			});
+		}
+
 		if (onReorderModeChange) {
 			onReorderModeChange(!isReorderMode);
 		}
 	};
 
 	const handleNext = () => {
+		const source = locationState?.source ?? "main_cta";
+		const questionCount = state.survey.question.length;
+
+		pushGtmEvent({
+			event: "survey_create_next",
+			pagePath: "/createForm",
+			source,
+			step: "confirm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			question_count: String(questionCount),
+		});
+
 		setSurveyStep(2);
 	};
 
 	const handleSkip = () => {
+		const source = locationState?.source ?? "main_cta";
+
+		pushGtmEvent({
+			event: "screening_modal_action",
+			pagePath: "/createForm",
+			action: "skip",
+			step: "decision",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+		});
+
 		setSurveyStep(3);
 		handleConfirmDialogClose();
 	};
 
 	const handleDialogConfirm = () => {
+		const source = locationState?.source ?? "main_cta";
+
+		pushGtmEvent({
+			event: "screening_modal_action",
+			pagePath: "/createForm",
+			action: "next",
+			step: "decision",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+		});
+
 		setScreeningEnabled(true);
 		handleNext();
 		handleConfirmDialogClose();

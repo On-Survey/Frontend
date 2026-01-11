@@ -15,6 +15,7 @@ import { useBackEventListener } from "../../hooks/useBackEventListener";
 import type { OngoingSurveySummary } from "../../service/surveyList/types";
 import type { SurveyListItem } from "../../types/surveyList";
 import { formatRemainingTime } from "../../utils/FormatDate";
+import { pushGtmEvent } from "../../utils/gtm";
 import { getUniqueSurveyIdsFromArrays } from "../../utils/surveyListUtils";
 import { useGlobalStats } from "./hooks/useGlobalStats";
 import { useOngoingSurveys } from "./hooks/useOngoingSurveys";
@@ -39,8 +40,16 @@ export const Home = () => {
 	const handleViewAllRecommended = () =>
 		navigate("/surveyList?type=recommended");
 	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
-	const handleCreateSurvey = () => navigate("/createFormStart");
-	const handleQuizClick = () => navigate("/oxScreening");
+	const handleCreateSurvey = () =>
+		navigate("/createFormStart", { state: { source: "main_cta" } });
+	const handleQuizClick = () => {
+		pushGtmEvent({
+			event: "start_screening_quiz",
+			pagePath: "/home",
+			source: "메인에서 진입(main)",
+		});
+		navigate("/oxScreening");
+	};
 
 	const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 

@@ -1,15 +1,22 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Top } from "@toss/tds-mobile";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 import { useCreateScreenings } from "../QuestionForm/hooks/useQuestionMutations";
 
 export const ScreeningOption = () => {
 	const { goNextScreening, goPrevScreening } = useMultiStep();
 	const { state, setScreeningAnswerType } = useSurvey();
 	const { mutate: createScreenings } = useCreateScreenings();
+	const location = useLocation();
 	const selected = state.screening.answerType;
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const handleSelectedChange = (answerType: "O" | "X") => {
 		setScreeningAnswerType(answerType);
@@ -26,6 +33,17 @@ export const ScreeningOption = () => {
 			{
 				onSuccess: (result) => {
 					if (result.success) {
+						const source = locationState?.source ?? "main_cta";
+
+						pushGtmEvent({
+							event: "screening_question",
+							pagePath: "/createForm",
+							source,
+							step: "confirm",
+							...(state.surveyId && { survey_id: String(state.surveyId) }),
+							screening_condition: selected,
+						});
+
 						goNextScreening();
 					}
 				},
