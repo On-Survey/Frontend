@@ -13,16 +13,23 @@ import { getUserInfo } from "../service/user";
 type UserContextValue = {
 	userInfo: createUserResponse | null;
 	fetchUserInfo: () => Promise<void>;
+	isLoading: boolean;
 };
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
 	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchUserInfo = useCallback(async () => {
-		const userInfoResult = await getUserInfo();
-		setUserInfo(userInfoResult);
+		try {
+			setIsLoading(true);
+			const userInfoResult = await getUserInfo();
+			setUserInfo(userInfoResult);
+		} finally {
+			setIsLoading(false);
+		}
 	}, []);
 
 	useEffect(() => {
@@ -33,8 +40,9 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 		() => ({
 			userInfo,
 			fetchUserInfo,
+			isLoading,
 		}),
-		[userInfo, fetchUserInfo],
+		[userInfo, fetchUserInfo, isLoading],
 	);
 
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

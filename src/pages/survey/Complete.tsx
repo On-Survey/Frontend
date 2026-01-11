@@ -9,7 +9,7 @@ import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { issuePromotion } from "../../service/promotion";
 
 export const SurveyComplete = () => {
-	const { userInfo } = useUserInfo();
+	const { userInfo, isLoading: isUserInfoLoading } = useUserInfo();
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -28,7 +28,9 @@ export const SurveyComplete = () => {
 
 	// 사용자 정보 가져오기 및 토스포인트 지급
 	useEffect(() => {
+		if (isUserInfoLoading) return;
 		if (!userInfo) return;
+
 		const fetchUserAndIssuePromotion = async () => {
 			try {
 				setUserName(userInfo?.result.name);
@@ -71,7 +73,7 @@ export const SurveyComplete = () => {
 		};
 
 		void fetchUserAndIssuePromotion();
-	}, [state.surveyId, surveyIdFromState, userInfo]);
+	}, [state.surveyId, surveyIdFromState, userInfo, isUserInfoLoading]);
 
 	useBackEventListener(() => {
 		navigate("/home", { replace: true });
