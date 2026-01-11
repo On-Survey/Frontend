@@ -33,7 +33,13 @@ export const SurveyComplete = () => {
 			try {
 				setUserName(userInfo?.result.name);
 				const surveyId = state.surveyId || surveyIdFromState;
-				if (surveyId) {
+				if (!surveyId) return;
+
+				// 재시도 로직
+				const MAX_RETRIES = 5;
+				const RETRY_DELAY = 1000; // 1초
+
+				for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
 					try {
 						await issuePromotion({ surveyId });
 						queryClient.invalidateQueries({ queryKey: ["globalStats"] });
@@ -41,9 +47,22 @@ export const SurveyComplete = () => {
 						queryClient.refetchQueries({ queryKey: ["recommendedSurveys"] });
 						queryClient.refetchQueries({ queryKey: ["impendingSurveys"] });
 						queryClient.refetchQueries({ queryKey: ["ongoingSurveysList"] });
-						console.log("토스포인트 지급 완료");
+						console.log(
+							`토스포인트 지급 완료 (시도 ${attempt}/${MAX_RETRIES})`,
+						);
+						return;
 					} catch (error) {
-						console.error("토스포인트 지급 실패:", error);
+						console.error(
+							`토스포인트 지급 실패 (시도 ${attempt}/${MAX_RETRIES}):`,
+							error,
+						);
+
+						if (attempt < MAX_RETRIES) {
+							await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+							continue;
+						}
+
+						console.error("토스포인트 지급 모든 재시도 실패");
 					}
 				}
 			} catch (error) {
