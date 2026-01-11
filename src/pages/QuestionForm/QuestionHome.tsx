@@ -32,15 +32,25 @@ export const QuestionHome = () => {
 	const hasSentQuestionEvent = useRef(false);
 
 	const locationState = location.state as
-		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| {
+				source?: "main_cta" | "mysurvey_button" | "mysurvey_edit";
+				surveyId?: number;
+		  }
 		| undefined;
 
 	useEffect(() => {
 		if (hasSentQuestionEvent.current) return;
 
-		hasSentQuestionEvent.current = true;
 		const source = locationState?.source ?? "main_cta";
-		const status = state.surveyId ? "editing" : "draft";
+
+		const status =
+			source === "main_cta" || source === "mysurvey_button"
+				? "draft"
+				: "editing";
+
+		const surveyId = locationState?.surveyId ?? state.surveyId;
+
+		hasSentQuestionEvent.current = true;
 
 		pushGtmEvent({
 			event: "survey_create_question",
@@ -48,9 +58,14 @@ export const QuestionHome = () => {
 			source,
 			step: "question",
 			status,
-			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			...(surveyId && { survey_id: String(surveyId) }),
 		});
-	}, [locationState?.source, state.surveyId]);
+	}, [
+		locationState?.source,
+		locationState?.surveyId,
+		state.surveyId,
+		locationState,
+	]);
 
 	const {
 		isOpen: isConfirmDialogOpen,

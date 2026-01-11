@@ -7,6 +7,9 @@ export interface createUserResponse {
 		coin: number;
 		promotionPoint: number;
 		isOnboardingCompleted: boolean;
+		residence?: string;
+		age?: string;
+		gender?: string;
 	};
 	success: boolean;
 }

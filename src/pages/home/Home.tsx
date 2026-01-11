@@ -35,6 +35,26 @@ export const Home = () => {
 		}
 	}, [userInfo, navigate]);
 
+	// 자동 로그인 완료 시 이벤트 로깅
+	useEffect(() => {
+		// 사용자 속성 로깅
+		const logUserProperties = async () => {
+			try {
+				pushGtmEvent({
+					event: "user_info",
+					login_method: "toss",
+					user_region: userInfo?.result.residence ?? "",
+					user_age: userInfo?.result.age ?? "",
+					user_gender: userInfo?.result.gender ?? "",
+				});
+			} catch (error) {
+				console.error("사용자 속성 로깅 실패:", error);
+			}
+		};
+
+		void logUserProperties();
+	}, [userInfo]);
+
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
 	const handleViewAllRecommended = () =>

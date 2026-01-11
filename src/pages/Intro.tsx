@@ -3,6 +3,7 @@ import { colors } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, StepperRow, Top } from "@toss/tds-mobile";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserInfo } from "../contexts/UserContext";
 import { loginApi } from "../service/login";
 import { getMemberInfo } from "../service/userInfo/api";
 import { pushGtmEvent } from "../utils/gtm";
@@ -10,15 +11,20 @@ import { saveTokens } from "../utils/tokenManager";
 
 export const Intro = () => {
 	const navigate = useNavigate();
+	const { userInfo } = useUserInfo();
 
 	// 이전에 로그인한 사용자인지 확인
 	useEffect(() => {
 		const checkAuth = async () => {
 			try {
 				const memberInfo = await getMemberInfo();
+
 				// isOnboardingCompleted 상태에 따라 분기
 				if (memberInfo.isOnboardingCompleted) {
-					navigate("/home", { replace: true });
+					navigate("/home", {
+						replace: true,
+						state: { isAutoLogin: true },
+					});
 				} else {
 					navigate("/onboarding", { replace: true });
 				}
@@ -40,11 +46,18 @@ export const Intro = () => {
 					loginApiResponse.refreshToken,
 				);
 
-				pushGtmEvent({
-					event: "login",
-					pagePath: "/intro",
-					Method: "로그인 수단 (Toss)",
-				});
+				// 로그인 완료 시 사용자 속성 로깅
+				try {
+					pushGtmEvent({
+						event: "user_info",
+						login_method: "toss",
+						user_region: userInfo?.result.residence ?? "",
+						user_age: userInfo?.result.age ?? "",
+						user_gender: userInfo?.result.gender ?? "",
+					});
+				} catch (error) {
+					console.error("사용자 속성 로깅 실패:", error);
+				}
 
 				if (loginApiResponse.onboardingCompleted) {
 					navigate("/home", { replace: true });
