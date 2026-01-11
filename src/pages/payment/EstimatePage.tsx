@@ -158,7 +158,7 @@ export const EstimatePage = () => {
 			...(ageGroup && { age_group: ageGroup }),
 			...(gender && { gender }),
 			region,
-			price_coin: priceCoin,
+			price_coin: String(priceCoin),
 			source,
 		});
 
@@ -170,8 +170,8 @@ export const EstimatePage = () => {
 				...(state.surveyId && { survey_id: String(state.surveyId) }),
 				step: "decision",
 				result: "coin_insufficient",
-				required_coin: totalPrice,
-				owned_coin: ownedCoin,
+				required_coin: String(totalPrice),
+				owned_coin: String(ownedCoin),
 				source,
 				entry_type: entryType,
 			});
@@ -181,8 +181,8 @@ export const EstimatePage = () => {
 				pagePath: "/createForm",
 				...(state.surveyId && { survey_id: String(state.surveyId) }),
 				step: "view",
-				required_coin: totalPrice,
-				owned_coin: ownedCoin,
+				required_coin: String(totalPrice),
+				owned_coin: String(ownedCoin),
 				source,
 				entry_type: entryType,
 			});
@@ -199,8 +199,8 @@ export const EstimatePage = () => {
 							...(state.surveyId && { survey_id: String(state.surveyId) }),
 							step: "decision",
 							result: "registered",
-							required_coin: totalPrice,
-							owned_coin: ownedCoin,
+							required_coin: String(totalPrice),
+							owned_coin: String(ownedCoin),
 							source,
 							entry_type: entryType,
 						});
@@ -210,8 +210,8 @@ export const EstimatePage = () => {
 							event: "purchase",
 							pagePath: "/createForm",
 							...(state.surveyId && { survey_id: String(state.surveyId) }),
-							value: totalPrice,
-							price: totalPrice,
+							value: String(totalPrice),
+							price: String(totalPrice),
 							item_name: "설문 등록",
 							entry_type: "settlement",
 							source,

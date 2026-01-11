@@ -88,7 +88,7 @@ export const useSurveyNavigation = ({
 			pagePath: window.location.pathname,
 			survey_id: String(surveyId),
 			source,
-			progress_percent: progressPercent,
+			progress_percent: String(progressPercent),
 		});
 	}, [
 		isCurrentQuestionType,
@@ -126,7 +126,7 @@ export const useSurveyNavigation = ({
 		const prevRoute = getQuestionTypeRoute(prevQuestion.type);
 		navigate(prevRoute, {
 			state: {
-				surveyId,
+				surveyId: String(surveyId),
 				questions: allQuestions,
 				currentQuestionIndex: initialQuestionIndex - 1,
 				answers,
@@ -176,7 +176,7 @@ export const useSurveyNavigation = ({
 			const nextRoute = getQuestionTypeRoute(nextQuestion.type);
 			navigate(nextRoute, {
 				state: {
-					surveyId,
+					surveyId: String(surveyId),
 					questions: allQuestions,
 					currentQuestionIndex: initialQuestionIndex + 1,
 					answers,

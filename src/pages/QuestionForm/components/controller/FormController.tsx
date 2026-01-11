@@ -122,7 +122,7 @@ export const FormController = ({
 			step: "question",
 			status,
 			...(state.surveyId && { survey_id: String(state.surveyId) }),
-			question_count: questionCount,
+			question_count: String(questionCount),
 		});
 
 		saveQuestions(
@@ -194,7 +194,7 @@ export const FormController = ({
 			source,
 			step: "confirm",
 			...(state.surveyId && { survey_id: String(state.surveyId) }),
-			question_count: questionCount,
+			question_count: String(questionCount),
 		});
 
 		setSurveyStep(2);

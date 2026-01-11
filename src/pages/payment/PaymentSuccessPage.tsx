@@ -40,8 +40,8 @@ export const PaymentSuccessPage = () => {
 			pagePath: "/createForm",
 			...(state.surveyId && { survey_id: String(state.surveyId) }),
 			step: "complete",
-			used_coin: usedCoin,
-			remaining_coin: remainingCoin,
+			used_coin: String(usedCoin),
+			remaining_coin: String(remainingCoin),
 			source,
 			entry_type: entryType,
 		});

@@ -78,7 +78,7 @@ export const ShortAnswerPage = () => {
 							status,
 							...(state.surveyId && { survey_id: String(state.surveyId) }),
 							question_type: "short_text",
-							question_index: questionIndex,
+							question_index: String(questionIndex),
 						});
 
 						navigate(-1);

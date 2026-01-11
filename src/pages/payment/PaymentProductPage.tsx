@@ -151,7 +151,7 @@ export const PaymentProductPage = () => {
 			step: "view",
 			source,
 			entry_type: entryType,
-			owned_coin: ownedCoin,
+			owned_coin: String(ownedCoin),
 		});
 	}, [
 		userInfo,

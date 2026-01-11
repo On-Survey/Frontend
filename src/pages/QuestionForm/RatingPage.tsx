@@ -136,7 +136,7 @@ export const RatingPage = () => {
 							status,
 							...(state.surveyId && { survey_id: String(state.surveyId) }),
 							question_type: "rating",
-							question_index: questionIndex,
+							question_index: String(questionIndex),
 						});
 
 						navigate(-1);

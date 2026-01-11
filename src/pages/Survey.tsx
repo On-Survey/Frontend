@@ -67,10 +67,10 @@ export const Survey = () => {
 		pushGtmEvent({
 			event: "survey_start",
 			pagePath: "/survey",
-			survey_id: surveyId,
+			survey_id: String(surveyId),
 			source,
-			progress_percent: 0,
-			...(quizId && { quiz_id: quizId }),
+			progress_percent: "0",
+			...(quizId && { quiz_id: String(quizId) }),
 		});
 	}, [surveyId, locationState?.source, locationState?.quiz_id]);
 

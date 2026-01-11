@@ -138,7 +138,7 @@ export const MultipleChoiceMain = () => {
 							status,
 							...(state.surveyId && { survey_id: String(state.surveyId) }),
 							question_type: "single_choice",
-							question_index: questionIndex,
+							question_index: String(questionIndex),
 						});
 
 						navigate(-1);

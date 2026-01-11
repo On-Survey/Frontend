@@ -81,7 +81,7 @@ export const OxScreening = () => {
 				pushGtmEvent({
 					event: "complete_screening_quiz",
 					pagePath: "/screening",
-					quiz_id: currentQuestion.screeningId,
+					quiz_id: String(currentQuestion.screeningId),
 					result: "pass",
 				});
 			} catch (err) {
@@ -114,13 +114,22 @@ export const OxScreening = () => {
 				};
 
 				navigate(`/survey?surveyId=${nextSurveyId}`, {
-					state: { surveyId: String(nextSurveyId), survey },
+					state: {
+						surveyId: String(nextSurveyId),
+						survey,
+						source: "quiz" as const,
+						quiz_id: String(currentQuestion?.screeningId),
+					},
 				});
 			} catch (err) {
 				console.error("설문 데이터 조회 실패:", err);
 				// 실패하면 surveyId 전달
 				navigate(`/survey?surveyId=${nextSurveyId}`, {
-					state: { surveyId: String(nextSurveyId) },
+					state: {
+						surveyId: String(nextSurveyId),
+						source: "quiz" as const,
+						quiz_id: String(currentQuestion?.screeningId),
+					},
 				});
 			}
 		} else {
@@ -138,7 +147,7 @@ export const OxScreening = () => {
 				pushGtmEvent({
 					event: "complete_screening_quiz",
 					pagePath: "/screening",
-					quiz_id: currentQuestion.screeningId,
+					quiz_id: String(currentQuestion.screeningId),
 					result: "fail",
 				});
 			} catch (err) {
@@ -155,8 +164,8 @@ export const OxScreening = () => {
 				pushGtmEvent({
 					event: "redirect_to_another_quiz",
 					pagePath: "/screening",
-					from_quiz_id: currentQuestion.screeningId,
-					to_quiz_id: nextQuestion.screeningId,
+					from_quiz_id: String(currentQuestion.screeningId),
+					to_quiz_id: String(nextQuestion.screeningId),
 					reason: "screening_fail",
 				});
 			}
@@ -324,7 +333,7 @@ export const OxScreening = () => {
 					pushGtmEvent({
 						event: "answer_screening_quiz",
 						pagePath: "/screening",
-						quiz_id: currentQuestion.screeningId,
+						quiz_id: String(currentQuestion.screeningId),
 					});
 
 					if (selectedOption === currentQuestion.answer) {
@@ -332,8 +341,8 @@ export const OxScreening = () => {
 							pushGtmEvent({
 								event: "unlock_survey",
 								pagePath: "/screening",
-								quiz_id: currentQuestion.screeningId,
-								survey_id: nextSurveyId,
+								quiz_id: String(currentQuestion.screeningId),
+								survey_id: String(nextSurveyId),
 								source: "screening_quiz",
 							});
 						}
