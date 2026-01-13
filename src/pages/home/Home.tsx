@@ -26,9 +26,9 @@ export const Home = () => {
 
 	const { data: globalStats } = useGlobalStats();
 	const { data: result, error: ongoingSurveysError } = useOngoingSurveys();
-	// 3천대 랜덤 숫자 생성 (3000~3999)
+
 	const [randomCount] = useState(() => {
-		const random = Math.floor(Math.random() * 1000) + 3000;
+		const random = Math.floor(Math.random() * 100) + 1;
 		return random.toLocaleString();
 	});
 
