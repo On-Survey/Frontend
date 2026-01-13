@@ -1,7 +1,7 @@
 import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
@@ -26,6 +26,11 @@ export const Home = () => {
 
 	const { data: globalStats } = useGlobalStats();
 	const { data: result, error: ongoingSurveysError } = useOngoingSurveys();
+	// 3천대 랜덤 숫자 생성 (3000~3999)
+	const [randomCount] = useState(() => {
+		const random = Math.floor(Math.random() * 1000) + 3000;
+		return random.toLocaleString();
+	});
 
 	// 온보딩 미완료 시 온보딩 페이지로 리다이렉트
 	useEffect(() => {
@@ -132,8 +137,8 @@ export const Home = () => {
 				onConfirm={handleConfirmDialogConfirm}
 			/>
 			<div className="flex flex-col w-full min-h-screen">
-				<div className="px-4 py-6">
-					<div className="w-full h-fit bg-[var(--adaptiveCardBgGrey)] rounded-[24px] p-4 backdrop-blur-none">
+				<div className="p-4">
+					<div className="w-full h-fit rounded-[24px] p-4 backdrop-blur-none flex items-center gap-2 bg-gray-100">
 						<Asset.Image
 							frameShape={Asset.frameShape.CleanW24}
 							backgroundColor="transparent"
@@ -142,21 +147,16 @@ export const Home = () => {
 							style={{ aspectRatio: "1/1" }}
 						/>
 						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
-							현재{" "}
+							현재
 						</Text>
 						<Text
 							color={adaptive.green400}
 							typography="t6"
 							fontWeight="semibold"
 						>
-							3,400명{" "}
+							{randomCount}명
 						</Text>
-						<Text
-							display="block"
-							color={adaptive.grey800}
-							typography="t6"
-							fontWeight="medium"
-						>
+						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
 							이 설문을 보고 있어요
 						</Text>
 					</div>
