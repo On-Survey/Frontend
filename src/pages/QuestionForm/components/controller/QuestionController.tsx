@@ -52,7 +52,10 @@ export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 
 	const handleQuestionTypeClick = (questionType: string) => {
 		const source = locationState?.source ?? "main_cta";
-		const status = state.surveyId ? "editing" : "draft";
+		const status =
+			source === "main_cta" || source === "mysurvey_button"
+				? "draft"
+				: "editing";
 		const questionTypeForEvent = getQuestionTypeForEvent(questionType);
 
 		pushGtmEvent({

@@ -7,4 +7,7 @@ export interface MemberInfo {
 	coin: number;
 	promotionPoint: number;
 	isOnboardingCompleted: boolean;
+	residence?: string;
+	age?: string;
+	gender?: string;
 }

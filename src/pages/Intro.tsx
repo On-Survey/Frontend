@@ -16,9 +16,13 @@ export const Intro = () => {
 		const checkAuth = async () => {
 			try {
 				const memberInfo = await getMemberInfo();
+
 				// isOnboardingCompleted 상태에 따라 분기
 				if (memberInfo.isOnboardingCompleted) {
-					navigate("/home", { replace: true });
+					navigate("/home", {
+						replace: true,
+						state: { isAutoLogin: true },
+					});
 				} else {
 					navigate("/onboarding", { replace: true });
 				}
@@ -31,6 +35,11 @@ export const Intro = () => {
 	}, [navigate]);
 
 	const handleLogin = async () => {
+		pushGtmEvent({
+			event: "login",
+			pagePath: "/intro",
+			method: "로그인 수단 (Toss)",
+		});
 		try {
 			const { authorizationCode, referrer } = await appLogin();
 			const loginApiResponse = await loginApi(authorizationCode, referrer);
@@ -39,12 +48,6 @@ export const Intro = () => {
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
-
-				pushGtmEvent({
-					event: "login",
-					pagePath: "/intro",
-					Method: "로그인 수단 (Toss)",
-				});
 
 				if (loginApiResponse.onboardingCompleted) {
 					navigate("/home", { replace: true });

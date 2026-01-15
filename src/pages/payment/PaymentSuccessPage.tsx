@@ -45,6 +45,23 @@ export const PaymentSuccessPage = () => {
 			source,
 			entry_type: entryType,
 		});
+
+		// 구매 전환 시 사용자 속성 로깅
+		const logUserProperties = async () => {
+			try {
+				pushGtmEvent({
+					event: "user_info",
+					login_method: "",
+					user_region: userInfo?.result.residence ?? "",
+					user_age: userInfo?.result.age ?? "",
+					user_gender: userInfo?.result.gender ?? "",
+				});
+			} catch (error) {
+				console.error("구매 시 사용자 속성 로깅 실패:", error);
+			}
+		};
+
+		void logUserProperties();
 	}, [
 		isChargeFlow,
 		locationState?.source,
@@ -52,6 +69,9 @@ export const PaymentSuccessPage = () => {
 		state.screening?.enabled,
 		totalPrice,
 		userInfo?.result.coin,
+		userInfo?.result.residence,
+		userInfo?.result.age,
+		userInfo?.result.gender,
 	]);
 
 	const handleNavigate = () => {

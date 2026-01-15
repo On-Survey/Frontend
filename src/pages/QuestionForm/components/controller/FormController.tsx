@@ -36,7 +36,10 @@ export const FormController = ({
 	const location = useLocation();
 
 	const locationState = location.state as
-		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| {
+				source?: "main_cta" | "mysurvey_button" | "mysurvey_edit";
+				surveyId?: number;
+		  }
 		| undefined;
 
 	const {
@@ -104,16 +107,18 @@ export const FormController = ({
 			});
 			return;
 		}
-		const surveyId = state.surveyId ?? 0;
+		const source = locationState?.source ?? "main_cta";
+		const status =
+			source === "main_cta" || source === "mysurvey_button"
+				? "draft"
+				: "editing";
+		const surveyId = locationState?.surveyId ?? state.surveyId ?? 0;
+		const questionCount = state.survey.question.length;
+
 		const serverQuestions = convertQuestionsToServerFormat(
 			state.survey.question,
 			surveyId,
 		);
-
-		// 임시 저장 버튼 클릭 시 survey_draft_save 이벤트 전송
-		const source = locationState?.source ?? "main_cta";
-		const status = state.surveyId ? "editing" : "draft";
-		const questionCount = state.survey.question.length;
 
 		pushGtmEvent({
 			event: "survey_draft_save",
@@ -121,7 +126,7 @@ export const FormController = ({
 			source,
 			step: "question",
 			status,
-			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			...(surveyId && { survey_id: String(surveyId) }),
 			question_count: String(questionCount),
 		});
 
@@ -167,7 +172,10 @@ export const FormController = ({
 		}
 		if (isReorderMode && onReorderModeChange) {
 			const source = locationState?.source ?? "main_cta";
-			const status = state.surveyId ? "editing" : "draft";
+			const status =
+				source === "main_cta" || source === "mysurvey_button"
+					? "draft"
+					: "editing";
 
 			pushGtmEvent({
 				event: "survey_question_reorder",

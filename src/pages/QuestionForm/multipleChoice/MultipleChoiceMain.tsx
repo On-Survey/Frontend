@@ -127,7 +127,10 @@ export const MultipleChoiceMain = () => {
 						}
 
 						const source = locationState?.source ?? "main_cta";
-						const status = state.surveyId ? "editing" : "draft";
+						const status =
+							source === "main_cta" || source === "mysurvey_button"
+								? "draft"
+								: "editing";
 						const questionIndex = (question?.questionOrder ?? 0) + 1;
 
 						pushGtmEvent({
