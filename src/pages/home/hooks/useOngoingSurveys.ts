@@ -5,5 +5,6 @@ export const useOngoingSurveys = () => {
 	return useQuery({
 		queryKey: ["ongoingSurveys"],
 		queryFn: () => getOngoingSurveys(),
+		refetchOnMount: "always",
 	});
 };

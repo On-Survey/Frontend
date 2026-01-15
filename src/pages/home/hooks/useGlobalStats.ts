@@ -5,5 +5,6 @@ export const useGlobalStats = () => {
 	return useQuery({
 		queryKey: ["globalStats"],
 		queryFn: () => getGlobalStats(),
+		refetchOnMount: "always",
 	});
 };

@@ -19,7 +19,6 @@ export const useUserSurveys = () => {
 
 	const { draftSurveys, activeSurveys, closedSurveys } = useMemo(() => {
 		const userSurveys = resultObj?.infoList ?? [];
-		const now = new Date();
 
 		const draftStatuses = new Set(["DRAFT", "WRITING"]);
 		const drafts: DraftSurvey[] = userSurveys
@@ -30,16 +29,9 @@ export const useUserSurveys = () => {
 				description: survey.description,
 			}));
 
+		const activeStatuses = new Set(["ONGOING", "ACTIVE"]);
 		const active: ActiveSurvey[] = userSurveys
-			.filter((survey) => {
-				if (survey.status === "ONGOING") return true;
-				if (survey.status === "ACTIVE") {
-					if (!survey.deadLine) return false;
-					const deadline = new Date(survey.deadLine);
-					return deadline > now;
-				}
-				return false;
-			})
+			.filter((survey) => activeStatuses.has(survey.status))
 			.map((survey) => ({
 				id: survey.surveyId,
 				title: survey.title,
