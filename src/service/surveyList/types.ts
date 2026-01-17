@@ -14,6 +14,7 @@ export interface OngoingSurveySummary {
 	interest?: InterestId;
 	interests?: InterestId[];
 	deadline?: string;
+	isFree?: boolean;
 }
 
 export interface OngoingSurveyResult {

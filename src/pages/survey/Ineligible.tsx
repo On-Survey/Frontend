@@ -45,6 +45,7 @@ export const Ineligible = () => {
 						description: survey.description,
 						remainingTimeText: remainingTime,
 						isClosed: remainingTime === "마감됨",
+						isFree: survey.isFree,
 					};
 				};
 

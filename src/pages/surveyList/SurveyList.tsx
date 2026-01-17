@@ -88,6 +88,7 @@ export const SurveyListPage = () => {
 				iconSrc,
 				iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
 				description: survey.description,
+				isFree: survey.isFree,
 			};
 		};
 
