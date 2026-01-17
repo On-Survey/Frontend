@@ -255,7 +255,9 @@ export const Survey = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								참여 보상 : 200원
+								{surveyInfo?.isFree
+									? "참여보상이 없는 설문이에요"
+									: "참여 보상 : 200원"}
 							</Text>
 							<div className="h-2" />
 							<Text
