@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -8,13 +9,22 @@ import {
 	StepperRow,
 	Top,
 } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { useCreateSurveyInterests } from "../../pages/QuestionForm/hooks/useQuestionMutations";
+import { useCreateFreeForm } from "../../pages/QuestionForm/hooks/useSurveyMutation";
 
 export const FreeRegistrationNotice = () => {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+	const { state } = useSurvey();
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const createFreeFormMutation = useCreateFreeForm();
+	const createSurveyInterestsMutation = useCreateSurveyInterests();
 
 	useBackEventListener(() => {
 		navigate(-1);
@@ -28,10 +38,54 @@ export const FreeRegistrationNotice = () => {
 		setIsBottomSheetOpen(false);
 	};
 
-	const handleConfirm = () => {
-		// TODO: 무료 등록 로직 구현
+	// 무료 설문 등록 기본값 (deadline만 전송, 나머지는 백엔드에서 기본값으로 처리)
+	const freeFormPayload = useMemo(() => {
+		if (!state.surveyId) return null;
+
+		// 기본값: 30일 후 마감일 설정
+		const deadline = new Date();
+		deadline.setDate(deadline.getDate() + 30);
+
+		return {
+			surveyId: state.surveyId,
+			deadline: deadline.toISOString(),
+		};
+	}, [state.surveyId]);
+
+	const handleConfirm = async () => {
+		if (!freeFormPayload || !state.surveyId) {
+			console.error("설문 정보가 없습니다");
+			return;
+		}
+
+		setIsLoading(true);
 		setIsBottomSheetOpen(false);
-		console.log("무료 등록 확인");
+
+		try {
+			// 무료 폼 생성
+			await createFreeFormMutation.mutateAsync(freeFormPayload);
+
+			// 관심사가 설정되어 있으면 반영
+			if (state.topics.length > 0) {
+				const interests = state.topics.map((topic) => topic.value);
+				await createSurveyInterestsMutation.mutateAsync({
+					surveyId: state.surveyId,
+					interests,
+				});
+			}
+
+			// 설문 리스트 갱신
+			queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
+			queryClient.invalidateQueries({ queryKey: ["memberInfo"] });
+
+			// 성공 페이지로 이동
+			navigate("/payment/success");
+		} catch (error) {
+			console.error("무료 설문 등록 실패:", error);
+			// 에러 처리 (토스트 메시지 등)
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -124,8 +178,9 @@ export const FreeRegistrationNotice = () => {
 				/>
 			</div>
 			<FixedBottomCTA
-				loading={false}
+				loading={isLoading}
 				onClick={handleFreeRegistration}
+				disabled={isLoading || !state.surveyId}
 				style={
 					{ "--button-background-color": "#15c67f" } as React.CSSProperties
 				}

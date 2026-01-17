@@ -15,6 +15,7 @@ interface UseSurveyNavigationState {
 	questions?: TransformedSurveyQuestion[];
 	currentQuestionIndex?: number;
 	answers?: Record<number, string>;
+	isFree?: boolean;
 }
 
 interface UseSurveyNavigationOptions {
@@ -117,7 +118,10 @@ export const useSurveyNavigation = ({
 				await completeSurvey(surveyId);
 				navigate("/survey/complete", {
 					replace: true,
-					state: { surveyId },
+					state: {
+						surveyId,
+						isFree: locationState?.isFree,
+					},
 				});
 				return;
 			}

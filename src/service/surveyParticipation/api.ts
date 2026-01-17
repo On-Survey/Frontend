@@ -24,6 +24,7 @@ export const getSurveyParticipation = async (
 	description: string;
 	interests: string[];
 	deadline: string;
+	isFree?: boolean;
 }> => {
 	const result = await apiCall<SurveyParticipationInfo>({
 		method: "GET",
@@ -70,6 +71,7 @@ export const getSurveyParticipation = async (
 		description: result.description,
 		interests: result.interests,
 		deadline: result.deadline,
+		isFree: result.isFree,
 	};
 };
 

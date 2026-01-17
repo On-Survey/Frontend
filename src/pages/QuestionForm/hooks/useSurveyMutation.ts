@@ -1,8 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
-import { createForm, createSurvey, patchSurvey } from "../api/api";
+import {
+	createForm,
+	createFreeForm,
+	createSurvey,
+	patchSurvey,
+} from "../api/api";
 import type {
 	CreateFormRequest,
 	CreateFormResponse,
+	CreateFreeFormRequest,
 	CreateSurveyResponse,
 	PatchSurveyRequest,
 	PatchSurveyResponse,
@@ -33,6 +39,20 @@ export const useCreateForm = () => {
 	>({
 		mutationFn: ({ surveyId, ...formPayload }) =>
 			createForm({ surveyId, ...formPayload }),
+	});
+};
+
+/**
+ * 무료 폼 생성 mutation
+ */
+export const useCreateFreeForm = () => {
+	return useMutation<
+		CreateFormResponse,
+		Error,
+		CreateFreeFormRequest & { surveyId: number }
+	>({
+		mutationFn: ({ surveyId, ...formPayload }) =>
+			createFreeForm({ surveyId, ...formPayload }),
 	});
 };
 

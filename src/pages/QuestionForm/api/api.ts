@@ -3,6 +3,7 @@ import { api } from "../../../service/axios";
 import type {
 	CreateFormRequest,
 	CreateFormResponse,
+	CreateFreeFormRequest,
 	CreateScreeningsResponse,
 	CreateSurveyInterestsResponse,
 	CreateSurveyQuestionResponse,
@@ -70,6 +71,19 @@ export const createForm = async ({
 }: CreateFormRequest & { surveyId: number }): Promise<CreateFormResponse> => {
 	const { data } = await api.patch<CreateFormResponse, CreateFormRequest>(
 		`/v1/survey-form/surveys/${surveyId}`,
+		formPayload,
+	);
+	return data;
+};
+
+export const createFreeForm = async ({
+	surveyId,
+	...formPayload
+}: CreateFreeFormRequest & {
+	surveyId: number;
+}): Promise<CreateFormResponse> => {
+	const { data } = await api.patch<CreateFormResponse, CreateFreeFormRequest>(
+		`/v1/survey-form/surveys/${surveyId}/free`,
 		formPayload,
 	);
 	return data;
