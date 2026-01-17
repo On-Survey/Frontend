@@ -78,8 +78,8 @@ export const FreeRegistrationNotice = () => {
 			queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
 			queryClient.invalidateQueries({ queryKey: ["memberInfo"] });
 
-			// 성공 페이지로 이동
-			navigate("/payment/success");
+			// PaymentLoading으로 이동 (무료 설문임을 표시)
+			navigate("/payment/loading", { state: { isFree: true } });
 		} catch (error) {
 			console.error("무료 설문 등록 실패:", error);
 			// 에러 처리 (토스트 메시지 등)

@@ -18,6 +18,7 @@ import { UserProvider } from "./contexts/UserContext";
 import {
 	DatePage,
 	EstimatePage,
+	FreeRegistrationNotice,
 	Home,
 	Intro,
 	LocationSelectPage,
@@ -29,6 +30,7 @@ import {
 	NPSPage,
 	NumberPage,
 	Onboarding,
+	PaymentLoading,
 	PaymentMain,
 	QuestionListPage,
 	QuestionOptionsPage,
@@ -222,6 +224,14 @@ export const App = () => {
 											element={<EstimateNavigationPage />}
 										/>
 										<Route path="/payment/charge" element={<PaymentMain />} />
+										<Route
+											path="/payment/free-registration-notice"
+											element={<FreeRegistrationNotice />}
+										/>
+										<Route
+											path="/payment/loading"
+											element={<PaymentLoading />}
+										/>
 										<Route
 											path="/createForm/multipleChoice"
 											element={<MultipleChoicePage />}
