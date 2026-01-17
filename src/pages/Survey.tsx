@@ -104,7 +104,6 @@ export const Survey = () => {
 					const status = error.response.status;
 
 					if (status === 401) {
-						// 인증 실패 - 로그인 페이지로 이동
 						setErrorDialog({
 							open: true,
 							title: "로그인이 필요합니다",
@@ -198,9 +197,10 @@ export const Survey = () => {
 	};
 
 	const handleErrorDialogConfirm = () => {
-		setErrorDialog({ open: false, title: "" });
-		if (errorDialog.redirectTo) {
-			navigate(errorDialog.redirectTo, { replace: true });
+		const redirectTo = errorDialog.redirectTo;
+		setErrorDialog({ open: false, title: "", redirectTo: undefined });
+		if (redirectTo) {
+			navigate(redirectTo, { replace: true });
 		}
 	};
 
