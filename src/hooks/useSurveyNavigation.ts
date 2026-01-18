@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import {
 	completeSurvey,
+	sendSurveyHeartbeat,
 	submitSurveyParticipation,
 } from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
@@ -56,6 +57,50 @@ export const useSurveyNavigation = ({
 		totalQuestions > 0 ? (initialQuestionIndex + 1) / totalQuestions : 0;
 
 	const progressEventSentRef = useRef<string>("");
+	const lastInteractionTimeRef = useRef<number | null>(null);
+	const hasInteractedRef = useRef<boolean>(false);
+
+	// Heartbeat: 설문 진입 후 60초 안에 인터랙션이 있으면 true로 전송
+	useEffect(() => {
+		if (!isCurrentQuestionType || !surveyId) return;
+
+		const handleUserInteraction = () => {
+			hasInteractedRef.current = true;
+			lastInteractionTimeRef.current = Date.now();
+		};
+
+		const events = ["click", "keydown", "mousemove", "scroll", "touchstart"];
+		events.forEach((event) => {
+			window.addEventListener(event, handleUserInteraction, { passive: true });
+		});
+
+		const heartbeatInterval = setInterval(async () => {
+			if (!hasInteractedRef.current || !lastInteractionTimeRef.current) {
+				return;
+			}
+
+			const now = Date.now();
+			const timeSinceLastInteraction = now - lastInteractionTimeRef.current;
+
+			if (timeSinceLastInteraction <= 60000) {
+				try {
+					await sendSurveyHeartbeat(surveyId);
+				} catch (error) {
+					console.error("Heartbeat 전송 실패:", error);
+				}
+			}
+		}, 60000);
+
+		hasInteractedRef.current = false;
+		lastInteractionTimeRef.current = null;
+
+		return () => {
+			clearInterval(heartbeatInterval);
+			events.forEach((event) => {
+				window.removeEventListener(event, handleUserInteraction);
+			});
+		};
+	}, [isCurrentQuestionType, surveyId]);
 
 	useEffect(() => {
 		if (!isCurrentQuestionType || !surveyId) return;

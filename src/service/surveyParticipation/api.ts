@@ -7,7 +7,8 @@ import {
 	type ScreeningResponse,
 	type SubmitScreeningResponsePayload,
 	type SubmitSurveyParticipationPayload,
-	type SurveyParticipationInfo,
+	type SurveyInfo,
+	type SurveyQuestionsInfo,
 	type TransformedSurveyQuestion,
 } from "./types";
 
@@ -15,20 +16,44 @@ export interface GetSurveyParticipationParams {
 	surveyId: number;
 }
 
-//설문에 대한 응답 생성
-export const getSurveyParticipation = async (
+// 설문 정보 조회 (responseCount 포함)
+export const getSurveyInfo = async (
 	params: GetSurveyParticipationParams,
 ): Promise<{
-	info: TransformedSurveyQuestion[];
+	surveyId: number;
 	title: string;
 	description: string;
 	interests: string[];
 	deadline: string;
 	isFree?: boolean;
+	responseCount: number;
 }> => {
-	const result = await apiCall<SurveyParticipationInfo>({
+	const result = await apiCall<SurveyInfo>({
 		method: "GET",
-		url: "/v1/survey-participation/surveys",
+		url: "/v1/survey-participation/surveys/info",
+		params,
+	});
+
+	return {
+		surveyId: result.surveyId,
+		title: result.title,
+		description: result.description,
+		interests: result.interests,
+		deadline: result.deadline,
+		isFree: result.isFree,
+		responseCount: result.responseCount,
+	};
+};
+
+// 설문 문항 정보 조회
+export const getSurveyQuestions = async (
+	params: GetSurveyParticipationParams,
+): Promise<{
+	info: TransformedSurveyQuestion[];
+}> => {
+	const result = await apiCall<SurveyQuestionsInfo>({
+		method: "GET",
+		url: "/v1/survey-participation/surveys/questions",
 		params,
 	});
 
@@ -67,11 +92,34 @@ export const getSurveyParticipation = async (
 
 	return {
 		info: transformed,
-		title: result.title,
-		description: result.description,
-		interests: result.interests,
-		deadline: result.deadline,
-		isFree: result.isFree,
+	};
+};
+
+// 설문 정보와 문항 정보를 함께 조회 (하위 호환성 유지)
+export const getSurveyParticipation = async (
+	params: GetSurveyParticipationParams,
+): Promise<{
+	info: TransformedSurveyQuestion[];
+	title: string;
+	description: string;
+	interests: string[];
+	deadline: string;
+	isFree?: boolean;
+	responseCount?: number;
+}> => {
+	const [surveyInfo, questionsInfo] = await Promise.all([
+		getSurveyInfo(params),
+		getSurveyQuestions(params),
+	]);
+
+	return {
+		info: questionsInfo.info,
+		title: surveyInfo.title,
+		description: surveyInfo.description,
+		interests: surveyInfo.interests,
+		deadline: surveyInfo.deadline,
+		isFree: surveyInfo.isFree,
+		responseCount: surveyInfo.responseCount,
 	};
 };
 
@@ -123,4 +171,15 @@ export const completeSurvey = async (surveyId: number): Promise<boolean> => {
 		`/v1/survey-participation/surveys/${surveyId}/complete`,
 	);
 	return data.result ?? false;
+};
+
+// 설문 heartbeat
+export const sendSurveyHeartbeat = async (
+	surveyId: number,
+): Promise<boolean> => {
+	const result = await apiCall<boolean>({
+		method: "POST",
+		url: `/v1/survey-participation/surveys/${surveyId}/heartbeat`,
+	});
+	return result;
 };
