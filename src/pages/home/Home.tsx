@@ -15,6 +15,7 @@ import { useBackEventListener } from "../../hooks/useBackEventListener";
 import type { OngoingSurveySummary } from "../../service/surveyList/types";
 import type { SurveyListItem } from "../../types/surveyList";
 import { formatRemainingTime } from "../../utils/FormatDate";
+import { pushGtmEvent } from "../../utils/gtm";
 import { getUniqueSurveyIdsFromArrays } from "../../utils/surveyListUtils";
 import { useGlobalStats } from "./hooks/useGlobalStats";
 import { useOngoingSurveys } from "./hooks/useOngoingSurveys";
@@ -39,13 +40,38 @@ export const Home = () => {
 		}
 	}, [userInfo, navigate]);
 
+	// 자동 로그인 완료 시 이벤트 로깅
+	useEffect(() => {
+		pushGtmEvent({
+			event: "login",
+			pagePath: "/home",
+			method: "로그인 수단 (Toss)",
+		});
+
+		// pushGtmEvent({
+		// 	event: "user_info",
+		// 	login_method: "toss",
+		// 	user_region: userInfo?.result.residence ?? "",
+		// 	user_age: userInfo?.result.age ?? "",
+		// 	user_gender: userInfo?.result.gender ?? "",
+		// });
+	}, []);
+
 	const handleMySurvey = () => navigate("/mysurvey");
 	const handleMyPage = () => navigate("/mypage");
 	const handleViewAllRecommended = () =>
 		navigate("/surveyList?type=recommended");
 	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
-	const handleCreateSurvey = () => navigate("/createFormStart");
-	const handleQuizClick = () => navigate("/oxScreening");
+	const handleCreateSurvey = () =>
+		navigate("/createFormStart", { state: { source: "main_cta" } });
+	const handleQuizClick = () => {
+		pushGtmEvent({
+			event: "start_screening_quiz",
+			// pagePath: "/home",
+			source: "메인에서 진입(main)",
+		});
+		navigate("/oxScreening");
+	};
 
 	const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 

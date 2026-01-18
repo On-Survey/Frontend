@@ -1,15 +1,78 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text } from "@toss/tds-mobile";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
+import { useSurvey } from "../../contexts/SurveyContext";
+import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 
 export const PaymentSuccessPage = () => {
 	const { resetScreening, resetSurvey, resetPayment } = useMultiStep();
+	const { state } = useSurvey();
+	const { totalPrice } = usePaymentEstimate();
+	const { userInfo } = useUserInfo();
+	const hasSentEvent = useRef(false);
 
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isChargeFlow = location.pathname === "/payment/charge";
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
+	useEffect(() => {
+		if (hasSentEvent.current || isChargeFlow) return;
+
+		hasSentEvent.current = true;
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening?.enabled
+			? "screening_complete"
+			: "screening_skip";
+		const usedCoin = totalPrice;
+		const remainingCoin = userInfo?.result.coin ?? 0;
+
+		pushGtmEvent({
+			event: "survey_register_success",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "complete",
+			used_coin: String(usedCoin),
+			remaining_coin: String(remainingCoin),
+			source,
+			entry_type: entryType,
+		});
+
+		// 구매 전환 시 사용자 속성 로깅
+		const logUserProperties = async () => {
+			try {
+				pushGtmEvent({
+					event: "user_info",
+					login_method: "",
+					user_region: userInfo?.result.residence ?? "",
+					user_age: userInfo?.result.age ?? "",
+					user_gender: userInfo?.result.gender ?? "",
+				});
+			} catch (error) {
+				console.error("구매 시 사용자 속성 로깅 실패:", error);
+			}
+		};
+
+		void logUserProperties();
+	}, [
+		isChargeFlow,
+		locationState?.source,
+		state.surveyId,
+		state.screening?.enabled,
+		totalPrice,
+		userInfo?.result.coin,
+		userInfo?.result.residence,
+		userInfo?.result.age,
+		userInfo?.result.gender,
+	]);
 
 	const handleNavigate = () => {
 		const target = isChargeFlow ? "/mypage" : "/mysurvey";

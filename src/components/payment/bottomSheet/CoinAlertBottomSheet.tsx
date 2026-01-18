@@ -1,5 +1,8 @@
 import { Asset, BottomSheet, Button } from "@toss/tds-mobile";
+import { useLocation } from "react-router-dom";
 import { useMultiStep } from "../../../contexts/MultiStepContext";
+import { useSurvey } from "../../../contexts/SurveyContext";
+import { pushGtmEvent } from "../../../utils/gtm";
 
 interface CoinAlertBottomSheetProps {
 	isOpen: boolean;
@@ -11,8 +14,48 @@ export const CoinAlertBottomSheet = ({
 	handleClose,
 }: CoinAlertBottomSheetProps) => {
 	const { goNextPayment } = useMultiStep();
+	const { state } = useSurvey();
+	const location = useLocation();
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
+	const handleCloseClick = () => {
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "coin_charge_prompt_action",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "decision",
+			action: "close",
+			source,
+			entry_type: entryType,
+		});
+
+		handleClose();
+	};
 
 	const handleNextPayment = () => {
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "coin_charge_prompt_action",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "decision",
+			action: "charge",
+			source,
+			entry_type: entryType,
+		});
+
 		goNextPayment();
 		handleClose();
 	};
@@ -30,7 +73,7 @@ export const CoinAlertBottomSheet = ({
 			cta={
 				<BottomSheet.DoubleCTA
 					leftButton={
-						<Button color="dark" variant="weak" onClick={handleClose}>
+						<Button color="dark" variant="weak" onClick={handleCloseClick}>
 							닫기
 						</Button>
 					}

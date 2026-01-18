@@ -11,27 +11,35 @@ import {
 	Top,
 	useToast,
 } from "@toss/tds-mobile";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { queryClient } from "../../contexts/queryClient";
+import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { createPayment } from "../../service/payments";
 import { type createUserResponse, getUserInfo } from "../../service/user";
+import { pushGtmEvent } from "../../utils/gtm";
 import { calculateRequiredCoinAmount } from "../../utils/paymentCalculator";
 
 export const PaymentProductPage = () => {
 	const { goNextPayment, goPrevPayment, setPaymentStep } = useMultiStep();
 	const { selectedCoinAmount, handleSelectedCoinAmountChange, totalPrice } =
 		usePaymentEstimate();
+	const { state } = useSurvey();
 	const { openToast } = useToast();
 	const location = useLocation();
 	const navigate = useNavigate();
 	const isChargeFlow = location.pathname === "/payment/charge";
+	const hasSentEvent = useRef(false);
 
 	const [products, setProducts] = useState<IapProductListItem[]>([]);
 	const [userInfo, setUserInfo] = useState<createUserResponse | null>(null);
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
 
 	const displayAmount = useMemo(() => {
 		if (!userInfo) {
@@ -134,6 +142,33 @@ export const PaymentProductPage = () => {
 
 		fetchProducts();
 	}, []);
+
+	useEffect(() => {
+		if (hasSentEvent.current || !userInfo || isChargeFlow) return;
+
+		hasSentEvent.current = true;
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+		const ownedCoin = userInfo.result.coin;
+
+		pushGtmEvent({
+			event: "coin_charge",
+			pagePath: "/createForm",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			step: "view",
+			source,
+			entry_type: entryType,
+			owned_coin: String(ownedCoin),
+		});
+	}, [
+		userInfo,
+		isChargeFlow,
+		locationState?.source,
+		state.surveyId,
+		state.screening.enabled,
+	]);
 
 	useBackEventListener(() => {
 		if (isChargeFlow) {
@@ -282,9 +317,7 @@ export const PaymentProductPage = () => {
 				disabled={!selectedCoinAmount}
 				loading={false}
 				onClick={handleNext}
-				style={
-					{ "--button-background-color": "#15c67f" } as React.CSSProperties
-				}
+				style={{ "--button-background-color": "#15c67f" } as any}
 			>
 				다음
 			</FixedBottomCTA>

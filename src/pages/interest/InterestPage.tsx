@@ -1,16 +1,44 @@
 import { adaptive, colors } from "@toss/tds-colors";
 import { Checkbox, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { topics } from "../../constants/topics";
 import { useMultiStep } from "../../contexts/MultiStepContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
+import { pushGtmEvent } from "../../utils/gtm";
 import { useCreateSurveyInterests } from "../QuestionForm/hooks/useQuestionMutations";
 
 export const InterestPage = () => {
 	const { setSurveyStep } = useMultiStep();
 	const { state, addTopic, removeTopic } = useSurvey();
 	const { mutate: createSurveyInterests } = useCreateSurveyInterests();
+	const location = useLocation();
 	const selectedTopics = state.topics;
+	const hasSentEvent = useRef(false);
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
+	useEffect(() => {
+		if (hasSentEvent.current) return;
+
+		hasSentEvent.current = true;
+		const source = locationState?.source ?? "main_cta";
+		const entryType = state.screening.enabled
+			? "screening_complete"
+			: "screening_skip";
+
+		pushGtmEvent({
+			event: "survey_interest",
+			pagePath: "/createForm",
+			step: "view",
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			source,
+			entry_type: entryType,
+		});
+	}, [locationState?.source, state.surveyId, state.screening.enabled]);
 
 	const handleTopicToggle = (topicId: string) => {
 		const topic = topics.find((t) => t.id === topicId);
@@ -44,6 +72,24 @@ export const InterestPage = () => {
 			{
 				onSuccess: (response) => {
 					if (response.success) {
+						const source = locationState?.source ?? "main_cta";
+						const entryType = state.screening.enabled
+							? "screening_complete"
+							: "screening_skip";
+
+						// 각 interest마다 개별 이벤트 전송
+						interests.forEach((interest) => {
+							pushGtmEvent({
+								event: "survey_interest",
+								pagePath: "/createForm",
+								step: "confirm",
+								...(state.surveyId && { survey_id: String(state.surveyId) }),
+								source,
+								entry_type: entryType,
+								interest_selected: interest,
+							});
+						});
+
 						setSurveyStep(4);
 					}
 				},

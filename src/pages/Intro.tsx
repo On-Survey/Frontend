@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../service/login";
 import { getMemberInfo } from "../service/userInfo/api";
+import { pushGtmEvent } from "../utils/gtm";
 import { saveTokens } from "../utils/tokenManager";
 
 export const Intro = () => {
@@ -15,9 +16,13 @@ export const Intro = () => {
 		const checkAuth = async () => {
 			try {
 				const memberInfo = await getMemberInfo();
+
 				// isOnboardingCompleted 상태에 따라 분기
 				if (memberInfo.isOnboardingCompleted) {
-					navigate("/home", { replace: true });
+					navigate("/home", {
+						replace: true,
+						state: { isAutoLogin: true },
+					});
 				} else {
 					navigate("/onboarding", { replace: true });
 				}
@@ -30,6 +35,11 @@ export const Intro = () => {
 	}, [navigate]);
 
 	const handleLogin = async () => {
+		pushGtmEvent({
+			event: "login",
+			pagePath: "/intro",
+			method: "로그인 수단 (Toss)",
+		});
 		try {
 			const { authorizationCode, referrer } = await appLogin();
 			const loginApiResponse = await loginApi(authorizationCode, referrer);
@@ -38,7 +48,7 @@ export const Intro = () => {
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
-				// 로그인 API 응답에 onboardingCompleted가 포함되어 있음
+
 				if (loginApiResponse.onboardingCompleted) {
 					navigate("/home", { replace: true });
 				} else {

@@ -3,6 +3,7 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, Text, useToast } from "@toss/tds-mobile";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
 	BUTTON_STYLES,
 	ICON_PROPS,
@@ -12,6 +13,7 @@ import {
 import { useSurvey } from "../../../../contexts/SurveyContext";
 import { useModal } from "../../../../hooks/UseToggle";
 import type { QuestionType } from "../../../../types/survey";
+import { pushGtmEvent } from "../../../../utils/gtm";
 import { QuestionTitleBottomSheet } from "../bottomSheet/QuestionTitleBottomSheet";
 
 interface QuestionControllerProps {
@@ -19,10 +21,29 @@ interface QuestionControllerProps {
 }
 export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 	const { isOpen, handleOpen, handleClose } = useModal();
+	const location = useLocation();
 	const { state } = useSurvey();
 	const { openToast } = useToast();
 	const [selectedQuestionType, setSelectedQuestionType] =
 		useState<QuestionType | null>(null);
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
+	// question_type 매핑 (코드 타입 -> 이벤트 타입)
+	const getQuestionTypeForEvent = (type: string): string => {
+		const typeMap: Record<string, string> = {
+			multipleChoice: "single_choice",
+			shortAnswer: "short_text",
+			nps: "nps",
+			rating: "rating",
+			longAnswer: "long_text",
+			number: "number",
+			date: "date",
+		};
+		return typeMap[type] ?? type;
+	};
 
 	const handlePrevious = () => {
 		generateHapticFeedback({ type: "tap" });
@@ -30,6 +51,23 @@ export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
 	};
 
 	const handleQuestionTypeClick = (questionType: string) => {
+		const source = locationState?.source ?? "main_cta";
+		const status =
+			source === "main_cta" || source === "mysurvey_button"
+				? "draft"
+				: "editing";
+		const questionTypeForEvent = getQuestionTypeForEvent(questionType);
+
+		pushGtmEvent({
+			event: "survey_question_type_click",
+			pagePath: "/createForm",
+			source,
+			step: "question",
+			status,
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			question_type: questionTypeForEvent,
+		});
+
 		if (state.survey.question.length >= 15) {
 			openToast("문항은 최대 15개까지 생성이 가능해요.", {
 				type: "bottom",
