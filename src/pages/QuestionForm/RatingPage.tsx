@@ -1,4 +1,3 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -9,18 +8,18 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useModal } from "../../hooks/UseToggle";
 import { pushGtmEvent } from "../../utils/gtm";
 import { formatQuestionNumber } from "../../utils/questionFactory";
 import { RatingLabelEditBottomSheet } from "./components/bottomSheet/RatingLabelEditBottomSheete";
+import { useQuestionBackHandler } from "./hooks/useQuestionBackHandler";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
 export const RatingPage = () => {
-	const { state, updateQuestion, deleteQuestion } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -42,18 +41,7 @@ export const RatingPage = () => {
 	const maxValue = question?.maxValue ?? "내용 입력하기";
 	const ratingCount = question?.rate ?? 10;
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				if (!questionIdFromUrl && questionId) {
-					deleteQuestion(questionId);
-				}
-				navigate(-1);
-			},
-		});
-
-		return unsubscription;
-	}, [navigate, questionIdFromUrl, questionId, deleteQuestion]);
+	useQuestionBackHandler({ questionId, questionIdFromUrl });
 
 	const {
 		isOpen: isMinValueEditOpen,

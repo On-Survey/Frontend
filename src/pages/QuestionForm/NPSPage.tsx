@@ -1,4 +1,3 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	FixedBottomCTA,
@@ -8,16 +7,17 @@ import {
 	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { pushGtmEvent } from "../../utils/gtm";
 import { formatQuestionNumber } from "../../utils/questionFactory";
+import { useQuestionBackHandler } from "./hooks/useQuestionBackHandler";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
 export const NPSPage = () => {
-	const { state, updateQuestion, deleteQuestion } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -37,18 +37,7 @@ export const NPSPage = () => {
 		description,
 	} = useQuestionByType("nps");
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				if (!questionIdFromUrl && questionId) {
-					deleteQuestion(questionId);
-				}
-				navigate(-1);
-			},
-		});
-
-		return unsubscription;
-	}, [navigate, questionIdFromUrl, questionId, deleteQuestion]);
+	useQuestionBackHandler({ questionId, questionIdFromUrl });
 
 	const handleRequiredChange = (checked: boolean) => {
 		if (questionId) {

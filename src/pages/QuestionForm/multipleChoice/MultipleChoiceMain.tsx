@@ -1,4 +1,3 @@
-import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -9,7 +8,6 @@ import {
 	ListRow,
 	Switch,
 } from "@toss/tds-mobile";
-import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useSurvey } from "../../../contexts/SurveyContext";
@@ -18,11 +16,12 @@ import { pushGtmEvent } from "../../../utils/gtm";
 import { CreateMultiChoiceBottomSheet } from "../components/bottomSheet/CreateMultiChoiceBottomSheet";
 import { QuestionSelectionBottomSheet } from "../components/bottomSheet/QuestionSelectionBottomSheet";
 import { SelectionLimitBottomSheet } from "../components/bottomSheet/SelectionLimitBottomSheet";
+import { useQuestionBackHandler } from "../hooks/useQuestionBackHandler";
 import { useQuestionByType } from "../hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "../hooks/useQuestionMutations";
 
 export const MultipleChoiceMain = () => {
-	const { state, updateQuestion, deleteQuestion } = useSurvey();
+	const { state, updateQuestion } = useSurvey();
 	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
 
 	const location = useLocation();
@@ -44,18 +43,7 @@ export const MultipleChoiceMain = () => {
 	const maxChoice = question?.maxChoice;
 	const options = question?.option ?? [];
 
-	useEffect(() => {
-		const unsubscription = graniteEvent.addEventListener("backEvent", {
-			onEvent: () => {
-				if (options.length === 0 && questionId) {
-					deleteQuestion(questionId);
-				}
-				navigate(-1);
-			},
-		});
-
-		return unsubscription;
-	}, [navigate, options.length, questionId, deleteQuestion]);
+	useQuestionBackHandler({ questionId, questionIdFromUrl });
 
 	const { isOpen, handleOpen, handleClose } = useModal(false);
 
