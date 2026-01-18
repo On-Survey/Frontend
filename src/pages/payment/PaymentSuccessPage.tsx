@@ -8,6 +8,7 @@ import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { pushGtmEvent } from "../../utils/gtm";
+import { sendUserInfoEvent } from "../../utils/userInfoEvent";
 
 export const PaymentSuccessPage = () => {
 	const { resetScreening, resetSurvey, resetPayment } = useMultiStep();
@@ -46,22 +47,8 @@ export const PaymentSuccessPage = () => {
 			entry_type: entryType,
 		});
 
-		// 구매 전환 시 사용자 속성 로깅
-		const logUserProperties = async () => {
-			try {
-				pushGtmEvent({
-					event: "user_info",
-					login_method: "",
-					user_region: userInfo?.result.residence ?? "",
-					user_age: userInfo?.result.age ?? "",
-					user_gender: userInfo?.result.gender ?? "",
-				});
-			} catch (error) {
-				console.error("구매 시 사용자 속성 로깅 실패:", error);
-			}
-		};
-
-		void logUserProperties();
+		// 구매 전환 시 user_info 이벤트 전송
+		void sendUserInfoEvent("Toss");
 	}, [
 		isChargeFlow,
 		locationState?.source,
@@ -69,9 +56,6 @@ export const PaymentSuccessPage = () => {
 		state.screening?.enabled,
 		totalPrice,
 		userInfo?.result.coin,
-		userInfo?.result.residence,
-		userInfo?.result.age,
-		userInfo?.result.gender,
 	]);
 
 	const handleNavigate = () => {

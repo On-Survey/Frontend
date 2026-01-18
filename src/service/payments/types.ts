@@ -18,3 +18,15 @@ export interface PaymentHistoryResponse {
 	result: PaymentHistoryItem[];
 	success: boolean;
 }
+
+export interface PaymentStats {
+	totalCount: number;
+	totalAmount: number;
+}
+
+export interface PaymentStatsResponse {
+	code: number;
+	message: string;
+	result: PaymentStats;
+	success: boolean;
+}
