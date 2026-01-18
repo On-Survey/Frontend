@@ -1,3 +1,4 @@
+import { graniteEvent } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import {
 	FixedBottomCTA,
@@ -6,6 +7,7 @@ import {
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { pushGtmEvent } from "../../utils/gtm";
@@ -14,7 +16,7 @@ import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
 export const DatePage = () => {
-	const { state, updateQuestion } = useSurvey();
+	const { state, updateQuestion, deleteQuestion } = useSurvey();
 	const { mutate: createSurveyQuestion } = useCreateSurveyQuestion();
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -33,6 +35,19 @@ export const DatePage = () => {
 	} = useQuestionByType("date");
 
 	const date = question?.date;
+
+	useEffect(() => {
+		const unsubscription = graniteEvent.addEventListener("backEvent", {
+			onEvent: () => {
+				if (!questionIdFromUrl && questionId) {
+					deleteQuestion(questionId);
+				}
+				navigate(-1);
+			},
+		});
+
+		return unsubscription;
+	}, [navigate, questionIdFromUrl, questionId, deleteQuestion]);
 
 	const handleDateChange = (newDate: Date) => {
 		if (questionId) {
