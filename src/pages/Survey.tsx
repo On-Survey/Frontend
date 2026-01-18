@@ -16,6 +16,7 @@ import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
 import { pushGtmEvent } from "../utils/gtm";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
+import { getRefreshToken } from "../utils/tokenManager";
 
 export const Survey = () => {
 	const navigate = useNavigate();
@@ -119,20 +120,29 @@ export const Survey = () => {
 				}
 
 				// HTTP 상태 코드별 분기 처리
-				const error = err as { response?: { status: number } };
+				const error = err as {
+					response?: { status: number };
+					code?: string;
+				};
+
+				// CORS 에러나 네트워크 에러로 인해 response가 없을 수 있음
+				// ERR_NETWORK이면서 토큰이 없는 경우는 인증 문제로 간주
+				const isNetworkError = error.code === "ERR_NETWORK";
+				const is401Error = error.response?.status === 401;
+
+				if (is401Error || (isNetworkError && !(await getRefreshToken()))) {
+					// 인증 실패 - 로그인 페이지로 이동
+					setErrorDialog({
+						open: true,
+						title: "로그인이 필요합니다",
+						description: "로그인 후 이용해주세요",
+						redirectTo: "/",
+					});
+					return;
+				}
+
 				if (error.response) {
 					const status = error.response.status;
-
-					if (status === 401) {
-						// 인증 실패 - 로그인 페이지로 이동
-						setErrorDialog({
-							open: true,
-							title: "로그인이 필요합니다",
-							description: "로그인 후 이용해주세요",
-							redirectTo: "/intro",
-						});
-						return;
-					}
 
 					if (status === 403) {
 						// 권한 없음 - 메인 페이지로 이동
