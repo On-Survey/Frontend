@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { pushGtmEvent } from "../../utils/gtm";
 import { formatQuestionNumber } from "../../utils/questionFactory";
+import { useQuestionBackHandler } from "./hooks/useQuestionBackHandler";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
@@ -33,6 +34,8 @@ export const DatePage = () => {
 	} = useQuestionByType("date");
 
 	const date = question?.date;
+
+	useQuestionBackHandler({ questionId, questionIdFromUrl });
 
 	const handleDateChange = (newDate: Date) => {
 		if (questionId) {
