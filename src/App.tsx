@@ -32,6 +32,7 @@ import {
 	Onboarding,
 	PaymentLoading,
 	PaymentMain,
+	PaymentSuccessPage,
 	QuestionListPage,
 	QuestionOptionsPage,
 	QuestionTitleAndDescriptionEditPage,
@@ -231,6 +232,10 @@ export const App = () => {
 										<Route
 											path="/payment/loading"
 											element={<PaymentLoading />}
+										/>
+										<Route
+											path="/payment/success"
+											element={<PaymentSuccessPage />}
 										/>
 										<Route
 											path="/createForm/multipleChoice"
