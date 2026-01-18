@@ -2,14 +2,17 @@ import { appLogin } from "@apps-in-toss/web-framework";
 import { colors } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, StepperRow, Top } from "@toss/tds-mobile";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loginApi } from "../service/login";
 import { getMemberInfo } from "../service/userInfo/api";
+import type { LocationStateWithReturnTo } from "../types/navigation";
 import { pushGtmEvent } from "../utils/gtm";
 import { saveTokens } from "../utils/tokenManager";
 
 export const Intro = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
+	const returnTo = (location.state as LocationStateWithReturnTo)?.returnTo;
 
 	// 이전에 로그인한 사용자인지 확인
 	useEffect(() => {
@@ -19,12 +22,24 @@ export const Intro = () => {
 
 				// isOnboardingCompleted 상태에 따라 분기
 				if (memberInfo.isOnboardingCompleted) {
-					navigate("/home", {
-						replace: true,
-						state: { isAutoLogin: true },
-					});
+					// 원래 페이지로 돌아가거나 홈으로 이동
+					if (returnTo) {
+						navigate(returnTo.path, {
+							replace: true,
+							state: returnTo.state,
+						});
+					} else {
+						navigate("/home", {
+							replace: true,
+							state: { isAutoLogin: true },
+						});
+					}
 				} else {
-					navigate("/onboarding", { replace: true });
+					// 온보딩으로 이동 (returnTo 정보 전달)
+					navigate("/onboarding", {
+						replace: true,
+						state: returnTo ? { returnTo } : undefined,
+					});
 				}
 			} catch (error) {
 				// 인증 실패 (토큰 없거나 만료 등) 시에는 로그인 페이지 유지
@@ -32,7 +47,7 @@ export const Intro = () => {
 			}
 		};
 		checkAuth();
-	}, [navigate]);
+	}, [navigate, returnTo]);
 
 	const handleLogin = async () => {
 		pushGtmEvent({
@@ -50,9 +65,21 @@ export const Intro = () => {
 				);
 
 				if (loginApiResponse.onboardingCompleted) {
-					navigate("/home", { replace: true });
+					// 온보딩 완료된 유저 - 원래 페이지로 돌아가거나 홈으로 이동
+					if (returnTo) {
+						navigate(returnTo.path, {
+							replace: true,
+							state: returnTo.state,
+						});
+					} else {
+						navigate("/home", { replace: true });
+					}
 				} else {
-					navigate("/onboarding");
+					// 온보딩 미완료 - 온보딩으로 이동 (returnTo 정보 전달)
+					navigate("/onboarding", {
+						replace: true,
+						state: returnTo ? { returnTo } : undefined,
+					});
 				}
 			}
 		} catch (error) {

@@ -12,6 +12,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
+import type { ReturnTo } from "../types/navigation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
 import { pushGtmEvent } from "../utils/gtm";
@@ -51,6 +52,7 @@ export const Survey = () => {
 		title: string;
 		description?: string;
 		redirectTo?: string;
+		returnTo?: ReturnTo;
 	}>({
 		open: false,
 		title: "",
@@ -137,6 +139,17 @@ export const Survey = () => {
 						title: "로그인이 필요합니다",
 						description: "로그인 후 이용해주세요",
 						redirectTo: "/",
+						returnTo: surveyId
+							? {
+									path: "/survey",
+									state: {
+										surveyId,
+										survey: surveyFromState,
+										source: locationState?.source ?? "main",
+										quiz_id: locationState?.quiz_id,
+									},
+								}
+							: undefined,
 					});
 					return;
 				}
@@ -166,7 +179,12 @@ export const Survey = () => {
 		return () => {
 			isMounted = false;
 		};
-	}, [surveyId]);
+	}, [
+		surveyId,
+		surveyFromState,
+		locationState?.source,
+		locationState?.quiz_id,
+	]);
 
 	const sortedQuestions = useMemo(
 		() =>
@@ -231,7 +249,12 @@ export const Survey = () => {
 	const handleErrorDialogConfirm = () => {
 		setErrorDialog({ open: false, title: "" });
 		if (errorDialog.redirectTo) {
-			navigate(errorDialog.redirectTo, { replace: true });
+			navigate(errorDialog.redirectTo, {
+				replace: true,
+				state: errorDialog.returnTo
+					? { returnTo: errorDialog.returnTo }
+					: undefined,
+			});
 		}
 	};
 
