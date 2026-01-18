@@ -7,6 +7,7 @@ import { loginApi } from "../service/login";
 import { getMemberInfo } from "../service/userInfo/api";
 import { pushGtmEvent } from "../utils/gtm";
 import { saveTokens } from "../utils/tokenManager";
+import { sendUserInfoEvent } from "../utils/userInfoEvent";
 
 export const Intro = () => {
 	const navigate = useNavigate();
@@ -16,6 +17,9 @@ export const Intro = () => {
 		const checkAuth = async () => {
 			try {
 				const memberInfo = await getMemberInfo();
+
+				// 자동 로그인 완료 시 user_info 이벤트 전송
+				void sendUserInfoEvent("Toss");
 
 				// isOnboardingCompleted 상태에 따라 분기
 				if (memberInfo.isOnboardingCompleted) {
@@ -48,6 +52,7 @@ export const Intro = () => {
 					loginApiResponse.accessToken,
 					loginApiResponse.refreshToken,
 				);
+				void sendUserInfoEvent("Toss");
 
 				if (loginApiResponse.onboardingCompleted) {
 					navigate("/home", { replace: true });
