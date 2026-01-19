@@ -14,6 +14,7 @@ import { useModal } from "../../hooks/UseToggle";
 import { pushGtmEvent } from "../../utils/gtm";
 import { formatQuestionNumber } from "../../utils/questionFactory";
 import { RatingLabelEditBottomSheet } from "./components/bottomSheet/RatingLabelEditBottomSheete";
+import { useQuestionBackHandler } from "./hooks/useQuestionBackHandler";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
@@ -39,6 +40,8 @@ export const RatingPage = () => {
 	const minValue = question?.minValue ?? "내용 입력하기";
 	const maxValue = question?.maxValue ?? "내용 입력하기";
 	const ratingCount = question?.rate ?? 10;
+
+	useQuestionBackHandler({ questionId, questionIdFromUrl });
 
 	const {
 		isOpen: isMinValueEditOpen,
