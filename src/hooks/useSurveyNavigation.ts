@@ -227,6 +227,7 @@ export const useSurveyNavigation = ({
 					questions: allQuestions,
 					currentQuestionIndex: initialQuestionIndex + 1,
 					answers,
+					isFree: locationState?.isFree,
 					source: locationState?.source,
 				},
 			});

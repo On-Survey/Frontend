@@ -8,6 +8,7 @@ import { useSurvey } from "../../contexts/SurveyContext";
 import { useUserInfo } from "../../contexts/UserContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { issuePromotion } from "../../service/promotion";
+import { getSurveyInfo } from "../../service/surveyParticipation";
 import { pushGtmEvent } from "../../utils/gtm";
 
 export const SurveyComplete = () => {
@@ -28,6 +29,9 @@ export const SurveyComplete = () => {
 		| undefined;
 	const surveyIdFromState = locationState?.surveyId;
 	const isFreeFromState = locationState?.isFree;
+
+	// isFree state 관리
+	const [isFree, setIsFree] = useState<boolean | undefined>(isFreeFromState);
 
 	// surveyId를 context에 설정
 	useEffect(() => {
@@ -55,7 +59,7 @@ export const SurveyComplete = () => {
 		});
 	}, [state.surveyId, surveyIdFromState, locationState?.source]);
 
-	// 사용자 정보 가져오기 및 토스포인트 지급 (무료 설문이 아닌 경우만)
+	// 사용자 정보 가져오기 및 토스포인트 지급
 	useEffect(() => {
 		if (isUserInfoLoading) return;
 		if (!userInfo) return;
@@ -66,13 +70,34 @@ export const SurveyComplete = () => {
 				const surveyId = state.surveyId || surveyIdFromState;
 				if (!surveyId) return;
 
-				// 무료 설문인 경우 프로모션 지급하지 않음 (이미 가져온 isFree 정보 사용)
-				if (isFreeFromState) {
+				let currentIsFree = isFreeFromState;
+				if (currentIsFree === undefined) {
+					try {
+						const surveyInfo = await getSurveyInfo({ surveyId });
+						console.log("설문 정보 조회:", {
+							surveyId,
+							isFree: surveyInfo.isFree,
+						});
+						currentIsFree = surveyInfo.isFree === true;
+						setIsFree(currentIsFree);
+					} catch (error) {
+						console.error("설문 정보 조회 실패:", error);
+						console.log("설문 정보 조회 실패로 프로모션 지급을 건너뜁니다.");
+						setIsFree(false); // 에러 시에도 UI 업데이트
+						return;
+					}
+				} else {
+					console.log("locationState에서 isFree 확인:", {
+						surveyId,
+						isFree: isFreeFromState,
+					});
+					setIsFree(currentIsFree);
+				}
+				if (currentIsFree === true) {
 					console.log("무료 설문이므로 프로모션 지급을 건너뜁니다.");
 					return;
 				}
 
-				// 재시도 로직
 				const MAX_RETRIES = 5;
 				const RETRY_DELAY = 1000; // 1초
 
@@ -149,18 +174,20 @@ export const SurveyComplete = () => {
 			</div>
 
 			<div className="fixed bottom-6 left-0 right-0 flex flex-col gap-2 px-4 pb-4 bg-white">
-				<div className="mb-6 flex items-center gap-2 rounded-[18px] bg-gray-100 px-4 py-3">
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						backgroundColor="transparent"
-						name="icon-loudspeaker"
-						ratio="1/1"
-						aria-hidden={true}
-					/>
-					<Text color={adaptive.grey900} typography="t6">
-						리워드 지급이 지연될 수 있어요
-					</Text>
-				</div>
+				{isFree !== true && (
+					<div className="mb-6 flex items-center gap-2 rounded-[18px] bg-gray-100 px-4 py-3">
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							name="icon-loudspeaker"
+							ratio="1/1"
+							aria-hidden={true}
+						/>
+						<Text color={adaptive.grey900} typography="t6">
+							리워드 지급이 지연될 수 있어요
+						</Text>
+					</div>
+				)}
 				<Button
 					color="primary"
 					display="block"
