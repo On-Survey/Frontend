@@ -50,7 +50,12 @@ export const SurveySingleChoice = () => {
 						{currentQuestion?.title ?? ""}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={<QuestionBadge isRequired={currentQuestion?.isRequired} />}
+				subtitleTop={
+					<QuestionBadge
+						isRequired={currentQuestion?.isRequired}
+						maxChoice={currentQuestion?.maxChoice}
+					/>
+				}
 				subtitleBottom={
 					currentQuestion?.description ? (
 						<Top.SubtitleParagraph size={15}>
