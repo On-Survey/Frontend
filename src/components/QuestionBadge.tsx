@@ -5,15 +5,21 @@ interface QuestionBadgeProps {
 	maxChoice?: number;
 }
 
+type BadgeConfig = {
+	text: string;
+	color: "blue" | "green" | "red" | "teal" | "yellow" | "elephant";
+	variant: "fill" | "weak";
+};
+
 export const QuestionBadge = ({
 	isRequired,
 	maxChoice,
 }: QuestionBadgeProps) => {
-	const badges = [
+	const badges: BadgeConfig[] = [
 		{
 			text: isRequired ? "필수" : "선택",
 			color: isRequired ? "green" : "elephant",
-			variant: "fill" as const,
+			variant: "fill",
 		},
 	];
 
@@ -21,7 +27,7 @@ export const QuestionBadge = ({
 		badges.push({
 			text: `최대 ${maxChoice}개`,
 			color: "green",
-			variant: "weak" as const,
+			variant: "weak",
 		});
 	}
 
