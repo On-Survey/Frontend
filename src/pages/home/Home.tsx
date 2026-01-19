@@ -177,7 +177,7 @@ export const Home = () => {
 							typography="t6"
 							fontWeight="semibold"
 						>
-							{globalStats?.dailyUserCount.toLocaleString() ?? 0}명
+							{globalStats ? globalStats.dailyUserCount.toLocaleString() : 0}명
 						</Text>
 						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
 							이 설문을 보고 있어요

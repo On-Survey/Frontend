@@ -40,6 +40,9 @@ export const SurveySingleChoice = () => {
 		}
 	};
 
+	const hasAnswer = Boolean(answers[currentQuestion.questionId]);
+	const isRequired = currentQuestion.isRequired ?? false;
+
 	return (
 		<div className="flex flex-col w-full h-screen">
 			<ProgressBar size="normal" color={colors.green500} progress={progress} />
@@ -117,7 +120,7 @@ export const SurveySingleChoice = () => {
 					<CTAButton
 						display="block"
 						onClick={handleNext}
-						disabled={submitting}
+						disabled={submitting || (isRequired && !hasAnswer)}
 						loading={submitting}
 						style={
 							{ "--button-background-color": "#15c67f" } as React.CSSProperties
