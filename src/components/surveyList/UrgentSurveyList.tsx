@@ -133,16 +133,14 @@ export const UrgentSurveyList = ({
 							)}
 							{typeof survey.isFree === "boolean" && (
 								<div className="flex items-center gap-1 mb-3">
-									{!survey.isFree && (
-										<Asset.Icon
-											frameShape={Asset.frameShape.CleanW16}
-											backgroundColor="transparent"
-											name="icon-money-bag-point-mono"
-											color={adaptive.grey600}
-											aria-hidden={true}
-											ratio="1/1"
-										/>
-									)}
+									<Asset.Icon
+										frameShape={Asset.frameShape.CleanW16}
+										backgroundColor="transparent"
+										name="icon-money-bag-point-mono"
+										color={adaptive.grey600}
+										aria-hidden={true}
+										ratio="1/1"
+									/>
 									<Text
 										color={adaptive.grey800}
 										typography="t7"

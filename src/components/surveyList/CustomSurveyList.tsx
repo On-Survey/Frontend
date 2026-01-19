@@ -61,9 +61,7 @@ export const CustomSurveyList = ({
 									topProps={{ color: adaptive.green500 }}
 									middle={survey.title}
 									middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
-									bottom={
-										survey.isFree ? "보상이 없어요" : "3분이면 200원 획득"
-									}
+									bottom={survey.isFree ? "보상이 없어요" : "200원 획득"}
 									bottomProps={{ color: adaptive.grey600 }}
 								/>
 							}
