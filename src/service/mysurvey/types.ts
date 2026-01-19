@@ -33,6 +33,7 @@ export interface SurveyQuestionInfo {
 
 export interface SurveyDetailResult {
 	info: SurveyQuestionInfo[];
+	isFree?: boolean;
 }
 
 export interface SurveyDetailResponse extends BaseResponse {

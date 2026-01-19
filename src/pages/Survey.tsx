@@ -44,6 +44,7 @@ export const Survey = () => {
 		topicId?: InterestId;
 		remainingTimeText?: string;
 		isClosed?: boolean;
+		isFree?: boolean;
 	} | null>(null);
 
 	// 에러 다이얼로그 상태
@@ -113,6 +114,7 @@ export const Survey = () => {
 					topicId: (result.interests?.[0] ?? "CAREER") as InterestId,
 					remainingTimeText,
 					isClosed,
+					isFree: result.isFree,
 				});
 			} catch (err) {
 				console.log("err", err);
@@ -241,6 +243,7 @@ export const Survey = () => {
 				questions: sortedQuestions,
 				currentQuestionIndex: 0,
 				answers: {},
+				isFree: surveyInfo?.isFree,
 				source,
 			},
 		});
@@ -309,7 +312,9 @@ export const Survey = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								참여 보상 : 200원
+								{surveyInfo?.isFree
+									? "참여보상이 없는 설문이에요"
+									: "참여 보상 : 200원"}
 							</Text>
 							<div className="h-2" />
 							<Text

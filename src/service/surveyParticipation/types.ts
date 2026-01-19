@@ -86,6 +86,7 @@ export interface SurveyParticipationInfo {
 	interests: string[];
 	deadline: string;
 	info: SurveyParticipationQuestion[];
+	isFree?: boolean;
 }
 
 // 프론트엔드에서 사용하는 변환된 문항 타입

@@ -68,6 +68,7 @@ export interface UserSurvey {
 	createdAt: string;
 	updatedAt: string;
 	memberId?: number;
+	isFree?: boolean;
 }
 
 export interface UserSurveyResponse {

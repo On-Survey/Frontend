@@ -3,6 +3,7 @@ interface BaseSurvey {
 	title: string;
 	description?: string;
 	memberId?: number;
+	isFree?: boolean;
 }
 
 export interface DraftSurvey extends BaseSurvey {}

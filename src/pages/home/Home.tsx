@@ -1,7 +1,7 @@
 import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
@@ -27,6 +27,11 @@ export const Home = () => {
 
 	const { data: globalStats } = useGlobalStats();
 	const { data: result, error: ongoingSurveysError } = useOngoingSurveys();
+
+	const [randomCount] = useState(() => {
+		const random = Math.floor(Math.random() * 100) + 1;
+		return random.toLocaleString();
+	});
 
 	// 온보딩 미완료 시 온보딩 페이지로 리다이렉트
 	useEffect(() => {
@@ -98,6 +103,7 @@ export const Home = () => {
 				description: survey.description,
 				remainingTimeText: remainingTime,
 				isClosed: remainingTime === "마감됨",
+				isFree: survey.isFree,
 			};
 		};
 
@@ -158,16 +164,29 @@ export const Home = () => {
 				onConfirm={handleConfirmDialogConfirm}
 			/>
 			<div className="flex flex-col w-full min-h-screen">
-				<div className="px-4 py-6">
-					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-						지금{" "}
-					</Text>
-					<Text color={adaptive.green400} typography="t5" fontWeight="bold">
-						3,200명
-					</Text>
-					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-						이 설문을 보고 있어요 👀
-					</Text>
+				<div className="p-4">
+					<div className="w-full h-fit rounded-[24px] p-4 backdrop-blur-none flex items-center gap-2 bg-gray-100">
+						<Asset.Image
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							src="https://static.toss.im/2d-emojis/png/4x/u1F440.png"
+							aria-hidden={true}
+							style={{ aspectRatio: "1/1" }}
+						/>
+						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
+							현재
+						</Text>
+						<Text
+							color={adaptive.green400}
+							typography="t6"
+							fontWeight="semibold"
+						>
+							{randomCount}명
+						</Text>
+						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
+							이 설문을 보고 있어요
+						</Text>
+					</div>
 				</div>
 				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden shrink-0 h-[337px]">
 					<div className="absolute inset-0 home-banner-gradient" />

@@ -87,9 +87,20 @@ export const SurveyCard = ({ survey, type, onClick }: SurveyCardProps) => {
 	return (
 		<div className="bg-gray-50 rounded-xl p-4 relative" {...cardProps}>
 			<div className="flex items-start justify-between mb-2">
-				<Badge variant="weak" color={config.color} size="small">
-					{config.label}
-				</Badge>
+				<div className="flex items-center gap-2">
+					<Badge variant="weak" color={config.color} size="small">
+						{config.label}
+					</Badge>
+					{type !== "draft" && typeof survey.isFree === "boolean" && (
+						<Badge
+							variant="weak"
+							color={survey.isFree ? "elephant" : "yellow"}
+							size="small"
+						>
+							{survey.isFree ? "무료" : "유료"}
+						</Badge>
+					)}
+				</div>
 				<button
 					type="button"
 					className="cursor-pointer"

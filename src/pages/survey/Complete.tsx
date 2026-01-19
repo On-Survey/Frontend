@@ -18,13 +18,16 @@ export const SurveyComplete = () => {
 	const { state, setSurveyId } = useSurvey();
 	const [userName, setUserName] = useState<string>("");
 
+	// location state에서 surveyId, isFree, source 가져오기
 	const locationState = location.state as
 		| {
 				surveyId?: number;
+				isFree?: boolean;
 				source?: "main" | "quiz" | "after_complete";
 		  }
 		| undefined;
 	const surveyIdFromState = locationState?.surveyId;
+	const isFreeFromState = locationState?.isFree;
 
 	// surveyId를 context에 설정
 	useEffect(() => {
@@ -52,7 +55,7 @@ export const SurveyComplete = () => {
 		});
 	}, [state.surveyId, surveyIdFromState, locationState?.source]);
 
-	// 사용자 정보 가져오기 및 토스포인트 지급
+	// 사용자 정보 가져오기 및 토스포인트 지급 (무료 설문이 아닌 경우만)
 	useEffect(() => {
 		if (isUserInfoLoading) return;
 		if (!userInfo) return;
@@ -62,6 +65,12 @@ export const SurveyComplete = () => {
 				setUserName(userInfo?.result.name);
 				const surveyId = state.surveyId || surveyIdFromState;
 				if (!surveyId) return;
+
+				// 무료 설문인 경우 프로모션 지급하지 않음 (이미 가져온 isFree 정보 사용)
+				if (isFreeFromState) {
+					console.log("무료 설문이므로 프로모션 지급을 건너뜁니다.");
+					return;
+				}
 
 				// 재시도 로직
 				const MAX_RETRIES = 5;
@@ -99,7 +108,13 @@ export const SurveyComplete = () => {
 		};
 
 		void fetchUserAndIssuePromotion();
-	}, [state.surveyId, surveyIdFromState, userInfo, isUserInfoLoading]);
+	}, [
+		state.surveyId,
+		surveyIdFromState,
+		userInfo,
+		isUserInfoLoading,
+		isFreeFromState,
+	]);
 
 	useBackEventListener(() => {
 		navigate("/home", { replace: true });

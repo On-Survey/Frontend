@@ -27,6 +27,7 @@ export const useUserSurveys = () => {
 				id: survey.surveyId,
 				title: survey.title,
 				description: survey.description,
+				isFree: survey.isFree,
 			}));
 
 		const activeStatuses = new Set(["ONGOING", "ACTIVE"]);
@@ -39,6 +40,7 @@ export const useUserSurveys = () => {
 				deadline: survey.deadLine ?? undefined,
 				progress: survey.currentCount ?? 0,
 				total: survey.dueCount ?? 0,
+				isFree: survey.isFree,
 			}));
 
 		const closed: ClosedSurvey[] = userSurveys
@@ -48,6 +50,7 @@ export const useUserSurveys = () => {
 				title: survey.title,
 				description: survey.description,
 				closedAt: survey.deadLine ?? undefined,
+				isFree: survey.isFree,
 			}));
 
 		return {
