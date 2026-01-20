@@ -1,6 +1,6 @@
 import { adaptive, colors } from "@toss/tds-colors";
 import { Asset, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { queryClient } from "../../contexts/queryClient";
@@ -12,28 +12,30 @@ import { getSurveyInfo } from "../../service/surveyParticipation";
 import { pushGtmEvent } from "../../utils/gtm";
 
 export const SurveyComplete = () => {
-	const { userInfo, isLoading: isUserInfoLoading } = useUserInfo();
+	const {
+		userInfo,
+		isLoading: isUserInfoLoading,
+		fetchUserInfo,
+	} = useUserInfo();
 
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { state, setSurveyId } = useSurvey();
-	const [userName, setUserName] = useState<string>("");
 
-	// location state에서 surveyId, isFree, source 가져오기
 	const locationState = location.state as
 		| {
 				surveyId?: number;
 				isFree?: boolean;
 				source?: "main" | "quiz" | "after_complete";
+				promotionIssued?: boolean;
 		  }
 		| undefined;
 	const surveyIdFromState = locationState?.surveyId;
 	const isFreeFromState = locationState?.isFree;
+	const promotionIssuedFromState = locationState?.promotionIssued;
 
-	// isFree state 관리
 	const [isFree, setIsFree] = useState<boolean | undefined>(isFreeFromState);
 
-	// surveyId를 context에 설정
 	useEffect(() => {
 		if (surveyIdFromState && !state.surveyId) {
 			setSurveyId(surveyIdFromState);
@@ -41,7 +43,9 @@ export const SurveyComplete = () => {
 	}, [surveyIdFromState, state.surveyId, setSurveyId]);
 
 	const hasSentCompleteEvent = useRef(false);
+	const hasIssuedPromotion = useRef(false);
 
+	// 설문 완료 GTM 이벤트 전송
 	useEffect(() => {
 		const surveyId = state.surveyId || surveyIdFromState;
 		if (!surveyId || hasSentCompleteEvent.current) return;
@@ -59,86 +63,122 @@ export const SurveyComplete = () => {
 		});
 	}, [state.surveyId, surveyIdFromState, locationState?.source]);
 
-	// 사용자 정보 가져오기 및 토스포인트 지급
-	useEffect(() => {
-		if (isUserInfoLoading) return;
-		if (!userInfo) return;
+	const checkIfSurveyIsFree = useCallback(
+		async (surveyId: number): Promise<boolean> => {
+			if (isFreeFromState !== undefined) {
+				setIsFree(isFreeFromState);
+				return isFreeFromState === true;
+			}
 
-		const fetchUserAndIssuePromotion = async () => {
 			try {
-				setUserName(userInfo?.result.name);
+				const surveyInfo = await getSurveyInfo({ surveyId });
+				const isSurveyFree = surveyInfo.isFree === true;
+				setIsFree(isSurveyFree);
+				return isSurveyFree;
+			} catch (error) {
+				console.error("설문 정보 조회 실패:", error);
+				setIsFree(false);
+				throw error;
+			}
+		},
+		[isFreeFromState],
+	);
+
+	const issuePromotionWithRetry = useCallback(
+		async (surveyId: number): Promise<void> => {
+			const MAX_RETRIES = 5;
+			const RETRY_DELAY = 1000;
+
+			for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+				try {
+					await issuePromotion({ surveyId });
+					queryClient.invalidateQueries({ queryKey: ["globalStats"] });
+					queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] });
+					queryClient.refetchQueries({ queryKey: ["recommendedSurveys"] });
+					queryClient.refetchQueries({ queryKey: ["impendingSurveys"] });
+					queryClient.refetchQueries({ queryKey: ["ongoingSurveysList"] });
+					console.log(`토스포인트 지급 완료 (시도 ${attempt}/${MAX_RETRIES})`);
+					return;
+				} catch (error) {
+					console.error(
+						`토스포인트 지급 실패 (시도 ${attempt}/${MAX_RETRIES}):`,
+						error,
+					);
+
+					if (attempt < MAX_RETRIES) {
+						await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+						continue;
+					}
+
+					console.error("토스포인트 지급 모든 재시도 실패");
+					throw error;
+				}
+			}
+		},
+		[],
+	);
+
+	// 토스포인트 지급 재시도 처리 (제출 버튼에서 실패한 경우)
+	useEffect(() => {
+		// 이미 처리했거나 조건이 맞지 않으면 종료
+		if (hasIssuedPromotion.current) return;
+
+		// 제출 버튼에서 이미 성공한 경우 재시도 불필요
+		if (promotionIssuedFromState === true) {
+			hasIssuedPromotion.current = true;
+			return;
+		}
+
+		const handlePromotionRetry = async () => {
+			if (hasIssuedPromotion.current) return;
+
+			try {
 				const surveyId = state.surveyId || surveyIdFromState;
 				if (!surveyId) return;
 
-				let currentIsFree = isFreeFromState;
-				if (currentIsFree === undefined) {
-					try {
-						const surveyInfo = await getSurveyInfo({ surveyId });
-						console.log("설문 정보 조회:", {
-							surveyId,
-							isFree: surveyInfo.isFree,
-						});
-						currentIsFree = surveyInfo.isFree === true;
-						setIsFree(currentIsFree);
-					} catch (error) {
-						console.error("설문 정보 조회 실패:", error);
-						console.log("설문 정보 조회 실패로 프로모션 지급을 건너뜁니다.");
-						setIsFree(false); // 에러 시에도 UI 업데이트
-						return;
-					}
-				} else {
-					console.log("locationState에서 isFree 확인:", {
-						surveyId,
-						isFree: isFreeFromState,
-					});
-					setIsFree(currentIsFree);
-				}
-				if (currentIsFree === true) {
+				const isSurveyFree = await checkIfSurveyIsFree(surveyId);
+				if (isSurveyFree) {
 					console.log("무료 설문이므로 프로모션 지급을 건너뜁니다.");
+					hasIssuedPromotion.current = true;
 					return;
 				}
 
-				const MAX_RETRIES = 5;
-				const RETRY_DELAY = 1000; // 1초
-
-				for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+				if (!userInfo && !isUserInfoLoading) {
+					console.log("userInfo가 없어 재호출합니다.");
 					try {
-						await issuePromotion({ surveyId });
-						queryClient.invalidateQueries({ queryKey: ["globalStats"] });
-						queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] });
-						queryClient.refetchQueries({ queryKey: ["recommendedSurveys"] });
-						queryClient.refetchQueries({ queryKey: ["impendingSurveys"] });
-						queryClient.refetchQueries({ queryKey: ["ongoingSurveysList"] });
-						console.log(
-							`토스포인트 지급 완료 (시도 ${attempt}/${MAX_RETRIES})`,
-						);
-						return;
+						await fetchUserInfo();
 					} catch (error) {
-						console.error(
-							`토스포인트 지급 실패 (시도 ${attempt}/${MAX_RETRIES}):`,
-							error,
-						);
-
-						if (attempt < MAX_RETRIES) {
-							await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
-							continue;
-						}
-
-						console.error("토스포인트 지급 모든 재시도 실패");
+						console.error("userInfo 재호출 실패:", error);
 					}
 				}
+
+				console.log(
+					"제출 버튼에서 프로모션 지급 실패, Complete 페이지에서 재시도",
+				);
+				await issuePromotionWithRetry(surveyId);
+				hasIssuedPromotion.current = true;
 			} catch (error) {
-				console.error("사용자 정보 조회 실패:", error);
+				console.error("프로모션 지급 재시도 실패:", error);
+				hasIssuedPromotion.current = true;
 			}
 		};
 
-		void fetchUserAndIssuePromotion();
+		if (
+			!isUserInfoLoading &&
+			(promotionIssuedFromState === false ||
+				promotionIssuedFromState === undefined)
+		) {
+			void handlePromotionRetry();
+		}
 	}, [
 		state.surveyId,
 		surveyIdFromState,
 		userInfo,
 		isUserInfoLoading,
-		isFreeFromState,
+		fetchUserInfo,
+		promotionIssuedFromState,
+		checkIfSurveyIsFree,
+		issuePromotionWithRetry,
 	]);
 
 	useBackEventListener(() => {
@@ -159,7 +199,7 @@ export const SurveyComplete = () => {
 					fontWeight="bold"
 					textAlign="center"
 				>
-					{userName || "회원"}님의 소중한 의견 감사합니다!
+					{userInfo?.result?.name || "회원"}님의 소중한 의견 감사합니다!
 				</Text>
 				<div className="h-6" />
 				<Asset.Icon
@@ -192,7 +232,9 @@ export const SurveyComplete = () => {
 					color="primary"
 					display="block"
 					onClick={() => navigate("/surveyList")}
-					style={{ "--button-background-color": "#15c67f" } as any}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
 				>
 					다른 설문 참여하기
 				</Button>
