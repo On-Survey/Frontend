@@ -89,6 +89,17 @@ export interface SurveyParticipationInfo {
 	isFree?: boolean;
 }
 
+export interface SurveyBasicInfo {
+	surveyId: number;
+	title: string;
+	description: string;
+	deadline: string;
+	interests: string[];
+	responseCount: number;
+	isScreenRequired: boolean;
+	isFree: boolean;
+}
+
 // 프론트엔드에서 사용하는 변환된 문항 타입
 export interface TransformedSurveyQuestion {
 	questionId: number;

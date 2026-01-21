@@ -7,6 +7,7 @@ import {
 	type ScreeningResponse,
 	type SubmitScreeningResponsePayload,
 	type SubmitSurveyParticipationPayload,
+	type SurveyBasicInfo,
 	type SurveyParticipationInfo,
 	type TransformedSurveyQuestion,
 } from "./types";
@@ -73,6 +74,16 @@ export const getSurveyParticipation = async (
 		deadline: result.deadline,
 		isFree: result.isFree,
 	};
+};
+
+export const getSurveyInfo = async (
+	surveyId: number,
+): Promise<SurveyBasicInfo> => {
+	return apiCall<SurveyBasicInfo>({
+		method: "GET",
+		url: "/v1/survey-participation/surveys/info",
+		params: { surveyId },
+	});
 };
 
 //설문에 대한 응답 생성

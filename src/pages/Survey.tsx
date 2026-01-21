@@ -10,6 +10,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
+import { useSurveyInfo } from "../hooks/useSurveyInfo";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
 import type { ReturnTo } from "../types/navigation";
@@ -35,6 +36,11 @@ export const Survey = () => {
 	const surveyIdFromState = locationState?.surveyId ?? surveyFromState?.id;
 	const surveyIdFromQuery = searchParams.get("surveyId");
 	const surveyId = surveyIdFromQuery ?? surveyIdFromState ?? null;
+	const numericSurveyId = useMemo(() => {
+		if (!surveyId) return null;
+		const parsed = Number(surveyId);
+		return Number.isNaN(parsed) ? null : parsed;
+	}, [surveyId]);
 
 	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
 	const [error, setError] = useState<string | null>(null);
@@ -78,14 +84,23 @@ export const Survey = () => {
 		});
 	}, [surveyId, locationState?.source, locationState?.quiz_id]);
 
+	const { data: surveyBasicInfoData } = useSurveyInfo(
+		numericSurveyId ?? undefined,
+		{ enabled: Boolean(numericSurveyId) },
+	);
+
 	useEffect(() => {
-		if (!surveyId) {
+		if (!numericSurveyId) {
 			return;
 		}
 
-		const numericSurveyId = Number(surveyId);
-		if (Number.isNaN(numericSurveyId)) {
-			setQuestions([]);
+		if (surveyBasicInfoData && !surveyBasicInfoData.isScreenRequired) {
+			setErrorDialog({
+				open: true,
+				title: "스크리닝이 필요합니다",
+				description: "스크리닝을 완료한 후 참여할 수 있어요.",
+				redirectTo: "/screening",
+			});
 			return;
 		}
 
@@ -182,6 +197,8 @@ export const Survey = () => {
 			isMounted = false;
 		};
 	}, [
+		numericSurveyId,
+		surveyBasicInfoData,
 		surveyId,
 		surveyFromState,
 		locationState?.source,
