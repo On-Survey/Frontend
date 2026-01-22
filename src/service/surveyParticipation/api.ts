@@ -1,13 +1,12 @@
 import { api } from "../axios";
 import { apiCall } from "../axios/apiClient";
-
 import {
 	type GetScreeningsParams,
 	mapBackendQuestionType,
 	type ScreeningResponse,
 	type SubmitScreeningResponsePayload,
 	type SubmitSurveyParticipationPayload,
-	type SurveyInfo,
+	type SurveyBasicInfo,
 	type SurveyQuestionsInfo,
 	type TransformedSurveyQuestion,
 } from "./types";
@@ -17,33 +16,33 @@ export interface GetSurveyParticipationParams {
 }
 
 // 설문 정보 조회 (responseCount 포함)
-export const getSurveyInfo = async (
-	params: GetSurveyParticipationParams,
-): Promise<{
-	surveyId: number;
-	title: string;
-	description: string;
-	interests: string[];
-	deadline: string;
-	isFree?: boolean;
-	responseCount: number;
-}> => {
-	const result = await apiCall<SurveyInfo>({
-		method: "GET",
-		url: "/v1/survey-participation/surveys/info",
-		params,
-	});
+// export const getSurveyInfo = async (
+// 	params: GetSurveyParticipationParams,
+// ): Promise<{
+// 	surveyId: number;
+// 	title: string;
+// 	description: string;
+// 	interests: string[];
+// 	deadline: string;
+// 	isFree?: boolean;
+// 	responseCount: number;
+// }> => {
+// 	const result = await apiCall<SurveyInfo>({
+// 		method: "GET",
+// 		url: "/v1/survey-participation/surveys/info",
+// 		params,
+// 	});
 
-	return {
-		surveyId: result.surveyId,
-		title: result.title,
-		description: result.description,
-		interests: result.interests,
-		deadline: result.deadline,
-		isFree: result.isFree,
-		responseCount: result.responseCount,
-	};
-};
+// 	return {
+// 		surveyId: result.surveyId,
+// 		title: result.title,
+// 		description: result.description,
+// 		interests: result.interests,
+// 		deadline: result.deadline,
+// 		isFree: result.isFree,
+// 		responseCount: result.responseCount,
+// 	};
+// };
 
 // 설문 문항 정보 조회
 export const getSurveyQuestions = async (
@@ -108,7 +107,7 @@ export const getSurveyParticipation = async (
 	responseCount?: number;
 }> => {
 	const [surveyInfo, questionsInfo] = await Promise.all([
-		getSurveyInfo(params),
+		getSurveyInfo(params.surveyId),
 		getSurveyQuestions(params),
 	]);
 
@@ -121,6 +120,16 @@ export const getSurveyParticipation = async (
 		isFree: surveyInfo.isFree,
 		responseCount: surveyInfo.responseCount,
 	};
+};
+
+export const getSurveyInfo = async (
+	surveyId: number,
+): Promise<SurveyBasicInfo> => {
+	return apiCall<SurveyBasicInfo>({
+		method: "GET",
+		url: "/v1/survey-participation/surveys/info",
+		params: { surveyId },
+	});
 };
 
 //설문에 대한 응답 생성

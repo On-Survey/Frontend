@@ -46,7 +46,7 @@ export const OxScreening = () => {
 					setNextSurveyId(firstSurveyId);
 					// 첫 번째 설문의 responseCount 조회
 					try {
-						const surveyInfo = await getSurveyInfo({ surveyId: firstSurveyId });
+						const surveyInfo = await getSurveyInfo(firstSurveyId);
 						setResponseCount(surveyInfo.responseCount);
 					} catch (err) {
 						console.error("설문 정보 조회 실패:", err);
@@ -77,7 +77,7 @@ export const OxScreening = () => {
 				const nextSurveyId = screeningQuestions[nextIndex].surveyId;
 				setNextSurveyId(nextSurveyId);
 				// 다음 설문의 responseCount 조회
-				getSurveyInfo({ surveyId: nextSurveyId })
+				getSurveyInfo(nextSurveyId)
 					.then((surveyInfo) => {
 						setResponseCount(surveyInfo.responseCount);
 					})
@@ -194,7 +194,7 @@ export const OxScreening = () => {
 				const nextSurveyId = nextQuestion.surveyId;
 				setNextSurveyId(nextSurveyId);
 				// 다음 설문의 responseCount 조회
-				getSurveyInfo({ surveyId: nextSurveyId })
+				getSurveyInfo(nextSurveyId)
 					.then((surveyInfo) => {
 						setResponseCount(surveyInfo.responseCount);
 					})
