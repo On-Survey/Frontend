@@ -15,6 +15,7 @@ export interface OngoingSurveySummary {
 	interests?: InterestId[];
 	deadline?: string;
 	isFree?: boolean;
+	responseCount?: number;
 }
 
 export interface OngoingSurveyResult {
@@ -46,6 +47,7 @@ export interface GlobalStats {
 	totalDueCount: number;
 	totalCompletedCount: number;
 	totalPromotionCount: number;
+	dailyUserCount: number;
 }
 
 export interface GlobalStatsResponse extends BaseResponse {

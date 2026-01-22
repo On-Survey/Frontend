@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	getScreenings,
+	getSurveyInfo,
 	getSurveyParticipation,
 	submitScreeningResponse,
 } from "../service/surveyParticipation";
@@ -29,6 +30,7 @@ export const OxScreening = () => {
 	const [showNoQuiz, setShowNoQuiz] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [nextSurveyId, setNextSurveyId] = useState<number | null>(null);
+	const [responseCount, setResponseCount] = useState<number | null>(null);
 
 	// 스크리닝 설문 조회
 	useEffect(() => {
@@ -40,7 +42,15 @@ export const OxScreening = () => {
 					setShowNoQuiz(true);
 				} else {
 					setScreeningQuestions(result.data);
-					setNextSurveyId(result.data[0].surveyId);
+					const firstSurveyId = result.data[0].surveyId;
+					setNextSurveyId(firstSurveyId);
+					// 첫 번째 설문의 responseCount 조회
+					try {
+						const surveyInfo = await getSurveyInfo(firstSurveyId);
+						setResponseCount(surveyInfo.responseCount);
+					} catch (err) {
+						console.error("설문 정보 조회 실패:", err);
+					}
 				}
 			} catch (err) {
 				console.error("스크리닝 설문 조회 실패:", err);
@@ -64,7 +74,16 @@ export const OxScreening = () => {
 			const nextIndex = currentQuestionIndex + 1;
 			setCurrentQuestionIndex(nextIndex);
 			if (screeningQuestions[nextIndex]) {
-				setNextSurveyId(screeningQuestions[nextIndex].surveyId);
+				const nextSurveyId = screeningQuestions[nextIndex].surveyId;
+				setNextSurveyId(nextSurveyId);
+				// 다음 설문의 responseCount 조회
+				getSurveyInfo(nextSurveyId)
+					.then((surveyInfo) => {
+						setResponseCount(surveyInfo.responseCount);
+					})
+					.catch((err) => {
+						console.error("설문 정보 조회 실패:", err);
+					});
 			}
 		} else {
 			setShowNoQuiz(true);
@@ -172,7 +191,16 @@ export const OxScreening = () => {
 
 			setCurrentQuestionIndex(nextIndex);
 			if (nextQuestion) {
-				setNextSurveyId(nextQuestion.surveyId);
+				const nextSurveyId = nextQuestion.surveyId;
+				setNextSurveyId(nextSurveyId);
+				// 다음 설문의 responseCount 조회
+				getSurveyInfo(nextSurveyId)
+					.then((surveyInfo) => {
+						setResponseCount(surveyInfo.responseCount);
+					})
+					.catch((err) => {
+						console.error("설문 정보 조회 실패:", err);
+					});
 			}
 		} else {
 			setShowNoQuiz(true);
@@ -255,7 +283,9 @@ export const OxScreening = () => {
 						fontWeight="medium"
 						textAlign="center"
 					>
-						80명이 퀴즈를 풀고 있어요
+						{responseCount
+							? `${responseCount.toLocaleString()}명이 퀴즈를 풀고 있어요`
+							: "퀴즈를 풀고 있어요"}
 					</Text>
 				</div>
 

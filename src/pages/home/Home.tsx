@@ -1,7 +1,7 @@
 import { closeView } from "@apps-in-toss/web-framework";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
@@ -27,11 +27,6 @@ export const Home = () => {
 
 	const { data: globalStats } = useGlobalStats();
 	const { data: result, error: ongoingSurveysError } = useOngoingSurveys();
-
-	const [randomCount] = useState(() => {
-		const random = Math.floor(Math.random() * 100) + 1;
-		return random.toLocaleString();
-	});
 
 	// 온보딩 미완료 시 온보딩 페이지로 리다이렉트
 	useEffect(() => {
@@ -104,6 +99,7 @@ export const Home = () => {
 				remainingTimeText: remainingTime,
 				isClosed: remainingTime === "마감됨",
 				isFree: survey.isFree,
+				responseCount: survey.responseCount,
 			};
 		};
 
@@ -181,7 +177,7 @@ export const Home = () => {
 							typography="t6"
 							fontWeight="semibold"
 						>
-							{randomCount}명
+							{globalStats ? globalStats.dailyUserCount.toLocaleString() : 0}명
 						</Text>
 						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
 							이 설문을 보고 있어요
@@ -242,7 +238,7 @@ export const Home = () => {
 									fontWeight="regular"
 									className="z-999 opacity-80"
 								>
-									지금까지
+									지금까지{" "}
 									{globalStats?.totalPromotionCount.toLocaleString() ?? 0}명이
 									받았어요
 								</Text>

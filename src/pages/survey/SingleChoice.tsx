@@ -14,7 +14,6 @@ import { useSurveyNavigation } from "../../hooks/useSurveyNavigation";
 export const SurveySingleChoice = () => {
 	const {
 		currentQuestion,
-		currentAnswer,
 		answers,
 		updateAnswer,
 		progress,
@@ -25,7 +24,6 @@ export const SurveySingleChoice = () => {
 		handleNext,
 	} = useSurveyNavigation({
 		questionType: "multipleChoice",
-		validateAnswer: (answer) => answer.trim().length > 0,
 	});
 
 	if (!currentQuestion) {
@@ -33,10 +31,17 @@ export const SurveySingleChoice = () => {
 	}
 
 	const handleOptionSelect = (optionContent: string) => {
-		updateAnswer(currentQuestion.questionId, optionContent);
+		const currentAnswer = answers[currentQuestion.questionId];
+		// 이미 선택된 항목을 다시 클릭하면 선택 해제
+		if (currentAnswer === optionContent) {
+			updateAnswer(currentQuestion.questionId, "");
+		} else {
+			updateAnswer(currentQuestion.questionId, optionContent);
+		}
 	};
 
-	const isCurrentAnswered = Boolean(currentAnswer);
+	const hasAnswer = Boolean(answers[currentQuestion.questionId]);
+	const isRequired = currentQuestion.isRequired ?? false;
 
 	return (
 		<div className="flex flex-col w-full h-screen">
@@ -48,7 +53,12 @@ export const SurveySingleChoice = () => {
 						{currentQuestion?.title ?? ""}
 					</Top.TitleParagraph>
 				}
-				subtitleTop={<QuestionBadge isRequired={currentQuestion?.isRequired} />}
+				subtitleTop={
+					<QuestionBadge
+						isRequired={currentQuestion?.isRequired}
+						maxChoice={currentQuestion?.maxChoice}
+					/>
+				}
 				subtitleBottom={
 					currentQuestion?.description ? (
 						<Top.SubtitleParagraph size={15}>
@@ -110,7 +120,7 @@ export const SurveySingleChoice = () => {
 					<CTAButton
 						display="block"
 						onClick={handleNext}
-						disabled={!isCurrentAnswered || submitting}
+						disabled={submitting || (isRequired && !hasAnswer)}
 						loading={submitting}
 						style={
 							{ "--button-background-color": "#15c67f" } as React.CSSProperties

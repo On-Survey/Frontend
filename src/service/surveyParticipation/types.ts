@@ -87,6 +87,21 @@ export interface SurveyParticipationInfo {
 	deadline: string;
 	info: SurveyParticipationQuestion[];
 	isFree?: boolean;
+	responseCount?: number;
+}
+
+export interface SurveyInfo {
+	surveyId: number;
+	title: string;
+	description: string;
+	interests: string[];
+	deadline: string;
+	isFree?: boolean;
+	responseCount: number;
+}
+
+export interface SurveyQuestionsInfo {
+	info: SurveyParticipationQuestion[];
 }
 
 export interface SurveyBasicInfo {

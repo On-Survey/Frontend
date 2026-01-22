@@ -51,6 +51,7 @@ export const Survey = () => {
 		remainingTimeText?: string;
 		isClosed?: boolean;
 		isFree?: boolean;
+		responseCount?: number;
 	} | null>(null);
 
 	// 에러 다이얼로그 상태
@@ -94,7 +95,7 @@ export const Survey = () => {
 			return;
 		}
 
-		if (surveyBasicInfoData && !surveyBasicInfoData.isScreenRequired) {
+		if (surveyBasicInfoData?.isScreenRequired) {
 			setErrorDialog({
 				open: true,
 				title: "스크리닝이 필요합니다",
@@ -130,6 +131,7 @@ export const Survey = () => {
 					remainingTimeText,
 					isClosed,
 					isFree: result.isFree,
+					responseCount: result.responseCount,
 				});
 			} catch (err) {
 				console.log("err", err);
@@ -370,7 +372,9 @@ export const Survey = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								80명이 이 설문에 참여했어요!
+								{surveyInfo?.responseCount
+									? `${surveyInfo.responseCount.toLocaleString()}명이 이 설문에 참여했어요!`
+									: "이 설문에 참여해보세요!"}
 							</Text>
 						</div>
 					</div>
