@@ -98,6 +98,8 @@ export const Home = () => {
 				description: survey.description,
 				remainingTimeText: remainingTime,
 				isClosed: remainingTime === "마감됨",
+				isFree: survey.isFree,
+				responseCount: survey.responseCount,
 			};
 		};
 
@@ -158,16 +160,29 @@ export const Home = () => {
 				onConfirm={handleConfirmDialogConfirm}
 			/>
 			<div className="flex flex-col w-full min-h-screen">
-				<div className="px-4 py-6">
-					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-						지금{" "}
-					</Text>
-					<Text color={adaptive.green400} typography="t5" fontWeight="bold">
-						3,200명
-					</Text>
-					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-						이 설문을 보고 있어요 👀
-					</Text>
+				<div className="p-4">
+					<div className="w-full h-fit rounded-[24px] p-4 backdrop-blur-none flex items-center gap-2 bg-gray-100">
+						<Asset.Image
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							src="https://static.toss.im/2d-emojis/png/4x/u1F440.png"
+							aria-hidden={true}
+							style={{ aspectRatio: "1/1" }}
+						/>
+						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
+							현재
+						</Text>
+						<Text
+							color={adaptive.green400}
+							typography="t6"
+							fontWeight="semibold"
+						>
+							{globalStats ? globalStats.dailyUserCount.toLocaleString() : 0}명
+						</Text>
+						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
+							이 설문을 보고 있어요
+						</Text>
+					</div>
 				</div>
 				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden shrink-0 h-[337px]">
 					<div className="absolute inset-0 home-banner-gradient" />
@@ -223,7 +238,7 @@ export const Home = () => {
 									fontWeight="regular"
 									className="z-999 opacity-80"
 								>
-									지금까지
+									지금까지{" "}
 									{globalStats?.totalPromotionCount.toLocaleString() ?? 0}명이
 									받았어요
 								</Text>

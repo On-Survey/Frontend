@@ -9,7 +9,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ExitConfirmDialog } from "../components/ExitConfirmDialog";
 import { type RegionData, regions } from "../constants/regions";
 import { type TopicData, topics } from "../constants/topics";
@@ -17,6 +17,7 @@ import { useUserInfo } from "../contexts/UserContext";
 import { useModal } from "../hooks/UseToggle";
 import { useBackEventListener } from "../hooks/useBackEventListener";
 import { OnboardingApi } from "../service/onboading";
+import type { LocationStateWithReturnTo } from "../types/navigation";
 import { pushGtmEvent } from "../utils/gtm";
 
 const OnboardingStep1 = ({
@@ -109,7 +110,9 @@ const OnboardingStep2 = ({
 	handleTopicToggle: (topic: TopicData) => void;
 }) => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { fetchUserInfo } = useUserInfo();
+	const returnTo = (location.state as LocationStateWithReturnTo)?.returnTo;
 
 	const handleSubmit = async () => {
 		if (!selectedRegion) return;
@@ -132,7 +135,15 @@ const OnboardingStep2 = ({
 				signup: "로그인 유무",
 			});
 
-			navigate("/home");
+			// 원래 페이지로 돌아가거나 홈으로 이동
+			if (returnTo) {
+				navigate(returnTo.path, {
+					replace: true,
+					state: returnTo.state,
+				});
+			} else {
+				navigate("/home", { replace: true });
+			}
 		}
 	};
 

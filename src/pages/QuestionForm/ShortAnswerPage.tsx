@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { pushGtmEvent } from "../../utils/gtm";
 import { formatQuestionNumber } from "../../utils/questionFactory";
+import { useQuestionBackHandler } from "./hooks/useQuestionBackHandler";
 import { useQuestionByType } from "./hooks/useQuestionByType";
 import { useCreateSurveyQuestion } from "./hooks/useQuestionMutations";
 
@@ -32,6 +33,8 @@ export const ShortAnswerPage = () => {
 		title,
 		description,
 	} = useQuestionByType("shortAnswer");
+
+	useQuestionBackHandler({ questionId, questionIdFromUrl });
 
 	const handleRequiredChange = (checked: boolean) => {
 		if (questionId) {

@@ -1,9 +1,13 @@
 import { useToast } from "@toss/tds-mobile";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { queryClient } from "../contexts/queryClient";
+import { issuePromotion } from "../service/promotion";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import {
 	completeSurvey,
+	getSurveyInfo,
+	sendSurveyHeartbeat,
 	submitSurveyParticipation,
 } from "../service/surveyParticipation";
 import type { SurveyListItem } from "../types/surveyList";
@@ -16,6 +20,7 @@ interface UseSurveyNavigationState {
 	questions?: TransformedSurveyQuestion[];
 	currentQuestionIndex?: number;
 	answers?: Record<number, string>;
+	isFree?: boolean;
 	source?: "main" | "quiz" | "after_complete";
 }
 
@@ -55,6 +60,50 @@ export const useSurveyNavigation = ({
 		totalQuestions > 0 ? (initialQuestionIndex + 1) / totalQuestions : 0;
 
 	const progressEventSentRef = useRef<string>("");
+	const lastInteractionTimeRef = useRef<number | null>(null);
+	const hasInteractedRef = useRef<boolean>(false);
+
+	// Heartbeat: 설문 진입 후 60초 안에 인터랙션이 있으면 true로 전송
+	useEffect(() => {
+		if (!isCurrentQuestionType || !surveyId) return;
+
+		const handleUserInteraction = () => {
+			hasInteractedRef.current = true;
+			lastInteractionTimeRef.current = Date.now();
+		};
+
+		const events = ["click", "keydown", "mousemove", "scroll", "touchstart"];
+		events.forEach((event) => {
+			window.addEventListener(event, handleUserInteraction, { passive: true });
+		});
+
+		const heartbeatInterval = setInterval(async () => {
+			if (!hasInteractedRef.current || !lastInteractionTimeRef.current) {
+				return;
+			}
+
+			const now = Date.now();
+			const timeSinceLastInteraction = now - lastInteractionTimeRef.current;
+
+			if (timeSinceLastInteraction <= 60000) {
+				try {
+					await sendSurveyHeartbeat(surveyId);
+				} catch (error) {
+					console.error("Heartbeat 전송 실패:", error);
+				}
+			}
+		}, 60000);
+
+		hasInteractedRef.current = false;
+		lastInteractionTimeRef.current = null;
+
+		return () => {
+			clearInterval(heartbeatInterval);
+			events.forEach((event) => {
+				window.removeEventListener(event, handleUserInteraction);
+			});
+		};
+	}, [isCurrentQuestionType, surveyId]);
 
 	useEffect(() => {
 		if (!isCurrentQuestionType || !surveyId) return;
@@ -162,11 +211,50 @@ export const useSurveyNavigation = ({
 			const isLastQuestion = initialQuestionIndex >= allQuestions.length - 1;
 			if (isLastQuestion) {
 				await completeSurvey(surveyId);
+
+				// 프로모션 지급 첫 시도
+				let promotionIssued: boolean | undefined;
+				try {
+					// 무료 설문 확인
+					const surveyInfo = await getSurveyInfo({ surveyId });
+					const isSurveyFree = surveyInfo.isFree === true;
+
+					if (!isSurveyFree) {
+						// 유료 설문인 경우 프로모션 지급 시도
+						try {
+							await issuePromotion({ surveyId });
+							// 쿼리 캐시 무효화
+							queryClient.invalidateQueries({ queryKey: ["globalStats"] });
+							queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] });
+							queryClient.refetchQueries({ queryKey: ["recommendedSurveys"] });
+							queryClient.refetchQueries({ queryKey: ["impendingSurveys"] });
+							queryClient.refetchQueries({ queryKey: ["ongoingSurveysList"] });
+							promotionIssued = true;
+							console.log("프로모션 지급 성공 (제출 버튼에서 첫 시도)");
+						} catch (error) {
+							promotionIssued = false;
+							console.error(
+								"프로모션 지급 실패 (제출 버튼에서 첫 시도):",
+								error,
+							);
+							// 실패해도 Complete 페이지로 이동 (재시도는 Complete에서)
+						}
+					} else {
+						// 무료 설문인 경우
+						promotionIssued = true; // 지급 안 하므로 "성공" 처리
+					}
+				} catch (error) {
+					console.error("설문 정보 조회 실패 또는 프로모션 지급 실패:", error);
+					promotionIssued = false; // 에러 발생 시 재시도 필요
+				}
+
 				navigate("/survey/complete", {
 					replace: true,
 					state: {
 						surveyId,
+						isFree: locationState?.isFree,
 						source: locationState?.source,
+						promotionIssued, // 프로모션 지급 성공 여부 전달
 					},
 				});
 				return;
@@ -180,6 +268,7 @@ export const useSurveyNavigation = ({
 					questions: allQuestions,
 					currentQuestionIndex: initialQuestionIndex + 1,
 					answers,
+					isFree: locationState?.isFree,
 					source: locationState?.source,
 				},
 			});

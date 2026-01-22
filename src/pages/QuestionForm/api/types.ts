@@ -152,6 +152,10 @@ export interface CreateFormRequest {
 	totalCoin: number;
 }
 
+export interface CreateFreeFormRequest {
+	deadline: string;
+}
+
 export interface SaveAsDraftResponse extends BaseResponse {
 	result: {
 		surveyId: number;

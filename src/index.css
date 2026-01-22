@@ -47,8 +47,3 @@
 	--button-color: var(--main-green);
 }
 
-.payment-bottom-sheet-select label:has(input[value="150"]),
-.payment-bottom-sheet-select label:has(input[value="200"]) {
-	color: #d1d5db !important;
-	opacity: 0.6 !important;
-}

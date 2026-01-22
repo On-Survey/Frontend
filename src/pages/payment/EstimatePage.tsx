@@ -3,6 +3,7 @@ import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
 	ConfirmDialog,
+	CTAButton,
 	FixedBottomCTA,
 	TextField,
 } from "@toss/tds-mobile";
@@ -331,6 +332,10 @@ export const EstimatePage = () => {
 		handleEstimateChange({ ...estimate, ages });
 	};
 
+	const handleFreeRegistration = () => {
+		navigate("/payment/free-registration-notice");
+	};
+
 	useBackEventListener(() => setSurveyStep(3));
 
 	return (
@@ -457,13 +462,31 @@ export const EstimatePage = () => {
 				value={estimate.date ?? new Date()}
 				onChange={handleDateBottomSheetConfirm}
 			/>
-			<FixedBottomCTA
-				loading={false}
-				onClick={handleConfirmDialogOpenWithEvent}
-				style={{ "--button-background-color": "#15c67f" } as any}
-			>
-				{formatPriceAsCoin(totalPrice)} 결제하기
-			</FixedBottomCTA>
+			<FixedBottomCTA.Double
+				leftButton={
+					<CTAButton
+						color="dark"
+						variant="weak"
+						display="block"
+						onClick={handleFreeRegistration}
+					>
+						무료로 등록하기
+					</CTAButton>
+				}
+				rightButton={
+					<CTAButton
+						display="block"
+						onClick={handleConfirmDialogOpenWithEvent}
+						style={
+							{
+								"--button-background-color": "#15c67f",
+							} as React.CSSProperties
+						}
+					>
+						{formatPriceAsCoin(totalPrice)} 결제하기
+					</CTAButton>
+				}
+			/>
 		</>
 	);
 };

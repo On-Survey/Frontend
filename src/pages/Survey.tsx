@@ -12,10 +12,12 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import { getSurveyParticipation } from "../service/surveyParticipation";
+import type { ReturnTo } from "../types/navigation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
 import { pushGtmEvent } from "../utils/gtm";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
+import { getRefreshToken } from "../utils/tokenManager";
 
 export const Survey = () => {
 	const navigate = useNavigate();
@@ -42,6 +44,8 @@ export const Survey = () => {
 		topicId?: InterestId;
 		remainingTimeText?: string;
 		isClosed?: boolean;
+		isFree?: boolean;
+		responseCount?: number;
 	} | null>(null);
 
 	// 에러 다이얼로그 상태
@@ -50,6 +54,7 @@ export const Survey = () => {
 		title: string;
 		description?: string;
 		redirectTo?: string;
+		returnTo?: ReturnTo;
 	}>({
 		open: false,
 		title: "",
@@ -110,6 +115,8 @@ export const Survey = () => {
 					topicId: (result.interests?.[0] ?? "CAREER") as InterestId,
 					remainingTimeText,
 					isClosed,
+					isFree: result.isFree,
+					responseCount: result.responseCount,
 				});
 			} catch (err) {
 				console.log("err", err);
@@ -119,20 +126,40 @@ export const Survey = () => {
 				}
 
 				// HTTP 상태 코드별 분기 처리
-				const error = err as { response?: { status: number } };
+				const error = err as {
+					response?: { status: number };
+					code?: string;
+				};
+
+				// CORS 에러나 네트워크 에러로 인해 response가 없을 수 있음
+				// ERR_NETWORK이면서 토큰이 없는 경우는 인증 문제로 간주
+				const isNetworkError = error.code === "ERR_NETWORK";
+				const is401Error = error.response?.status === 401;
+
+				if (is401Error || (isNetworkError && !(await getRefreshToken()))) {
+					// 인증 실패 - 로그인 페이지로 이동
+					setErrorDialog({
+						open: true,
+						title: "로그인이 필요합니다",
+						description: "로그인 후 이용해주세요",
+						redirectTo: "/",
+						returnTo: surveyId
+							? {
+									path: "/survey",
+									state: {
+										surveyId,
+										survey: surveyFromState,
+										source: locationState?.source ?? "main",
+										quiz_id: locationState?.quiz_id,
+									},
+								}
+							: undefined,
+					});
+					return;
+				}
+
 				if (error.response) {
 					const status = error.response.status;
-
-					if (status === 401) {
-						// 인증 실패 - 로그인 페이지로 이동
-						setErrorDialog({
-							open: true,
-							title: "로그인이 필요합니다",
-							description: "로그인 후 이용해주세요",
-							redirectTo: "/intro",
-						});
-						return;
-					}
 
 					if (status === 403) {
 						// 권한 없음 - 메인 페이지로 이동
@@ -156,7 +183,12 @@ export const Survey = () => {
 		return () => {
 			isMounted = false;
 		};
-	}, [surveyId]);
+	}, [
+		surveyId,
+		surveyFromState,
+		locationState?.source,
+		locationState?.quiz_id,
+	]);
 
 	const sortedQuestions = useMemo(
 		() =>
@@ -187,6 +219,7 @@ export const Survey = () => {
 					description: surveyInfo.description,
 					remainingTimeText: surveyInfo.remainingTimeText,
 					isClosed: surveyInfo.isClosed,
+					isFree: surveyInfo.isFree,
 				}
 			: null);
 
@@ -213,6 +246,7 @@ export const Survey = () => {
 				questions: sortedQuestions,
 				currentQuestionIndex: 0,
 				answers: {},
+				isFree: surveyInfo?.isFree,
 				source,
 			},
 		});
@@ -221,7 +255,12 @@ export const Survey = () => {
 	const handleErrorDialogConfirm = () => {
 		setErrorDialog({ open: false, title: "" });
 		if (errorDialog.redirectTo) {
-			navigate(errorDialog.redirectTo, { replace: true });
+			navigate(errorDialog.redirectTo, {
+				replace: true,
+				state: errorDialog.returnTo
+					? { returnTo: errorDialog.returnTo }
+					: undefined,
+			});
 		}
 	};
 
@@ -276,7 +315,9 @@ export const Survey = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								참여 보상 : 200원
+								{surveyFromState?.isFree === true || surveyInfo?.isFree === true
+									? "참여보상이 없는 설문이에요"
+									: "참여 보상 : 200원"}
 							</Text>
 							<div className="h-2" />
 							<Text
@@ -315,7 +356,9 @@ export const Survey = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								80명이 이 설문에 참여했어요!
+								{surveyInfo?.responseCount
+									? `${surveyInfo.responseCount.toLocaleString()}명이 이 설문에 참여했어요!`
+									: "이 설문에 참여해보세요!"}
 							</Text>
 						</div>
 					</div>

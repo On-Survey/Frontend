@@ -111,7 +111,7 @@ export const UrgentSurveyList = ({
 								{survey.title}
 							</Text>
 							{survey.iconType === "image" && survey.remainingTimeText ? (
-								<div className="flex items-center gap-1 mb-3">
+								<div className="flex items-center gap-1 mb-2">
 									<Asset.Icon
 										frameShape={Asset.frameShape.CleanW16}
 										backgroundColor="transparent"
@@ -129,7 +129,26 @@ export const UrgentSurveyList = ({
 									</Text>
 								</div>
 							) : (
-								<div className="mb-3" />
+								<div className="mb-2" />
+							)}
+							{typeof survey.isFree === "boolean" && (
+								<div className="flex items-center gap-1 mb-3">
+									<Asset.Icon
+										frameShape={Asset.frameShape.CleanW16}
+										backgroundColor="transparent"
+										name="icon-money-bag-point-mono"
+										color={adaptive.grey600}
+										aria-hidden={true}
+										ratio="1/1"
+									/>
+									<Text
+										color={adaptive.grey800}
+										typography="t7"
+										fontWeight="semibold"
+									>
+										{survey.isFree ? "보상이 없어요" : "200원"}
+									</Text>
+								</div>
 							)}
 							<div className="flex-1" />
 							<span className="mt-auto inline-flex h-9 items-center justify-center rounded-xl px-4 text-sm font-semibold text-gray-700 bg-gray-300/40">
