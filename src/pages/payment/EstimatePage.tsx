@@ -359,7 +359,7 @@ export const EstimatePage = () => {
 						style={
 							{
 								"--button-background-color": "#15c67f",
-							} as any
+							} as React.CSSProperties
 						}
 					>
 						결제하기

@@ -66,7 +66,9 @@ export const ScreeningQuestion = () => {
 			<FixedBottomCTA
 				disabled={!question.trim()}
 				onClick={handleNext}
-				style={{ "--button-background-color": "#15c67f" } as any}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
 			>
 				다음
 			</FixedBottomCTA>
