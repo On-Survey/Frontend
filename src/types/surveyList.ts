@@ -11,4 +11,5 @@ export interface SurveyListItem {
 	remainingTimeText?: string;
 	isClosed?: boolean;
 	isFree?: boolean;
+	responseCount?: number;
 }
