@@ -105,6 +105,17 @@ export const Survey = () => {
 			return;
 		}
 
+		if (surveyBasicInfoData?.isScreened) {
+			setErrorDialog({
+				open: true,
+				title: "스크리닝 조건이 맞지 않습니다",
+				description:
+					"설정하신 스크리닝 조건에 맞지 않아 설문에 참여할 수 없어요.",
+				redirectTo: "/",
+			});
+			return;
+		}
+
 		let isMounted = true;
 
 		const fetchSurveyParticipation = async () => {

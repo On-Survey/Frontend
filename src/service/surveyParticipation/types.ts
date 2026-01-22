@@ -112,6 +112,8 @@ export interface SurveyBasicInfo {
 	interests: string[];
 	responseCount: number;
 	isScreenRequired: boolean;
+	isScreened: boolean;
+	isSurveyResponded: boolean;
 	isFree: boolean;
 }
 
