@@ -6,6 +6,7 @@ import {
 	FixedBottomCTA,
 	Text,
 	Top,
+	useToast,
 } from "@toss/tds-mobile";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -24,6 +25,7 @@ export const Survey = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [searchParams] = useSearchParams();
+	const { openToast } = useToast();
 	const locationState = location.state as
 		| {
 				survey?: SurveyListItem;
@@ -260,6 +262,15 @@ export const Survey = () => {
 
 	const handleStart = () => {
 		if (sortedQuestions.length === 0 || isClosed) {
+			return;
+		}
+
+		if (surveyBasicInfoData?.isSurveyResponded) {
+			openToast("이미 참여한 설문입니다.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
 			return;
 		}
 
