@@ -249,6 +249,7 @@ export const Survey = () => {
 					description: surveyInfo.description,
 					remainingTimeText: surveyInfo.remainingTimeText,
 					isClosed: surveyInfo.isClosed,
+					isFree: surveyInfo.isFree,
 				}
 			: null);
 
@@ -353,7 +354,7 @@ export const Survey = () => {
 								typography="t5"
 								fontWeight="semibold"
 							>
-								{surveyInfo?.isFree
+								{surveyFromState?.isFree === true || surveyInfo?.isFree === true
 									? "참여보상이 없는 설문이에요"
 									: "참여 보상 : 200원"}
 							</Text>

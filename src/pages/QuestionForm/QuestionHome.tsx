@@ -168,7 +168,7 @@ export const QuestionHome = () => {
 				}
 				description={
 					<ListHeader.DescriptionParagraph>
-						최대 15개까지 가능
+						문항을 추가하고 수정할 수 있어요
 					</ListHeader.DescriptionParagraph>
 				}
 				descriptionPosition="bottom"

@@ -317,7 +317,9 @@ export const PaymentProductPage = () => {
 				disabled={!selectedCoinAmount}
 				loading={false}
 				onClick={handleNext}
-				style={{ "--button-background-color": "#15c67f" } as any}
+				style={
+					{ "--button-background-color": "#15c67f" } as React.CSSProperties
+				}
 			>
 				다음
 			</FixedBottomCTA>

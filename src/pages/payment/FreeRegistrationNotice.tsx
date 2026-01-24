@@ -11,6 +11,7 @@ import {
 } from "@toss/tds-mobile";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePaymentEstimate } from "../../contexts/PaymentContext";
 import { useSurvey } from "../../contexts/SurveyContext";
 import { useBackEventListener } from "../../hooks/useBackEventListener";
 import { useCreateSurveyInterests } from "../../pages/QuestionForm/hooks/useQuestionMutations";
@@ -20,6 +21,7 @@ export const FreeRegistrationNotice = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { state } = useSurvey();
+	const { estimate } = usePaymentEstimate();
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -38,19 +40,15 @@ export const FreeRegistrationNotice = () => {
 		setIsBottomSheetOpen(false);
 	};
 
-	// 무료 설문 등록 기본값 (deadline만 전송, 나머지는 백엔드에서 기본값으로 처리)
+	// 무료 설문 등록 페이로드 (EstimatePage에서 선택한 마감일 사용)
 	const freeFormPayload = useMemo(() => {
-		if (!state.surveyId) return null;
-
-		// 기본값: 30일 후 마감일 설정
-		const deadline = new Date();
-		deadline.setDate(deadline.getDate() + 30);
+		if (!state.surveyId || !estimate.date) return null;
 
 		return {
 			surveyId: state.surveyId,
-			deadline: deadline.toISOString(),
+			deadline: estimate.date.toISOString(),
 		};
-	}, [state.surveyId]);
+	}, [state.surveyId, estimate.date]);
 
 	const handleConfirm = async () => {
 		if (!freeFormPayload || !state.surveyId) {
@@ -77,12 +75,9 @@ export const FreeRegistrationNotice = () => {
 			// 설문 리스트 갱신
 			queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
 			queryClient.invalidateQueries({ queryKey: ["memberInfo"] });
-
-			// PaymentLoading으로 이동 (무료 설문임을 표시)
 			navigate("/payment/loading", { state: { isFree: true } });
 		} catch (error) {
 			console.error("무료 설문 등록 실패:", error);
-			// 에러 처리 (토스트 메시지 등)
 		} finally {
 			setIsLoading(false);
 		}
