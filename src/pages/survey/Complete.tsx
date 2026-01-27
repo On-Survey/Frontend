@@ -71,7 +71,7 @@ export const SurveyComplete = () => {
 			}
 
 			try {
-				const surveyInfo = await getSurveyInfo({ surveyId });
+				const surveyInfo = await getSurveyInfo(surveyId);
 				const isSurveyFree = surveyInfo.isFree === true;
 				setIsFree(isSurveyFree);
 				return isSurveyFree;

@@ -5,7 +5,6 @@ import { queryClient } from "../contexts/queryClient";
 import { issuePromotion } from "../service/promotion";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import {
-	completeSurvey,
 	getSurveyInfo,
 	sendSurveyHeartbeat,
 	submitSurveyParticipation,
@@ -13,6 +12,7 @@ import {
 import type { SurveyListItem } from "../types/surveyList";
 import { pushGtmEvent } from "../utils/gtm";
 import { getQuestionTypeRoute } from "../utils/questionRoute";
+import { useCompleteSurvey } from "./useCompleteSurvey";
 
 interface UseSurveyNavigationState {
 	surveyId?: string | null;
@@ -50,6 +50,7 @@ export const useSurveyNavigation = ({
 	const [answers, setAnswers] =
 		useState<Record<number, string>>(initialAnswers);
 	const [submitting, setSubmitting] = useState(false);
+	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
 
 	const currentQuestion = allQuestions[initialQuestionIndex];
 	const isCurrentQuestionType =
@@ -210,13 +211,13 @@ export const useSurveyNavigation = ({
 
 			const isLastQuestion = initialQuestionIndex >= allQuestions.length - 1;
 			if (isLastQuestion) {
-				await completeSurvey(surveyId);
+				await completeSurveyMutation({ surveyId });
 
 				// 프로모션 지급 첫 시도
 				let promotionIssued: boolean | undefined;
 				try {
 					// 무료 설문 확인
-					const surveyInfo = await getSurveyInfo({ surveyId });
+					const surveyInfo = await getSurveyInfo(surveyId);
 					const isSurveyFree = surveyInfo.isFree === true;
 
 					if (!isSurveyFree) {
