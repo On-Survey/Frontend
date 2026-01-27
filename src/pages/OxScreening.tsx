@@ -8,11 +8,11 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSubmitScreeningResponse } from "../hooks/useSubmitScreeningResponse";
 import {
 	getScreenings,
 	getSurveyInfo,
 	getSurveyParticipation,
-	submitScreeningResponse,
 } from "../service/surveyParticipation";
 import type { ScreeningQuestion } from "../service/surveyParticipation/types";
 import type { SurveyListItem } from "../types/surveyList";
@@ -31,6 +31,8 @@ export const OxScreening = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [nextSurveyId, setNextSurveyId] = useState<number | null>(null);
 	const [responseCount, setResponseCount] = useState<number | null>(null);
+
+	const { mutateAsync: submitScreening } = useSubmitScreeningResponse();
 
 	// 스크리닝 설문 조회
 	useEffect(() => {
@@ -94,8 +96,10 @@ export const OxScreening = () => {
 		if (currentQuestion && selectedOption !== null) {
 			try {
 				const content = String(selectedOption);
-				await submitScreeningResponse(currentQuestion.screeningId, {
-					content,
+				await submitScreening({
+					screeningId: currentQuestion.screeningId,
+					payload: { content },
+					surveyId: nextSurveyId,
 				});
 				pushGtmEvent({
 					event: "complete_screening_quiz",
@@ -160,8 +164,10 @@ export const OxScreening = () => {
 		if (currentQuestion && selectedOption !== null) {
 			try {
 				const content = String(selectedOption);
-				await submitScreeningResponse(currentQuestion.screeningId, {
-					content,
+				await submitScreening({
+					screeningId: currentQuestion.screeningId,
+					payload: { content },
+					surveyId: nextSurveyId,
 				});
 				pushGtmEvent({
 					event: "complete_screening_quiz",
