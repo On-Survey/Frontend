@@ -216,7 +216,7 @@ export const useSurveyNavigation = ({
 				let promotionIssued: boolean | undefined;
 				try {
 					// 무료 설문 확인
-					const surveyInfo = await getSurveyInfo({ surveyId });
+					const surveyInfo = await getSurveyInfo(surveyId);
 					const isSurveyFree = surveyInfo.isFree === true;
 
 					if (!isSurveyFree) {
