@@ -1,5 +1,7 @@
 export * from "./EstimatePage";
 export * from "./FreeRegistrationNotice";
+export * from "./GoogleFormConversionPrecheckPage";
+export * from "./GoogleFormConversionRequestPage";
 export * from "./LocationSelectPage";
 export * from "./PaymentConfirmationPage";
 export * from "./PaymentLoading";

@@ -19,6 +19,8 @@ import {
 	DatePage,
 	EstimatePage,
 	FreeRegistrationNotice,
+	GoogleFormConversionPrecheckPage,
+	GoogleFormConversionRequestPage,
 	Home,
 	Intro,
 	LocationSelectPage,
@@ -212,6 +214,14 @@ export const App = () => {
 								<Route element={<MultiStepProviderWrapper />}>
 									<Route element={<PaymentProviderLayout />}>
 										<Route path="/createForm" element={<SurveyMain />} />
+										<Route
+											path="/payment/google-form-conversion"
+											element={<GoogleFormConversionRequestPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-check"
+											element={<GoogleFormConversionPrecheckPage />}
+										/>
 										<Route
 											path="/payment/location"
 											element={<LocationSelectPage />}
