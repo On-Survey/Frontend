@@ -20,6 +20,7 @@ import {
 	EstimatePage,
 	FreeRegistrationNotice,
 	GoogleFormConversionPrecheckPage,
+	GoogleFormConversionPrivacyConsentPage,
 	GoogleFormConversionRequestPage,
 	Home,
 	Intro,
@@ -221,6 +222,10 @@ export const App = () => {
 										<Route
 											path="/payment/google-form-conversion-check"
 											element={<GoogleFormConversionPrecheckPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-privacy-consent"
+											element={<GoogleFormConversionPrivacyConsentPage />}
 										/>
 										<Route
 											path="/payment/location"
