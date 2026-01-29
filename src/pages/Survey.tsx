@@ -12,8 +12,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { type InterestId, topics } from "../constants/topics";
 import { useSurveyInfo } from "../hooks/useSurveyInfo";
+import { useSurveyQuestions } from "../hooks/useSurveyQuestions";
 import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
-import { getSurveyParticipation } from "../service/surveyParticipation";
 import type { ReturnTo } from "../types/navigation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
@@ -92,6 +92,11 @@ export const Survey = () => {
 		{ enabled: Boolean(numericSurveyId) },
 	);
 
+	const { data: surveyQuestionsData } = useSurveyQuestions(
+		numericSurveyId ?? undefined,
+		{ enabled: Boolean(numericSurveyId) },
+	);
+
 	useEffect(() => {
 		if (!numericSurveyId) {
 			return;
@@ -102,7 +107,7 @@ export const Survey = () => {
 				open: true,
 				title: "스크리닝이 필요합니다",
 				description: "스크리닝을 완료한 후 참여할 수 있어요.",
-				redirectTo: "/screening",
+				redirectTo: "/oxScreening",
 			});
 			return;
 		}
@@ -113,7 +118,7 @@ export const Survey = () => {
 				title: "스크리닝 조건이 맞지 않습니다",
 				description:
 					"설정하신 스크리닝 조건에 맞지 않아 설문에 참여할 수 없어요.",
-				redirectTo: "/",
+				redirectTo: "/home",
 			});
 			return;
 		}
@@ -123,9 +128,15 @@ export const Survey = () => {
 		const fetchSurveyParticipation = async () => {
 			try {
 				setError(null);
-				const result = await getSurveyParticipation({
-					surveyId: numericSurveyId,
-				});
+				const result = {
+					info: surveyQuestionsData?.info ?? [],
+					title: surveyBasicInfoData?.title ?? "",
+					description: surveyBasicInfoData?.description ?? "",
+					interests: surveyBasicInfoData?.interests ?? [],
+					deadline: surveyBasicInfoData?.deadline ?? "",
+					isFree: surveyBasicInfoData?.isFree ?? false,
+					responseCount: surveyBasicInfoData?.responseCount ?? 0,
+				};
 				if (!isMounted) {
 					return;
 				}
@@ -218,7 +229,9 @@ export const Survey = () => {
 		surveyFromState,
 		locationState?.source,
 		locationState?.quiz_id,
+		surveyQuestionsData?.info,
 	]);
+	surveyQuestionsData?.info;
 
 	const sortedQuestions = useMemo(
 		() =>
