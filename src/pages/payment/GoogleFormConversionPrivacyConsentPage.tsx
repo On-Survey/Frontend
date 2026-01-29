@@ -1,5 +1,4 @@
-import { adaptive } from "@toss/tds-colors";
-import { Paragraph, Post, Top } from "@toss/tds-mobile";
+import { Paragraph, Post } from "@toss/tds-mobile";
 
 export const GoogleFormConversionPrivacyConsentPage = () => {
 	return (

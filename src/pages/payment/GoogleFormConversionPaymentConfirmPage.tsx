@@ -6,7 +6,6 @@ import {
 	FixedBottomCTA,
 	Paragraph,
 	Post,
-	Spacing,
 	Top,
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
