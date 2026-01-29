@@ -6,14 +6,16 @@ import {
 	FixedBottomCTA,
 	Stepper,
 	StepperRow,
+	Text,
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/UseToggle";
 
 export const GoogleFormConversionPrecheckPage = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [isAgreed, setIsAgreed] = useState(false);
 	const {
 		isOpen: isConsentBottomSheetOpen,
@@ -31,8 +33,21 @@ export const GoogleFormConversionPrecheckPage = () => {
 
 	const handleConsentConfirm = () => {
 		handleConsentBottomSheetClose();
-		// TODO: 실제 결제/다음 단계로 이동 경로 확정 시 수정
-		navigate(-1);
+		// 결제 확인 페이지로 이동 (선택한 정보는 location.state로 전달)
+		const locationState = location.state as
+			| {
+					questionPackage: "light" | "standard" | "plus";
+					respondentCount: 50 | 100;
+					price: number;
+			  }
+			| undefined;
+		navigate("/payment/google-form-conversion-payment-confirm", {
+			state: locationState ?? {
+				questionPackage: "light" as const,
+				respondentCount: 50 as const,
+				price: 9900,
+			},
+		});
 	};
 
 	return (
@@ -118,30 +133,31 @@ export const GoogleFormConversionPrecheckPage = () => {
 					/>
 				}
 			>
-				<div className="px-4 py-6">
-					<AgreementV4
-						variant="small"
-						left={
+				<AgreementV4
+					variant="small"
+					left={
+						<div className="flex items-center">
 							<AgreementV4.Checkbox
-								variant="dot"
+								variant="checkbox"
 								checked={isAgreed}
 								onChange={() => setIsAgreed(!isAgreed)}
 							/>
-						}
-						middle={
-							<AgreementV4.Text
-								onClick={(e) => {
-									e.stopPropagation();
-									handleAgreementClick();
-								}}
-								style={{ cursor: "pointer" }}
-							>
-								개인정보 수집·이용 동의
-							</AgreementV4.Text>
-						}
-					/>
-				</div>
-				<>콘텐츠를 클릭해 확인해주세요</>
+							<Text color={adaptive.blue600} typography="t7" fontWeight="bold">
+								필수
+							</Text>
+						</div>
+					}
+					middle={
+						<AgreementV4.Text
+							onClick={(e) => {
+								e.stopPropagation();
+								handleAgreementClick();
+							}}
+						>
+							개인정보 수집·이용 동의
+						</AgreementV4.Text>
+					}
+				/>
 			</BottomSheet>
 		</>
 	);

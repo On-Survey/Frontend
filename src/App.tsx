@@ -19,6 +19,9 @@ import {
 	DatePage,
 	EstimatePage,
 	FreeRegistrationNotice,
+	GoogleFormConversionLandingPage,
+	GoogleFormConversionPaymentConfirmPage,
+	GoogleFormConversionPaymentSuccessPage,
 	GoogleFormConversionPrecheckPage,
 	GoogleFormConversionPrivacyConsentPage,
 	GoogleFormConversionRequestPage,
@@ -136,6 +139,10 @@ export const App = () => {
 						<Routes>
 							<Route path="/" element={<Intro />} />
 							<Route path="/home" element={<Home />} />
+							<Route
+								path="/google-form-conversion-landing"
+								element={<GoogleFormConversionLandingPage />}
+							/>
 							<Route path="/onboarding" element={<Onboarding />} />
 							<Route path="/main" element={<Main />} />
 							<Route path="/createFormStart" element={<SurveyStart />} />
@@ -222,6 +229,14 @@ export const App = () => {
 										<Route
 											path="/payment/google-form-conversion-check"
 											element={<GoogleFormConversionPrecheckPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-payment-confirm"
+											element={<GoogleFormConversionPaymentConfirmPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-success"
+											element={<GoogleFormConversionPaymentSuccessPage />}
 										/>
 										<Route
 											path="/payment/google-form-conversion-privacy-consent"

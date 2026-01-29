@@ -61,6 +61,20 @@ const PRICE_TABLE: Record<QuestionPackage, Record<RespondentCount, number>> = {
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
 
+const formatDate = (date: Date): string => {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${year}.${month}.${day}`;
+};
+
+const getDefaultDeadline = (): string => {
+	const today = new Date();
+	const sevenDaysLater = new Date(today);
+	sevenDaysLater.setDate(today.getDate() + 7);
+	return formatDate(sevenDaysLater);
+};
+
 export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
 
@@ -69,7 +83,7 @@ export const GoogleFormConversionRequestPage = () => {
 	const [questionPackage, setQuestionPackage] =
 		useState<QuestionPackage>("light");
 	const [respondentCount, setRespondentCount] = useState<RespondentCount>(50);
-	const [deadlineText, setDeadlineText] = useState("");
+	const [deadlineText, setDeadlineText] = useState(getDefaultDeadline());
 
 	const [isQuestionPackageSheetOpen, setIsQuestionPackageSheetOpen] =
 		useState(false);
@@ -90,8 +104,14 @@ export const GoogleFormConversionRequestPage = () => {
 	);
 
 	const handleSubmit = () => {
-		// TODO: 신청 정보 전송 API 연동 시 활용
-		navigate("/payment/google-form-conversion-check");
+		// 선택한 정보를 함께 전달
+		navigate("/payment/google-form-conversion-check", {
+			state: {
+				questionPackage,
+				respondentCount,
+				price,
+			},
+		});
 	};
 
 	return (
@@ -102,13 +122,10 @@ export const GoogleFormConversionRequestPage = () => {
 						설문 정보를 입력해주세요
 					</Top.TitleParagraph>
 				}
-				subtitleBottom={
-					<Top.SubtitleParagraph size={15}></Top.SubtitleParagraph>
-				}
 				lowerGap={0}
 			/>
 
-			<div className="flex flex-col gap-4 px-4 pt-8 pb-28">
+			<div className="flex flex-col gap-4 px-2 pt-4">
 				<TextField.Clearable
 					variant="line"
 					hasError={isFormLinkTouched && !isGoogleFormLink}
@@ -180,7 +197,6 @@ export const GoogleFormConversionRequestPage = () => {
 					labelOption="sustain"
 					help="결제 완료 시점으로부터 영업일 기준 1일 이내에 설문 제작 및 노출이 시작됩니다."
 					value={deadlineText}
-					placeholder="2026.01.20"
 					onChange={(e) => setDeadlineText(e.target.value)}
 				/>
 			</div>
@@ -217,7 +233,7 @@ export const GoogleFormConversionRequestPage = () => {
 				onClose={() => setIsRespondentSheetOpen(false)}
 				cta={[]}
 			>
-				<div className="mb-4">
+				<div>
 					<BottomSheet.Select
 						value={String(respondentCount)}
 						options={RESPONDENT_OPTIONS.map((option) => ({
