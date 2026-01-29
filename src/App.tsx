@@ -110,6 +110,24 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 	return <>{children}</>;
 };
 
+const DeepLinkHandler = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		const href = window.location.href;
+
+		const match = href.match(/intoss:\/\/[^/]+(\/.+)$/);
+		const targetPath = match?.[1];
+
+		if (targetPath && location.pathname !== targetPath) {
+			navigate(targetPath, { replace: true });
+		}
+	}, [navigate, location.pathname]);
+
+	return null;
+};
+
 const AnalyticsTracker = () => {
 	const location = useLocation();
 
@@ -134,6 +152,7 @@ export const App = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Router>
+				<DeepLinkHandler />
 				<AnalyticsTracker />
 				<UserProvider>
 					<GlobalNavigationLayout>
