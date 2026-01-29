@@ -16,6 +16,7 @@ import { queryClient } from "./contexts/queryClient";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { UserProvider } from "./contexts/UserContext";
 import {
+	AdPage,
 	DatePage,
 	EstimatePage,
 	FreeRegistrationNotice,
@@ -138,6 +139,7 @@ export const App = () => {
 					<GlobalNavigationLayout>
 						<Routes>
 							<Route path="/" element={<Intro />} />
+							<Route path="/ad" element={<AdPage />} />
 							<Route path="/home" element={<Home />} />
 							<Route
 								path="/google-form-conversion-landing"

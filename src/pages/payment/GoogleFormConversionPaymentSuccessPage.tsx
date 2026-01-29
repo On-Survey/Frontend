@@ -6,7 +6,6 @@ export const GoogleFormConversionPaymentSuccessPage = () => {
 	const navigate = useNavigate();
 
 	const handleConfirm = () => {
-		// TODO: 홈으로 이동하거나 적절한 페이지로 이동
 		navigate("/home");
 	};
 
