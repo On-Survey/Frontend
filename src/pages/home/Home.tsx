@@ -57,8 +57,7 @@ export const Home = () => {
 	const handleViewAllRecommended = () =>
 		navigate("/surveyList?type=recommended");
 	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
-	const handleCreateSurvey = () =>
-		navigate("/createFormStart", { state: { source: "main_cta" } });
+	const handleCreateSurvey = () => navigate("/google-form-conversion-landing"); //구글폼 설문 랜딩 페이지로 이동
 	const handleQuizClick = () => {
 		pushGtmEvent({
 			event: "start_screening_quiz",
@@ -272,14 +271,14 @@ export const Home = () => {
 							style={{ background: "none", border: "none", padding: 0 }}
 						>
 							<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-								지금 바로 설문 제작해보기!
+								구글폼으로 설문 변환하기
 							</Text>
 							<Text
 								color={adaptive.grey600}
 								typography="t7"
 								fontWeight="regular"
 							>
-								설문 제작부터 응답 모집까지 간편하고 빠르게
+								등록만 하면 패널에게 즉시 노출
 							</Text>
 						</button>
 						<Asset.Icon

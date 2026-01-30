@@ -16,9 +16,16 @@ import { queryClient } from "./contexts/queryClient";
 import { SurveyProvider } from "./contexts/SurveyContext";
 import { UserProvider } from "./contexts/UserContext";
 import {
+	AdPage,
 	DatePage,
 	EstimatePage,
 	FreeRegistrationNotice,
+	GoogleFormConversionLandingPage,
+	GoogleFormConversionPaymentConfirmPage,
+	GoogleFormConversionPaymentSuccessPage,
+	GoogleFormConversionPrecheckPage,
+	GoogleFormConversionPrivacyConsentPage,
+	GoogleFormConversionRequestPage,
 	Home,
 	Intro,
 	LocationSelectPage,
@@ -103,6 +110,24 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 	return <>{children}</>;
 };
 
+const DeepLinkHandler = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		const href = window.location.href;
+
+		const match = href.match(/intoss:\/\/[^/]+(\/.+)$/);
+		const targetPath = match?.[1];
+
+		if (targetPath && location.pathname !== targetPath) {
+			navigate(targetPath, { replace: true });
+		}
+	}, [navigate, location.pathname]);
+
+	return null;
+};
+
 const AnalyticsTracker = () => {
 	const location = useLocation();
 
@@ -127,12 +152,18 @@ export const App = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Router>
+				<DeepLinkHandler />
 				<AnalyticsTracker />
 				<UserProvider>
 					<GlobalNavigationLayout>
 						<Routes>
 							<Route path="/" element={<Intro />} />
+							<Route path="/ad" element={<AdPage />} />
 							<Route path="/home" element={<Home />} />
+							<Route
+								path="/google-form-conversion-landing"
+								element={<GoogleFormConversionLandingPage />}
+							/>
 							<Route path="/onboarding" element={<Onboarding />} />
 							<Route path="/main" element={<Main />} />
 							<Route path="/createFormStart" element={<SurveyStart />} />
@@ -212,6 +243,26 @@ export const App = () => {
 								<Route element={<MultiStepProviderWrapper />}>
 									<Route element={<PaymentProviderLayout />}>
 										<Route path="/createForm" element={<SurveyMain />} />
+										<Route
+											path="/payment/google-form-conversion"
+											element={<GoogleFormConversionRequestPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-check"
+											element={<GoogleFormConversionPrecheckPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-payment-confirm"
+											element={<GoogleFormConversionPaymentConfirmPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-success"
+											element={<GoogleFormConversionPaymentSuccessPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-privacy-consent"
+											element={<GoogleFormConversionPrivacyConsentPage />}
+										/>
 										<Route
 											path="/payment/location"
 											element={<LocationSelectPage />}
