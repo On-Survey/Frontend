@@ -80,6 +80,7 @@ export const GoogleFormConversionRequestPage = () => {
 
 	const [formLink, setFormLink] = useState("");
 	const [isFormLinkTouched, setIsFormLinkTouched] = useState(false);
+	const [email, setEmail] = useState("");
 	const [questionPackage, setQuestionPackage] =
 		useState<QuestionPackage>("light");
 	const [respondentCount, setRespondentCount] = useState<RespondentCount>(50);
@@ -107,8 +108,11 @@ export const GoogleFormConversionRequestPage = () => {
 		// 선택한 정보를 함께 전달
 		navigate("/payment/google-form-conversion-check", {
 			state: {
+				formLink,
+				email,
 				questionPackage,
 				respondentCount,
+				deadlineText,
 				price,
 			},
 		});
@@ -146,6 +150,19 @@ export const GoogleFormConversionRequestPage = () => {
 						}
 						setFormLink(e.target.value);
 					}}
+				/>
+
+				<TextField.Clearable
+					variant="line"
+					hasError={false}
+					label="이메일"
+					labelOption="sustain"
+					help="설문 등록 과정을 안내받으실 이메일을 입력해주세요"
+					value={email}
+					placeholder="example@toss.im"
+					suffix=""
+					prefix=""
+					onChange={(e) => setEmail(e.target.value)}
 				/>
 
 				<TextField.Button
@@ -252,7 +269,7 @@ export const GoogleFormConversionRequestPage = () => {
 			<FixedBottomCTA
 				loading={false}
 				onClick={handleSubmit}
-				disabled={!formLink || !isGoogleFormLink}
+				disabled={!formLink || !isGoogleFormLink || !email}
 			>
 				{formatPrice(price)}원 결제하기
 			</FixedBottomCTA>

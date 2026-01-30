@@ -36,17 +36,16 @@ export const GoogleFormConversionPrecheckPage = () => {
 		// 결제 확인 페이지로 이동 (선택한 정보는 location.state로 전달)
 		const locationState = location.state as
 			| {
+					formLink: string;
+					email: string;
 					questionPackage: "light" | "standard" | "plus";
 					respondentCount: 50 | 100;
+					deadlineText: string;
 					price: number;
 			  }
 			| undefined;
 		navigate("/payment/google-form-conversion-payment-confirm", {
-			state: locationState ?? {
-				questionPackage: "light" as const,
-				respondentCount: 50 as const,
-				price: 9900,
-			},
+			state: locationState,
 		});
 	};
 

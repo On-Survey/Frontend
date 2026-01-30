@@ -278,7 +278,7 @@ export const Home = () => {
 								typography="t7"
 								fontWeight="regular"
 							>
-								기존보다 더 할인된 가격으로 만나보세요
+								등록만 하면 패널에게 즉시 노출
 							</Text>
 						</button>
 						<Asset.Icon

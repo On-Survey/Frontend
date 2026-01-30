@@ -10,6 +10,7 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { createGoogleFormConversionRequest } from "../../service/googleFormConversion";
 import { createPayment } from "../../service/payments";
 
 type QuestionPackage = "light" | "standard" | "plus";
@@ -19,6 +20,23 @@ const QUESTION_PACKAGE_DISPLAY: Record<QuestionPackage, string> = {
 	light: "라이트 (15문항 이내)",
 	standard: "스탠다드 (25문항 이내)",
 	plus: "플러스 (30문항 이내)",
+};
+
+const QUESTION_PACKAGE_COUNT: Record<QuestionPackage, number> = {
+	light: 15,
+	standard: 25,
+	plus: 30,
+};
+
+const convertDeadlineToISO = (deadlineText: string): string => {
+	// "2026.01.20" 형식을 ISO 형식으로 변환
+	const [year, month, day] = deadlineText.split(".");
+	const date = new Date(
+		parseInt(year, 10),
+		parseInt(month, 10) - 1,
+		parseInt(day, 10),
+	);
+	return date.toISOString();
 };
 
 const formatPrice = (price: number) =>
@@ -32,14 +50,20 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 
 	const locationState = location.state as
 		| {
+				formLink: string;
+				email: string;
 				questionPackage: QuestionPackage;
 				respondentCount: RespondentCount;
+				deadlineText: string;
 				price: number;
 		  }
 		| undefined;
 
+	const formLink = locationState?.formLink ?? "";
+	const email = locationState?.email ?? "";
 	const questionPackage = locationState?.questionPackage ?? "light";
 	const respondentCount = locationState?.respondentCount ?? 50;
+	const deadlineText = locationState?.deadlineText ?? "";
 	const price = locationState?.price ?? 9900;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
@@ -110,6 +134,22 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				if (event.type === "success") {
 					const { orderId } = event.data;
 					console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+
+					// 구글폼 변환 신청 API 호출
+					try {
+						await createGoogleFormConversionRequest({
+							formLink,
+							questionCount: QUESTION_PACKAGE_COUNT[questionPackage],
+							targetResponseCount: respondentCount,
+							deadline: convertDeadlineToISO(deadlineText),
+							requesterEmail: email,
+							price,
+						});
+						console.log("구글폼 변환 신청이 완료되었습니다.");
+					} catch (error) {
+						console.error("구글폼 변환 신청 실패:", error);
+						// TODO: 에러 처리 (토스트 메시지 등)
+					}
 
 					// 결제 완료 후 성공 페이지로 이동
 					navigate("/payment/google-form-conversion-success", {
