@@ -77,13 +77,15 @@ export const NumberQuestion = ({
 					</ListHeader.DescriptionParagraph>
 				}
 				right={
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						name={isExpanded ? "icon-arrow-up-mono" : "icon-arrow-down-mono"}
-						color={adaptive.grey600}
-						aria-label={isExpanded ? "접기" : "펼치기"}
-						onClick={onToggleExpand}
-					/>
+					<div style={{ marginRight: "20px" }}>
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							name={isExpanded ? "icon-arrow-up-mono" : "icon-arrow-down-mono"}
+							color={adaptive.grey600}
+							aria-label={isExpanded ? "접기" : "펼치기"}
+							onClick={onToggleExpand}
+						/>
+					</div>
 				}
 			/>
 			{question.description && (
@@ -92,7 +94,7 @@ export const NumberQuestion = ({
 					color={adaptive.grey700}
 					typography="t6"
 					fontWeight="regular"
-					className="px-4 mb-2"
+					className="px-6! mb-2!"
 				>
 					{question.description}
 				</Text>
@@ -117,7 +119,7 @@ export const NumberQuestion = ({
 							color={adaptive.red500}
 							typography="t7"
 							fontWeight="regular"
-							className="px-4 mt-2"
+							className="ml-5 px-4 mt-2"
 						>
 							{errorMessage}
 						</Text>

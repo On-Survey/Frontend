@@ -63,6 +63,9 @@ export const SectionBasedSurvey = () => {
 	const [datePickerValue, setDatePickerValue] = useState<Date | null>(null);
 	const [submitting, setSubmitting] = useState(false);
 	const [isLastSection, setIsLastSection] = useState(false);
+	const [visitedSections, setVisitedSections] = useState<number[]>([
+		initialSection,
+	]);
 
 	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
 
@@ -102,11 +105,12 @@ export const SectionBasedSurvey = () => {
 					// 1. 문항 자체의 nextSection 확인
 					if (
 						sectionDecidableQuestion.nextSection !== undefined &&
+						sectionDecidableQuestion.nextSection !== null &&
 						sectionDecidableQuestion.nextSection !== 0
 					) {
 						nextSectionToCheck = sectionDecidableQuestion.nextSection;
 					} else if (sectionDecidableQuestion.type === "multipleChoice") {
-						// 2. 문항 자체에 nextSection이 없고 객관식인 경우, 보기의 nextSection 확인
+						// 2. 문항 자체에 nextSection이 없거나 null이고 객관식인 경우, 보기의 nextSection 확인
 						const answer = answers[sectionDecidableQuestion.questionId];
 						if (answer) {
 							const selectedOptions = answer.split("|||").filter(Boolean);
@@ -115,6 +119,7 @@ export const SectionBasedSurvey = () => {
 							);
 							if (
 								option?.nextSection !== undefined &&
+								option.nextSection !== null &&
 								option.nextSection !== 0
 							) {
 								nextSectionToCheck = option.nextSection;
@@ -244,8 +249,18 @@ export const SectionBasedSurvey = () => {
 			// 첫 섹션인 경우 Survey 페이지로 이동
 			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
 		} else {
-			// 이전 섹션으로 이동
-			setCurrentSection(currentSection - 1);
+			// 이전에 참여했던 섹션 중 현재 섹션보다 작은 섹션 중 가장 큰 섹션으로 이동
+			const previousSections = visitedSections
+				.filter((section) => section < currentSection)
+				.sort((a, b) => b - a); // 내림차순 정렬
+
+			if (previousSections.length > 0) {
+				// 이전에 참여했던 섹션이 있는 경우
+				setCurrentSection(previousSections[0]);
+			} else {
+				// 이전에 참여한 섹션이 없는 경우 이전 섹션으로 이동
+				setCurrentSection(currentSection - 1);
+			}
 			// 스크롤을 맨 위로
 			window.scrollTo({ top: 0, behavior: "smooth" });
 		}
@@ -280,7 +295,10 @@ export const SectionBasedSurvey = () => {
 		if (sectionDecidableQuestion) {
 			// 분기처리 문항이 있는 경우
 			// 1. 문항 자체의 nextSection 확인
-			if (sectionDecidableQuestion.nextSection !== undefined) {
+			if (
+				sectionDecidableQuestion.nextSection !== undefined &&
+				sectionDecidableQuestion.nextSection !== null
+			) {
 				if (sectionDecidableQuestion.nextSection === 0) {
 					// nextSection = 0이면 설문 종료
 					await handleSubmit();
@@ -289,7 +307,7 @@ export const SectionBasedSurvey = () => {
 					nextSection = sectionDecidableQuestion.nextSection;
 				}
 			} else if (sectionDecidableQuestion.type === "multipleChoice") {
-				// 2. 문항 자체에 nextSection이 없고 객관식인 경우, 보기의 nextSection 확인
+				// 2. 문항 자체에 nextSection이 없거나 null이고 객관식인 경우, 보기의 nextSection 확인
 				const answer = answers[sectionDecidableQuestion.questionId];
 				if (answer) {
 					// 선택한 보기의 nextSection 값 확인
@@ -298,7 +316,10 @@ export const SectionBasedSurvey = () => {
 						selectedOptions.includes(opt.content),
 					);
 
-					if (option?.nextSection !== undefined) {
+					if (
+						option?.nextSection !== undefined &&
+						option.nextSection !== null
+					) {
 						if (option.nextSection === 0) {
 							// nextSection = 0이면 설문 종료
 							await handleSubmit();
@@ -335,7 +356,17 @@ export const SectionBasedSurvey = () => {
 			}
 
 			// 다음 섹션으로 이동
-			setCurrentSection(nextSection);
+			if (nextSection !== null) {
+				const sectionToMove = nextSection;
+				setCurrentSection(sectionToMove);
+				// 방문한 섹션 목록에 추가 (중복 제거)
+				setVisitedSections((prev) => {
+					if (!prev.includes(sectionToMove)) {
+						return [...prev, sectionToMove].sort((a, b) => a - b);
+					}
+					return prev;
+				});
+			}
 			window.scrollTo({ top: 0, behavior: "smooth" });
 		} catch (error) {
 			console.error("다음 섹션 조회 실패:", error);
@@ -462,7 +493,7 @@ export const SectionBasedSurvey = () => {
 			/>
 			<Border variant="height16" />
 
-			<div className="px-4 pb-28">
+			<div className="pb-14">
 				{questions.map((question) => (
 					<div key={question.questionId} data-question-id={question.questionId}>
 						<QuestionRenderer
