@@ -53,8 +53,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	const questionPackage = locationState?.questionPackage ?? "light";
 	const respondentCount = locationState?.respondentCount ?? 50;
 	const deadline = locationState?.deadline ?? "";
-	// TODO: 테스트용 - 1코인(400원)으로 결제되도록 임시 설정. 테스트 완료 후 제거 필요
-	const price = 400; // locationState?.price ?? 9900;
+	const price = locationState?.price ?? 0;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
 	useEffect(() => {
@@ -92,7 +91,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 
 		fetchProducts();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []); // price는 테스트용 하드코딩 값이므로 dependency에서 제외
+	}, [price]);
 
 	const handlePayment = () => {
 		if (!selectedProduct?.sku) {

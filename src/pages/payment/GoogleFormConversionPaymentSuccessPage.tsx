@@ -10,7 +10,7 @@ export const GoogleFormConversionPaymentSuccessPage = () => {
 	};
 
 	return (
-		<>
+		<div className="flex flex-col items-center justify-center p-4">
 			<Spacing size={160} />
 			<Asset.Image
 				frameShape={Asset.frameShape.CleanW100}
@@ -41,6 +41,6 @@ export const GoogleFormConversionPaymentSuccessPage = () => {
 			<FixedBottomCTA loading={false} onClick={handleConfirm}>
 				확인했어요
 			</FixedBottomCTA>
-		</>
+		</div>
 	);
 };
