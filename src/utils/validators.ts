@@ -14,3 +14,12 @@ export const validateNumberInput = (
 	}
 	return false;
 };
+
+//이메일 입력값의 유효성을 검사 함수
+export const validateEmail = (email: string): boolean => {
+	if (email === "") {
+		return true;
+	}
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return emailRegex.test(email);
+};
