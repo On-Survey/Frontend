@@ -68,11 +68,18 @@ export const getSurveyQuestions = async (
 			questionOrder: question.questionOrder,
 		};
 
+		// 문항 자체의 nextSection과 isSectionDecidable 필드 추가 (모든 타입에 공통)
+		if ("nextSection" in question) {
+			base.nextSection = question.nextSection;
+		}
+		if ("isSectionDecidable" in question) {
+			base.isSectionDecidable = question.isSectionDecidable;
+		}
+
 		if (question.questionType === "CHOICE" && "options" in question) {
 			base.maxChoice = question.maxChoice;
 			base.hasNoneOption = question.hasNoneOption;
 			base.hasCustomInput = question.hasCustomInput;
-			base.isSectionDecidable = question.isSectionDecidable;
 			base.options = question.options?.map((opt, idx) => ({
 				...opt,
 				order: idx,

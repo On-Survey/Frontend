@@ -92,21 +92,33 @@ export const SectionBasedSurvey = () => {
 
 				// 다음 섹션 확인 (분기처리 문항이 있는 경우 고려)
 				const sectionDecidableQuestion = result.info.find(
-					(q) => q.type === "multipleChoice" && q.isSectionDecidable,
+					(q) => q.isSectionDecidable === true,
 				);
 
 				let nextSectionToCheck: number | null = null;
 
 				if (sectionDecidableQuestion) {
-					// 분기처리 문항이 있는 경우, 선택된 답변의 nextSection 확인
-					const answer = answers[sectionDecidableQuestion.questionId];
-					if (answer) {
-						const selectedOptions = answer.split("|||").filter(Boolean);
-						const option = sectionDecidableQuestion.options?.find((opt) =>
-							selectedOptions.includes(opt.content),
-						);
-						if (option?.nextSection !== undefined && option.nextSection !== 0) {
-							nextSectionToCheck = option.nextSection;
+					// 분기처리 문항이 있는 경우
+					// 1. 문항 자체의 nextSection 확인
+					if (
+						sectionDecidableQuestion.nextSection !== undefined &&
+						sectionDecidableQuestion.nextSection !== 0
+					) {
+						nextSectionToCheck = sectionDecidableQuestion.nextSection;
+					} else if (sectionDecidableQuestion.type === "multipleChoice") {
+						// 2. 문항 자체에 nextSection이 없고 객관식인 경우, 보기의 nextSection 확인
+						const answer = answers[sectionDecidableQuestion.questionId];
+						if (answer) {
+							const selectedOptions = answer.split("|||").filter(Boolean);
+							const option = sectionDecidableQuestion.options?.find((opt) =>
+								selectedOptions.includes(opt.content),
+							);
+							if (
+								option?.nextSection !== undefined &&
+								option.nextSection !== 0
+							) {
+								nextSectionToCheck = option.nextSection;
+							}
 						}
 					}
 				}
@@ -258,30 +270,42 @@ export const SectionBasedSurvey = () => {
 		// 현재 섹션의 답변 제출
 		await submitCurrentSectionAnswers();
 
-		// 분기처리 로직: 객관식 문항 중 isSectionDecidable이 true인 경우
+		// 분기처리 로직: isSectionDecidable이 true인 문항 찾기
 		const sectionDecidableQuestion = questions.find(
-			(q) => q.type === "multipleChoice" && q.isSectionDecidable,
+			(q) => q.isSectionDecidable === true,
 		);
 
 		let nextSection: number | null = null;
 
 		if (sectionDecidableQuestion) {
 			// 분기처리 문항이 있는 경우
-			const answer = answers[sectionDecidableQuestion.questionId];
-			if (answer) {
-				// 선택한 보기의 nextSection 값 확인
-				const selectedOptions = answer.split("|||").filter(Boolean);
-				const option = sectionDecidableQuestion.options?.find((opt) =>
-					selectedOptions.includes(opt.content),
-				);
+			// 1. 문항 자체의 nextSection 확인
+			if (sectionDecidableQuestion.nextSection !== undefined) {
+				if (sectionDecidableQuestion.nextSection === 0) {
+					// nextSection = 0이면 설문 종료
+					await handleSubmit();
+					return;
+				} else {
+					nextSection = sectionDecidableQuestion.nextSection;
+				}
+			} else if (sectionDecidableQuestion.type === "multipleChoice") {
+				// 2. 문항 자체에 nextSection이 없고 객관식인 경우, 보기의 nextSection 확인
+				const answer = answers[sectionDecidableQuestion.questionId];
+				if (answer) {
+					// 선택한 보기의 nextSection 값 확인
+					const selectedOptions = answer.split("|||").filter(Boolean);
+					const option = sectionDecidableQuestion.options?.find((opt) =>
+						selectedOptions.includes(opt.content),
+					);
 
-				if (option?.nextSection !== undefined) {
-					if (option.nextSection === 0) {
-						// nextSection = 0이면 설문 종료
-						await handleSubmit();
-						return;
-					} else {
-						nextSection = option.nextSection;
+					if (option?.nextSection !== undefined) {
+						if (option.nextSection === 0) {
+							// nextSection = 0이면 설문 종료
+							await handleSubmit();
+							return;
+						} else {
+							nextSection = option.nextSection;
+						}
 					}
 				}
 			}

@@ -28,6 +28,8 @@ export interface BaseSurveyParticipationQuestion {
 	isRequired: boolean;
 	questionOrder: number;
 	section?: number; // 섹션 번호 (null이면 전체 조회)
+	nextSection?: number; // 분기처리용 다음 섹션 번호 (문항 자체에 있는 경우, 0이면 설문 종료)
+	isSectionDecidable?: boolean; // 섹션 분기처리 가능 여부
 }
 
 // 객관식 문항 (추가 필드 포함)
@@ -36,7 +38,6 @@ export interface ChoiceQuestion extends BaseSurveyParticipationQuestion {
 	maxChoice?: number;
 	hasNoneOption?: boolean;
 	hasCustomInput?: boolean;
-	isSectionDecidable?: boolean; // 섹션 분기처리 가능 여부
 	options?: BackendOption[];
 }
 
@@ -148,12 +149,13 @@ export interface TransformedSurveyQuestion {
 	hasNoneOption?: boolean;
 	hasCustomInput?: boolean;
 	isSectionDecidable?: boolean; // 섹션 분기처리 가능 여부
+	nextSection?: number; // 분기처리용 다음 섹션 번호 (문항 자체에 있는 경우, 0이면 설문 종료)
 	options?: Array<{
 		optionId: number;
 		content: string;
 		nextQuestionId: number;
 		order: number;
-		nextSection?: number; // 분기처리용 다음 섹션 번호 (0이면 설문 종료)
+		nextSection?: number; // 분기처리용 다음 섹션 번호 (보기에 있는 경우, 0이면 설문 종료)
 	}>;
 	date?: string;
 	minValue?: string;
