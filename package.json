@@ -13,7 +13,8 @@
 		"prepare": "husky",
 		"deploy": "ait deploy",
 		"test:e2e:survey": "maestro test e2e/survey/create-survey.yaml",
-		"test:e2e:watch": "maestro test --watch e2e/survey/"
+		"test:e2e:watch": "maestro test --watch e2e/survey/",
+		"pullapi": "orval --config tools/orval.config.ts && biome check --write src/api"
 	},
 	"dependencies": {
 		"@apps-in-toss/web-framework": "1.5.3",
@@ -42,6 +43,7 @@
 		"@types/react-dom": "^18.2.0",
 		"@vitejs/plugin-react": "^5.0.4",
 		"lint-staged": "^16.2.3",
+		"orval": "^8.1.0",
 		"typescript": "~5.9.3",
 		"vite": "npm:rolldown-vite@7.1.14"
 	},
