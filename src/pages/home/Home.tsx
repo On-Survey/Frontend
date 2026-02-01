@@ -3,6 +3,7 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import formBanner from "../../assets/formBanner.png";
 import homeBanner from "../../assets/HomeBanner.png";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { ExitConfirmDialog } from "../../components/ExitConfirmDialog";
@@ -19,7 +20,6 @@ import { pushGtmEvent } from "../../utils/gtm";
 import { getUniqueSurveyIdsFromArrays } from "../../utils/surveyListUtils";
 import { useGlobalStats } from "./hooks/useGlobalStats";
 import { useOngoingSurveys } from "./hooks/useOngoingSurveys";
-
 export const Home = () => {
 	const navigate = useNavigate();
 
@@ -263,11 +263,11 @@ export const Home = () => {
 				</div>
 
 				<div className="px-4 pb-4">
-					<div className="bg-green-50 rounded-2xl p-4 flex items-center justify-between ">
+					<div className="bg-gray-50 rounded-2xl flex items-center justify-between gap-4">
 						<button
 							type="button"
 							onClick={handleCreateSurvey}
-							className="flex-1 cursor-pointer text-left"
+							className="flex-1 p-4"
 							style={{ background: "none", border: "none", padding: 0 }}
 						>
 							<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
@@ -281,12 +281,10 @@ export const Home = () => {
 								등록만 하면 패널에게 즉시 노출
 							</Text>
 						</button>
-						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW60}
-							backgroundColor="transparent"
-							name="icon-document-check-lines-fill"
-							aria-hidden={true}
-							ratio="1/1"
+						<img
+							src={formBanner}
+							alt="구글폼 배너"
+							className="h-full max-h-[84px] w-auto object-contain flex-shrink-0"
 						/>
 					</div>
 				</div>
