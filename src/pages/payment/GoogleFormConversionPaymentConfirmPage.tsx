@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../../service/googleFormConversion";
-import { createPayment } from "../../service/payments";
+import { createGoogleFormPayment } from "../../service/payments";
 
 type QuestionPackage = "light" | "standard" | "plus";
 type RespondentCount = 50 | 100;
@@ -29,7 +29,6 @@ const QUESTION_PACKAGE_COUNT: Record<QuestionPackage, number> = {
 };
 
 const convertDeadlineToISO = (deadlineText: string): string => {
-	// "2026.01.20" 형식을 ISO 형식으로 변환
 	const [year, month, day] = deadlineText.split(".");
 	const date = new Date(
 		parseInt(year, 10),
@@ -109,17 +108,12 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 			return;
 		}
 
-		console.log(`결제 금액: ${formatPrice(price)}원`);
-		console.log(`패키지: ${QUESTION_PACKAGE_DISPLAY[questionPackage]}`);
-		console.log(`응답자 수: ${respondentCount}명`);
-		console.log(`선택된 상품 SKU: ${selectedProduct.sku}`);
-
 		IAP.createOneTimePurchaseOrder({
 			options: {
 				sku: selectedProduct.sku,
 				processProductGrant: async ({ orderId }) => {
 					try {
-						await createPayment({
+						await createGoogleFormPayment({
 							orderId,
 							price,
 						});
@@ -148,7 +142,6 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 						console.log("구글폼 변환 신청이 완료되었습니다.");
 					} catch (error) {
 						console.error("구글폼 변환 신청 실패:", error);
-						// TODO: 에러 처리 (토스트 메시지 등)
 					}
 
 					// 결제 완료 후 성공 페이지로 이동

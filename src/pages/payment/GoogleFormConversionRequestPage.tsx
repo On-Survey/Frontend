@@ -45,16 +45,16 @@ const RESPONDENT_OPTIONS: {
 
 const PRICE_TABLE: Record<QuestionPackage, Record<RespondentCount, number>> = {
 	light: {
-		50: 9900,
-		100: 17900,
+		50: 10890,
+		100: 19690,
 	},
 	standard: {
-		50: 14900,
-		100: 26900,
+		50: 16390,
+		100: 29590,
 	},
 	plus: {
-		50: 19900,
-		100: 35900,
+		50: 21890,
+		100: 39490,
 	},
 };
 
@@ -105,7 +105,6 @@ export const GoogleFormConversionRequestPage = () => {
 	);
 
 	const handleSubmit = () => {
-		// 선택한 정보를 함께 전달
 		navigate("/payment/google-form-conversion-check", {
 			state: {
 				formLink,
@@ -175,6 +174,7 @@ export const GoogleFormConversionRequestPage = () => {
 						)?.display ?? ""
 					}
 					placeholder="설문 문항 수"
+					help="표시된 금액은 VAT 포함 금액이에요"
 					right={
 						<Asset.Icon
 							frameShape={Asset.frameShape.CleanW24}
@@ -212,7 +212,7 @@ export const GoogleFormConversionRequestPage = () => {
 					hasError={false}
 					label="설문조사 마감일"
 					labelOption="sustain"
-					help="결제 완료 시점으로부터 영업일 기준 1일 이내에 설문 제작 및 노출이 시작됩니다."
+					help="결제 완료 시점으로부터 영업일 기준 1일 이내에 설문 제작 및 노출이 시작돼요"
 					value={deadlineText}
 					onChange={(e) => setDeadlineText(e.target.value)}
 				/>
