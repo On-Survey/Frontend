@@ -263,7 +263,7 @@ export const Home = () => {
 				</div>
 
 				<div className="px-4 pb-4">
-					<div className="bg-gray-50 rounded-2xl flex items-center justify-between gap-4">
+					<div className="bg-gray-50 rounded-[24px] flex items-center justify-between gap-4">
 						<button
 							type="button"
 							onClick={handleCreateSurvey}
