@@ -7,6 +7,7 @@ import { getOngoingSurveys } from "../../service/surveyList";
 import type { OngoingSurveySummary } from "../../service/surveyList/types";
 import type { SurveyListItem } from "../../types/surveyList";
 import { formatRemainingTime } from "../../utils/FormatDate";
+import { pushGtmEvent } from "../../utils/gtm";
 
 export const Ineligible = () => {
 	const navigate = useNavigate();
@@ -72,6 +73,13 @@ export const Ineligible = () => {
 	}, []);
 
 	const handleSurveyClick = (survey: SurveyListItem) => {
+		pushGtmEvent({
+			event: "survey_start",
+			pagePath: "/survey",
+			survey_id: String(survey.id),
+			source: "main",
+			progress_percent: "0",
+		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(
 			{

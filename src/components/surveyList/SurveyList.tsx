@@ -3,6 +3,7 @@ import { List, ListRow } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 import { topics } from "../../constants/topics";
 import type { SurveyListItem } from "../../types/surveyList";
+import { pushGtmEvent } from "../../utils/gtm";
 
 const getTopicTag = (topicId: string): string => {
 	const topic = topics.find((t) => t.id === topicId);
@@ -33,6 +34,13 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 	const navigate = useNavigate();
 
 	const handleSurveyClick = (survey: SurveyListItem) => {
+		pushGtmEvent({
+			event: "survey_start",
+			pagePath: "/survey",
+			survey_id: String(survey.id),
+			source: "main",
+			progress_percent: "0",
+		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(
 			{

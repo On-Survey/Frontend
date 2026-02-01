@@ -3,6 +3,7 @@ import { Asset, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
 import type { SurveyListItem } from "../../types/surveyList";
+import { pushGtmEvent } from "../../utils/gtm";
 
 interface UrgentSurveyListProps {
 	surveys: SurveyListItem[];
@@ -21,6 +22,13 @@ export const UrgentSurveyList = ({
 	];
 
 	const handleSurveyClick = (survey: SurveyListItem) => {
+		pushGtmEvent({
+			event: "survey_start",
+			pagePath: "/survey",
+			survey_id: String(survey.id),
+			source: "main",
+			progress_percent: "0",
+		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(
 			{
