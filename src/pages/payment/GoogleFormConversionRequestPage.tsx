@@ -8,6 +8,8 @@ import {
 } from "@toss/tds-mobile";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DateSelectBottomSheet } from "../../components/payment";
+import { validateEmail } from "../../utils/validators";
 
 type QuestionPackage = "light" | "standard" | "plus";
 type RespondentCount = 50 | 100;
@@ -68,11 +70,11 @@ const formatDate = (date: Date): string => {
 	return `${year}.${month}.${day}`;
 };
 
-const getDefaultDeadline = (): string => {
+const getDefaultDeadline = (): Date => {
 	const today = new Date();
 	const sevenDaysLater = new Date(today);
 	sevenDaysLater.setDate(today.getDate() + 7);
-	return formatDate(sevenDaysLater);
+	return sevenDaysLater;
 };
 
 export const GoogleFormConversionRequestPage = () => {
@@ -81,10 +83,11 @@ export const GoogleFormConversionRequestPage = () => {
 	const [formLink, setFormLink] = useState("");
 	const [isFormLinkTouched, setIsFormLinkTouched] = useState(false);
 	const [email, setEmail] = useState("");
+	const [isEmailTouched, setIsEmailTouched] = useState(false);
 	const [questionPackage, setQuestionPackage] =
 		useState<QuestionPackage>("light");
 	const [respondentCount, setRespondentCount] = useState<RespondentCount>(50);
-	const [deadlineText, setDeadlineText] = useState(getDefaultDeadline());
+	const [deadline, setDeadline] = useState<Date>(getDefaultDeadline());
 
 	const [isQuestionPackageSheetOpen, setIsQuestionPackageSheetOpen] =
 		useState(false);
@@ -99,6 +102,8 @@ export const GoogleFormConversionRequestPage = () => {
 		[formLink],
 	);
 
+	const isValidEmail = useMemo(() => validateEmail(email), [email]);
+
 	const price = useMemo(
 		() => PRICE_TABLE[questionPackage][respondentCount],
 		[questionPackage, respondentCount],
@@ -111,10 +116,15 @@ export const GoogleFormConversionRequestPage = () => {
 				email,
 				questionPackage,
 				respondentCount,
-				deadlineText,
+				deadlineText: formatDate(deadline),
+				deadline: deadline.toISOString(),
 				price,
 			},
 		});
+	};
+
+	const handleDateChange = (date: Date) => {
+		setDeadline(date);
 	};
 
 	return (
@@ -153,15 +163,24 @@ export const GoogleFormConversionRequestPage = () => {
 
 				<TextField.Clearable
 					variant="line"
-					hasError={false}
+					hasError={isEmailTouched && !isValidEmail}
 					label="이메일"
 					labelOption="sustain"
-					help="설문 등록 과정을 안내받으실 이메일을 입력해주세요"
+					help={
+						isEmailTouched && !isValidEmail
+							? "올바른 이메일 형식을 입력해주세요"
+							: "설문 등록 과정을 안내받으실 이메일을 입력해주세요"
+					}
 					value={email}
 					placeholder="example@toss.im"
 					suffix=""
 					prefix=""
-					onChange={(e) => setEmail(e.target.value)}
+					onChange={(e) => {
+						if (!isEmailTouched) {
+							setIsEmailTouched(true);
+						}
+						setEmail(e.target.value);
+					}}
 				/>
 
 				<TextField.Button
@@ -205,16 +224,6 @@ export const GoogleFormConversionRequestPage = () => {
 						/>
 					}
 					onClick={() => setIsRespondentSheetOpen(true)}
-				/>
-
-				<TextField.Clearable
-					variant="line"
-					hasError={false}
-					label="설문조사 마감일"
-					labelOption="sustain"
-					help="결제 완료 시점으로부터 영업일 기준 1일 이내에 설문 제작 및 노출이 시작돼요"
-					value={deadlineText}
-					onChange={(e) => setDeadlineText(e.target.value)}
 				/>
 			</div>
 
@@ -266,10 +275,12 @@ export const GoogleFormConversionRequestPage = () => {
 				</div>
 			</BottomSheet>
 
+			<DateSelectBottomSheet value={deadline} onChange={handleDateChange} />
+
 			<FixedBottomCTA
 				loading={false}
 				onClick={handleSubmit}
-				disabled={!formLink || !isGoogleFormLink || !email}
+				disabled={!formLink || !isGoogleFormLink || !email || !isValidEmail}
 			>
 				{formatPrice(price)}원 결제하기
 			</FixedBottomCTA>

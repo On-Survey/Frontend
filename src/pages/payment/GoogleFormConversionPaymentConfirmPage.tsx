@@ -28,16 +28,6 @@ const QUESTION_PACKAGE_COUNT: Record<QuestionPackage, number> = {
 	plus: 30,
 };
 
-const convertDeadlineToISO = (deadlineText: string): string => {
-	const [year, month, day] = deadlineText.split(".");
-	const date = new Date(
-		parseInt(year, 10),
-		parseInt(month, 10) - 1,
-		parseInt(day, 10),
-	);
-	return date.toISOString();
-};
-
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
 
@@ -53,7 +43,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				email: string;
 				questionPackage: QuestionPackage;
 				respondentCount: RespondentCount;
-				deadlineText: string;
+				deadline: string;
 				price: number;
 		  }
 		| undefined;
@@ -62,8 +52,9 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	const email = locationState?.email ?? "";
 	const questionPackage = locationState?.questionPackage ?? "light";
 	const respondentCount = locationState?.respondentCount ?? 50;
-	const deadlineText = locationState?.deadlineText ?? "";
-	const price = locationState?.price ?? 9900;
+	const deadline = locationState?.deadline ?? "";
+	// TODO: 테스트용 - 1코인(400원)으로 결제되도록 임시 설정. 테스트 완료 후 제거 필요
+	const price = 400; // locationState?.price ?? 9900;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
 	useEffect(() => {
@@ -100,7 +91,8 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 		}
 
 		fetchProducts();
-	}, [price]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []); // price는 테스트용 하드코딩 값이므로 dependency에서 제외
 
 	const handlePayment = () => {
 		if (!selectedProduct?.sku) {
@@ -135,7 +127,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 							formLink,
 							questionCount: QUESTION_PACKAGE_COUNT[questionPackage],
 							targetResponseCount: respondentCount,
-							deadline: convertDeadlineToISO(deadlineText),
+							deadline,
 							requesterEmail: email,
 							price,
 						});

@@ -271,7 +271,7 @@ export const Home = () => {
 							style={{ background: "none", border: "none", padding: 0 }}
 						>
 							<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-								구글폼으로 설문 변환하기
+								구글폼으로 설문 등록하기
 							</Text>
 							<Text
 								color={adaptive.grey600}
