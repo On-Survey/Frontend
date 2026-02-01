@@ -1,0 +1,27 @@
+name: PR 제목 검증
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [main, develop]
+
+jobs:
+  pr-title-check:
+    name: 지라 티켓 ID 형식 확인
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📋 PR 제목 형식 검증
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          # [OMF-157] 또는 [OMF-1234] 형식으로 시작하는지 확인 (대괄호 + OMF- + 숫자 + ])
+          if ! echo "$PR_TITLE" | grep -qE '^\[OMF-[0-9]+\]'; then
+            echo "❌ PR 제목이 올바른 형식이 아닙니다."
+            echo ""
+            echo "제목은 반드시 지라 티켓 ID로 시작해야 합니다."
+            echo "올바른 예: [OMF-157] 폴더 구조 변경"
+            echo "현재 제목: $PR_TITLE"
+            echo ""
+            exit 1
+          fi
+          echo "✅ PR 제목 형식이 올바릅니다: $PR_TITLE"
