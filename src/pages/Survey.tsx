@@ -18,7 +18,6 @@ import type { ReturnTo } from "../types/navigation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
 import { pushGtmEvent } from "../utils/gtm";
-import { getQuestionTypeRoute } from "../utils/questionRoute";
 import { getRefreshToken } from "../utils/tokenManager";
 
 export const Survey = () => {
@@ -288,17 +287,17 @@ export const Survey = () => {
 			return;
 		}
 
-		const firstQuestion = sortedQuestions[0];
-		const questionTypeRoute = getQuestionTypeRoute(firstQuestion.type);
-
 		const source = locationState?.source ?? "main";
-		navigate(questionTypeRoute, {
+		// 섹션 기반 설문 페이지로 이동 (section=1로 시작)
+		navigate("/survey/section", {
 			state: {
-				surveyId,
-				questions: sortedQuestions,
-				currentQuestionIndex: 0,
+				surveyId: numericSurveyId,
+				currentSection: 1,
 				answers: {},
-				isFree: surveyInfo?.isFree,
+				previousAnswers: {},
+				surveyTitle: surveyInfo?.title ?? currentSurvey?.title ?? "",
+				surveyDescription:
+					surveyInfo?.description ?? currentSurvey?.description ?? "",
 				source,
 			},
 		});

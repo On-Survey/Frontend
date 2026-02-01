@@ -15,6 +15,7 @@ export interface BackendOption {
 	optionId: number;
 	content: string;
 	nextQuestionId: number;
+	nextSection?: number; // 분기처리용 다음 섹션 번호 (0이면 설문 종료, 기본값은 현재 section + 1)
 }
 
 // 백엔드 응답의 문항 타입 (기본)
@@ -26,6 +27,7 @@ export interface BaseSurveyParticipationQuestion {
 	description: string;
 	isRequired: boolean;
 	questionOrder: number;
+	section?: number; // 섹션 번호 (null이면 전체 조회)
 }
 
 // 객관식 문항 (추가 필드 포함)
@@ -34,6 +36,7 @@ export interface ChoiceQuestion extends BaseSurveyParticipationQuestion {
 	maxChoice?: number;
 	hasNoneOption?: boolean;
 	hasCustomInput?: boolean;
+	isSectionDecidable?: boolean; // 섹션 분기처리 가능 여부
 	options?: BackendOption[];
 }
 
@@ -104,6 +107,19 @@ export interface SurveyQuestionsInfo {
 	info: SurveyParticipationQuestion[];
 }
 
+// 섹션 타입
+export interface SurveySection {
+	sectionId: number;
+	title: string;
+	description: string;
+	sectionOrder: number;
+	questions: TransformedSurveyQuestion[];
+}
+
+export interface SurveySectionsInfo {
+	sections: SurveySection[];
+}
+
 export interface SurveyBasicInfo {
 	surveyId: number;
 	title: string;
@@ -126,15 +142,18 @@ export interface TransformedSurveyQuestion {
 	description: string;
 	isRequired: boolean;
 	questionOrder: number;
+	section?: number; // 섹션 번호
 	// 타입별 추가 필드
 	maxChoice?: number;
 	hasNoneOption?: boolean;
 	hasCustomInput?: boolean;
+	isSectionDecidable?: boolean; // 섹션 분기처리 가능 여부
 	options?: Array<{
 		optionId: number;
 		content: string;
 		nextQuestionId: number;
 		order: number;
+		nextSection?: number; // 분기처리용 다음 섹션 번호 (0이면 설문 종료)
 	}>;
 	date?: string;
 	minValue?: string;
@@ -143,7 +162,7 @@ export interface TransformedSurveyQuestion {
 
 export interface SubmitSurveyParticipationAnswer {
 	questionId: number;
-	content: string;
+	content: string | null; // null: 객관식에서 해제, "" 또는 null: 텍스트 입력에서 지움
 }
 
 export interface SubmitSurveyParticipationPayload {
