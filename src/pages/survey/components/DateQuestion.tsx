@@ -29,15 +29,13 @@ export const DateQuestion = ({
 	return (
 		<>
 			<ListHeader
-				size="large"
-				horizontalPadding="medium"
-				verticalPadding="small"
 				descriptionPosition="top"
-				rightAlignment="center"
-				a11yRightReflow={false}
-				titleWidthRatio="fill"
 				title={
-					<ListHeader.TitleParagraph color={adaptive.grey800}>
+					<ListHeader.TitleParagraph
+						color={adaptive.grey800}
+						fontWeight="regular"
+						typography="t5"
+					>
 						{question.title}
 					</ListHeader.TitleParagraph>
 				}
@@ -47,13 +45,11 @@ export const DateQuestion = ({
 					</ListHeader.DescriptionParagraph>
 				}
 				right={
-					<ListHeader.RightIconButton
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW24}
+						name={isExpanded ? "icon-arrow-up-mono" : "icon-arrow-down-mono"}
+						color={adaptive.grey600}
 						aria-label={isExpanded ? "접기" : "펼치기"}
-						src={
-							isExpanded
-								? "https://static.toss.im/icons/png/4x/icon-system-arrow-up-outlined.png"
-								: "https://static.toss.im/icons/png/4x/icon-system-arrow-down-outlined.png"
-						}
 						onClick={onToggleExpand}
 					/>
 				}

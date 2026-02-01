@@ -50,6 +50,8 @@ export const getSurveyQuestions = async (
 	params: GetSurveyParticipationParams,
 ): Promise<{
 	info: TransformedSurveyQuestion[];
+	sectionTitle?: string;
+	sectionDescription?: string;
 }> => {
 	const result = await apiCall<SurveyQuestionsInfo>({
 		method: "GET",
@@ -106,6 +108,8 @@ export const getSurveyQuestions = async (
 
 	return {
 		info: transformed,
+		sectionTitle: result.sectionTitle,
+		sectionDescription: result.sectionDescription,
 	};
 };
 

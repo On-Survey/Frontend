@@ -46,6 +46,8 @@ export const SectionBasedSurvey = () => {
 	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
 	const [surveyTitle] = useState<string>(initialSurveyTitle);
 	const [surveyDescription] = useState<string>(initialSurveyDescription);
+	const [sectionTitle, setSectionTitle] = useState<string>("");
+	const [sectionDescription, setSectionDescription] = useState<string>("");
 	const [answers, setAnswers] =
 		useState<Record<number, string>>(initialAnswers);
 	const [previousAnswers, setPreviousAnswers] = useState<
@@ -82,6 +84,9 @@ export const SectionBasedSurvey = () => {
 				}
 
 				setQuestions(result.info);
+				// 섹션 제목과 설명 설정 (없으면 전체 설문 제목/설명 사용)
+				setSectionTitle(result.sectionTitle ?? surveyTitle);
+				setSectionDescription(result.sectionDescription ?? surveyDescription);
 
 				// 1번 문항만 열림, 나머지는 닫힘 상태로 초기화
 				const expanded: Record<number, boolean> = {};
@@ -145,7 +150,7 @@ export const SectionBasedSurvey = () => {
 		};
 
 		fetchSectionQuestions();
-	}, [surveyId, currentSection, answers]);
+	}, [surveyId, currentSection, answers, surveyTitle, surveyDescription]);
 
 	const updateAnswer = (questionId: number, value: string) => {
 		const previousValue = answers[questionId];
@@ -449,13 +454,13 @@ export const SectionBasedSurvey = () => {
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{surveyTitle}
+						{sectionTitle || surveyTitle}
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={
-					surveyDescription ? (
+					sectionDescription || surveyDescription ? (
 						<Top.SubtitleParagraph size={15}>
-							{surveyDescription}
+							{sectionDescription || surveyDescription}
 						</Top.SubtitleParagraph>
 					) : undefined
 				}

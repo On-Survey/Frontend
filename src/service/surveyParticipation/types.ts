@@ -106,6 +106,8 @@ export interface SurveyInfo {
 
 export interface SurveyQuestionsInfo {
 	info: SurveyParticipationQuestion[];
+	sectionTitle?: string; // 섹션 제목
+	sectionDescription?: string; // 섹션 설명
 }
 
 // 섹션 타입

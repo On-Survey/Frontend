@@ -9,6 +9,8 @@ interface RatingQuestionProps {
 	onAnswerChange: (questionId: number, answer: string) => void;
 	error?: boolean;
 	errorMessage?: string;
+	isExpanded?: boolean;
+	onToggleExpand?: () => void;
 }
 
 export const RatingQuestion = ({
@@ -17,6 +19,8 @@ export const RatingQuestion = ({
 	onAnswerChange,
 	error,
 	errorMessage,
+	isExpanded = true,
+	onToggleExpand,
 }: RatingQuestionProps) => {
 	const minValue = parseInt(question.minValue ?? "1", 10);
 	const maxValue = parseInt(question.maxValue ?? "10", 10);
@@ -30,8 +34,6 @@ export const RatingQuestion = ({
 		return question.isRequired ? "필수" : "선택";
 	};
 
-	const isExpanded = true; // TODO: 접기/펼치기 상태 관리
-
 	const ratingOptions = useMemo(() => {
 		return Array.from({ length: maxValue - minValue + 1 }, (_, idx) => {
 			const value = minValue + idx;
@@ -42,15 +44,13 @@ export const RatingQuestion = ({
 	return (
 		<>
 			<ListHeader
-				size="large"
-				horizontalPadding="medium"
-				verticalPadding="small"
 				descriptionPosition="top"
-				rightAlignment="center"
-				a11yRightReflow={false}
-				titleWidthRatio="fill"
 				title={
-					<ListHeader.TitleParagraph color={adaptive.grey800}>
+					<ListHeader.TitleParagraph
+						color={adaptive.grey800}
+						fontWeight="regular"
+						typography="t5"
+					>
 						{question.title}
 					</ListHeader.TitleParagraph>
 				}
@@ -60,13 +60,12 @@ export const RatingQuestion = ({
 					</ListHeader.DescriptionParagraph>
 				}
 				right={
-					<ListHeader.RightIconButton
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW24}
+						name={isExpanded ? "icon-arrow-up-mono" : "icon-arrow-down-mono"}
+						color={adaptive.grey600}
 						aria-label={isExpanded ? "접기" : "펼치기"}
-						src={
-							isExpanded
-								? "https://static.toss.im/icons/png/4x/icon-system-arrow-up-outlined.png"
-								: "https://static.toss.im/icons/png/4x/icon-system-arrow-down-outlined.png"
-						}
+						onClick={onToggleExpand}
 					/>
 				}
 			/>
