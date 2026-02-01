@@ -30,11 +30,11 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@toss/tds-mobile':
-        specifier: ^2.2.1
-        version: 2.2.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^2.1.2
+        version: 2.2.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@toss/tds-mobile-ait':
-        specifier: ^2.2.0
-        version: 2.2.0(@apps-in-toss/web-framework@1.5.3(7a60cd67821669d580bfb538f497aa9b))(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@toss/tds-mobile@2.2.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^2.1.2
+        version: 2.2.0(@apps-in-toss/web-framework@1.5.3(7a60cd67821669d580bfb538f497aa9b))(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@toss/tds-mobile@2.2.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       axios:
         specifier: ^1.12.2
         version: 1.13.2
@@ -3047,8 +3047,8 @@ packages:
       react: ^16.8.3 || ^17 || ^18
       react-dom: ^16.8.3 || ^17 || ^18
 
-  '@toss/tds-mobile@2.2.1':
-    resolution: {integrity: sha512-KqQ2PX8j35RWs2x4lbrDcOLXxHtdPwoaRZv/hoVAHtF3anjmADrAdu83vOmINbojh7fNMHNxcI1vSIueTndoOw==}
+  '@toss/tds-mobile@2.2.0':
+    resolution: {integrity: sha512-YyKCahirMhP/okFbPVFdCp7+LWcpFIGdI3xJ+J/MKxqHIGbzE/F0Q7rts5G9qwXmAFInsLooiMFpJHAqNidLlA==}
     peerDependencies:
       '@emotion/react': ^11
       react: ^16.8.3 || ^17 || ^18
@@ -10428,16 +10428,16 @@ snapshots:
 
   '@toss/tds-easings@0.0.1': {}
 
-  '@toss/tds-mobile-ait@2.2.0(@apps-in-toss/web-framework@1.5.3(7a60cd67821669d580bfb538f497aa9b))(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@toss/tds-mobile@2.2.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@toss/tds-mobile-ait@2.2.0(@apps-in-toss/web-framework@1.5.3(7a60cd67821669d580bfb538f497aa9b))(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@toss/tds-mobile@2.2.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@apps-in-toss/web-framework': 1.5.3(7a60cd67821669d580bfb538f497aa9b)
       '@emotion/react': 11.14.0(@types/react@18.3.27)(react@18.3.1)
       '@toss/tds-colors': 0.1.0
-      '@toss/tds-mobile': 2.2.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@toss/tds-mobile': 2.2.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@toss/tds-mobile@2.2.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@toss/tds-mobile@2.2.0(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.27)(react@18.3.1)
       react: 18.3.1
