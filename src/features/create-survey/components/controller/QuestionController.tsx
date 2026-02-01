@@ -1,0 +1,182 @@
+import { generateHapticFeedback } from "@apps-in-toss/web-framework";
+import { useSurvey } from "@shared/contexts/SurveyContext";
+import { useModal } from "@shared/hooks/UseToggle";
+import { pushGtmEvent } from "@shared/lib/gtm";
+import type { QuestionType } from "@shared/types/survey";
+import { adaptive } from "@toss/tds-colors";
+import { Asset, Text } from "@toss/tds-mobile";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import {
+	BUTTON_STYLES,
+	ICON_PROPS,
+	QUESTION_TYPES,
+	TEXT_PROPS,
+} from "../../constants/formController";
+import { QuestionTitleBottomSheet } from "../bottomSheet/QuestionTitleBottomSheet";
+
+interface QuestionControllerProps {
+	onPrevious: () => void;
+}
+export const QuestionController = ({ onPrevious }: QuestionControllerProps) => {
+	const { isOpen, handleOpen, handleClose } = useModal();
+	const location = useLocation();
+	const { state } = useSurvey();
+	const [selectedQuestionType, setSelectedQuestionType] =
+		useState<QuestionType | null>(null);
+
+	const locationState = location.state as
+		| { source?: "main_cta" | "mysurvey_button" | "mysurvey_edit" }
+		| undefined;
+
+	// question_type 매핑 (코드 타입 -> 이벤트 타입)
+	const getQuestionTypeForEvent = (type: string): string => {
+		const typeMap: Record<string, string> = {
+			multipleChoice: "single_choice",
+			shortAnswer: "short_text",
+			nps: "nps",
+			rating: "rating",
+			longAnswer: "long_text",
+			number: "number",
+			date: "date",
+		};
+		return typeMap[type] ?? type;
+	};
+
+	const handlePrevious = () => {
+		generateHapticFeedback({ type: "tap" });
+		onPrevious();
+	};
+
+	const handleQuestionTypeClick = (questionType: string) => {
+		const source = locationState?.source ?? "main_cta";
+		const status =
+			source === "main_cta" || source === "mysurvey_button"
+				? "draft"
+				: "editing";
+		const questionTypeForEvent = getQuestionTypeForEvent(questionType);
+
+		pushGtmEvent({
+			event: "survey_question_type_click",
+			pagePath: "/createForm",
+			source,
+			step: "question",
+			status,
+			...(state.surveyId && { survey_id: String(state.surveyId) }),
+			question_type: questionTypeForEvent,
+		});
+
+		setSelectedQuestionType(questionType as QuestionType);
+		handleOpen();
+	};
+
+	const handleBottomSheetClose = () => {
+		handleClose();
+		setSelectedQuestionType(null);
+	};
+
+	return (
+		<>
+			{isOpen && selectedQuestionType && (
+				<QuestionTitleBottomSheet
+					onClose={handleBottomSheetClose}
+					isOpen={isOpen}
+					questionType={selectedQuestionType}
+				/>
+			)}
+			<div
+				className="flex items-center gap-4 bg-white rounded-full p-2 w-full overflow-x-auto"
+				style={{
+					scrollbarWidth: "none",
+					msOverflowStyle: "none",
+					WebkitOverflowScrolling: "touch",
+				}}
+			>
+				{/* 뒤로가기 버튼 */}
+				<button
+					className={BUTTON_STYLES.backButton}
+					type="button"
+					onClick={handlePrevious}
+				>
+					<Asset.Icon
+						frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+						backgroundColor={ICON_PROPS.backgroundColor}
+						name="icon-arrow-left-2-mono"
+						color={adaptive.grey600}
+						aria-hidden={ICON_PROPS.ariaHidden}
+						ratio={ICON_PROPS.ratio}
+					/>
+				</button>
+
+				{/* 문항 타입 버튼들 */}
+				{QUESTION_TYPES.map((questionType, index) => {
+					if (index === 0) {
+						return (
+							<motion.button
+								key={questionType.id}
+								className={BUTTON_STYLES.questionType}
+								type="button"
+								onClick={() => handleQuestionTypeClick(questionType.id)}
+								initial={{ opacity: 1, x: 60 }}
+								animate={{ opacity: 1, x: 0 }}
+								transition={{
+									duration: 0.01,
+									ease: "linear",
+								}}
+							>
+								<Asset.Icon
+									frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+									backgroundColor={ICON_PROPS.backgroundColor}
+									name={questionType.icon}
+									color={adaptive.grey600}
+									aria-hidden={ICON_PROPS.ariaHidden}
+									ratio={ICON_PROPS.ratio}
+								/>
+								<Text
+									color={adaptive.grey700}
+									typography={TEXT_PROPS.typography}
+									fontWeight={TEXT_PROPS.fontWeight}
+								>
+									{questionType.label}
+								</Text>
+							</motion.button>
+						);
+					}
+
+					return (
+						<motion.button
+							key={questionType.id}
+							className={BUTTON_STYLES.questionType}
+							type="button"
+							onClick={() => handleQuestionTypeClick(questionType.id)}
+							initial={{ opacity: 0, scale: 0.85, y: 14 }}
+							animate={{ opacity: 1, scale: 1, y: 0 }}
+							transition={{
+								duration: 0.01,
+								ease: "linear",
+								delay: index * 0.05,
+							}}
+						>
+							<Asset.Icon
+								frameShape={Asset.frameShape[ICON_PROPS.frameShape]}
+								backgroundColor={ICON_PROPS.backgroundColor}
+								name={questionType.icon}
+								color={adaptive.grey600}
+								aria-hidden={ICON_PROPS.ariaHidden}
+								ratio={ICON_PROPS.ratio}
+							/>
+							<Text
+								color={adaptive.grey700}
+								typography={TEXT_PROPS.typography}
+								fontWeight={TEXT_PROPS.fontWeight}
+							>
+								{questionType.label}
+							</Text>
+						</motion.button>
+					);
+				})}
+			</div>
+		</>
+	);
+};
