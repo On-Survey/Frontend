@@ -9,6 +9,7 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DateSelectBottomSheet } from "../../components/payment";
+import { pushGtmEvent } from "../../utils/gtm";
 import { validateEmail } from "../../utils/validators";
 
 type QuestionPackage = "light" | "standard" | "plus";
@@ -117,6 +118,10 @@ export const GoogleFormConversionRequestPage = () => {
 	);
 
 	const handleSubmit = () => {
+		pushGtmEvent({
+			event: "form_payment_button_click",
+			pagePath: "/payment/google-form-conversion",
+		});
 		navigate("/payment/google-form-conversion-check", {
 			state: {
 				formLink,

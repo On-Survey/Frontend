@@ -39,8 +39,8 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 			pagePath: "/survey",
 			survey_id: String(survey.id),
 			source: "main",
-			progress_percent: "0",
 		});
+		console.log("survey", survey);
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(
 			{

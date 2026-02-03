@@ -6,11 +6,16 @@ import ad3 from "../assets/adPage/ad3.svg";
 import ad4 from "../assets/adPage/ad4.svg";
 import ad5 from "../assets/adPage/ad5.svg";
 import landing4 from "../assets/landingPage/landing4.svg";
+import { pushGtmEvent } from "../utils/gtm";
 
 export const AdPage = () => {
 	const navigate = useNavigate();
 
 	const handleMoveToOnsurvey = () => {
+		pushGtmEvent({
+			event: "landing_button_click",
+			pagePath: "/ad",
+		});
 		navigate("/");
 	};
 

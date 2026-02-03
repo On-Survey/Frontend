@@ -4,6 +4,9 @@ declare global {
 	}
 }
 
+/** purchase 이벤트의 entry_type 옵션 */
+export type PurchaseEntryType = "settlement" | "mypage" | "form_convert";
+
 interface GtmEventParams {
 	event: string;
 	pagePath?: string;

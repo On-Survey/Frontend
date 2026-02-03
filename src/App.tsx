@@ -82,6 +82,7 @@ import { SectionBasedSurvey } from "./pages/survey/SectionBasedSurvey";
 import SurveyShortAnswer from "./pages/survey/ShortAnswer";
 import SurveySingleChoice from "./pages/survey/SingleChoice";
 import { logPageView } from "./utils/firebase";
+import { getPageScreenName } from "./utils/pageScreenNames";
 
 // 전역 네비게이션 바 이벤트 리스너 레이아웃 (granite.config.ts에서 설정한 하트 버튼 이벤트 처리)
 const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
@@ -133,8 +134,14 @@ const AnalyticsTracker = () => {
 	const location = useLocation();
 
 	useEffect(() => {
+		const pagePath = location.pathname + location.search;
+		const pageTitle = getPageScreenName(location.pathname);
+
+		// document.title 설정 (GA4 페이지 제목 캡처용)
+		document.title = `${pageTitle} - onsurvey`;
+
 		// Firebase Analytics로 직접 page_view 전송
-		void logPageView(location.pathname + location.search);
+		void logPageView(pagePath, { page_title: pageTitle });
 
 		// GTM으로 SPA 라우트 변경 이벤트 전송
 		if (typeof window === "undefined") return;
@@ -142,7 +149,8 @@ const AnalyticsTracker = () => {
 		w.dataLayer = w.dataLayer || [];
 		w.dataLayer.push({
 			event: "route_change",
-			page_path: location.pathname + location.search,
+			page_path: pagePath,
+			page_title: pageTitle,
 		});
 	}, [location]);
 

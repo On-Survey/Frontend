@@ -90,6 +90,10 @@ export const EstimatePage = () => {
 			: "screening_skip";
 
 		pushGtmEvent({
+			event: "form_payment_button_click",
+			pagePath: "/createForm",
+		});
+		pushGtmEvent({
 			event: "survey_payment_modal",
 			pagePath: "/createForm",
 			...(state.surveyId && { survey_id: String(state.surveyId) }),

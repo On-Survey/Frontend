@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../../service/googleFormConversion";
 import { createGoogleFormPayment } from "../../service/payments";
+import { pushGtmEvent } from "../../utils/gtm";
 
 type QuestionPackage = "light" | "standard" | "plus";
 type RespondentCount = 50 | 100;
@@ -94,6 +95,10 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	}, [price]);
 
 	const handlePayment = () => {
+		pushGtmEvent({
+			event: "form_coin_charge",
+			pagePath: "/payment/google-form-conversion-payment-confirm",
+		});
 		if (!selectedProduct?.sku) {
 			console.error("상품 정보가 없습니다");
 			return;
@@ -119,6 +124,16 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				if (event.type === "success") {
 					const { orderId } = event.data;
 					console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
+
+					pushGtmEvent({
+						event: "purchase",
+						pagePath: "/payment/google-form-conversion-payment-confirm",
+						transaction_id: String(orderId),
+						value: String(price),
+						price: String(price),
+						item_name: `${QUESTION_PACKAGE_DISPLAY[questionPackage]} (${respondentCount}명)`,
+						entry_type: "form_convert",
+					});
 
 					// 구글폼 변환 신청 API 호출
 					try {

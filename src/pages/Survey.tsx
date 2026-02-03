@@ -17,7 +17,6 @@ import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import type { ReturnTo } from "../types/navigation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
-import { pushGtmEvent } from "../utils/gtm";
 import { getRefreshToken } from "../utils/tokenManager";
 
 export const Survey = () => {
@@ -269,17 +268,6 @@ export const Survey = () => {
 		}
 
 		const source = locationState?.source ?? "main";
-
-		// GTM 이벤트 전송
-		if (numericSurveyId) {
-			pushGtmEvent({
-				event: "survey_start",
-				pagePath: "/survey",
-				survey_id: String(numericSurveyId),
-				source,
-				progress_percent: "0",
-			});
-		}
 
 		// 섹션 기반 설문 페이지로 이동 (section=1로 시작)
 		navigate("/survey/section", {

@@ -18,6 +18,7 @@ import {
 	getSurveyQuestions,
 	submitSurveyParticipation,
 } from "../../service/surveyParticipation";
+import { pushGtmEvent } from "../../utils/gtm";
 import { buildSectionAnswersPayload } from "../../utils/surveySubmission";
 import { QuestionRenderer } from "./components/QuestionRenderer";
 
@@ -308,6 +309,14 @@ export const SectionBasedSurvey = () => {
 	};
 
 	const handleNext = async () => {
+		if (surveyId) {
+			pushGtmEvent({
+				event: "survey_progress_button_click",
+				pagePath: "/survey",
+				survey_id: String(surveyId),
+				source: locationState?.source ?? "main",
+			});
+		}
 		if (!validateSection()) {
 			// 에러가 있는 경우 첫 번째 에러 문항으로 스크롤
 			const firstErrorQuestionId = Object.keys(questionErrors)[0];
