@@ -17,8 +17,6 @@ import type { TransformedSurveyQuestion } from "../service/surveyParticipation";
 import type { ReturnTo } from "../types/navigation";
 import type { SurveyListItem } from "../types/surveyList";
 import { formatRemainingTime } from "../utils/FormatDate";
-import { pushGtmEvent } from "../utils/gtm";
-import { getQuestionTypeRoute } from "../utils/questionRoute";
 import { getRefreshToken } from "../utils/tokenManager";
 
 export const Survey = () => {
