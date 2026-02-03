@@ -115,36 +115,18 @@ export const useSurveyNavigation = ({
 
 		progressEventSentRef.current = eventKey;
 
-		// progress_percent 계산 (10, 30, 50, 70, 90 중 하나)
-		const getProgressPercent = (index: number, total: number): number => {
-			if (total === 0) return 0;
-			if (total === 1) return 90;
-			const ratio = (index + 1) / total;
-			if (ratio <= 0.2) return 10;
-			if (ratio <= 0.4) return 30;
-			if (ratio <= 0.6) return 50;
-			if (ratio <= 0.8) return 70;
-			return 90;
-		};
-
 		const source = locationState?.source ?? "main";
-		const progressPercent = getProgressPercent(
-			initialQuestionIndex,
-			totalQuestions,
-		);
 
 		pushGtmEvent({
 			event: "survey_progress",
 			pagePath: window.location.pathname,
 			survey_id: String(surveyId),
 			source,
-			progress_percent: String(progressPercent),
 		});
 	}, [
 		isCurrentQuestionType,
 		surveyId,
 		initialQuestionIndex,
-		totalQuestions,
 		locationState?.source,
 	]);
 
@@ -188,6 +170,15 @@ export const useSurveyNavigation = ({
 	const handleNext = async () => {
 		if (!isCurrentQuestionType) {
 			return;
+		}
+
+		if (surveyId) {
+			pushGtmEvent({
+				event: "survey_progress_button_click",
+				pagePath: window.location.pathname,
+				survey_id: String(surveyId),
+				source: locationState?.source ?? "main",
+			});
 		}
 
 		if (validateAnswer && !validateAnswer(currentAnswer)) {

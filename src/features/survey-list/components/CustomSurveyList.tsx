@@ -1,4 +1,5 @@
 import { topics } from "@shared/constants/topics";
+import { pushGtmEvent } from "@shared/lib/gtm";
 import type { SurveyListItem } from "@shared/types/surveyList";
 import { adaptive } from "@toss/tds-colors";
 import { List, ListRow, Text } from "@toss/tds-mobile";
@@ -23,6 +24,12 @@ export const CustomSurveyList = ({
 	const navigate = useNavigate();
 
 	const handleSurveyClick = (survey: SurveyListItem) => {
+		pushGtmEvent({
+			event: "survey_start",
+			pagePath: "/survey",
+			survey_id: String(survey.id),
+			source: "main",
+		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(
 			{

@@ -1,8 +1,6 @@
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { type InterestId, topics } from "@shared/constants/topics";
 import { formatRemainingTime } from "@shared/lib/FormatDate";
-import { pushGtmEvent } from "@shared/lib/gtm";
-import { getQuestionTypeRoute } from "@shared/lib/questionRoute";
 import { getRefreshToken } from "@shared/lib/tokenManager";
 import type { ReturnTo } from "@shared/types/navigation";
 import type { SurveyListItem } from "@shared/types/surveyList";
@@ -16,7 +14,7 @@ import {
 	Top,
 	useToast,
 } from "@toss/tds-mobile";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useSurveyInfo } from "../hooks/useSurveyInfo";
 import { useSurveyQuestions } from "../hooks/useSurveyQuestions";
@@ -67,25 +65,6 @@ export const Survey = () => {
 		open: false,
 		title: "",
 	});
-
-	const hasSentStartEvent = useRef(false);
-
-	useEffect(() => {
-		if (!surveyId || hasSentStartEvent.current) return;
-
-		hasSentStartEvent.current = true;
-		const source = locationState?.source ?? "main";
-		const quizId = locationState?.quiz_id;
-
-		pushGtmEvent({
-			event: "survey_start",
-			pagePath: "/survey",
-			survey_id: String(surveyId),
-			source,
-			progress_percent: "0",
-			...(quizId && { quiz_id: String(quizId) }),
-		});
-	}, [surveyId, locationState?.source, locationState?.quiz_id]);
 
 	const { data: surveyBasicInfoData } = useSurveyInfo(
 		numericSurveyId ?? undefined,
@@ -288,17 +267,18 @@ export const Survey = () => {
 			return;
 		}
 
-		const firstQuestion = sortedQuestions[0];
-		const questionTypeRoute = getQuestionTypeRoute(firstQuestion.type);
-
 		const source = locationState?.source ?? "main";
-		navigate(questionTypeRoute, {
+
+		// 섹션 기반 설문 페이지로 이동 (section=1로 시작)
+		navigate("/survey/section", {
 			state: {
-				surveyId,
-				questions: sortedQuestions,
-				currentQuestionIndex: 0,
+				surveyId: numericSurveyId,
+				currentSection: 1,
 				answers: {},
-				isFree: surveyInfo?.isFree,
+				previousAnswers: {},
+				surveyTitle: surveyInfo?.title ?? currentSurvey?.title ?? "",
+				surveyDescription:
+					surveyInfo?.description ?? currentSurvey?.description ?? "",
 				source,
 			},
 		});

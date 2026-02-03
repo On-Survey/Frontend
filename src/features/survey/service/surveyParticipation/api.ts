@@ -13,6 +13,7 @@ import {
 
 export interface GetSurveyParticipationParams {
 	surveyId: number;
+	section?: number; // 섹션 번호 (선택 파라미터, 기본값 1)
 }
 
 // 설문 정보 조회 (responseCount 포함)
@@ -49,6 +50,8 @@ export const getSurveyQuestions = async (
 	params: GetSurveyParticipationParams,
 ): Promise<{
 	info: TransformedSurveyQuestion[];
+	sectionTitle?: string;
+	sectionDescription?: string;
 }> => {
 	const result = await apiCall<SurveyQuestionsInfo>({
 		method: "GET",
@@ -67,6 +70,14 @@ export const getSurveyQuestions = async (
 			questionOrder: question.questionOrder,
 		};
 
+		// 문항 자체의 nextSection과 isSectionDecidable 필드 추가 (모든 타입에 공통)
+		if ("nextSection" in question) {
+			base.nextSection = question.nextSection;
+		}
+		if ("isSectionDecidable" in question) {
+			base.isSectionDecidable = question.isSectionDecidable;
+		}
+
 		if (question.questionType === "CHOICE" && "options" in question) {
 			base.maxChoice = question.maxChoice;
 			base.hasNoneOption = question.hasNoneOption;
@@ -74,7 +85,13 @@ export const getSurveyQuestions = async (
 			base.options = question.options?.map((opt, idx) => ({
 				...opt,
 				order: idx,
+				nextSection: opt.nextSection, // 분기처리용 다음 섹션 번호
 			}));
+		}
+
+		// 섹션 정보 추가
+		if ("section" in question) {
+			base.section = question.section;
 		}
 
 		if (question.questionType === "DATE" && "date" in question) {
@@ -91,6 +108,8 @@ export const getSurveyQuestions = async (
 
 	return {
 		info: transformed,
+		sectionTitle: result.sectionTitle,
+		sectionDescription: result.sectionDescription,
 	};
 };
 

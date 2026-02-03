@@ -14,12 +14,12 @@ import { adaptive } from "@toss/tds-colors";
 import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import formBanner from "../../../assets/formBanner.png";
 import homeBanner from "../../../assets/HomeBanner.png";
 import { CustomSurveyList } from "../components/CustomSurveyList";
 import { UrgentSurveyList } from "../components/UrgentSurveyList";
 import { useGlobalStats } from "../hooks/useGlobalStats";
 import { useOngoingSurveys } from "../hooks/useOngoingSurveys";
-
 export const Home = () => {
 	const navigate = useNavigate();
 
@@ -57,8 +57,16 @@ export const Home = () => {
 	const handleViewAllRecommended = () =>
 		navigate("/surveyList?type=recommended");
 	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
-	const handleCreateSurvey = () =>
-		navigate("/createFormStart", { state: { source: "main_cta" } });
+	const handleCreateSurvey = () => {
+		pushGtmEvent({
+			event: "main_banner_click",
+			pagePath: "/home",
+			source: "home_ad_main",
+		});
+		navigate("/google-form-conversion-landing", {
+			state: { source: "main_cta" },
+		}); //구글폼 설문 랜딩 페이지로 이동
+	};
 	const handleQuizClick = () => {
 		pushGtmEvent({
 			event: "start_screening_quiz",
@@ -264,30 +272,28 @@ export const Home = () => {
 				</div>
 
 				<div className="px-4 pb-4">
-					<div className="bg-green-50 rounded-2xl p-4 flex items-center justify-between ">
+					<div className="bg-gray-50 rounded-[24px] flex items-center justify-between gap-4">
 						<button
 							type="button"
 							onClick={handleCreateSurvey}
-							className="flex-1 cursor-pointer text-left"
+							className="flex-1 p-4"
 							style={{ background: "none", border: "none", padding: 0 }}
 						>
 							<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-								지금 바로 설문 제작해보기!
+								구글폼으로 설문 등록하기
 							</Text>
 							<Text
 								color={adaptive.grey600}
 								typography="t7"
 								fontWeight="regular"
 							>
-								설문 제작부터 응답 모집까지 간편하고 빠르게
+								등록만 하면 패널에게 즉시 노출
 							</Text>
 						</button>
-						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW60}
-							backgroundColor="transparent"
-							name="icon-document-check-lines-fill"
-							aria-hidden={true}
-							ratio="1/1"
+						<img
+							src={formBanner}
+							alt="구글폼 배너"
+							className="h-full max-h-[84px] w-auto object-contain flex-shrink-0"
 						/>
 					</div>
 				</div>

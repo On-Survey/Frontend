@@ -2,6 +2,7 @@ import { getOngoingSurveys } from "@features/survey-list/service/surveyList";
 import type { OngoingSurveySummary } from "@features/survey-list/service/surveyList/types";
 import { topics } from "@shared/constants/topics";
 import { formatRemainingTime } from "@shared/lib/FormatDate";
+import { pushGtmEvent } from "@shared/lib/gtm";
 import type { SurveyListItem } from "@shared/types/surveyList";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text } from "@toss/tds-mobile";
@@ -72,6 +73,12 @@ export const Ineligible = () => {
 	}, []);
 
 	const handleSurveyClick = (survey: SurveyListItem) => {
+		pushGtmEvent({
+			event: "survey_start",
+			pagePath: "/survey",
+			survey_id: String(survey.id),
+			source: "main",
+		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(
 			{

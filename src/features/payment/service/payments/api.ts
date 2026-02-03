@@ -36,6 +36,34 @@ export const createPayment = async ({
 	return data;
 };
 
+export const createGoogleFormPayment = async ({
+	orderId,
+	price,
+}: {
+	orderId: string;
+	price: number;
+}): Promise<CreatePaymentResponse> => {
+	const token = await getAccessToken();
+	const { data } = await api.post<
+		CreatePaymentResponse,
+		{ orderId: string; price: number }
+	>(
+		`/toss/iap/grant-home`,
+		{
+			orderId,
+			price,
+		},
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		},
+	);
+
+	return data;
+};
+
 export const getPaymentHistory = async (): Promise<PaymentHistoryItem[]> => {
 	const response = await api.get<PaymentHistoryResponse>("/v1/payments");
 	return response.data.result ?? [];

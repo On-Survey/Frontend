@@ -136,6 +136,13 @@ export const OxScreening = () => {
 					isClosed,
 				};
 
+				pushGtmEvent({
+					event: "survey_start",
+					pagePath: "/survey",
+					survey_id: String(nextSurveyId),
+					source: "quiz",
+					quiz_id: String(currentQuestion?.screeningId),
+				});
 				navigate(`/survey?surveyId=${nextSurveyId}`, {
 					state: {
 						surveyId: String(nextSurveyId),
@@ -147,6 +154,7 @@ export const OxScreening = () => {
 			} catch (err) {
 				console.error("설문 데이터 조회 실패:", err);
 				// 실패하면 surveyId 전달
+
 				navigate(`/survey?surveyId=${nextSurveyId}`, {
 					state: {
 						surveyId: String(nextSurveyId),

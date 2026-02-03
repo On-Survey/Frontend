@@ -10,6 +10,7 @@ import {
 	useLocation,
 	useNavigate,
 } from "react-router-dom";
+import { AdPage } from "../features/ad-page/AdPage";
 import {
 	DatePage,
 	LongAnswerPage,
@@ -25,6 +26,14 @@ import {
 	SurveyMain,
 	SurveyStart,
 } from "../features/create-survey";
+import {
+	GoogleFormConversionLandingPage,
+	GoogleFormConversionPaymentConfirmPage,
+	GoogleFormConversionPaymentSuccessPage,
+	GoogleFormConversionPrecheckPage,
+	GoogleFormConversionPrivacyConsentPage,
+	GoogleFormConversionRequestPage,
+} from "../features/google-form-conversion/pages";
 import BusinessInfo from "../features/mypage/pages/BusinessInfo";
 import CoinDetail from "../features/mypage/pages/CoinDetail";
 import CoinHistory from "../features/mypage/pages/CoinHistory";
@@ -56,6 +65,7 @@ import { Ineligible } from "../features/survey/pages/Ineligible";
 import SurveyNPS from "../features/survey/pages/NPS";
 import SurveyNumber from "../features/survey/pages/Number";
 import SurveyRating from "../features/survey/pages/Rating";
+import { SectionBasedSurvey } from "../features/survey/pages/SectionBasedSurvey";
 import SurveyShortAnswer from "../features/survey/pages/ShortAnswer";
 import SurveySingleChoice from "../features/survey/pages/SingleChoice";
 import { Survey } from "../features/survey/pages/Survey";
@@ -74,6 +84,7 @@ import { queryClient } from "../shared/contexts/queryClient";
 import { SurveyProvider } from "../shared/contexts/SurveyContext";
 import { UserProvider } from "../shared/contexts/UserContext";
 import { logPageView } from "../shared/lib/firebase";
+import { getPageScreenName } from "../shared/lib/pageScreenNames";
 import { Intro } from "./Intro";
 
 // 전역 네비게이션 바 이벤트 리스너 레이아웃 (granite.config.ts에서 설정한 하트 버튼 이벤트 처리)
@@ -104,12 +115,36 @@ const GlobalNavigationLayout = ({ children }: { children: ReactNode }) => {
 	return <>{children}</>;
 };
 
+const DeepLinkHandler = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		const href = window.location.href;
+
+		const match = href.match(/intoss:\/\/[^/]+(\/.+)$/);
+		const targetPath = match?.[1];
+
+		if (targetPath && location.pathname !== targetPath) {
+			navigate(targetPath, { replace: true });
+		}
+	}, [navigate, location.pathname]);
+
+	return null;
+};
+
 const AnalyticsTracker = () => {
 	const location = useLocation();
 
 	useEffect(() => {
+		const pagePath = location.pathname + location.search;
+		const pageTitle = getPageScreenName(location.pathname);
+
+		// document.title 설정 (GA4 페이지 제목 캡처용)
+		document.title = `${pageTitle} - onsurvey`;
+
 		// Firebase Analytics로 직접 page_view 전송
-		void logPageView(location.pathname + location.search);
+		void logPageView(pagePath, { page_title: pageTitle });
 
 		// GTM으로 SPA 라우트 변경 이벤트 전송
 		if (typeof window === "undefined") return;
@@ -117,7 +152,8 @@ const AnalyticsTracker = () => {
 		w.dataLayer = w.dataLayer || [];
 		w.dataLayer.push({
 			event: "route_change",
-			page_path: location.pathname + location.search,
+			page_path: pagePath,
+			page_title: pageTitle,
 		});
 	}, [location]);
 
@@ -128,12 +164,18 @@ export const App = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Router>
+				<DeepLinkHandler />
 				<AnalyticsTracker />
 				<UserProvider>
 					<GlobalNavigationLayout>
 						<Routes>
 							<Route path="/" element={<Intro />} />
+							<Route path="/ad" element={<AdPage />} />
 							<Route path="/home" element={<Home />} />
+							<Route
+								path="/google-form-conversion-landing"
+								element={<GoogleFormConversionLandingPage />}
+							/>
 							<Route path="/onboarding" element={<Onboarding />} />
 							<Route path="/createFormStart" element={<SurveyStart />} />
 							<Route element={<SurveyProviderLayout />}>
@@ -188,6 +230,10 @@ export const App = () => {
 								<Route path="/survey/nps" element={<SurveyNPS />} />
 								<Route path="/survey/number" element={<SurveyNumber />} />
 								<Route path="/survey/date" element={<SurveyDate />} />
+								<Route
+									path="/survey/section"
+									element={<SectionBasedSurvey />}
+								/>
 								<Route path="/survey/complete" element={<SurveyComplete />} />
 								<Route path="/survey/ineligible" element={<Ineligible />} />
 							</Route>
@@ -212,6 +258,26 @@ export const App = () => {
 								<Route element={<MultiStepProviderWrapper />}>
 									<Route element={<PaymentProviderLayout />}>
 										<Route path="/createForm" element={<SurveyMain />} />
+										<Route
+											path="/payment/google-form-conversion"
+											element={<GoogleFormConversionRequestPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-check"
+											element={<GoogleFormConversionPrecheckPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-payment-confirm"
+											element={<GoogleFormConversionPaymentConfirmPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-success"
+											element={<GoogleFormConversionPaymentSuccessPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-privacy-consent"
+											element={<GoogleFormConversionPrivacyConsentPage />}
+										/>
 										<Route
 											path="/payment/location"
 											element={<LocationSelectPage />}

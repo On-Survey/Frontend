@@ -115,8 +115,6 @@ export const PaymentConfirmationPage = () => {
 					);
 					const price = priceBreakdown.totalPrice;
 					const itemName = selectedCoinAmount.displayName;
-					const entryType = "settlement";
-
 					pushGtmEvent({
 						event: "purchase",
 						pagePath: "/createForm",
@@ -125,7 +123,7 @@ export const PaymentConfirmationPage = () => {
 						value: String(value),
 						price: String(price),
 						item_name: itemName,
-						entry_type: entryType,
+						entry_type: "settlement" as const,
 						source,
 					});
 
