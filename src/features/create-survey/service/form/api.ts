@@ -1,0 +1,130 @@
+import { api } from "@shared/api/axios";
+
+import type {
+	CreateFormRequest,
+	CreateFormResponse,
+	CreateFreeFormRequest,
+	CreateScreeningsResponse,
+	CreateSurveyInterestsResponse,
+	CreateSurveyQuestionResponse,
+	CreateSurveyResponse,
+	createSurveyQuestionRequest,
+	Interest,
+	PatchSurveyRequest,
+	PatchSurveyResponse,
+	ServerQuestion,
+} from "./types";
+
+export const createSurvey = async ({
+	title,
+	description,
+}: {
+	title: string;
+	description: string;
+}): Promise<CreateSurveyResponse> => {
+	const { data } = await api.post<
+		CreateSurveyResponse,
+		{ title: string; description: string }
+	>("/v1/survey-form/surveys", {
+		title,
+		description,
+	});
+
+	return data;
+};
+
+export const createSurveyQuestion = async ({
+	questionInfo,
+	surveyId,
+}: {
+	questionInfo: createSurveyQuestionRequest;
+	surveyId: number;
+}): Promise<CreateSurveyQuestionResponse> => {
+	const { data } = await api.post<
+		CreateSurveyQuestionResponse,
+		{ questions: createSurveyQuestionRequest[] }
+	>(`/v1/survey-form/surveys/${surveyId}/questions`, {
+		questions: [questionInfo],
+	});
+	return data;
+};
+
+export const createScreenings = async ({
+	surveyId,
+	content,
+	answer,
+}: {
+	surveyId: number;
+	content: string;
+	answer: boolean;
+}): Promise<CreateScreeningsResponse> => {
+	const { data } = await api.post<
+		CreateScreeningsResponse,
+		{ content: string; answer: boolean }
+	>(`/v1/survey-form/surveys/${surveyId}/screenings`, { content, answer });
+	return data;
+};
+
+export const createForm = async ({
+	surveyId,
+	...formPayload
+}: CreateFormRequest & { surveyId: number }): Promise<CreateFormResponse> => {
+	const { data } = await api.patch<CreateFormResponse, CreateFormRequest>(
+		`/v1/survey-form/surveys/${surveyId}`,
+		formPayload,
+	);
+	return data;
+};
+
+export const createFreeForm = async ({
+	surveyId,
+	...formPayload
+}: CreateFreeFormRequest & {
+	surveyId: number;
+}): Promise<CreateFormResponse> => {
+	const { data } = await api.patch<CreateFormResponse, CreateFreeFormRequest>(
+		`/v1/survey-form/surveys/${surveyId}/free`,
+		formPayload,
+	);
+	return data;
+};
+
+export const saveQuestions = async ({
+	surveyId,
+	questions,
+}: {
+	surveyId: number;
+	questions: { questions: ServerQuestion[] };
+}): Promise<CreateSurveyQuestionResponse> => {
+	const { data } = await api.put<
+		CreateSurveyQuestionResponse,
+		{ questions: ServerQuestion[] }
+	>(`/v1/survey-form/surveys/${surveyId}/questions`, questions);
+	return data;
+};
+
+export const createSurveyInterests = async ({
+	surveyId,
+	interests,
+}: {
+	surveyId: number;
+	interests: Interest[];
+}): Promise<CreateSurveyInterestsResponse> => {
+	const { data } = await api.patch<
+		CreateSurveyInterestsResponse,
+		{ interests: Interest[] }
+	>(`/v1/survey-form/surveys/${surveyId}/interests`, { interests });
+	return data;
+};
+
+export const patchSurvey = async ({
+	surveyId,
+	title,
+	description,
+}: PatchSurveyRequest): Promise<PatchSurveyResponse> => {
+	const { data } = await api.patch<
+		PatchSurveyResponse,
+		{ title: string; description: string }
+	>(`/v1/survey-form/surveys/${surveyId}/display`, { title, description });
+	return data;
+};
