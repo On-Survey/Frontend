@@ -57,7 +57,10 @@ export const Home = () => {
 	const handleViewAllRecommended = () =>
 		navigate("/surveyList?type=recommended");
 	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
-	const handleCreateSurvey = () => navigate("/google-form-conversion-landing"); //구글폼 설문 랜딩 페이지로 이동
+	const handleCreateSurvey = () =>
+		navigate("/google-form-conversion-landing", {
+			state: { source: "main_cta" },
+		}); //구글폼 설문 랜딩 페이지로 이동
 	const handleQuizClick = () => {
 		pushGtmEvent({
 			event: "start_screening_quiz",

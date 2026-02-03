@@ -1,0 +1,589 @@
+{
+	"name": "@react-native-async-storage/async-storage",
+	"version": "1.18.2",
+	"requiresBuild": false,
+	"files": {
+		"LICENSE": {
+			"checkedAt": 1769965441909,
+			"integrity": "sha512-SPPLiXB5i3AB1T88gKO6nax+ZP78oPgOvl76FLu45waZtsuLw7zExl1EVXLxRObso7b/zb/iKIejum1rFp3TDw==",
+			"mode": 420,
+			"size": 1079
+		},
+		"windows/ReactNativeAsyncStorage/packages.config": {
+			"checkedAt": 1769965441911,
+			"integrity": "sha512-D7B3cjag0yMKmtUQ6z7yKHt/Wu/Bv6xgEb158q+5Ln26iMJBiGibCiScTeoOW4K/rvJ+gYDvhGrQpabO3azSnA==",
+			"mode": 420,
+			"size": 158
+		},
+		"windows/ReactNativeAsyncStorage61/packages.config": {
+			"checkedAt": 1769965441913,
+			"integrity": "sha512-mGQv8WLa88E4PLccxwnlDRJhi9DfKR2tk9/AMlnJTrWRrCGtXdhMQTWC6829JxVYBDaepftJOp1YNE5OaBsvFQ==",
+			"mode": 420,
+			"size": 158
+		},
+		"windows/code/DBStorage.cpp": {
+			"checkedAt": 1769965441915,
+			"integrity": "sha512-kR8CoC9WwDGBRzwc86kzl6lG5dxZW5As0nkxIcJa/hNTP0eHJ9oEqpnhE2qClrfjUCQzuvXT8cgx4AOOAOFn6Q==",
+			"mode": 420,
+			"size": 21098
+		},
+		"windows/code/pch.cpp": {
+			"checkedAt": 1769965441917,
+			"integrity": "sha512-/DEqjxJjLYe+ht7MK3ED+PycanlMFgStVC5qlTvwVw+EQYY9ZtZHFM2b/pGKsbah2EoU8FyUBohidtpRWwuq9w==",
+			"mode": 420,
+			"size": 95
+		},
+		"windows/code/ReactPackageProvider.cpp": {
+			"checkedAt": 1769965441920,
+			"integrity": "sha512-KwPxJvl5NwibhY4437CotiBGzvRDG8RCgmTrPlIKLTnIe7tawl7IkcgGJdUb8jneUJhIsRDFdLX5Nh+3enOASg==",
+			"mode": 420,
+			"size": 527
+		},
+		"windows/code/ReactNativeAsyncStorage.def": {
+			"checkedAt": 1769965441922,
+			"integrity": "sha512-hJBIs1a/cvfvXi1maAYm5bh4uKo8IxWv6AYJgUBJHKkZZia6YuoPjBOmsRkJXJ5CUgriLxApQxz5yC+mLXZ3Ug==",
+			"mode": 420,
+			"size": 139
+		},
+		"windows/ReactNativeAsyncStorage/ReactNativeAsyncStorage.vcxproj.filters": {
+			"checkedAt": 1769965441923,
+			"integrity": "sha512-EYQVPAB+P3KK+T1jHpOyOWd72DSm9kxj3wLWYGy4dvVbrKQ9A3l4aj5KPNWApwfiU6M3rBRx/2FcicdIP4/XXA==",
+			"mode": 420,
+			"size": 1316
+		},
+		"windows/ReactNativeAsyncStorage61/ReactNativeAsyncStorage61.vcxproj.filters": {
+			"checkedAt": 1769965441925,
+			"integrity": "sha512-HUwL9FgMdJkFDY4p9jhQ7JchXQb7ujcvfL7e0tSGR1wok39ZUGB9wxjCw5gkAjyra9cqfCK0ufzAQrEvROe52w==",
+			"mode": 420,
+			"size": 1316
+		},
+		"android/build.gradle": {
+			"checkedAt": 1769965441928,
+			"integrity": "sha512-xMFZmA6abU8q6bEAKY1q2btEBQm8gme9V08GSi7jH9Jj/C38lAqwULnE9Tq9e4+0vUx9vFphlkFLutLa0A8m0Q==",
+			"mode": 420,
+			"size": 5093
+		},
+		"android/testresults.gradle": {
+			"checkedAt": 1769965441929,
+			"integrity": "sha512-Tp0hK/266IUfEEt+++wAEoSPyoge1fY3bDEy0dKYpVBN7BiP3hBEtcipY1oEs7xksYiBC6n0CRnoGbn2SfaLAw==",
+			"mode": 420,
+			"size": 1503
+		},
+		"windows/code/DBStorage.h": {
+			"checkedAt": 1769965441931,
+			"integrity": "sha512-tmKW01dQ7+dweazASE0Y/SDeLRQp/2FsFtgap4TF7Nb/d6K/n+lJWL+vsgDut7WdD5k9WtBVMl7p+D66PNxtEw==",
+			"mode": 420,
+			"size": 5344
+		},
+		"windows/code/pch.h": {
+			"checkedAt": 1769965441933,
+			"integrity": "sha512-+RsJxSxdxEqhM/1MZYh2Rb3o5QE+9a4BYXx1Cu2FCTm9HQyn3GDW6GWLu8PdTkaXLUDT1w79u7esgwIpYQNSZA==",
+			"mode": 420,
+			"size": 403
+		},
+		"windows/code/ReactPackageProvider.h": {
+			"checkedAt": 1769965441935,
+			"integrity": "sha512-Ppvl6jVopiC2si53hX0kkMEsBTQgTKlOqNC/sVmq+ab4s4tS0EDiSBgM1D6BJouzx24ONvcSI8ZCkfzN1QY0Pg==",
+			"mode": 420,
+			"size": 782
+		},
+		"ios/RNCAsyncStorage.h": {
+			"checkedAt": 1769965441937,
+			"integrity": "sha512-7QSuNzOdQBcazVe8MnTnEE6qsds2HwmAxjABC/WE9CRS6hLMiEFv+Z9xrpK7npKSkLGlz7p5HOAE/wg3LNPb2A==",
+			"mode": 420,
+			"size": 1806
+		},
+		"windows/code/RNCAsyncStorage.h": {
+			"checkedAt": 1769965441986,
+			"integrity": "sha512-Qdnaqx4vkcej+8p6jhJkwoCxkbK/IJLLKSlLLBmDdrNlMiF7BEo1HcqRjLBUm0689SAT9tRATY7RccVBytz4Ow==",
+			"mode": 420,
+			"size": 5676
+		},
+		"ios/RNCAsyncStorageDelegate.h": {
+			"checkedAt": 1769965441995,
+			"integrity": "sha512-YxvSKPLcZs6SxtkBKBmkfjmRzeeqyMyCKOx8KQr+PELSqoI2aEHHHfS9QAJx2FejvSolaLjnv7hctpT9wE/Fsg==",
+			"mode": 420,
+			"size": 2181
+		},
+		"windows/code/ReactPackageProvider.idl": {
+			"checkedAt": 1769965442005,
+			"integrity": "sha512-zT+C8LOnCS3dKa4cyUSnWDmOXWbcNKVUJz/f/IaJ4vkQ92rMm4RucX0XN0CpqMob7RccXCmp6AUFY1Vd3LDYdQ==",
+			"mode": 420,
+			"size": 221
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/AsyncLocalStorageUtil.java": {
+			"checkedAt": 1769965442008,
+			"integrity": "sha512-hIEABQ26j/cvTFy8VKrYW86RomfUQj+BX71gDHSpBCQjuGX6aJesn88343FB4X908QANfEczz/JlQCW27ZBaRw==",
+			"mode": 420,
+			"size": 6270
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/AsyncStorageErrorUtil.java": {
+			"checkedAt": 1769965442010,
+			"integrity": "sha512-pF7B9XXcw0VM+J6BqfU7gcRY6B6pWYHvcCPGxl0ViP++eHWyaBZUgFB8Y4xS1DhR/NOkBGeAqfTFKKfbcPTe0A==",
+			"mode": 420,
+			"size": 1177
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/AsyncStorageExpoMigration.java": {
+			"checkedAt": 1769965442095,
+			"integrity": "sha512-qPWPAMrnW+9HMyS8DUQavak5bD0tafeVWjvHJNA/pdHkjuJWga+EpTERLDvbHNfn2y8ad7QiZadmYt3sttUdIw==",
+			"mode": 420,
+			"size": 5573
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/AsyncStorageModule.java": {
+			"checkedAt": 1769965442102,
+			"integrity": "sha512-2ER6gAP7hAwNp8NElI/xsH5llEBwfIexNw0M4ts9+KeTEUA9FySYxJcHLns+TWbiNVauPyEqJLrooa9nEKcLKw==",
+			"mode": 420,
+			"size": 14941
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/AsyncStoragePackage.java": {
+			"checkedAt": 1769965442104,
+			"integrity": "sha512-7W3kkDYOWFX1sw+j0r2NIxtuHXzU5UnI4FqqH5PeHlL5JtY1Ic/xcFTRPJO0jlhA+HzABKHKv0qmbHSXUobb7A==",
+			"mode": 420,
+			"size": 2145
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/ReactDatabaseSupplier.java": {
+			"checkedAt": 1769965442114,
+			"integrity": "sha512-9EOMKeFuovHOCkSQS+X0FJ3a3Ve8LLterWVui8HHk5TF571A62c4cm9rvw/Pmio21F+xIE/z+o1jolQRSz24zw==",
+			"mode": 420,
+			"size": 4858
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/SerialExecutor.java": {
+			"checkedAt": 1769965442119,
+			"integrity": "sha512-01wva/aaEo4O5RlrkdRj/pz51ObO6jHXL8Drp0LNGGjzM5XKwdvIGSoQXll4FYyXkcJkSdLi+WjBdXCgIBs1lw==",
+			"mode": 420,
+			"size": 1220
+		},
+		"jest/async-storage-mock.js": {
+			"checkedAt": 1769965442122,
+			"integrity": "sha512-TzPfHjMM+hvVi2CYrJQEbc9mHXMKaKl3c8pFeAQVmpoxSb1OKlr79hY0F7X1DKrvJigAfbA+uLNoMrYmqPnhQg==",
+			"mode": 420,
+			"size": 2631
+		},
+		"lib/commonjs/AsyncStorage.js": {
+			"checkedAt": 1769965442138,
+			"integrity": "sha512-PRS4jCQYEzCrGOd1t7K2WczZMT2Oxyco1u1iQ4Hm4zr6HWzyeDbqFng4EkCmOivBuEG8iGN03wB4NXUTroFMpw==",
+			"mode": 420,
+			"size": 4743
+		},
+		"lib/module/AsyncStorage.js": {
+			"checkedAt": 1769965442191,
+			"integrity": "sha512-Ce356hjh1Vo54OtLuUxHTh8A4uqJU+akxwAm374GjG4kCKYFG+AA5Np30JS3SO69Aan8Jkeqqfntdj1Z/JoUzg==",
+			"mode": 420,
+			"size": 4473
+		},
+		"lib/commonjs/AsyncStorage.native.js": {
+			"checkedAt": 1769965442194,
+			"integrity": "sha512-IXOIqQbhi40eLQxEFV3GJfNiAu7ULTzv9+CKQ1+9XEbg7oI97pMcwis8+Cn8AzZr5td1d9U/97Sc8pqfVzYkkQ==",
+			"mode": 420,
+			"size": 12698
+		},
+		"lib/module/AsyncStorage.native.js": {
+			"checkedAt": 1769965442197,
+			"integrity": "sha512-PSvt99oK7mPUROGox3+YxxdktODZAXqL42cPqn7+T7K9APmshugUjAgq8+luW4k2MhL/5S60ucgHrKnNhArStA==",
+			"mode": 420,
+			"size": 12146
+		},
+		"lib/commonjs/helpers.js": {
+			"checkedAt": 1769965442206,
+			"integrity": "sha512-9L3fbul8FufxzOiOzZnIHjeUp6IumhAJknb6mGJajlEbIt5QLn4wD6FvtuDhaOFj1DpHaBUYQSjiH0pI2tctJA==",
+			"mode": 420,
+			"size": 2240
+		},
+		"lib/module/helpers.js": {
+			"checkedAt": 1769965442210,
+			"integrity": "sha512-kaVp8IpDewA+WedKc9XV2MEKlS8BL9QMPMf6/zye/pKk6CjF4WbNujI7oWBHdVMGSRUOskI8FFaEGk7UqekZRA==",
+			"mode": 420,
+			"size": 2024
+		},
+		"lib/commonjs/hooks.js": {
+			"checkedAt": 1769965442216,
+			"integrity": "sha512-uis6dU84pPHIcrPREVBr1j2Kp1wNubkNqmQofRVK+lE6+dYzF60JIxzFEoqwwFXw8uzKPfQLC/HJSVkxtG00dA==",
+			"mode": 420,
+			"size": 1353
+		},
+		"lib/module/hooks.js": {
+			"checkedAt": 1769965442220,
+			"integrity": "sha512-9poAfTGZworg7em4ukPdPc5TgpGXZCtHTWI2kUJszwZ0dEzyP5VllNPFoC32MHgcRo1eU6TWT5BubANYGYjqNg==",
+			"mode": 420,
+			"size": 1074
+		},
+		"lib/commonjs/index.js": {
+			"checkedAt": 1769965442222,
+			"integrity": "sha512-lIy/ybxxAj4gNww04AW9t1M817q2Gh3w1M/d73ZDIPXfeEtqWRMNJn3J/I9WQxAL/E8UguYLjGxeKTBcxTO6Og==",
+			"mode": 420,
+			"size": 545
+		},
+		"lib/module/index.js": {
+			"checkedAt": 1769965442224,
+			"integrity": "sha512-HPNVx8S8k/E1VFu5hPlQRn5x84TEgNkB+Pukj9YOnbaAsarVeGr+OBVEBAPmP89MbxdzsECIzc5+v+7Rh2F61Q==",
+			"mode": 420,
+			"size": 148
+		},
+		"lib/commonjs/RCTAsyncStorage.js": {
+			"checkedAt": 1769965442226,
+			"integrity": "sha512-dUBQDa5YLC6KQfXX0XaRabeP9cAj7xqS/AJYpld45s3b8udZ2khMaXwHBcK1VjkXy0B5s/CO4wJWbwbDZ6tX0Q==",
+			"mode": 420,
+			"size": 1563
+		},
+		"lib/module/RCTAsyncStorage.js": {
+			"checkedAt": 1769965442228,
+			"integrity": "sha512-ykNuotUMejt8FzR79/2eWLRbjkKylLILD+QIRBEEz/+51pZDvpKkqJYylrCAxlqMQ1Kmh5nErRkXeY61msjUfw==",
+			"mode": 420,
+			"size": 1253
+		},
+		"lib/commonjs/shouldFallbackToLegacyNativeModule.js": {
+			"checkedAt": 1769965442230,
+			"integrity": "sha512-gW29qMMtdf8OGfNR7FS7nAgNo5hQm0bBTbnPOYF2FmQLLFA1eABONV2cI85Kn7/MWS7Sdu2hnkeeouJQj8PF7A==",
+			"mode": 420,
+			"size": 1682
+		},
+		"lib/module/shouldFallbackToLegacyNativeModule.js": {
+			"checkedAt": 1769965442231,
+			"integrity": "sha512-vcJIWMyFJGJGbVlR4VChZLXWJaeJR7s7V7pFCD5gD/G7b679/0Btkf6XFu+PIN1SIlY6LhXF6HpXeSVnxBuYPw==",
+			"mode": 420,
+			"size": 1515
+		},
+		"lib/commonjs/types.js": {
+			"checkedAt": 1769965442369,
+			"integrity": "sha512-Y508Zoz01HYjEK2YYs2KHPOoxRohDyvAexQ1ScwNGYLC8DNfMEYRfKk9cHMKReNjEqgOCbI57SKhajWcNr/FXA==",
+			"mode": 420,
+			"size": 47
+		},
+		"lib/module/types.js": {
+			"checkedAt": 1769965442371,
+			"integrity": "sha512-hrH2zk18O2DxLm5iQ62Jhhsv9phBfnHkpaagH3YjvusM41t8r+AzoBkCcjIufTVFHBNQc4psx7L+UZUJefIwjg==",
+			"mode": 420,
+			"size": 34
+		},
+		"package.json": {
+			"checkedAt": 1769965442373,
+			"integrity": "sha512-KT8NbjnBE0S/QqjsYK+CdAwquWbNAvsffrYs75iHa1NaTEPeCuasbh7kXzn32LOZujVCa5G2cz/Eoh0ka+m7Qg==",
+			"mode": 420,
+			"size": 6131
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/next/ArgumentHelpers.kt": {
+			"checkedAt": 1769965442377,
+			"integrity": "sha512-IdPJQJ9FTbtrwtnzvFUjjtGgI8IahaJ6Yp6NSruXPbFwdtZNRPFqEvv8GTq34M0D0T0y5Zg55gBIrbQYMBiHJg==",
+			"mode": 420,
+			"size": 2182
+		},
+		"android/src/test/java/com/reactnativecommunity/asyncstorage/next/ArgumentHelpersTest.kt": {
+			"checkedAt": 1769965442383,
+			"integrity": "sha512-tCoSKX/tgf/CGkpcpUOB2kgM60EQlihxbO4pczMS6mw5caOzwImNCPEDxBfLERpXQpXB/5sSAfZh2VenFXlyIg==",
+			"mode": 420,
+			"size": 3221
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/next/ErrorHelpers.kt": {
+			"checkedAt": 1769965442385,
+			"integrity": "sha512-5PqlzS2Z7qmUf0A/QPtrk36Qb8FnOC+qYvSkmlZ7Sd/sJcVuXg2MB4Mt2UlAmwCCXdhMsDcMiCF1uSzCU7CbsA==",
+			"mode": 420,
+			"size": 1398
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/next/StorageModule.kt": {
+			"checkedAt": 1769965442387,
+			"integrity": "sha512-NdwWHt7femNJ4V9IR+D3up7BuGwRm3PwM3OfgZqJoH6sKq+b6Qn22OshrC6WP1TNAXoSOhMLp7JEAOoST4XuIA==",
+			"mode": 420,
+			"size": 2870
+		},
+		"android/src/main/java/com/reactnativecommunity/asyncstorage/next/StorageSupplier.kt": {
+			"checkedAt": 1769965442390,
+			"integrity": "sha512-UqkKH77buP7Au8IK/Q08xGbzNtwXul5i3sxf3MqjdFLB1lslJBdSKs4yslCE7mBxEN4R8ax2YyVgh/6526Dz8A==",
+			"mode": 420,
+			"size": 6001
+		},
+		"android/src/test/java/com/reactnativecommunity/asyncstorage/next/StorageTest.kt": {
+			"checkedAt": 1769965442404,
+			"integrity": "sha512-jZKVTRcJWd2dBcTpXdC6OeEt5semkCCsCYS3rXFNXaaRK9QbdYoAcwtNN2erbmaPvZjkxza6nO2z+UjeoPXxCA==",
+			"mode": 420,
+			"size": 4205
+		},
+		"ios/RNCAsyncStorage.m": {
+			"checkedAt": 1769965442413,
+			"integrity": "sha512-BTncaxjDZKUNfJYlDpk83cchmOKPY9FzDOsh1Da5YgyzV4UYZdMuORIfNfyhj0F0XNRGpY0MiB2onzCkh2dy6g==",
+			"mode": 420,
+			"size": 33078
+		},
+		"lib/commonjs/AsyncStorage.js.map": {
+			"checkedAt": 1769965442421,
+			"integrity": "sha512-P1ZJp+itr7zjaW9yGdXJMDLNAuYmSdGYhb2kXW0q4kOwBzyZixT17hTwa+E9TK3c82/GxlRXTkZiiqyuAdxWgA==",
+			"mode": 420,
+			"size": 9507
+		},
+		"lib/module/AsyncStorage.js.map": {
+			"checkedAt": 1769965442437,
+			"integrity": "sha512-bfKj2tGb/mEnTU5nTsmmY6jMfZv18UaqAjH+gceZj05eCrUlVtvyuXv/sst/WYy5YqGbBA3AdnOyDt3+251RbA==",
+			"mode": 420,
+			"size": 9527
+		},
+		"lib/commonjs/AsyncStorage.native.js.map": {
+			"checkedAt": 1769965442464,
+			"integrity": "sha512-i0dSCAyhjbrYHNnINajZv6yppGIqCwRyv8WeAkVhwBcvLYuh6tmUbt6EpOetyzq3Tp7+3Ul3qhdvo8z/V/xczQ==",
+			"mode": 420,
+			"size": 19543
+		},
+		"lib/module/AsyncStorage.native.js.map": {
+			"checkedAt": 1769965442469,
+			"integrity": "sha512-TQGpp8QbSoRhBN1gV896gvGeaDl/fowH/acF6RjCs9PZoXQuOkMCvrzfe/RFNIm01i7w3Jb4XkKWSIBLb4WpuA==",
+			"mode": 420,
+			"size": 19506
+		},
+		"lib/commonjs/helpers.js.map": {
+			"checkedAt": 1769965442473,
+			"integrity": "sha512-oPL2rnrDdJBqIDjNnO6welb4Qh5zr2Qm1zWADB04rV7xvNOvHgBncCWeAH97tMQfWc2MLQZoI9wrOam6vl3TQg==",
+			"mode": 420,
+			"size": 4140
+		},
+		"lib/module/helpers.js.map": {
+			"checkedAt": 1769965442488,
+			"integrity": "sha512-CICLocROvbGEreoOK4Wr5dSGpTbPWIhgLavpn67fQgTfbG/sSyEkYvHjdF/A38tRwb5Iv6r5ynvnR1ewbmY1gQ==",
+			"mode": 420,
+			"size": 4147
+		},
+		"lib/commonjs/hooks.js.map": {
+			"checkedAt": 1769965442490,
+			"integrity": "sha512-E92a3rCmTKDZe/nxPgPL8trhxFD1+MDIWf9frFNgeA89O8X2ii1JrExTXkG8SSuHr6ha7hUPgv9yjgZHIEsthQ==",
+			"mode": 420,
+			"size": 1184
+		},
+		"lib/module/hooks.js.map": {
+			"checkedAt": 1769965442502,
+			"integrity": "sha512-O6Ne5Ch9lLuO3bLoZLB7IQAdztXorhE89NEjxUF7eYSB1aMvjoj6x6ZHNX0qsGqU/9TvBOZ5pVWrXSLs6jlsAw==",
+			"mode": 420,
+			"size": 1199
+		},
+		"lib/commonjs/index.js.map": {
+			"checkedAt": 1769965442596,
+			"integrity": "sha512-JJmiHwv7NTHCq9XHIMTAtr3N3uLAUxAGk+s3HUeey8k7HhVVW1zjLiIYrQaiVaxNQl1/hXwYoYgI+aLYOzvgWQ==",
+			"mode": 420,
+			"size": 308
+		},
+		"lib/module/index.js.map": {
+			"checkedAt": 1769965442608,
+			"integrity": "sha512-HPWPWnRrMvccffKJ8vY5EiplpjLYz2BFGpGSPhNaGUBy5kw0yzMMYEs4b/VgsBTiKi4TC/fF07f3oGWAhjtDWA==",
+			"mode": 420,
+			"size": 363
+		},
+		"lib/commonjs/RCTAsyncStorage.js.map": {
+			"checkedAt": 1769965442610,
+			"integrity": "sha512-rOqLYxWJYyQxb4UcZ3x8CgBns0Y/hlOhr3V8u6bb1w86IWhV4cjSidMVLTyt5Ep9HvO2iieBnUP2D5Zywf1/Mw==",
+			"mode": 420,
+			"size": 2026
+		},
+		"lib/module/RCTAsyncStorage.js.map": {
+			"checkedAt": 1769965442612,
+			"integrity": "sha512-EVLGH1TmFl0ZApO/60WGZ7X0dK+BoyBexeiUlzkqM9vCvtTthATapAm6TcOH19McbqR+/f6/MaEJ6o83qnJmTw==",
+			"mode": 420,
+			"size": 2093
+		},
+		"lib/commonjs/shouldFallbackToLegacyNativeModule.js.map": {
+			"checkedAt": 1769965442621,
+			"integrity": "sha512-jbtmHGwJN+4H6W+bYoLGsy/V/e1HieuR068LUv1bxqUMN1mooMPcn4hse0AgpT6DVEKmlIm7FIoH4MKlPk+Djw==",
+			"mode": 420,
+			"size": 1990
+		},
+		"lib/module/shouldFallbackToLegacyNativeModule.js.map": {
+			"checkedAt": 1769965442623,
+			"integrity": "sha512-1hjs2rHaPykZjexOdaBzDKGje/pNwUeA1tfSDA/j0v2btppEe2KEl17AYTa7UwXWbvYcs0dwooMl0k5UCI7ZNA==",
+			"mode": 420,
+			"size": 2008
+		},
+		"lib/commonjs/types.js.map": {
+			"checkedAt": 1769965442626,
+			"integrity": "sha512-PE+xxnI9ALM+CxNd6F7SOScgpJzqIAEzNKfHWjlM4Nz1erMbP00/6ZwIkxmJDe2ZJQ71XZNLJG5y5a4jkRIxwA==",
+			"mode": 420,
+			"size": 5229
+		},
+		"lib/module/types.js.map": {
+			"checkedAt": 1769965442626,
+			"integrity": "sha512-PE+xxnI9ALM+CxNd6F7SOScgpJzqIAEzNKfHWjlM4Nz1erMbP00/6ZwIkxmJDe2ZJQ71XZNLJG5y5a4jkRIxwA==",
+			"mode": 420,
+			"size": 5229
+		},
+		"README.md": {
+			"checkedAt": 1769965442628,
+			"integrity": "sha512-lpdhnjwQ/awe033t1ta4N++N147chmC9Ti5hWjvpdRfvDRy0rmxbroXnTYLuPPNvT1oPKfixBpXSM8Uy4zw22w==",
+			"mode": 420,
+			"size": 770
+		},
+		"ios/RNCAsyncStorage.xcodeproj/project.pbxproj": {
+			"checkedAt": 1769965442640,
+			"integrity": "sha512-2WA3Jv8cT61p+3nbZoxxsJFUHVpfSB6Bc6GF/PTt+lna5UcahwqXqY+mJLq4HcbsLtHeviE5KhnjHEBRxLLPHQ==",
+			"mode": 420,
+			"size": 10130
+		},
+		"macos/RNCAsyncStorage.xcodeproj/project.pbxproj": {
+			"checkedAt": 1769965442645,
+			"integrity": "sha512-TqEkWAJtg1kefHwMymc1wkzniCr3myjk47r4GAk61UHHXKLGuN4JWEqM7n94tuKW5dtkeRThOmTFb4c7K6+uuA==",
+			"mode": 420,
+			"size": 14349
+		},
+		"RNCAsyncStorage.podspec": {
+			"checkedAt": 1769965442662,
+			"integrity": "sha512-jxGyKrmfW3GteERv1lLpZKUf9KrRewoP93dEt/prKxdB/yqc6H1H6S9aLBMsAUxE/3DrxtzO+vbB4NUPdd9KIg==",
+			"mode": 420,
+			"size": 601
+		},
+		"windows/ReactNativeAsyncStorage/PropertySheet.props": {
+			"checkedAt": 1769965442675,
+			"integrity": "sha512-tYOzrJbE/V9ckQ3hqs/nqo2yfOEqewDYUB9Y+MDKw6mUzqfAbLKcgT17PTYtcLsza25y5AXrE0A9f5f5sr0KcA==",
+			"mode": 420,
+			"size": 585
+		},
+		"windows/ReactNativeAsyncStorage61/PropertySheet.props": {
+			"checkedAt": 1769965442675,
+			"integrity": "sha512-tYOzrJbE/V9ckQ3hqs/nqo2yfOEqewDYUB9Y+MDKw6mUzqfAbLKcgT17PTYtcLsza25y5AXrE0A9f5f5sr0KcA==",
+			"mode": 420,
+			"size": 585
+		},
+		"windows/ReactNativeAsyncStorage.sln": {
+			"checkedAt": 1769965442746,
+			"integrity": "sha512-18qsyf1xVXVRLYOhg3CbIL7Ni1u2PnAMLng+7muZfJCg8W5lnATjSdvUqZByg8X83vpGpm+kQvjSdTJNcvmY4g==",
+			"mode": 420,
+			"size": 12921
+		},
+		"windows/ReactNativeAsyncStorage61.sln": {
+			"checkedAt": 1769965442755,
+			"integrity": "sha512-SUojwcov3uCxgj4x1NM4pB0ZZwL986XmQSJAAnHvI27ljdmFRSvh0XdFpU7K9FShIusfO49iTnkvyHW6TcSkQg==",
+			"mode": 420,
+			"size": 14678
+		},
+		"windows/ReactNativeAsyncStorage62.sln": {
+			"checkedAt": 1769965442757,
+			"integrity": "sha512-rPdCbU3iCxVdrkmFc415SriOorXz5up8kB2f5M3yRVKX7XNzLltB0jOwQjR2ILy3/6ghuNCJo31B9nMPYPIFiQ==",
+			"mode": 420,
+			"size": 14536
+		},
+		"jest/async-storage-mock.d.ts": {
+			"checkedAt": 1769965442765,
+			"integrity": "sha512-FIBblcEzI1LKRLeqhFZhICjrD0qpuCfFeuIWjmGiurI4hvsaYLCRQ5vSZubSi+h5nsRly6YjTMgQNIjocrHEqA==",
+			"mode": 420,
+			"size": 233
+		},
+		"lib/typescript/AsyncStorage.d.ts": {
+			"checkedAt": 1769965442806,
+			"integrity": "sha512-NXwm6jKSNO8adXTl16ToDYNciMIBDAszm5dgWquwaJBPPbQQSsQELDlEVXKG6evtynrS7hZowi2hosS+XQ7ZwQ==",
+			"mode": 420,
+			"size": 353
+		},
+		"lib/typescript/AsyncStorage.native.d.ts": {
+			"checkedAt": 1769965442809,
+			"integrity": "sha512-AoexCa7JQeu4AZuN+RAXvZKzHJ2kXIscRiy7DiAH7uNYwuMhFJotvHgvx0u3gkiOSlNmIAFMT4f5GDjFP2SHGA==",
+			"mode": 420,
+			"size": 574
+		},
+		"src/AsyncStorage.native.ts": {
+			"checkedAt": 1769965442839,
+			"integrity": "sha512-IvPrvtjgU5HJPd4oiYCoUqTLrW9Mynghixgesabe45snCn/yRFEolH9EIxMrSidH7gJGzuoxgoTes0AgqI5mVQ==",
+			"mode": 420,
+			"size": 11396
+		},
+		"src/AsyncStorage.ts": {
+			"checkedAt": 1769965442847,
+			"integrity": "sha512-ExGK2jngniGF/d/crWl4dDohfIQrSrSTRZYmo35MazkjyUdQi6sjQ9VM84SiuFtjIFm9yb9QtKlXfbZt3CGW5Q==",
+			"mode": 420,
+			"size": 4646
+		},
+		"lib/typescript/helpers.d.ts": {
+			"checkedAt": 1769965442855,
+			"integrity": "sha512-qrbO8ReJO5L5htzvNg2sliqPCTfZzeBrrOThk57g5CD5XuheGt02xSluRt3hVvZVSC6bYaFE+GIVgucU+QrWQg==",
+			"mode": 420,
+			"size": 367
+		},
+		"src/helpers.ts": {
+			"checkedAt": 1769965442862,
+			"integrity": "sha512-kAIil9Qc0ureZ2iKlxjbZIhI35A37fq1iQRJugkaM3DjuOe4c15/WHj6oM4J+TGI+NvS0VNVdMh5de76+9+5bw==",
+			"mode": 420,
+			"size": 2177
+		},
+		"lib/typescript/hooks.d.ts": {
+			"checkedAt": 1769965442909,
+			"integrity": "sha512-rN8mJGtavGc2wajSEqSU6Ysbyz8hyDvdf03zsPMAero8WPxR6ivnQkti7B675WiGDaYhKJb7iKFeOW4saZrgnw==",
+			"mode": 420,
+			"size": 121
+		},
+		"src/hooks.ts": {
+			"checkedAt": 1769965442912,
+			"integrity": "sha512-b2ZUCbtYb0TdghyICy5JDPcJ6KM+p/IulOgjiw2lGSL+MGExWBI8WC7ZP0AWCtv7Ai5O8OK0PaaUBhtCgDk9HQ==",
+			"mode": 420,
+			"size": 434
+		},
+		"lib/typescript/index.d.ts": {
+			"checkedAt": 1769965442914,
+			"integrity": "sha512-P8uMIQztYOQH6JP8M8FShuyo6+5NFWZx0NiaMZaWkYxlgKLpsCQBs3F4M2Tap2Gyg1oCqCTXTR4sRiscB6sNuQ==",
+			"mode": 420,
+			"size": 166
+		},
+		"src/index.ts": {
+			"checkedAt": 1769965442916,
+			"integrity": "sha512-sFrxu+uUgzzJuxJx6PQDF3Y25yGdlld98XQEiy/2Z4d8AP5+ujCK1GLJ59TOiE+035zF6lJHJD8PN3PGnqvjkQ==",
+			"mode": 420,
+			"size": 169
+		},
+		"lib/typescript/RCTAsyncStorage.d.ts": {
+			"checkedAt": 1769965442923,
+			"integrity": "sha512-pdzjhfgEIBvUiaCysznHcXp/hCtZYjBtSbGnzuDtShLPr9dQPy1DTVmOoJGlGbrI4kw0/e5RZ7UHx4YxW2LY6g==",
+			"mode": 420,
+			"size": 66
+		},
+		"src/RCTAsyncStorage.ts": {
+			"checkedAt": 1769965442930,
+			"integrity": "sha512-AmDmaS/v6OMZ6V1FhDurfMUXwp9vt2u4Mt6VOhyJJNGO7AZvoDuaPgxTYYNoeI6KYiESQCnhpErqhMDO3CMM2A==",
+			"mode": 420,
+			"size": 1254
+		},
+		"lib/typescript/shouldFallbackToLegacyNativeModule.d.ts": {
+			"checkedAt": 1769965442932,
+			"integrity": "sha512-gqGAjJccpIRkbyocfFiugxP6539HJ6qzBnZ6Pnp0gnDNeUJyJYEb1yx0J4pzXJ5F9vCbUZeTAUNx0vkOBuiWyw==",
+			"mode": 420,
+			"size": 71
+		},
+		"src/shouldFallbackToLegacyNativeModule.ts": {
+			"checkedAt": 1769965442936,
+			"integrity": "sha512-4WhjLYgXajBrwO4cMPeE6G1zc9s97lS0/mJ4STKgTT8i0xy+Muhv7Lf2IoqiJvFsw3XwL1J66QnQTVU5Kk/nEQ==",
+			"mode": 420,
+			"size": 1228
+		},
+		"lib/typescript/types.d.ts": {
+			"checkedAt": 1769965442938,
+			"integrity": "sha512-ic3Sw+OY6e9hAPhlvnn0ysTPNACo/XiHlYf/dWrYXqQ8qfsqVQPVtyNeRr4bAswrWXl3wD2WKA7AiZfYhXVZnA==",
+			"mode": 420,
+			"size": 5150
+		},
+		"src/types.ts": {
+			"checkedAt": 1769965442954,
+			"integrity": "sha512-wsB7fbcSQPkxE01+ltyGmCzJZ9jwbpk+dQb2QlCUAOnXnNlDJkNnkTczdO1/yeuDELSyyPpqMWCtgi631+tpBQ==",
+			"mode": 420,
+			"size": 4991
+		},
+		"windows/ReactNativeAsyncStorage/ReactNativeAsyncStorage.vcxproj": {
+			"checkedAt": 1769965442964,
+			"integrity": "sha512-iOS99gpUlCfAs9zKSqI6IZ0RIWZcd4b13Tj9SXrSsZI/1kUdQRdsUr2RC32eSL6Oc6CPKh2woBUp0ruHJ68tqg==",
+			"mode": 420,
+			"size": 9945
+		},
+		"windows/ReactNativeAsyncStorage61/ReactNativeAsyncStorage61.vcxproj": {
+			"checkedAt": 1769965442986,
+			"integrity": "sha512-MCWmKF7laz1m6JYT0iSQUEx1I8ACShSeDxaga3dg7rnSdWrZ0xKfPEyhfpU/yGmcestzGYf+e8Aq+mPzDqvrZg==",
+			"mode": 420,
+			"size": 8653
+		},
+		"macos/RNCAsyncStorage.xcodeproj/xcshareddata/xcschemes/RNCAsyncStorage-macOS.xcscheme": {
+			"checkedAt": 1769965442994,
+			"integrity": "sha512-uTZqfS1ja5vGen+S7024gr2sDjplntsZBmpb64VoUPYaDf3zZOgdW2awKolviSsUKL9D3cVrlHEPxITbzl33ag==",
+			"mode": 420,
+			"size": 2443
+		},
+		"macos/RNCAsyncStorage.xcodeproj/xcshareddata/xcschemes/RNCAsyncStorage.xcscheme": {
+			"checkedAt": 1769965442996,
+			"integrity": "sha512-qr70kllKyFMh+5W8yrTpozC+GH8mjHFdZ3Li0dp7Z6bQY6C3gxDZo5eAVr0JzPh8hZ3nqawFuDpEXowV/F5MHA==",
+			"mode": 420,
+			"size": 2419
+		},
+		"android/src/main/AndroidManifest.xml": {
+			"checkedAt": 1769965443040,
+			"integrity": "sha512-mLxj7OhSc9giSkDAn81dIuIp0beL3kOV7WiF06ZWrDR8rXTsI771kUmLbQj0OhC2KIqYcaE1wrS0+IVirysKLA==",
+			"mode": 420,
+			"size": 144
+		}
+	}
+}

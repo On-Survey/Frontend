@@ -1,0 +1,511 @@
+{
+	"name": "@apps-in-toss/native-modules",
+	"version": "1.5.3",
+	"requiresBuild": false,
+	"files": {
+		"dist/index.cjs": {
+			"checkedAt": 1769965438947,
+			"integrity": "sha512-ecTlxXPyQlLKv1gaWiBlXwiktmLIMHr0wdcGAFL3+yk0nTwbmCObJjA5bJDcuIpKjFglHGysDaHdQnw3OCJ6MQ==",
+			"mode": 420,
+			"size": 39217
+		},
+		"dist/index.d.cts": {
+			"checkedAt": 1769965438957,
+			"integrity": "sha512-q3FXCo3ILVzAPMvodLPJy+9nVUEbnx/FUfrpc9NQXzS+EFzQIG757Tm+RYNsJdWysxAZOHDiFEuKBe6nSeA6Kw==",
+			"mode": 420,
+			"size": 149691
+		},
+		"dist/index.js": {
+			"checkedAt": 1769965438972,
+			"integrity": "sha512-TyiULbLQZxv4m5dmti28iDMmz5JmUCDIKdTJaYHFTGtJKs0Nv49uljxbfsLKjNkMu+GqFDPobaFH9nJq5w1yuQ==",
+			"mode": 420,
+			"size": 35502
+		},
+		"dist/bridges-meta.json": {
+			"checkedAt": 1769965439006,
+			"integrity": "sha512-9Zm2TyKTtyD0Cw9jl4S+NcYVfjjYKYPrscvnrEDMidCi4CuurVXQahGivYeznLElbA/R5Qj2S2yg3KfbthXTvA==",
+			"mode": 420,
+			"size": 102656
+		},
+		"package.json": {
+			"checkedAt": 1769965439301,
+			"integrity": "sha512-q5bEqbPYDahmukre9ywT9sz15Cy6MIgpNDCbtjXhhiXEXk/HJFoilo9Md0i3II2/NBxaKGmZMoDcNKD2nRyPAQ==",
+			"mode": 420,
+			"size": 1487
+		},
+		"README.md": {
+			"checkedAt": 1769965439470,
+			"integrity": "sha512-TBq2igfx8QiGP6rEAcK5+tkah8kAxXSvYhv0dDFoiDo5+q1joGB9yBesKIRNjNs+fUAdHMOa/tSvj9aGdwmeXA==",
+			"mode": 420,
+			"size": 59
+		},
+		"src/AppsInTossModule/native-event-emitter/internal/appBridge.spec.ts": {
+			"checkedAt": 1769965439483,
+			"integrity": "sha512-l0YLVMDOitWZ+/af2TtkWJeIs8tY83yM2NRStfyYQu3hqECchWUozekAsjgOGvirCbFPPCMQDwl++ceGyvcPnw==",
+			"mode": 420,
+			"size": 4110
+		},
+		"src/AppsInTossModule/native-event-emitter/internal/appBridge.ts": {
+			"checkedAt": 1769965439597,
+			"integrity": "sha512-XMxsaIOdwGtpM5WIaVpqTWekIpOlbpruZSS4fT2usbhFbdhIgnynDxt5pAexZZr3NXV6NlMabHlvlPllMa8J5Q==",
+			"mode": 420,
+			"size": 2373
+		},
+		"src/AppsInTossModule/native-event-emitter/internal/AppBridgeCallbackEvent.ts": {
+			"checkedAt": 1769965439605,
+			"integrity": "sha512-TEPKUgkZaqI9ghccDRDPlVdQHDf581Yt1cSiLdO3fvnJu9IxLfe0sntsdHR8uws/1l8XImG0mLsETVCepdSRUA==",
+			"mode": 420,
+			"size": 1474
+		},
+		"src/AppsInTossModule/native-modules/appLogin.ts": {
+			"checkedAt": 1769965439671,
+			"integrity": "sha512-1TT5y32clUXbEqNvKD4t8CinulW/2dyCScRhiOEFzRH/2I0H+E281MPnsra+APhktJTVq1sOelW9+L14k+S5Sg==",
+			"mode": 420,
+			"size": 879
+		},
+		"src/AppsInTossModule/native-event-emitter/appsInTossEvent.ts": {
+			"checkedAt": 1769965439681,
+			"integrity": "sha512-mELkowttSUWfGjHYusTAMV2KA8WISglHlzkUeEWW6AiUxfTlY57o//w0V3ZRJpeKoUuCkaxyKRrJrjCs/HovrQ==",
+			"mode": 420,
+			"size": 523
+		},
+		"src/AppsInTossModule/native-modules/AppsInTossModule.ts": {
+			"checkedAt": 1769965439765,
+			"integrity": "sha512-3OUIr0G165p2HsxjcT2o2jADk5yCv61TeNXO2YWVut7k+JcKXnhSv7NcKkmWPFqZpuYEjZFN6KVzxXPszISn8w==",
+			"mode": 420,
+			"size": 5271
+		},
+		"src/AppsInTossModule/native-modules/appsInTossSignTossCert.ts": {
+			"checkedAt": 1769965439944,
+			"integrity": "sha512-WyzdelE3DcF9BalqVsQtPxv8yLkl5e+55wf4H9WzsgGd/3qWs5Clmg0YcQn6WQK29RbP7ZW4uClC8aYsVmn2kw==",
+			"mode": 420,
+			"size": 2060
+		},
+		"src/async-bridges.ts": {
+			"checkedAt": 1769965439961,
+			"integrity": "sha512-O2Bc2fVcaRVudhfHhcNEnpH0OTf9nEQuJMzL5dflNqCyyJugBT1Dt14zH1MCQgqywQjyoyOSE+zEc6UVJixOhA==",
+			"mode": 420,
+			"size": 2344
+		},
+		"src/BedrockModule/native-modules/core/BedrockCoreModule.ts": {
+			"checkedAt": 1769965439974,
+			"integrity": "sha512-4M6DQdIqu8WBJZ+ecFox1LaIokRy83BRhAa8vudKzEvdSZHoVrwIaI80c+cJESwaeglemZTbZWElPwxROnd1JQ==",
+			"mode": 420,
+			"size": 253
+		},
+		"src/BedrockModule/native-modules/natives/BedrockModule.ts": {
+			"checkedAt": 1769965440081,
+			"integrity": "sha512-/MzZck/BAE30tY4Q5ngXWO+vF7UjkxWz29I5vVO8eeKKK67XRBuWZSoDCOeA68W13CIdHOZlWJ1Fc0WJmLG8aA==",
+			"mode": 420,
+			"size": 832
+		},
+		"src/AppsInTossModule/native-modules/checkoutPayment.ts": {
+			"checkedAt": 1769965440088,
+			"integrity": "sha512-EFilUr3RqCcsOdrgsB7OIB+KlvWeen3e5RwmVgTNp1JnI81mlvCDVMYNB9DhaTQGl1hXSjTngD/3W9rNaZHBzA==",
+			"mode": 420,
+			"size": 2613
+		},
+		"src/BedrockModule/native-modules/natives/closeView.ts": {
+			"checkedAt": 1769965440090,
+			"integrity": "sha512-W3vSn4X7QeUkbn1hCJVotzr9Nl4dUQBXyLpl4Z42HoXKAlNe9X41Qur1htBSmPAOP8m+u2zaPaeVD6h8hL7PRA==",
+			"mode": 420,
+			"size": 662
+		},
+		"src/utils/compareVersion.spec.ts": {
+			"checkedAt": 1769965440099,
+			"integrity": "sha512-/8qf+3WfnbN9Q4gE2f/ibOPNsPmPbbqEzc9R3HRgsN2E3/tdfjXR6PfKi0DBG1ICC0Zb0ZG8cniBCOdgp7Uosw==",
+			"mode": 420,
+			"size": 9029
+		},
+		"src/utils/compareVersion.ts": {
+			"checkedAt": 1769965440102,
+			"integrity": "sha512-GevQ2K5SBiuH4U2xby02gR1c0LVzhGCCxW81gHraD07x0Y7BfKVU7KXB54GwBdgNx+f1JCGQFenhvM1E5AUdNw==",
+			"mode": 420,
+			"size": 2663
+		},
+		"src/constant-bridges.ts": {
+			"checkedAt": 1769965440409,
+			"integrity": "sha512-d3Z/cGqkaMbNOt0aRi2+LpXdXAVI218UnUgwsg7/YFR/xLRYeFPCN0y7FTgoxgLYg4Y8GbqkvD6KGZwOYyRHyg==",
+			"mode": 420,
+			"size": 452
+		},
+		"src/AppsInTossModule/constants.ts": {
+			"checkedAt": 1769965440414,
+			"integrity": "sha512-dIsIkLRHRQWANNPohckxOVRvCdn8sQZWvCHMaHisog4MfAXNzIem0okW9cCVemUGFbTunHvDUgCISPY2nR4/Cw==",
+			"mode": 420,
+			"size": 500
+		},
+		"src/AppsInTossModule/native-event-emitter/contactsViral.ts": {
+			"checkedAt": 1769965440488,
+			"integrity": "sha512-yKhVmdE/osjEBb5Gzm1Amrhaoo2BkaiGRm2h5IML0zX2FBNVJnxkoybqITPRwQP7nBiwYQtkH/VxemKx3PhlmQ==",
+			"mode": 420,
+			"size": 6825
+		},
+		"src/AppsInTossModule/native-modules/permissions/createPermissionFunction.ts": {
+			"checkedAt": 1769965440684,
+			"integrity": "sha512-cPW2TieleHihZb46voDBJiB6Ty4uTf6vsD+V3Q6T4gvIVJbGxMK/fKt9bNQ3DH/CgP0IL9oPEIiSEpi7w/yNng==",
+			"mode": 420,
+			"size": 924
+		},
+		"src/event-bridges.ts": {
+			"checkedAt": 1769965440706,
+			"integrity": "sha512-MsN9oEgsSX4nDFCj8xBidL0++vhlmdnZe29UsC2FKwkU3rJyYJVuwqEJI+f7NbbCtcnwLcHAbOMQlBt+q5bsPQ==",
+			"mode": 420,
+			"size": 277
+		},
+		"src/AppsInTossModule/native-modules/eventLog.spec.ts": {
+			"checkedAt": 1769965440733,
+			"integrity": "sha512-K/xQonJ+zRDyXevh3BlauFoX6oFM4k6I13IkVsaB3pzPms5XV7sIYfRWfBJ0faGN/liQ31RyCl4SZbvb5UJ7Ww==",
+			"mode": 420,
+			"size": 7064
+		},
+		"src/AppsInTossModule/native-modules/eventLog.ts": {
+			"checkedAt": 1769965440763,
+			"integrity": "sha512-H0b5n6Jf+iK8fkme0UQ/dYqohvEoaf9/RmxuzNPeMYGXOM+Mh3LNuuF31+bqxQUAtMHcQ1EpEBCEWmF/pKGd9g==",
+			"mode": 420,
+			"size": 2464
+		},
+		"src/AppsInTossModule/native-modules/permissions/fetchAlbumPhotos/fetchAlbumPhotos.ts": {
+			"checkedAt": 1769965440776,
+			"integrity": "sha512-P6XotmbClqMgudJntEurkGtTkKaRqpP03c83xT8LpMLuR1DrMv4hnlBtjfozro6ja3hoYYdV5DuV4dM+OLo3lw==",
+			"mode": 420,
+			"size": 4791
+		},
+		"src/AppsInTossModule/native-modules/permissions/fetchContacts/fetchContacts.ts": {
+			"checkedAt": 1769965440808,
+			"integrity": "sha512-RbaY7PUKpgsKOqSoUVI/eZ+4hF5l2fqVUCpuAtslFalzPvrX3IP8Kfo56638RryUzhj2vTiRAz8ilNDWx9iQ9A==",
+			"mode": 420,
+			"size": 5534
+		},
+		"src/utils/generateUUID.ts": {
+			"checkedAt": 1769965440876,
+			"integrity": "sha512-yXbOcyhEcIjUF6lCcQsqUaEbqqGUc2dufP7tYq0TAVtPWrFvIW30MeqGwB4KP5DgwlhMuVMA28CO54tM+Zcjxw==",
+			"mode": 420,
+			"size": 238
+		},
+		"src/AppsInTossModule/native-modules/permissions/getClipboardText/getClipboardText.ts": {
+			"checkedAt": 1769965440914,
+			"integrity": "sha512-TDW1k3fFaGcOC5Ty4OgmrOu+8pvr1SdlJp4eun+z/UlqRZWPxZrzNOvthJ/GJ0G5fMffi0UMQZDAcS+7Qo3Ylg==",
+			"mode": 420,
+			"size": 3738
+		},
+		"src/AppsInTossModule/native-modules/permissions/getCurrentLocation/getCurrentLocation.ts": {
+			"checkedAt": 1769965440916,
+			"integrity": "sha512-MNAMslsRJcX5WZogrG0RaFW/HWaw/P6DkGpVS+8QpWJkCm+6qaqP7YhKet3uLneSD2LxQy1orszf2ZmZvWp6Yg==",
+			"mode": 420,
+			"size": 4264
+		},
+		"src/AppsInTossModule/native-modules/getDeviceId.ts": {
+			"checkedAt": 1769965440921,
+			"integrity": "sha512-6VzpGWjCpMyKQzH+y/s4nLe66OSQRlimxOClMv+KBKNDMHbuAlEBGDk4ARV5VBWIHf9BYRM9inw3KuAiGqJaxQ==",
+			"mode": 420,
+			"size": 1048
+		},
+		"src/AppsInTossModule/native-modules/getGameCenterGameProfile.ts": {
+			"checkedAt": 1769965440927,
+			"integrity": "sha512-uqzJlhX8wOEFVSvrdqosafdil1zzbcVjpc+K/fR7GD5UQBA1w/akKzCgreIlyl7SAwX2BIPdtllHIocoGauxpQ==",
+			"mode": 420,
+			"size": 2639
+		},
+		"src/AppsInTossModule/native-modules/getIsTossLoginIntegratedService.ts": {
+			"checkedAt": 1769965440940,
+			"integrity": "sha512-L4WCTD35r4HZ9T0GW5vfAw0Lghe11FQt1rcdYFnMx5Bz1x0pwi52W2HKP1mT9RXdJBgx/YducQXefZ35F3j+ww==",
+			"mode": 420,
+			"size": 2430
+		},
+		"src/BedrockModule/native-modules/natives/getLocale.ts": {
+			"checkedAt": 1769965440947,
+			"integrity": "sha512-BimTWrftT4i70rFw0jsMf0+fK6PGh+eO2dxF6+u5kYAGetVnfR1gqeWPezX+HqoqpG0m2VLADgzAJOSQDVEYgg==",
+			"mode": 420,
+			"size": 1258
+		},
+		"src/AppsInTossModule/native-modules/getOperationalEnvironment.ts": {
+			"checkedAt": 1769965440950,
+			"integrity": "sha512-gQsejfuwafK2Uykd4l17Y6D+GocUE8hc87FdygiHSa8Uy4HY1k1qR0eo/ri+Z20fKyRpelAw3vD114SdnNCtYg==",
+			"mode": 420,
+			"size": 1209
+		},
+		"src/AppsInTossModule/native-modules/getPermission.ts": {
+			"checkedAt": 1769965440957,
+			"integrity": "sha512-0zZBtVZEkHkQRPQ6ujnBE92oZq1fE1zRUFBKi5vX5uF9LjtbGHvjkV/a5kPSQrRK7kKRA5pXc8nilynYPXxbuQ==",
+			"mode": 420,
+			"size": 2458
+		},
+		"src/BedrockModule/native-modules/natives/getPlatformOS.ts": {
+			"checkedAt": 1769965440965,
+			"integrity": "sha512-NuZ7zKPgSidVCkN9kbsd6AmujfGU8oJVcXe+UFODiF/AOxoJOM/6zZrqYrNz0ehl8lVNd3cuhvpJW0/eIo/l/A==",
+			"mode": 420,
+			"size": 978
+		},
+		"src/utils/getReferrer.ts": {
+			"checkedAt": 1769965440969,
+			"integrity": "sha512-m2kvDlWhiG4/jD65vwcDTazvwFuyNjPHfPt4clUAYnbZ5z7c09Bg7vFffHlT2f5e+C/VWvjNmMzZq+MO6a3Ycw==",
+			"mode": 420,
+			"size": 198
+		},
+		"src/BedrockModule/native-modules/natives/getSchemeUri.ts": {
+			"checkedAt": 1769965440972,
+			"integrity": "sha512-RX8T4SsgWZOJuR6HlQCp97cBaJOJDLjjHpGUNzdS1fbosbl/j+KKMh+pfnz5LWyg/y4DtR1lEvadzE7OlrylNQ==",
+			"mode": 420,
+			"size": 756
+		},
+		"src/AppsInTossModule/native-modules/getTossAppVersion.ts": {
+			"checkedAt": 1769965440974,
+			"integrity": "sha512-0vybMmDK455EOWInARPCg9Q3pNF6iZxBO3ClfzMcZuvQfZzd5x/k5T2UrT+qiwMGchjtidOlY6pS3krGlCH0bA==",
+			"mode": 420,
+			"size": 856
+		},
+		"src/AppsInTossModule/native-modules/getTossShareLink.ts": {
+			"checkedAt": 1769965440977,
+			"integrity": "sha512-NEReso5F0NZul+qvM+6LrAD4nGXQwuYcb+AlQOZy/a55caQnRixUXk94R5uAE7XfabFqAR7iFn3J0oyC9tnkNw==",
+			"mode": 420,
+			"size": 2180
+		},
+		"src/AppsInTossModule/native-modules/getUserKeyForGame.ts": {
+			"checkedAt": 1769965440982,
+			"integrity": "sha512-Ri14nwEkz3m4fDVlLoJXamX34MRiWENeNn1YhNgNWRX+sO2vIiKujJHS+bRStno+9gns21EncALgJRM1BT6LHA==",
+			"mode": 420,
+			"size": 3926
+		},
+		"src/AppsInTossModule/native-modules/ads/googleAdMob.ts": {
+			"checkedAt": 1769965440985,
+			"integrity": "sha512-QtVIOZz3Y1aP1QnBja4u9lbrlzzNUHj+nPpkTjWXGsFF5p4RqkgPCq9LYyYLB18snfzHTjsO7fHnTOUpO+doHQ==",
+			"mode": 420,
+			"size": 21145
+		},
+		"src/AppsInTossModule/native-modules/ads/googleAdMobV2.ts": {
+			"checkedAt": 1769965441048,
+			"integrity": "sha512-cNr/HN7xp5z+2La8bvVsa6mfAgSwHNiXn3NQ2hGFZIcfjysbKvcJWlOBNTXynM/Kjdb8gqoiEvba0L6TSQEHGw==",
+			"mode": 420,
+			"size": 13264
+		},
+		"src/AppsInTossModule/native-modules/grantPromotionRewardForGame.ts": {
+			"checkedAt": 1769965441113,
+			"integrity": "sha512-obDIqXVUdjUhyuN0iju+Yt8X7zjwBFu5dOXdSSWHIV8YaDoQF4PQdXUEwz/4hnc3aX59zoLk8pGceMI+npbqgw==",
+			"mode": 420,
+			"size": 5479
+		},
+		"src/AppsInTossModule/native-modules/iap.ts": {
+			"checkedAt": 1769965441116,
+			"integrity": "sha512-aytMTBVLCiFhPCvahczE43Uc6jH/8WrM0kcVXXQoHFtD82mGbY5vvQXxA6jPV4zciqoeJvh48BqHRLaNB2c8ww==",
+			"mode": 420,
+			"size": 20274
+		},
+		"dist/index.d.ts": {
+			"checkedAt": 1769965438957,
+			"integrity": "sha512-q3FXCo3ILVzAPMvodLPJy+9nVUEbnx/FUfrpc9NQXzS+EFzQIG757Tm+RYNsJdWysxAZOHDiFEuKBe6nSeA6Kw==",
+			"mode": 420,
+			"size": 149691
+		},
+		"src/AppsInTossModule/native-event-emitter/index.ts": {
+			"checkedAt": 1769965441201,
+			"integrity": "sha512-FdD2QvGrWOWyKAfMPlH0JnqWiZXiHTAoMonFMh2J9Hhb8GVO85Oxh4X3Ch5UU+qLylggXUxTmjamnzos4IrK3g==",
+			"mode": 420,
+			"size": 363
+		},
+		"src/AppsInTossModule/native-modules/index.ts": {
+			"checkedAt": 1769965441295,
+			"integrity": "sha512-5N245QOCv98K9AyJzAiqS3rKPZG5rUFApmJJ4g9C7Ez5xdglB22SPA56IlsoBjb/I9Cxb9e83WsFJhwAwy9+Gg==",
+			"mode": 420,
+			"size": 4781
+		},
+		"src/BedrockModule/native-modules/index.ts": {
+			"checkedAt": 1769965441305,
+			"integrity": "sha512-vwfQdaHeiGWzvhA9ssxzxmpq6ZLPl75TZ0u+r//6YCTytv4RoaE4jqw/l3mJcKKDAimi0Dpl6O753wg9W2lPrQ==",
+			"mode": 420,
+			"size": 165
+		},
+		"src/BedrockModule/native-modules/natives/generateHapticFeedback/index.ts": {
+			"checkedAt": 1769965441307,
+			"integrity": "sha512-aEoukCh6yZ2xBFb5kQ3zo44G0X4FYJCd357heeE3Y5R/KWarC1wlvSr6jMmUTJRnEM4FW59+VEygWGdBfjnQCg==",
+			"mode": 420,
+			"size": 1069
+		},
+		"src/BedrockModule/native-modules/natives/getNetworkStatus/index.ts": {
+			"checkedAt": 1769965441364,
+			"integrity": "sha512-c83t6oi52p3ckGMp5OZv2w+davab0GEWw+87+DuXvRgTSC+KoaCeuDDsaSuCoSFTMDR7pRr5/ztKEvRbC4sBeQ==",
+			"mode": 420,
+			"size": 2076
+		},
+		"src/BedrockModule/native-modules/natives/index.ts": {
+			"checkedAt": 1769965441397,
+			"integrity": "sha512-/gihUlA1SgsbKtPJSiIgWMcO6pokJ0iXH0odTJSEZFaENX7U3I/U9wVNZNzSIPx4T5RMKq0zUuleKzkwehtrKA==",
+			"mode": 420,
+			"size": 371
+		},
+		"src/index.ts": {
+			"checkedAt": 1769965441403,
+			"integrity": "sha512-nMGHonvwfcmriownFqWNNuSkXvIkNnBKWeitIq9CR6kVcBOD5Xhyd1bl8AZM9ulh/9ly2CvCCcv6gY+DYQ0DWg==",
+			"mode": 420,
+			"size": 442
+		},
+		"src/AppsInTossModule/native-modules/isMinVersionSupported.spec.ts": {
+			"checkedAt": 1769965441408,
+			"integrity": "sha512-h5hcqsieJqWVA3mOza55Ge4KlV2fvxMyPq5tLmP072ux81OD4xekCtwbzqjEk50FaiiVGbRMX/nMaYT25GPm+g==",
+			"mode": 420,
+			"size": 5322
+		},
+		"src/AppsInTossModule/native-modules/isMinVersionSupported.ts": {
+			"checkedAt": 1769965441411,
+			"integrity": "sha512-jfKjCAbmpRJ2jyzA6lM5+cXZgZARyn7EaBTggdQYnnz89zNLtYI9UucfG9AlcZBQix6VuO/Fc+5ogoMkxbI8bQ==",
+			"mode": 420,
+			"size": 2348
+		},
+		"src/AppsInTossModule/native-event-emitter/nativeEventEmitter.ts": {
+			"checkedAt": 1769965441421,
+			"integrity": "sha512-+nEvrZQm3nQL0B7dEKFZTptk3yFciHjud3Bz65H68e2GS5k0sVdl+rcyETCweEZ4dO4m4Jrcxzs4PtiQPd48FA==",
+			"mode": 420,
+			"size": 1926
+		},
+		"src/AppsInTossModule/native-event-emitter/internal/onVisibilityChangedByTransparentServiceWeb.ts": {
+			"checkedAt": 1769965441476,
+			"integrity": "sha512-uSErbad2j7REZc76cB1k28QIymYhrY+1ORACpMsAgMmUu+Z74lj+5fJDPrBub2o9JM83Wpw1Dg3gwRIlm3dfbA==",
+			"mode": 420,
+			"size": 750
+		},
+		"src/AppsInTossModule/native-modules/permissions/openCamera/openCamera.ts": {
+			"checkedAt": 1769965441493,
+			"integrity": "sha512-1SoVWTYAR6WqOXOU3jkc/CSQbbO8EkhG0HJNrqcOXYidvNqtppoICsHWgJ9brY63ZlWmCzxbGbxy9nLtosVGww==",
+			"mode": 420,
+			"size": 4476
+		},
+		"src/AppsInTossModule/native-modules/openGameCenterLeaderboard.ts": {
+			"checkedAt": 1769965441546,
+			"integrity": "sha512-Fa9cPJM3APWmoH9RCutjLkNSf+yVQf4rvXDeRPoqQNKx0IvbF73MZXfzngKmf8oOhzq9BvFXT5p1LH5vp4L6XA==",
+			"mode": 420,
+			"size": 1638
+		},
+		"src/AppsInTossModule/native-modules/permissions/openPermissionDialog.ts": {
+			"checkedAt": 1769965441551,
+			"integrity": "sha512-jdnMIKruEjaTWm798+BEPicWlTtJBp1Rw8lO5WgI2EB+w5W4l+laGhWTuWdNnEK7/YYr35GaY6jE1QNzCGmPSw==",
+			"mode": 420,
+			"size": 2344
+		},
+		"src/BedrockModule/native-modules/natives/openURL.ts": {
+			"checkedAt": 1769965441557,
+			"integrity": "sha512-gQneM2q2YJhzwv3il0GtdaUddJlubUkqJPTPAKRpvIevSdt8ZJPylZzkZ8tVyNgXqmKlckPyDq0uEa07lZMXxw==",
+			"mode": 420,
+			"size": 1042
+		},
+		"src/AppsInTossModule/native-modules/permissions/requestPermission.ts": {
+			"checkedAt": 1769965441572,
+			"integrity": "sha512-3puGAQqGt44yZFj7AIaBel6BIpk9FKJ8kotu0CtwiwHqmfJVLwL4BbeWHRd4T3gMxbUoWgKWgeNItToHpqRecg==",
+			"mode": 420,
+			"size": 2659
+		},
+		"src/AppsInTossModule/native-modules/saveBase64Data.ts": {
+			"checkedAt": 1769965441579,
+			"integrity": "sha512-dK8NRyUJFXGJtZpWJY6+nfRUOSsVlDoYj76At8tCWuQnaAmQZAGwL/2mEV7i/uhVtVZsbXOREO26oUT7WfQdgA==",
+			"mode": 420,
+			"size": 2214
+		},
+		"src/AppsInTossModule/native-modules/permissions/setClipboardText/setClipboardText.ts": {
+			"checkedAt": 1769965441585,
+			"integrity": "sha512-kfa0AgJuNKfTt8/e3n+cJ8CaHDYQBVZTXWjjwFPPG5ZDt8NCmKgV7xI4JWzQtPSHSF+4ee7fgk+gwxDZlMeaHg==",
+			"mode": 420,
+			"size": 3307
+		},
+		"src/AppsInTossModule/native-modules/setDeviceOrientation.ts": {
+			"checkedAt": 1769965441588,
+			"integrity": "sha512-aCsUn1PjnH1MSBfPU+FfoGD1setQlkiFhfbTunzi4qvBi6UmeSZprInkGqSx/vw1UuBlqgv6Pn244O8TEnswlw==",
+			"mode": 420,
+			"size": 2547
+		},
+		"src/BedrockModule/native-modules/natives/setIosSwipeGestureEnabled.ts": {
+			"checkedAt": 1769965441608,
+			"integrity": "sha512-H2t5jjZ85N4ALHbEJdwnyNx+v/RRaX5Hq+cOawfvbVoWxrSwXLXThTOYp2tbxzN//FHnd95afNOVP0XSEG5JqQ==",
+			"mode": 420,
+			"size": 1730
+		},
+		"src/BedrockModule/native-modules/natives/setScreenAwakeMode.ts": {
+			"checkedAt": 1769965441781,
+			"integrity": "sha512-X7db6rgcLIX6LKG89RTsuloFKO3DRoLcBQ89+VGyiR39WqFFvFfKwU53KTzEEPwLW69PAIe9sBUvwyCqUCC2yQ==",
+			"mode": 420,
+			"size": 2774
+		},
+		"src/BedrockModule/native-modules/natives/setSecureScreen.ts": {
+			"checkedAt": 1769965441821,
+			"integrity": "sha512-cFW4m1MIosx/K382d6TQg2mlUcRMkzP+91OfnQEKr4G6a5W0NeEQ/TvFPg1n+q0Qygoa4KWZISwJeVC7sYEzlA==",
+			"mode": 420,
+			"size": 1175
+		},
+		"src/BedrockModule/native-modules/natives/share.ts": {
+			"checkedAt": 1769965441826,
+			"integrity": "sha512-hQKu+xfGhX2bCRBiTBTnlRdZezLTm443H9N69AeXXTrjtwsd+dre7FKQvPcIt9pJE6S+PnugbwGP+tDry3dl+A==",
+			"mode": 420,
+			"size": 1255
+		},
+		"src/AppsInTossModule/native-event-emitter/startUpdateLocation.ts": {
+			"checkedAt": 1769965441832,
+			"integrity": "sha512-7n6+joYqcI0WSudruY+J9bpB0sbb4gDcF3xiGzlvR/YBHHVaDKQf6HYfaGyIxxsKBZ9vwIpRGbJgJe1GaWsa1Q==",
+			"mode": 420,
+			"size": 6062
+		},
+		"src/AppsInTossModule/native-event-emitter/StartUpdateLocationPermissionError.ts": {
+			"checkedAt": 1769965441837,
+			"integrity": "sha512-LTMCuUPoDbohd4R7Z5X/kVerwDSIKPiBMBwlroCX1TtzCUtlVik3RNrs5S33gYOkcgzYLMSMjFus4xYceI99Vg==",
+			"mode": 420,
+			"size": 74
+		},
+		"src/AppsInTossModule/native-modules/storage.ts": {
+			"checkedAt": 1769965441850,
+			"integrity": "sha512-3H196N4OoRRy09PbE09JlEmrCrQ4yKhVI6gM7MzRB8Mafy5geV62eO3pApXx30nUWt9BSYzqQDkql+iYQHqfww==",
+			"mode": 420,
+			"size": 3882
+		},
+		"src/AppsInTossModule/native-modules/submitGameCenterLeaderBoardScore.ts": {
+			"checkedAt": 1769965441865,
+			"integrity": "sha512-EQxnzaN1hzQaNIyAsqQMSeHdtcDM2qABOIelOqL6UkDqEJBEcqCuAGOQDAk263HcJ/QbFVAHK3AV26xvpuvMWA==",
+			"mode": 420,
+			"size": 3094
+		},
+		"src/AppsInTossModule/native-modules/tossCore.ts": {
+			"checkedAt": 1769965441871,
+			"integrity": "sha512-1Gx8O0ZjqTGSkvyDtAgVMAhtD5I/0YIBt5TQDANDpURO8h8tHJCJuzk5rrqer0sy4vaeeiAbRJhBXadrc32d5g==",
+			"mode": 420,
+			"size": 862
+		},
+		"src/AppsInTossModule/native-event-emitter/types.ts": {
+			"checkedAt": 1769965416480,
+			"integrity": "sha512-bp6ej6R3p1CzgVdGyxTLYsB6WfINBVNygECgHHAOAd6Wx00BssBijEKnZ5/dumIydHL8lEoUfoQXWkKVNImTlw==",
+			"mode": 420,
+			"size": 103
+		},
+		"src/AppsInTossModule/native-modules/ads/types.ts": {
+			"checkedAt": 1769965441903,
+			"integrity": "sha512-rKN2l777gp7Y52lJ6qxxpGRPn5zL2XVCqjA1pQe3rrdBV5Mg/E8koLbChAV7EBQGZKwgLFscvhH4NQ4ApqE5iA==",
+			"mode": 420,
+			"size": 4483
+		},
+		"src/BedrockModule/native-modules/natives/generateHapticFeedback/types.ts": {
+			"checkedAt": 1769965441906,
+			"integrity": "sha512-QU3bouBSRA/QYtDCwV9sITUWXo06WOaOjhMweeqzzrevHP+5FKO34s4vjYUjYl0fk9QpIWpvJWiGc4iTfrJakw==",
+			"mode": 420,
+			"size": 915
+		},
+		"src/BedrockModule/native-modules/natives/getNetworkStatus/types.ts": {
+			"checkedAt": 1769965441909,
+			"integrity": "sha512-74ntbsPVstqc3isgaHmjQ+09YUq/m/d6YmFZxhnGeA7kLSJask0Jc2W6QEgKHTBEEGTxNxRj1LRZssSOgnGZxw==",
+			"mode": 420,
+			"size": 97
+		},
+		"src/types.ts": {
+			"checkedAt": 1769965441939,
+			"integrity": "sha512-UqwSqX3b1jaxvIzxvriW9RUR6kptZzGicYAGvLSRFaskxLKLIfOLhahRVTK2B7/5DOfCttcEKrSN3PPDAi1vjA==",
+			"mode": 420,
+			"size": 86
+		},
+		"src/AppsInTossModule/native-event-emitter/event-plugins/UpdateLocationEvent.ts": {
+			"checkedAt": 1769965441991,
+			"integrity": "sha512-9uSjTI0gYdvBQs0fK/SlokSa1CIVf7Zvm8+BDlpPUTlk5o0mw60TiupwIQzOQGtH28z7I4F37cGzGKv9qEbRJw==",
+			"mode": 420,
+			"size": 1804
+		},
+		"src/AppsInTossModule/native-event-emitter/internal/VisibilityChangedByTransparentServiceWebEvent.ts": {
+			"checkedAt": 1769965441997,
+			"integrity": "sha512-jlFiDdEQgSekoGTSXRqykz9jW7VPacNTL16IMsp7ct9V7asmS2h1YeAn2KbroXHVZfXNaDe/lNQbfJ/jedAXbg==",
+			"mode": 420,
+			"size": 1631
+		}
+	}
+}

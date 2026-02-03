@@ -1,0 +1,43 @@
+{
+	"name": "@toss/tds-spring-easing",
+	"version": "0.0.1",
+	"requiresBuild": false,
+	"files": {
+		"dist/cjs/index.js": {
+			"checkedAt": 1769965520472,
+			"integrity": "sha512-lw7NDymqMiqNePN7WS7wIp10qJRrOp3lBiF/HLw1QzoJ2kOtKKHOfQDxeE0tO8DewFpEyxDhgJl9MX8WB/12rw==",
+			"mode": 420,
+			"size": 2322
+		},
+		"dist/esm/index.js": {
+			"checkedAt": 1769965520474,
+			"integrity": "sha512-vzh3QmQn1x/e8/DOjJ3SBKRdHYY7rb/ub2w5ONmW4ZU3u4NzAx9YBdzXAVXt3W/iCGOSg/Q9Lr0lh1r1YI/Ntw==",
+			"mode": 420,
+			"size": 1868
+		},
+		"dist/cjs/package.json": {
+			"checkedAt": 1769965520476,
+			"integrity": "sha512-31R+Wv1QpdoIo1QQe0371/hxoUPUt3ievB95FicybOeaoWgsFUpgX7m6Jx3qmIYimZzqHBSXbJJkrliPK4zeLg==",
+			"mode": 420,
+			"size": 21
+		},
+		"package.json": {
+			"checkedAt": 1769965520480,
+			"integrity": "sha512-6NTsRCt3S1kZX0qTfsgkH8zKZSkmV5T8EaCMUm1qzxpbeSGVjrShAvr4reK8U87mMwfBFV0Ipb19TUhZe6GQwQ==",
+			"mode": 420,
+			"size": 696
+		},
+		"dist/cjs/index.d.ts": {
+			"checkedAt": 1769965520486,
+			"integrity": "sha512-17vfQjsorqAure4Qpqv9zzBVeAndCTMDT6aGr5JOYxyt5LnNUcFOxm4LcYB8R8h3Rb5TC3n+7tjw0ILuA9FHgA==",
+			"mode": 420,
+			"size": 1053
+		},
+		"dist/esm/index.d.ts": {
+			"checkedAt": 1769965520486,
+			"integrity": "sha512-17vfQjsorqAure4Qpqv9zzBVeAndCTMDT6aGr5JOYxyt5LnNUcFOxm4LcYB8R8h3Rb5TC3n+7tjw0ILuA9FHgA==",
+			"mode": 420,
+			"size": 1053
+		}
+	}
+}

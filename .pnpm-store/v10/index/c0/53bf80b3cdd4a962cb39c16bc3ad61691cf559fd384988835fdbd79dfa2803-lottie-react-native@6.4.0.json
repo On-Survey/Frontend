@@ -1,0 +1,433 @@
+{
+	"name": "lottie-react-native",
+	"version": "6.4.0",
+	"requiresBuild": false,
+	"files": {
+		"android/build.gradle": {
+			"checkedAt": 1769965445093,
+			"integrity": "sha512-1CUmmPNc1n5xSn9sLz2dHMt8VZcR2GNlW2faP7soTwTzgorBHArVnHYFqap2virOIq3r5zt6jIN+O/1bPat7vw==",
+			"mode": 420,
+			"size": 4372
+		},
+		"ios/LottieReactNative/Bridging.h": {
+			"checkedAt": 1769965445097,
+			"integrity": "sha512-zPZDH9xu8SNEavQ1dEck0pf8s3zUr4463mWuRYgaUUhjR0SRAe5oRvl2MCieIVIJFWxdpJPUGArWMkQGtAJ7dw==",
+			"mode": 420,
+			"size": 118
+		},
+		"ios/Fabric/LottieAnimationViewComponentView.h": {
+			"checkedAt": 1769965445102,
+			"integrity": "sha512-z3VCNXLrtaNdn9M5TE9ZCfl8cWEw0Y8+GCijzYo1+2E4HA/Z2XAsu2jd0IWmvyszyL9aQgwaP4c0dexl+ZNQBg==",
+			"mode": 420,
+			"size": 976
+		},
+		"ios/Fabric/LottieContainerView.h": {
+			"checkedAt": 1769965445104,
+			"integrity": "sha512-W8GUZMn1afj2isQOAGScV4SrntrK4wRa7SBrj/WVTWjyL7fSJIKN4x11zhDULSnMqIq0hKZieIVCvo7CZhvWnA==",
+			"mode": 420,
+			"size": 1429
+		},
+		"ios/LottieReactNative/RCTConvert+Lottie.h": {
+			"checkedAt": 1769965445106,
+			"integrity": "sha512-5bUHNBfDzL4V/m3JlTtYgNPc9lA4CB9jVFjuOLgv4rZDwmAFU7VdT/q9DjkGm8p7//sSao0RyOi7o4Osw8F7iQ==",
+			"mode": 420,
+			"size": 123
+		},
+		"ios/Fabric/RNLottieFabricConversions.h": {
+			"checkedAt": 1769965445116,
+			"integrity": "sha512-jbbHfoYxeSYtGEtesoBPdXY5yOGC4R0OJhbfpzbYFALSRmo0C1pWxezmRDCp+CBbojaU2eN+Upv26plTzZ0a1w==",
+			"mode": 420,
+			"size": 1052
+		},
+		"lib/commonjs/index.js": {
+			"checkedAt": 1769965445135,
+			"integrity": "sha512-Ig2hTHnB9roGaytoIk9AIkVMPssZ0LWMAHIWbx4WBH61hRzXbC/swskAiIBNE4eyRIBBY4z96po9Bmt6ONtnmw==",
+			"mode": 420,
+			"size": 667
+		},
+		"lib/commonjs/LottieView/index.js": {
+			"checkedAt": 1769965445174,
+			"integrity": "sha512-OIQX2yl/gQSw15hfkTkb6kTGbtaDYbzVn6BPb42Ybkx35zTHffiTYEgCcoIn1ZtvJzgftjM+wzfXEPaci+Iz+w==",
+			"mode": 420,
+			"size": 5176
+		},
+		"lib/module/index.js": {
+			"checkedAt": 1769965445184,
+			"integrity": "sha512-iijCR5xMnOuXtckDJ0FU8b5kg4Sb973YsFq6zhWPHzMJoaN1I2M2N22ryza2voZ/e+5CSyigQ+jGkzQNp7lBjA==",
+			"mode": 420,
+			"size": 128
+		},
+		"lib/module/LottieView/index.js": {
+			"checkedAt": 1769965445193,
+			"integrity": "sha512-jFw+x29KRZjfiPpsiC+zFi91FkAOGrSvoGyqX2EpUs/bpGdTNIZlOfIbrurGtuJc+9/Rq6MKuIJIZRy/W1LQsQ==",
+			"mode": 420,
+			"size": 3582
+		},
+		"lib/commonjs/LottieView/index.web.js": {
+			"checkedAt": 1769965445195,
+			"integrity": "sha512-JsOmoRXhKjpVNVaqRAw5fsuOmdFmGipTKNZo1NC/1C2yLtKNtm+97HzAY8yFL5OL5aTDSV9rEP0LBHMIJwOf1g==",
+			"mode": 420,
+			"size": 4882
+		},
+		"lib/module/LottieView/index.web.js": {
+			"checkedAt": 1769965445200,
+			"integrity": "sha512-xvpLAn2JYCWWW7qQqIJWx4YoQnokm5QgU1vZSnku6CeVTgVehVCkrq+U6zgfetwMOpQhdOb+91tS2VYRfgGW5A==",
+			"mode": 420,
+			"size": 3612
+		},
+		"lib/commonjs/specs/LottieAnimationViewNativeComponent.js": {
+			"checkedAt": 1769965445204,
+			"integrity": "sha512-0a9xQSkBu0hrstVlugMsIQ8pCTmGeZ8eKBK1K1SVh4RcWrzLDFRqiZYHV1FN9B8xZvNdh+2gJToxeoACfBH+GA==",
+			"mode": 420,
+			"size": 775
+		},
+		"lib/module/specs/LottieAnimationViewNativeComponent.js": {
+			"checkedAt": 1769965445212,
+			"integrity": "sha512-2FJrGrz3tEbl5ZJuT3t18kPOPUsA0KJwe1sA7VW3fDghn4ex8I7cerPlZC9utbrreDSJmKUgj7/MQcVEDVmBvA==",
+			"mode": 420,
+			"size": 420
+		},
+		"react-native.config.js": {
+			"checkedAt": 1769965445219,
+			"integrity": "sha512-pPKGYNuA02QNuP2Iexu+Xuo5ohtUesUBdnXE9oo/1C1dk7xOhW+x8bcVFGTTIW9Ijl8j2/1P1S3Ol7WkcCgnGw==",
+			"mode": 420,
+			"size": 576
+		},
+		"lib/commonjs/types.js": {
+			"checkedAt": 1769965445229,
+			"integrity": "sha512-9kzEHyasaTUruLsrlcXzTqoZyDNxKCC/AbFMORguXaeWyljfqdyEdmKkyCjagZjUSfn5aMN2HfkHxeJ9JcrW1w==",
+			"mode": 420,
+			"size": 113
+		},
+		"lib/module/types.js": {
+			"checkedAt": 1769965445233,
+			"integrity": "sha512-SsbEBINp4lV0o5FfrXWIrReugcGKwHr3WmLAnUF60Atcrlv+DLvt25f8cEkvPg1SwkuoEp+vpkWJSNKcPtvFUQ==",
+			"mode": 420,
+			"size": 44
+		},
+		"lib/commonjs/LottieView/utils.js": {
+			"checkedAt": 1769965445235,
+			"integrity": "sha512-S241HZeHg5z6CPcq/6ymAEoyAE9FUNY3xLbFhxikcUTvTyf1B19zGGhDqFEZq98lmVVHZTpgXFrGFSv4ZO8kcQ==",
+			"mode": 420,
+			"size": 877
+		},
+		"lib/module/LottieView/utils.js": {
+			"checkedAt": 1769965445237,
+			"integrity": "sha512-1JJEgKqsT5sCf95Ojc5R31uZP+WLGAnsmRHvEwJZJqkcFv5zTbMMcyIJYx9e9RTEizrDvhf/QV/j2AiD0K8zgg==",
+			"mode": 420,
+			"size": 758
+		},
+		"package.json": {
+			"checkedAt": 1769965445244,
+			"integrity": "sha512-5a3UQIGB8KXfcAZr8SyW2cbWIRpmuwbOaQKiH+tVamG8XYqz0qmexQy8olIESw2Q+ZHyKyF/+lai0kighvjagA==",
+			"mode": 420,
+			"size": 3194
+		},
+		"android/src/newarch/com/airbnb/android/react/lottie/LottieAnimationViewManager.kt": {
+			"checkedAt": 1769965445249,
+			"integrity": "sha512-aEHo+Q/IIq+9JtCULiDGpBnNg8iy1zC6QCNELnTwypzqbLlTePtac4QITremCRbvYWMIPz1sgL8XPlgLFHr0gQ==",
+			"mode": 420,
+			"size": 8832
+		},
+		"android/src/oldarch/com/airbnb/android/react/lottie/LottieAnimationViewManager.kt": {
+			"checkedAt": 1769965445306,
+			"integrity": "sha512-gBWaDYgGGGG3XEo8X2yYAPnI1FUUUduzTbBMYrw5VTG4po2bFJzDSHYfjvnHG/96V275/ATOwaWzkIHLxjlrLA==",
+			"mode": 420,
+			"size": 7639
+		},
+		"android/src/main/java/com/airbnb/android/react/lottie/LottieAnimationViewManagerImpl.kt": {
+			"checkedAt": 1769965445323,
+			"integrity": "sha512-5LFgirZrB67w0FjbRznLOs3ndb0XkJe9upIy/VOn84SM7Ad0c0lEFDuoHzKBbaMNpp3jb3U66IEHNy9myUM/GQ==",
+			"mode": 420,
+			"size": 8942
+		},
+		"android/src/main/java/com/airbnb/android/react/lottie/LottieAnimationViewPropertyManager.kt": {
+			"checkedAt": 1769965445369,
+			"integrity": "sha512-ESTIxEntCiVQguC2HwajysWNO7R3YJ/H0o9uIbOYdL5XARA+w4jEYCStBK1X7bhWjjrYLn97sGG6v7phsWD81w==",
+			"mode": 420,
+			"size": 6756
+		},
+		"android/src/main/java/com/airbnb/android/react/lottie/LottiePackage.kt": {
+			"checkedAt": 1769965445384,
+			"integrity": "sha512-oStGb9NNyqS48f569iCZunU+eTo8ZH0bcMgHqnP8EKGoI+xECIQBJ3OKUFHxaO69D2Td7kYuW+Vuky9ZpL6zxQ==",
+			"mode": 420,
+			"size": 583
+		},
+		"android/src/main/java/com/airbnb/android/react/lottie/OnAnimationFailureEvent.kt": {
+			"checkedAt": 1769965445386,
+			"integrity": "sha512-vE9KQMGE7urVZw6xYbPb0G++//gYGWowCDoQ3nUQLmpT7Hpf442NYWLFOizYwWjicSmR17cbcCXE4R0oiz3hWQ==",
+			"mode": 420,
+			"size": 716
+		},
+		"android/src/main/java/com/airbnb/android/react/lottie/OnAnimationFinishEvent.kt": {
+			"checkedAt": 1769965445388,
+			"integrity": "sha512-eNA7XNpgZYSAfFVP6Du3NZzBwXoVzarel5FI3G7LpdreBYmRnxCaDbLHKySnKVX9qHny/pZpZg1DKh8DgwMABA==",
+			"mode": 420,
+			"size": 717
+		},
+		"ios/LottieReactNative/LRNAnimationViewManagerObjC.m": {
+			"checkedAt": 1769965445408,
+			"integrity": "sha512-tQPVEtnh+/nUrOewgPVyWjw4nwXrtGdxfClC8Me/aLgrEFrHX/qugc5ltdRArBXbMPar79j1/v4K1WHshp+O2Q==",
+			"mode": 420,
+			"size": 1147
+		},
+		"ios/LottieReactNative/RCTConvert+Lottie.m": {
+			"checkedAt": 1769965445413,
+			"integrity": "sha512-3QUAYk8S2ydYpNqVNhMyKkdTalcFK4K7luvrxLq4JtJ1xhoOjlavIm0LBEr7xpCrVK5OZrcn64YbIPpT+dH/wQ==",
+			"mode": 420,
+			"size": 694
+		},
+		"lib/typescript/index.d.ts.map": {
+			"checkedAt": 1769965445415,
+			"integrity": "sha512-ZpmfsrFwOCuYkwApTEQnJbJGmTxxiR9axhyKEnHzBtomeUfKBziFwK96iqnheig2KiWrEzPxKabKh/NgytvV9A==",
+			"mode": 420,
+			"size": 189
+		},
+		"lib/typescript/LottieView/index.d.ts.map": {
+			"checkedAt": 1769965445419,
+			"integrity": "sha512-PkGcTOWK3C2Hc59HrP/UjH+hEPgpwAdwLNKAhz0LKO3KVApDrWMdezFDFYd0r3Rg9ntILyj7fuQuBEE7twSAzw==",
+			"mode": 420,
+			"size": 667
+		},
+		"lib/commonjs/index.js.map": {
+			"checkedAt": 1769965445427,
+			"integrity": "sha512-VyYJPGwIJNIwpitttsE9o0QnWrowuWIP5fQwOSI1MImgF4P2OBDZB9fd0+dHmOckc0mkUjNp8q9F3KStI+Cx/w==",
+			"mode": 420,
+			"size": 748
+		},
+		"lib/commonjs/LottieView/index.js.map": {
+			"checkedAt": 1769965445434,
+			"integrity": "sha512-z21TpD+nyzXlGodb7IBZsmKSeRGkC8vhQD4xnsO/oyB2JWAJ77HpQD4FRF1zS8X3fushV3w47DtVG5PtHIjdvg==",
+			"mode": 420,
+			"size": 5925
+		},
+		"lib/module/index.js.map": {
+			"checkedAt": 1769965445486,
+			"integrity": "sha512-aWjFyXahKM+C5upNkdkzsz9QGCtRshkcD+iSWCLAN1MqTGsBuLLoxwXLUdHh4khNy977tXKaqMllXjhmMXsV3g==",
+			"mode": 420,
+			"size": 157
+		},
+		"lib/module/LottieView/index.js.map": {
+			"checkedAt": 1769965445489,
+			"integrity": "sha512-PCu+NLwyeS6ZDuLfN0OqQpN0wjxBcXLx4RWfVPGKHWEEwYPpyu1ilYKeaJ7MwEqNi52Vk7c7h/Y8cyVf4lZXnQ==",
+			"mode": 420,
+			"size": 4051
+		},
+		"lib/typescript/LottieView/index.web.d.ts.map": {
+			"checkedAt": 1769965445497,
+			"integrity": "sha512-5fk8Walwce6AR1e2LaZtl9tBm4csYdLh7C86wC6xkvnRvIjq1Cv+xPvnk7PAyj1e0w4yUlbbUYJ7QZLh6fGb2g==",
+			"mode": 420,
+			"size": 269
+		},
+		"lib/commonjs/LottieView/index.web.js.map": {
+			"checkedAt": 1769965445503,
+			"integrity": "sha512-gckKYciQGnvYK6DX9ay2tkkTqAoPnVqXtMTsl/hwdsP+0GEF61phCLwWs5nCk7pGg3EwmLSRchkjeYg59rq0zQ==",
+			"mode": 420,
+			"size": 5008
+		},
+		"lib/module/LottieView/index.web.js.map": {
+			"checkedAt": 1769965445548,
+			"integrity": "sha512-E1TpP/h3QccZVOD/kDPCc0K+NgriAh3NDNGiW8LVoNyzVBKnWBU2ChBir2vVQa4bxSKdH6yuu30TDzM+pZ2Riw==",
+			"mode": 420,
+			"size": 3734
+		},
+		"lib/typescript/specs/LottieAnimationViewNativeComponent.d.ts.map": {
+			"checkedAt": 1769965445569,
+			"integrity": "sha512-vE9E/4lH6W9h0XMR0W2/g6SkD8FIp5mgd1segVTx8TBe/ZksKeaulMiYpCnwz+KuS7y4ar4K0UzQAB04wmiVGA==",
+			"mode": 420,
+			"size": 2118
+		},
+		"lib/commonjs/specs/LottieAnimationViewNativeComponent.js.map": {
+			"checkedAt": 1769965445602,
+			"integrity": "sha512-QG/H6iAEnRMU7Hn2yPCrJwDyBi1t0BzNtHin4nm7MslQPVyl6F9SmY/u0spEI4sQ73rEDKUnwwkj7Ly1YiiFCw==",
+			"mode": 420,
+			"size": 749
+		},
+		"lib/module/specs/LottieAnimationViewNativeComponent.js.map": {
+			"checkedAt": 1769965445608,
+			"integrity": "sha512-DbQoR7Nl8/yeEP8arUM/v8/gl/42Vww/QPWIb1JMQDS6/DwerVKjh8dz1J9TFDAo1LJntCaTtCuoTHVodACKVA==",
+			"mode": 420,
+			"size": 417
+		},
+		"lib/typescript/types.d.ts.map": {
+			"checkedAt": 1769965445610,
+			"integrity": "sha512-yLsDkoiLCNG8qbFOVoIpKSO9PNRAKtprliZzVFhKEDeayToIl2vAMIxpxsBiwgLujsWb+F9zDvv+Af3K/u3BCg==",
+			"mode": 420,
+			"size": 2192
+		},
+		"lib/commonjs/types.js.map": {
+			"checkedAt": 1769965445612,
+			"integrity": "sha512-9zkWPWRj9o6lDmEfzFtWxs75t54vBEBSRMnsvBBfPTXPwkyee51Gu1W6tIeTi4BUeoOx0f3Cn91FwfkaCVwf1w==",
+			"mode": 420,
+			"size": 86
+		},
+		"lib/module/types.js.map": {
+			"checkedAt": 1769965445612,
+			"integrity": "sha512-9zkWPWRj9o6lDmEfzFtWxs75t54vBEBSRMnsvBBfPTXPwkyee51Gu1W6tIeTi4BUeoOx0f3Cn91FwfkaCVwf1w==",
+			"mode": 420,
+			"size": 86
+		},
+		"lib/typescript/LottieView/utils.d.ts.map": {
+			"checkedAt": 1769965445615,
+			"integrity": "sha512-frLXKNUmfzhy86J0i5qsoKoRLNDuUDaxccpyzGnJmq4nZRQf7OarZuf/a9V79RWO822ATDL59m/msjpY2s8ZbA==",
+			"mode": 420,
+			"size": 338
+		},
+		"lib/commonjs/LottieView/utils.js.map": {
+			"checkedAt": 1769965445622,
+			"integrity": "sha512-ZQjoBWKlAtQGKBlL7Px4yf0u6fonn3M3ioArZ4ThIAqNpYC4PgCwZbbTy3tI3llyb8+i4uNVxmepib8dw+yh5g==",
+			"mode": 420,
+			"size": 936
+		},
+		"lib/module/LottieView/utils.js.map": {
+			"checkedAt": 1769965445629,
+			"integrity": "sha512-52V6ObQKxRuddp6YfCkdSCdnbLFpu6TGMUA77v1lPp2QBtDyTe+oHERhYkG6DkA8YOHP50rtKQb8Tpp8qhYSHw==",
+			"mode": 420,
+			"size": 922
+		},
+		"README.md": {
+			"checkedAt": 1769965445637,
+			"integrity": "sha512-McXaSgTFwTid0NL9SODQGSXIZ/HnnopgO2aKdCHWZnqP9Jr3Kaqirz9a4r42XqyPS4yVtKk1qq3RUSol6jJOzg==",
+			"mode": 420,
+			"size": 11070
+		},
+		"ios/Fabric/LottieAnimationViewComponentView.mm": {
+			"checkedAt": 1769965445677,
+			"integrity": "sha512-qH696Je4k3tFTFGOrQz/128Iyls4DhdsoUDEtve35bS8uoGgZ4H82dLvOZKIagl78YG/K4+ZZOEa8TXOU5gmSA==",
+			"mode": 420,
+			"size": 4704
+		},
+		"ios/LottieReactNative.xcodeproj/project.pbxproj": {
+			"checkedAt": 1769965445685,
+			"integrity": "sha512-az3AsueQVA1WH+2/c5VE3MbHQFDosJN7e/nFDinWFv+9j2NP80ArrQYEFX46Ju+l1zsMPWPNmz4T5abQZ3QMpg==",
+			"mode": 420,
+			"size": 17172
+		},
+		"ios/LottieReactNative.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist": {
+			"checkedAt": 1769965445693,
+			"integrity": "sha512-0bhBzEnPsZnHpN651aJyk+GeYrnlCrfrgle2bm80GAM2hMVvOSK5MkU+9rThuouAuIdrY5UWEettlS04t37SMw==",
+			"mode": 420,
+			"size": 238
+		},
+		"lottie-react-native.podspec": {
+			"checkedAt": 1769965445702,
+			"integrity": "sha512-JLCNooNEfhnMMfmn+kaeBHKKhQnU1V3jhyTaOuYAo4icELLRo0eSxIojPeNJxCR37+hRhlpDzJV4qbPu8swuyA==",
+			"mode": 420,
+			"size": 1573
+		},
+		"android/gradle.properties": {
+			"checkedAt": 1769965445705,
+			"integrity": "sha512-CSfHVvb86A8CzwUY/PeNOvEhbiYN7gYg3bmmxv5pcqCnzqKQq/yrybuGKglTfDAumoWbMhPkRQ3tVreR4KzcZA==",
+			"mode": 420,
+			"size": 1194
+		},
+		"ios/LottieReactNative/AnimationViewManagerModule.swift": {
+			"checkedAt": 1769965445707,
+			"integrity": "sha512-1LOfby0enMm9RjjdBE/6qbVnWw0FSjZ1Ds8b3wa3x0HYK2ILwgMJ1YWn3RYnnr038vQ/T6OZMN+VJQjFZ0xlWg==",
+			"mode": 420,
+			"size": 2481
+		},
+		"ios/LottieReactNative/ContainerView.swift": {
+			"checkedAt": 1769965445729,
+			"integrity": "sha512-5IGA/wQ3O3ibS/udnVr8WX1VCYKJv1Pi7MYgTB6FSbc85TTv+S4pqjnXUfFX1iWN+gZmg55VBZM2xlGZsxIaRw==",
+			"mode": 420,
+			"size": 11569
+		},
+		"ios/LottieReactNative/PlatformColor.swift": {
+			"checkedAt": 1769965445732,
+			"integrity": "sha512-Q42Thn3XYgvzEsMnGLn8mTYARN/gUZFuFhT3B06WhSGe34ha4tpbOkP/PfvO4ZE0ULq97vKd/TkbvIir9twvaw==",
+			"mode": 420,
+			"size": 657
+		},
+		"lib/typescript/index.d.ts": {
+			"checkedAt": 1769965445737,
+			"integrity": "sha512-vNblRPUrY361ebNr/Bjlf9eWOcMfTzJMwZWrBLiTtonDZLFkf1mfobCzQShrTcmWYt0eFvnlq+VEP4tLeHSsgw==",
+			"mode": 420,
+			"size": 130
+		},
+		"lib/typescript/LottieView/index.d.ts": {
+			"checkedAt": 1769965445840,
+			"integrity": "sha512-BqgXA89AdZY7u3l5VdCAEQ15ssjV9LP66+OfM2v8m94OuhFKSNVicLxWhAyBOYBVh2dv1vvEIv7zl9Psq1rvgg==",
+			"mode": 420,
+			"size": 638
+		},
+		"lib/typescript/LottieView/index.web.d.ts": {
+			"checkedAt": 1769965445852,
+			"integrity": "sha512-W7TyaAQJsrd4GdQ+5na3g2TF5YWPVhFokBZp/fynw+jRoiZ/Dfg2jQjQXBoXBjOtAzmh2xVPITnA1xXWSZUMSg==",
+			"mode": 420,
+			"size": 245
+		},
+		"lib/typescript/specs/LottieAnimationViewNativeComponent.d.ts": {
+			"checkedAt": 1769965445856,
+			"integrity": "sha512-GrjuBddk0K5telKHj2/w+RlewXLc8PzCrY7vtL6QlzqHWk3no0UZ1keg5c1oowioW+aMzyxkLs7iXy3nrJl8Qw==",
+			"mode": 420,
+			"size": 2227
+		},
+		"src/specs/LottieAnimationViewNativeComponent.ts": {
+			"checkedAt": 1769965445858,
+			"integrity": "sha512-OKw5rICM6ZSON/EFiCPFpJi4XJ8Q9hIPjqysV9CEmhv8JJq+yrQpfAQDjRBA1sWTXCiUx+NUfAvAIb3X3kh36A==",
+			"mode": 420,
+			"size": 2501
+		},
+		"lib/typescript/types.d.ts": {
+			"checkedAt": 1769965445861,
+			"integrity": "sha512-huxftipTr2C4MuL35YBotYb4OtrSRRavUJe3sGK/srbiEA8SukcrKSmfrFrigo0T/ulGJeO8TyyRmT5bGl/ung==",
+			"mode": 420,
+			"size": 6016
+		},
+		"src/types.ts": {
+			"checkedAt": 1769965445866,
+			"integrity": "sha512-RKSLi4PanEUoEHRa/ClsjbVeUoZzT4eOlrOo5RuZ3ZYwlylSfyLcS9QdecPoAAz2XWROfDiMcqXgUp+Cav2smQ==",
+			"mode": 420,
+			"size": 5732
+		},
+		"lib/typescript/LottieView/utils.d.ts": {
+			"checkedAt": 1769965445870,
+			"integrity": "sha512-G0FuuwtSPzphKRszsgENLHOo098Gp/F2tsnci0v4+cbQJBzMELnyqOd3MnNvVikoaM5lQaUYnJ/FFooXJV3kIg==",
+			"mode": 420,
+			"size": 244
+		},
+		"src/LottieView/utils.ts": {
+			"checkedAt": 1769965445872,
+			"integrity": "sha512-VnevQgaHyOtTwT5ot5OqYpNZ/VebI2uXFPiY5tcF/MSO21FFPinxFChrutQJxmVpn9bWRxMPCMFCR2yxRyQX6Q==",
+			"mode": 420,
+			"size": 830
+		},
+		"src/index.tsx": {
+			"checkedAt": 1769965445881,
+			"integrity": "sha512-YtXdfbBzbqMpJRkHyB6/AVwauKTUXxztNEWHl17Lr8NkDYg2pZl48hs1ulX5piXjb5xoSRB0za+qcDZJI44/PA==",
+			"mode": 420,
+			"size": 95
+		},
+		"src/LottieView/index.tsx": {
+			"checkedAt": 1769965445894,
+			"integrity": "sha512-EB4dPG/R8VRgLxsQ8a+jlCzZD1inoicDW6P+iEfBIcPDs0d21eVU46mTcG3hFQf0FtxZq3ElhAnBEIOEXs9VLA==",
+			"mode": 420,
+			"size": 3370
+		},
+		"src/LottieView/index.web.tsx": {
+			"checkedAt": 1769965445901,
+			"integrity": "sha512-vJqclL1P8z5OJGONBby8Ow/fQaKlOe3k4Fh+ZxTrcMJSUSlg1qnmD/eDIUbRAf00ka6pE1mTHCsdcQ4V6PZI9w==",
+			"mode": 420,
+			"size": 3275
+		},
+		"ios/LottieReactNative.xcodeproj/project.xcworkspace/contents.xcworkspacedata": {
+			"checkedAt": 1769965445903,
+			"integrity": "sha512-npCbZIns3j+Qcsbl53K3TWebDtrFDNL1BqcA9DUuk/OaV2xeeO0gg7xnmxbHhbFs3jnpgNQ9+wng3FkRWlEYdw==",
+			"mode": 420,
+			"size": 135
+		},
+		"android/src/main/AndroidManifest.xml": {
+			"checkedAt": 1769965445905,
+			"integrity": "sha512-OfL0vq0ketLsxD804wgHuLpbilg18eKf6Sx7B4JR851wvq0lz+eLYV98Y0iEWHzw/yXNMOLiibd41x7+YJXWyw==",
+			"mode": 420,
+			"size": 127
+		},
+		"ios/.swiftlint.yml": {
+			"checkedAt": 1769965445907,
+			"integrity": "sha512-nJr7YO63Pu1U0Cg4P1BxK9Z58BCuRh6EdvvhbrCK1VVVT/nJvtC5dmqPCuIl+MUx3xlJKCM2zb0E8L/KCjL8wQ==",
+			"mode": 420,
+			"size": 86
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"name": "metro-react-native-babel-transformer",
+	"version": "0.76.8",
+	"requiresBuild": false,
+	"files": {
+		"src/index.js.flow": {
+			"checkedAt": 1769965477594,
+			"integrity": "sha512-2UXUcia5DybDC1VyjE7P7IYaLiiC9L8rb7qV2pE5UWMIosYGtTC0uxMOiP6sUKiARaC0xCRvMiqb1TTzR36r1A==",
+			"mode": 420,
+			"size": 7243
+		},
+		"src/index.js": {
+			"checkedAt": 1769965477605,
+			"integrity": "sha512-3dkikHZng3+6QHkkpIjHQMA4mh5k7lrcq4p+pW9eGwtEQgJ/ypYCs+JqWcDD4xFOX+xIdJ/cRQIrZQRxdZV9HA==",
+			"mode": 420,
+			"size": 6924
+		},
+		"package.json": {
+			"checkedAt": 1769965477612,
+			"integrity": "sha512-y47lt5I31nKf4RgbkzsewcDTM17RDHLDzy0OU/2YuOJlX32TMjxInzO2U8Okvct6jSMvPCdDKIUvWfN76f1W6w==",
+			"mode": 420,
+			"size": 830
+		}
+	}
+}

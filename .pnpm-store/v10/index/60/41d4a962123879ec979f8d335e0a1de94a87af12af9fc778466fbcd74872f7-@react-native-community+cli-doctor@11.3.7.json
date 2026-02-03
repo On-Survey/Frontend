@@ -1,0 +1,913 @@
+{
+	"name": "@react-native-community/cli-doctor",
+	"version": "11.3.7",
+	"requiresBuild": false,
+	"files": {
+		"LICENSE": {
+			"checkedAt": 1769965447449,
+			"integrity": "sha512-dSzwBXLLj9pdIe7kr4FZA0H4A4Skhtb6D8m4zM/enfIEVDrKhnhHNh+xWlO5Sti3/DeDf2VLaNo+mSFT35QIJQ==",
+			"mode": 420,
+			"size": 1079
+		},
+		"build/tools/healthchecks/adb.js": {
+			"checkedAt": 1769965524360,
+			"integrity": "sha512-zU38dIoGdUT8zF9xBewAz6kMB0/rMzRDYyqGtJWzaE9tD5cf6FVuRG/TB3j2jOyPb8m5FR7lWLY4QYShhlH4QQ==",
+			"mode": 420,
+			"size": 2589
+		},
+		"build/tools/healthchecks/androidHomeEnvVariable.js": {
+			"checkedAt": 1769965524364,
+			"integrity": "sha512-7Vx77m3s3rAd9ouzz95la6Z4FOCEs9yyxV1P7e38Cnbh+SZx2on2PbWUlTaB7JybzmDK2kOtQCWeGWE2PviOOg==",
+			"mode": 420,
+			"size": 1499
+		},
+		"build/tools/healthchecks/androidNDK.js": {
+			"checkedAt": 1769965524366,
+			"integrity": "sha512-rAbcI8WFiLXDQdLU+BgcSMCCmUNxHohzvYxUISJJZOxdx/H0/Xe8QkG2aFzl2sOayYNgoxWfW9YVMBAE5s52Nw==",
+			"mode": 420,
+			"size": 1715
+		},
+		"build/tools/healthchecks/androidSDK.js": {
+			"checkedAt": 1769965524369,
+			"integrity": "sha512-1WPeFs/dYezSX7kK12GcHWWQVGmMI/VZD7cqUPm8HFlGFnr3J8edhOKGvBHG0mN6TGbhvy+VdGpIxWoyZ+g8lg==",
+			"mode": 420,
+			"size": 6523
+		},
+		"build/tools/healthchecks/androidStudio.js": {
+			"checkedAt": 1769965524372,
+			"integrity": "sha512-dM+DilEn5o78wipEFE5d0obEqwSV7O9DTVnG6IPWfdFHZ1nDe2JpqO2BMeR6DhOsZbnKea7xCwKlT84fPpM7qQ==",
+			"mode": 420,
+			"size": 2948
+		},
+		"build/tools/windows/androidWinHelpers.js": {
+			"checkedAt": 1769965524377,
+			"integrity": "sha512-tz4XSffivJuGeduWjZIiVUXoW+WTfXbEGpFnzxOM3ciD0LyF+/AzMTWNpVhnnw4kPpzwVuI4fhw7mGZbF0acOA==",
+			"mode": 420,
+			"size": 8713
+		},
+		"build/tools/brewInstall.js": {
+			"checkedAt": 1769965524387,
+			"integrity": "sha512-oZi6F+glQgJ+hxgF/BCsYe/eMP1+gOLdMc3G1HDlEMOOHa152KkpqnNpC8OpycRYFhKP3QU2dha82IGNfbrUpw==",
+			"mode": 420,
+			"size": 951
+		},
+		"build/tools/checkInstallation.js": {
+			"checkedAt": 1769965524389,
+			"integrity": "sha512-h1GQtE1MoNEdr9Fn53GGXLTBzTzCwC4KT8JjGLOOnY8hCbYxvc/AqIS25OEUr1xB5a9/xTdNTRwEikxEQu322Q==",
+			"mode": 420,
+			"size": 1483
+		},
+		"build/tools/healthchecks/cocoaPods.js": {
+			"checkedAt": 1769965524403,
+			"integrity": "sha512-C+hQ2gWRHV64K0XNXVG1DorHQhN1GC3ZsrUH6MyMubOK1wZx5VJCc9M2M9PBJODoRkHjLqyj3bI2B7uUsCX2Ng==",
+			"mode": 420,
+			"size": 2050
+		},
+		"build/tools/healthchecks/common.js": {
+			"checkedAt": 1769965524423,
+			"integrity": "sha512-+H412yuNoAhn+gAQ2sw3+rfDq6S3FbyYKUYe/08jcrvfnbX/Bsg7V9yDfzjt8FufatgRGt/xIfERCvRPDDEagA==",
+			"mode": 420,
+			"size": 3215
+		},
+		"build/tools/windows/create-shortcut.js": {
+			"checkedAt": 1769965524444,
+			"integrity": "sha512-gu22uJzXuXPYl4p0XJ+KjjUWvbduvI9KQCtfBS18W4uSs+oFUR+U85Jo3ZSym55WYb+jAIIwXWoYrCR8OmbZHg==",
+			"mode": 420,
+			"size": 1339
+		},
+		"build/tools/deleteFile.js": {
+			"checkedAt": 1769965524449,
+			"integrity": "sha512-BV0gY/JFx40sUVJi3ptPMAtx60SP3eAQzZLknkHp5xL7om/m4ZjcWJAdEtWk4Ah9YWxKbFoqkNXqEUgtJQpbEA==",
+			"mode": 420,
+			"size": 460
+		},
+		"build/commands/doctor.js": {
+			"checkedAt": 1769965524454,
+			"integrity": "sha512-fM/Kbs7ccX1Cg63woBiNGVU4R8Zh4ZwczG4tTU/wtcPRxvLNgFYSOGtZeYSkLNI7gtjs68EAQGeWs6GN5tv0zQ==",
+			"mode": 420,
+			"size": 8658
+		},
+		"build/tools/downloadAndUnzip.js": {
+			"checkedAt": 1769965524477,
+			"integrity": "sha512-HggiQsKXdkOgN2JW12ZQ2fsmCtuoZbzfLnNXIRnr+8dZQU6lEQpPi2bx3+P7/ZDU3TJOnaSDuvVMb2Rj+cHAEA==",
+			"mode": 420,
+			"size": 1018
+		},
+		"build/tools/envinfo.js": {
+			"checkedAt": 1769965524478,
+			"integrity": "sha512-CCaLOlNy75D3h6sIljrl2K8S3B79t07JNJjixkQPhogOSdebvLsCq6ct5WaFRxKkMfAKME2igRJza2P/Bhcm+g==",
+			"mode": 420,
+			"size": 1482
+		},
+		"build/tools/windows/environmentVariables.js": {
+			"checkedAt": 1769965524480,
+			"integrity": "sha512-KptoPy2DlJcxleY3SROL731mhr8Na8IHH1jNhcWnlN+mPP/5TkMW5IYMdULduPGn+goBNVBqLWHk1tbSQBqUwg==",
+			"mode": 420,
+			"size": 1597
+		},
+		"build/tools/windows/executeWinCommand.js": {
+			"checkedAt": 1769965524482,
+			"integrity": "sha512-74PIv5cjm+thihe/mQExeHC54pyABm/8Sshf2QfKWzQW8a9cZlCVZV42oieBYM0sQwUEHYSDRdT/PADIPwUZpg==",
+			"mode": 420,
+			"size": 3325
+		},
+		"build/index.js": {
+			"checkedAt": 1769965524486,
+			"integrity": "sha512-AmaiFyypqlM5eicWKe3cgLak2qWjT+YFMtNsUO5AdLXMKLBnD4tjtteK4jt2jjtQDaNLXoSgUBVdEW09RH+/4w==",
+			"mode": 420,
+			"size": 1048
+		},
+		"build/tools/healthchecks/index.js": {
+			"checkedAt": 1769965524556,
+			"integrity": "sha512-b5PI9tE6Q7N7DS9Y4VnoeYFbF0Itih8OVAx8QTeT9ZNDOlmlwSLx7fsXGf0donsE8+By9EgIflEMgz0EpVgTjw==",
+			"mode": 420,
+			"size": 2432
+		},
+		"build/commands/info.js": {
+			"checkedAt": 1769965524581,
+			"integrity": "sha512-sYXCdFL1Rb5a6A4lTob+cNbGE59q0qE8wNUcpTffHHD/jyyN3tCNgxjAd0vAhQGyYkNeXSkltDWnEMGG+5eYLg==",
+			"mode": 420,
+			"size": 3318
+		},
+		"build/tools/install.js": {
+			"checkedAt": 1769965524587,
+			"integrity": "sha512-pYui0Gq31lmzOR0+jwjwXlzS8px1z88QASwWbTLK7aL2b/V1ot/DgRB7vOkjrwi5jqkkO4MetWFKCYh5oUFd4g==",
+			"mode": 420,
+			"size": 681
+		},
+		"build/tools/installPods.js": {
+			"checkedAt": 1769965524589,
+			"integrity": "sha512-bVap2eCWnhdXHkoBjLRuHhgiVTi3Xtl6joberJnySnc+ob9cV15IXQPK1FVEkv6WvWCCpnnyJi3jeVkygFr7qg==",
+			"mode": 420,
+			"size": 4859
+		},
+		"build/tools/healthchecks/iosDeploy.js": {
+			"checkedAt": 1769965524592,
+			"integrity": "sha512-ngouOisg8BhAKvzGAUcGQsaRps305BOx8TY7/WZlG6znTyjYE22wNALbBLS1vqdS/HgSUPKvh9m23w3c3AubjQ==",
+			"mode": 420,
+			"size": 1355
+		},
+		"build/tools/healthchecks/jdk.js": {
+			"checkedAt": 1769965524597,
+			"integrity": "sha512-I1yC1u72tdASfOiPPNWowHT0An5nfK0/wqI9hkaG7QSDgHU+ydKbZHcDe3+yC4K7t3Qf9OHldcinFBhXG5oHNw==",
+			"mode": 420,
+			"size": 2607
+		},
+		"build/tools/healthchecks/nodeJS.js": {
+			"checkedAt": 1769965524605,
+			"integrity": "sha512-jh6ZtC6tkeXLNmabIMypreJZRFCxSH/3resT9GIfati85ukr4MsNhsvG/sZpdmK6rV4VDKbw0voaonda/EqXPw==",
+			"mode": 420,
+			"size": 1012
+		},
+		"build/tools/healthchecks/packageManagers.js": {
+			"checkedAt": 1769965524614,
+			"integrity": "sha512-eGatKTanL3NVcjQQfHqyPjHdowo3mHNKnQ6bLZHLQOpJKMvea0Y6wJo4xY3rDq9aPzCtDpRL2XRVVzmzIy2YAg==",
+			"mode": 420,
+			"size": 2546
+		},
+		"build/tools/printFixOptions.js": {
+			"checkedAt": 1769965524625,
+			"integrity": "sha512-ZpidCZ7HTbAnnN0VTYsjmJpdKSYtzN9fR3ijM1Vcb+JrPyBxk0+0ohGqE87SkdUubDM8ywoawq3osNJzjMctRQ==",
+			"mode": 420,
+			"size": 1584
+		},
+		"build/tools/windows/processorType.js": {
+			"checkedAt": 1769965524629,
+			"integrity": "sha512-XPZ0WsSfjK1OprALW/IsePkAIIEoJKf1iXIvlHr3xeWm9Ju7XsU0s4Zj7NqlPE10sKnNj0XyVLaREUwQRwohnA==",
+			"mode": 420,
+			"size": 369
+		},
+		"build/tools/healthchecks/ruby.js": {
+			"checkedAt": 1769965524691,
+			"integrity": "sha512-Hf6xd1QU+Wk3aTtocSdYeDhSMj2dURGaOY9HlBh0cFk88jw1JKmX7M0qDPjV2PTi7sm7pXf1BhfWH02OLgtYYA==",
+			"mode": 420,
+			"size": 6426
+		},
+		"build/tools/runAutomaticFix.js": {
+			"checkedAt": 1769965524698,
+			"integrity": "sha512-gcmQxrm4UwIk5ttzD5se9PXiAb47Igcpp41vaNZzLQjsBV9k/v9MhvMoiMsU+Ipsdg9V8v/JKPvw+U/gQvYTtA==",
+			"mode": 420,
+			"size": 3118
+		},
+		"build/tools/runBundleInstall.js": {
+			"checkedAt": 1769965524702,
+			"integrity": "sha512-XNRaLxJTtAlKvKN+1XcFd/QgqwJsOAyH/Yzpg73sCSnPKdiPcftCVfo/e9N3eXsvE80VZQw4Gc2jJFQz5K5P0w==",
+			"mode": 420,
+			"size": 1094
+		},
+		"build/types.js": {
+			"checkedAt": 1769965522084,
+			"integrity": "sha512-ZUWeYVITt7Ow5BKJJGEWr81wE6SW2AF5I3PHutfR3W3zISlHz6GZyr0PQ1pTiOx9hQV6s9IP3faSum2XR8MNxA==",
+			"mode": 420,
+			"size": 48
+		},
+		"build/tools/unzip.js": {
+			"checkedAt": 1769965524707,
+			"integrity": "sha512-rtkXzt3P7bf93IUzL1evUiuiMKBVyHcAn/3S4SRxbugP9Bf+TdDX+U+6HxiBJfa9jZ1vZkHM0M9I3OniM7PtfA==",
+			"mode": 420,
+			"size": 770
+		},
+		"build/tools/versionRanges.js": {
+			"checkedAt": 1769965524717,
+			"integrity": "sha512-xvFdNcCKSxD4l6oxqgGYs4F3iX9fM9e4+mO+pJgLPCZmN3bcrS4MRoJVkPI/MucT3BhHtdRxq1XoI9CsMDysTA==",
+			"mode": 420,
+			"size": 423
+		},
+		"build/tools/healthchecks/watchman.js": {
+			"checkedAt": 1769965524724,
+			"integrity": "sha512-Euqu1xHBcIoeLlPUILgbDdt7q95BnFmFUYTJE/ZxUrPmsRm5hWWHE/x9NNC2zc3sLa/DUNg2QU9DZh371Rx9gQ==",
+			"mode": 420,
+			"size": 685
+		},
+		"build/tools/healthchecks/xcode.js": {
+			"checkedAt": 1769965524727,
+			"integrity": "sha512-x/x2cL1qXYnNAsiZ7e02tj9yJwcMg0cZxpQbkdn8zWcfojNR+c9Qic3ZNSWG4DYGLemgMKusdlYSdX3eLQEbXA==",
+			"mode": 420,
+			"size": 1057
+		},
+		"build/tools/healthchecks/xcodeEnv.js": {
+			"checkedAt": 1769965524731,
+			"integrity": "sha512-kTDPZ9ZpHccHlta/B4QB+ATEEWmfh6Kf212CV4gCEirOvcIr2nJF7vZ+ibWf8hKu9S1gfczQbMQZbpDm01detA==",
+			"mode": 420,
+			"size": 2992
+		},
+		"package.json": {
+			"checkedAt": 1769965524733,
+			"integrity": "sha512-OeTcQM+L5GbxALBPk8056TFOEC/nBY6HgAlRb3yeQlfZkH9gb1dIN2STIK92KqG5s4EWDx4dgg0IW7RVx7CZzg==",
+			"mode": 420,
+			"size": 1450
+		},
+		"build/tools/healthchecks/adb.d.ts.map": {
+			"checkedAt": 1769965524735,
+			"integrity": "sha512-gqPAvru3X0dxoc26XTBLpAG7FljgzIgBaM8b2CAvAK0IcO4O1PcuQByecGJhe9lK9SI+bJxcV+C/I9oAXDxhQg==",
+			"mode": 420,
+			"size": 181
+		},
+		"build/tools/healthchecks/adb.js.map": {
+			"checkedAt": 1769965524737,
+			"integrity": "sha512-bJmHl1mIsNB8ZkpEBoFqRNUGVJ6POXQnb+DEXeSCHSk/unPQ6YWiYmXmf5XUQrDyw4qHSNU+1m4vvtOJOCKwbw==",
+			"mode": 420,
+			"size": 4193
+		},
+		"build/tools/healthchecks/androidHomeEnvVariable.d.ts.map": {
+			"checkedAt": 1769965524760,
+			"integrity": "sha512-AzAoqns+5X4cxw85482H+I9uFWezKRaex0/4FpDHu0SQlopBsqu1/A1Cz3gjHWcHcZqKs+615LJLMgjj/Pqlpw==",
+			"mode": 420,
+			"size": 220
+		},
+		"build/tools/healthchecks/androidHomeEnvVariable.js.map": {
+			"checkedAt": 1769965524763,
+			"integrity": "sha512-CXilBYWuRjGmbvS+F5P5wyfWSdZ50NClM07f6C88dVVCkbYu47nR05gibQ1vfUjqZGNpcqOQdzB2v+NWGgONSQ==",
+			"mode": 420,
+			"size": 2293
+		},
+		"build/tools/healthchecks/androidNDK.d.ts.map": {
+			"checkedAt": 1769965524766,
+			"integrity": "sha512-YNBDiy2OCtEMgEBA8XfgqerNCN8k1ocBhxo/yPFTs5Uqcyp+A5qbPsV+G8un55J/DloZbbnPDCUVASuihc9YPA==",
+			"mode": 420,
+			"size": 196
+		},
+		"build/tools/healthchecks/androidNDK.js.map": {
+			"checkedAt": 1769965524770,
+			"integrity": "sha512-Wb6fFyrHhG09mSQEaJq5PlaMzngAJaFbDoqbS/spVD4i8VsZnMz665iBfonEyp+vigD7t0qKxGqMq7He6AwmZg==",
+			"mode": 420,
+			"size": 2725
+		},
+		"build/tools/healthchecks/androidSDK.d.ts.map": {
+			"checkedAt": 1769965524780,
+			"integrity": "sha512-m0dUSfJEBMuDvkdCRySlqOaooNgN3at3ba7G/f3TwswFJet+TajOmDI8O/F3uOlNqWfJz0Q4dWeGrAuGU6Rd/g==",
+			"mode": 420,
+			"size": 197
+		},
+		"build/tools/healthchecks/androidSDK.js.map": {
+			"checkedAt": 1769965524787,
+			"integrity": "sha512-pOr37fV+uFgQWUf1s08IrG1EdqmTv6M1q6chtn3ThDQKLGIn40qTgISb5aBLDV5IRMj2mjBHGy+7gGuFa9TjuA==",
+			"mode": 420,
+			"size": 10902
+		},
+		"build/tools/healthchecks/androidStudio.d.ts.map": {
+			"checkedAt": 1769965524791,
+			"integrity": "sha512-55aJ3cDCvUrik470QYEylCVgHZAxG8ViNvd+2hvIpsYpTHsONZyYZw6EQyuggwKtu/KM7njxCBKGbnlDFhUAQA==",
+			"mode": 420,
+			"size": 201
+		},
+		"build/tools/healthchecks/androidStudio.js.map": {
+			"checkedAt": 1769965524933,
+			"integrity": "sha512-/4WvUn8OX8u+MJGX9O5aXOPRFurFoBAFJtwVImYvRplpeNKpHs5TrwX6RND0iaMZdU9QEGy6fva5Q8vBJZdQ8w==",
+			"mode": 420,
+			"size": 4963
+		},
+		"build/tools/windows/androidWinHelpers.d.ts.map": {
+			"checkedAt": 1769965524947,
+			"integrity": "sha512-EFSODU0qaxWWGG81fnCgV+tkTbdGUN22Yoo0ERHvLhnVXpzC5++Yq7NE838hJnjBtpUGYmS7cTZINl9oEkef6Q==",
+			"mode": 420,
+			"size": 745
+		},
+		"build/tools/windows/androidWinHelpers.js.map": {
+			"checkedAt": 1769965524950,
+			"integrity": "sha512-SIGfQgDeLsq44KwIBYsP4d9bVvrN/IKJS10aUNOjA9rPoTOkcjEgC+vlEhVVwyLrLXJ+TqGr7qxU6iIUZ1r0og==",
+			"mode": 420,
+			"size": 13782
+		},
+		"build/tools/brewInstall.d.ts.map": {
+			"checkedAt": 1769965524953,
+			"integrity": "sha512-GLMPBzL/JIGrvADMEh/P8jU2UkEyghhHjHcN8vreETrpd4cJDMtoo0qai2UmrXds+CsYR63mMEtBTdBda3qbpQ==",
+			"mode": 420,
+			"size": 472
+		},
+		"build/tools/brewInstall.js.map": {
+			"checkedAt": 1769965524956,
+			"integrity": "sha512-9vnVOREr152EHzk+r9Nm9bf6VyMgA+skWDYFzzaYQKN37ALOviQHqUSFAUw1g729Pmh7fg6rRL75Q4td8MG1RA==",
+			"mode": 420,
+			"size": 1633
+		},
+		"build/tools/checkInstallation.d.ts.map": {
+			"checkedAt": 1769965524964,
+			"integrity": "sha512-JeOlPDYKeq7SAqFqTG8ScxsIN78lgDEsuGkmSItedHZ1HSZet+b6wGERCGLp/jOJlqUHQgJUDFTY+h5/csDudg==",
+			"mode": 420,
+			"size": 354
+		},
+		"build/tools/checkInstallation.js.map": {
+			"checkedAt": 1769965524967,
+			"integrity": "sha512-NBj684sd+QCP25VsEnIjQ5blo3KTcRYdDY/kmLkT2K6WgwvP8OY50g4O9lcF8h0oQO1sUFokbvClkagcVTZ3Mw==",
+			"mode": 420,
+			"size": 1765
+		},
+		"build/tools/healthchecks/cocoaPods.d.ts.map": {
+			"checkedAt": 1769965524973,
+			"integrity": "sha512-wBsZW8bp1kwks1VBlnj2tjsS5wscsTfGEvg10v4NNoaw7wpn2vfTxsdG7NMcM40p5KRUglYB2cvYzjuy/ZHdqA==",
+			"mode": 420,
+			"size": 193
+		},
+		"build/tools/healthchecks/cocoaPods.js.map": {
+			"checkedAt": 1769965524977,
+			"integrity": "sha512-tpYDo2VlgMENsQEA0ZBqCJ7QJSgCJw/oWFlaucNSaTU/ss6c3gdTj8TaIADpnxfPU9Prq5QSecBovYUO1Q5otQ==",
+			"mode": 420,
+			"size": 3335
+		},
+		"build/tools/healthchecks/common.d.ts.map": {
+			"checkedAt": 1769965524979,
+			"integrity": "sha512-uMsPGigCGCMg/cL811q/H8i26zrFY670BCg7Ij4n+DUZ4FFQorbvdjT/LtEvwJF5HfOe/yHf/M1abVi2Fpfusg==",
+			"mode": 420,
+			"size": 547
+		},
+		"build/tools/healthchecks/common.js.map": {
+			"checkedAt": 1769965524982,
+			"integrity": "sha512-q2PHZuMvG8Px09C40mJznauwEi2ETalPsiphH+RW9osBRc8eRVNIc7dmjiaiCi3tBnulClOO8FIrTjcyb637ZQ==",
+			"mode": 420,
+			"size": 5517
+		},
+		"build/tools/windows/create-shortcut.d.ts.map": {
+			"checkedAt": 1769965524985,
+			"integrity": "sha512-a7QsKhj26VZyOybtun1TFTSD0fDNIthmNrPQvKp8ZpZjgUD8jPNjC9NE8rIW4TfZI9YDXkcDSeKHSZmUQ3hGcw==",
+			"mode": 420,
+			"size": 305
+		},
+		"build/tools/windows/create-shortcut.js.map": {
+			"checkedAt": 1769965524987,
+			"integrity": "sha512-gJtDyDoz9iMqWI1cvWRFxW2/H58mXphAkOtwaDU+UXFz0a4eqRBx/8g56LyGF1JpTQ3yrvfR3ysx2RHFmTdMCw==",
+			"mode": 420,
+			"size": 1747
+		},
+		"build/tools/deleteFile.d.ts.map": {
+			"checkedAt": 1769965524995,
+			"integrity": "sha512-lkGRLyWsU9Kpdk97IZaaHROZvvWh7lAmfEStxeWNVb/SN0BKn49siEK3AhjzLM0p2UZYE5AecsUA8RYmIN1yZA==",
+			"mode": 420,
+			"size": 196
+		},
+		"build/tools/deleteFile.js.map": {
+			"checkedAt": 1769965524997,
+			"integrity": "sha512-0fGL1bcLu5hGco5GvZ3TKJb8SvZ8gKwyXdhaUFci78BW7T1diOc3Y3iD/Zs0k8sk+i6m9mJNG9xQYzUMJv4LPQ==",
+			"mode": 420,
+			"size": 375
+		},
+		"build/commands/doctor.d.ts.map": {
+			"checkedAt": 1769965525001,
+			"integrity": "sha512-GM84v4MY/nGJBBpQkmQyH+mvQnEJYoFfJ8p+TouFZTVbNCORCyEn4CxJa8Q2lcm80CscvK21nM42c+QSLa60TA==",
+			"mode": 420,
+			"size": 288
+		},
+		"build/commands/doctor.js.map": {
+			"checkedAt": 1769965525006,
+			"integrity": "sha512-t1se046oAc8XID18BOtNJi0cGVzOFm5/f4Mar2E5pMQrRTLhOaNM+B5MkgcEFOhyWPRIwBkG5rF4qJsnTpKlAA==",
+			"mode": 420,
+			"size": 14847
+		},
+		"build/tools/downloadAndUnzip.d.ts.map": {
+			"checkedAt": 1769965525007,
+			"integrity": "sha512-MTRO3KmmGvUeLD7P6QoUdQX/SEk1WGJmF/Yc3lAlyFq5GgnsbftbFtvonQr4mMxuOHNodcx3biYIYCCFP1hbnQ==",
+			"mode": 420,
+			"size": 264
+		},
+		"build/tools/downloadAndUnzip.js.map": {
+			"checkedAt": 1769965525014,
+			"integrity": "sha512-AGImCLtCWoSwB0G/6tVanw9linfkokDaqcIMMcI3QYpJy0Eb0wjRxbS2MpxqHeodCTCx2BSLOm/mXI/RnWIC7A==",
+			"mode": 420,
+			"size": 1552
+		},
+		"build/tools/envinfo.d.ts.map": {
+			"checkedAt": 1769965525016,
+			"integrity": "sha512-YBPodKBxvq7tTGCq2GRHArQ8UhOqm/FGVkQO5kW0C3W7WJxB14Gr/3cJM3Sh/EsSjkyuMUSfv3vz92kjvF/doA==",
+			"mode": 420,
+			"size": 381
+		},
+		"build/tools/envinfo.js.map": {
+			"checkedAt": 1769965525056,
+			"integrity": "sha512-kh+YFQbrrqUwxXKaj03fDht9fO8RcwK4Wle9W9n9wKzVHtmQJuOsrH8Zk8HcOIcYC7RYDVw0pRs6OKAo2JCr1A==",
+			"mode": 420,
+			"size": 3014
+		},
+		"build/tools/windows/environmentVariables.d.ts.map": {
+			"checkedAt": 1769965525058,
+			"integrity": "sha512-EGrPAzbKnrK7sxJz8DPOwD3Ey/aPNMa7myYPQLomx4ZQ5IsMRd2CxxX8X/se+IqWs4eGFlcdUzu9Vciab8ugOA==",
+			"mode": 420,
+			"size": 328
+		},
+		"build/tools/windows/environmentVariables.js.map": {
+			"checkedAt": 1769965525066,
+			"integrity": "sha512-04SLN7+Cgh/wR8ld87xJsnh9mG4PK9PdtYOCv5mN4kbnjtlRcHS+Y/A8TjF1hOIQVBc9bjxNT2+SEXXka4b6zQ==",
+			"mode": 420,
+			"size": 2380
+		},
+		"build/tools/windows/executeWinCommand.d.ts.map": {
+			"checkedAt": 1769965525107,
+			"integrity": "sha512-d/elen0MeMigPQMlwtCAIn23gH7kQXEcHClMOHD5/T6/UJMhAraj0pGILWZhSXn9mS/IdbQSfDJ67ds5LHbv7w==",
+			"mode": 420,
+			"size": 277
+		},
+		"build/tools/windows/executeWinCommand.js.map": {
+			"checkedAt": 1769965525109,
+			"integrity": "sha512-VsnBDs29Ev4eRjrQ/r6vtkLzh8PVU2ASkdNGmobfjiKkHNU8YU8gtxV6DwDOHeu6gD5stQMZ+wFcMe5qwfF/uQ==",
+			"mode": 420,
+			"size": 5005
+		},
+		"build/index.d.ts.map": {
+			"checkedAt": 1769965525111,
+			"integrity": "sha512-ucfwaXe4EHUPEBiegoTH7DSKWJe4IdrhrtpfNhBTYe0U6ryxtHfHql4veQh/sfzHHmKmctur0J7oosLPwDn7lA==",
+			"mode": 420,
+			"size": 271
+		},
+		"build/tools/healthchecks/index.d.ts.map": {
+			"checkedAt": 1769965525114,
+			"integrity": "sha512-yZuJS/WxWiDoOhp2hAf5CR2/Q+P0uEFRybL9CkpSwulVcr0tjcqAKheg1WHSV91+k/XpHgEZkXWo0jqRCqYZOQ==",
+			"mode": 420,
+			"size": 356
+		},
+		"build/index.js.map": {
+			"checkedAt": 1769965525116,
+			"integrity": "sha512-FcikwdIWcSHD3zfGa66w/+mr4iOmikrEYOkhEwEcyBa+AGFezToQLeQyTVTBSYCUE82cTGjaAHZ3/qtBHGbJtQ==",
+			"mode": 420,
+			"size": 676
+		},
+		"build/tools/healthchecks/index.js.map": {
+			"checkedAt": 1769965525120,
+			"integrity": "sha512-sMyYXyYWvmUkLTjYUcLZeHoYzdPM0jyy3drZb/XXXZXHj2eTbfrQmauc9MJB/4WmRCdobzV9RM2F5hcCt9K03w==",
+			"mode": 420,
+			"size": 3265
+		},
+		"build/commands/info.d.ts.map": {
+			"checkedAt": 1769965525122,
+			"integrity": "sha512-xxF3o4X5+8I3N7I9iOf+/58w28t27LREnP5PnQPmRavlvinSDGhMG7/MpCJeGcGTmO5YVl/aBSO1B4AoLf+YHQ==",
+			"mode": 420,
+			"size": 187
+		},
+		"build/commands/info.js.map": {
+			"checkedAt": 1769965525125,
+			"integrity": "sha512-qZuKMSufAh3K3fZTtB5pDwAoQ6Cas9dLO+JiP5iaNr8AwoF9px61I24DuFJJ0/0BL9ataDXGedUVxLUvPfUsdw==",
+			"mode": 420,
+			"size": 5381
+		},
+		"build/tools/install.d.ts.map": {
+			"checkedAt": 1769965525183,
+			"integrity": "sha512-6cjj/1g0J2Dc9zDS9mZ3z7y6uqQihDsipyTSS3n5aV33FU/zJY7VND5RHQ1SvcNvwZFEEcTHMsVtHyGO5X3Evg==",
+			"mode": 420,
+			"size": 403
+		},
+		"build/tools/install.js.map": {
+			"checkedAt": 1769965525213,
+			"integrity": "sha512-6nkckb4dCw2Z4D1TGz4H9uHxzmxB/G+0npcgGZlqF8Xfsz/qA62tQ1ASxgn14LNmSx8aExrbn4FRwzyFbEkIew==",
+			"mode": 420,
+			"size": 1299
+		},
+		"build/tools/installPods.d.ts.map": {
+			"checkedAt": 1769965525227,
+			"integrity": "sha512-i/1fSPm8Rosq/vgftP55b7TqMg+FtRhiHzRmcSbonVe7m2M7hCWRVxS6jJ8ryBJ34rRLFas8tziPwxvdyD8rig==",
+			"mode": 420,
+			"size": 463
+		},
+		"build/tools/installPods.js.map": {
+			"checkedAt": 1769965525245,
+			"integrity": "sha512-dfc/DirXe0V9d9T8o0tEoiZkjytErVOC+fHQwR9I2iDKzjgxDl8yxl2m3hU88n6KOfvsPItua/Olr1idQul0AQ==",
+			"mode": 420,
+			"size": 7809
+		},
+		"build/tools/healthchecks/iosDeploy.d.ts.map": {
+			"checkedAt": 1769965525249,
+			"integrity": "sha512-gKSZ6tQO8jtR9s42cvXD/YeZTe0dZVGXUGbJJ7mjJKyV3UEpGfnAPQiZEj0qB6iVu5dtHNJCwZQOfocGnrBFMA==",
+			"mode": 420,
+			"size": 193
+		},
+		"build/tools/healthchecks/iosDeploy.js.map": {
+			"checkedAt": 1769965525253,
+			"integrity": "sha512-638gEEHroESNq5HdyvEGyN0Qmd3zsf+TNUacV6x7byVFC9sPhoH2rmofO4vi3seO7Vt0bBQVUgcHatPe/i6e6A==",
+			"mode": 420,
+			"size": 2080
+		},
+		"build/tools/healthchecks/jdk.d.ts.map": {
+			"checkedAt": 1769965525257,
+			"integrity": "sha512-9HuomN8dXVrjP2Q01g2N936CqxPlXcYVGu4T7bHU7fVUH//OazML5P3OIO4uk+FzQZbTQ4eEBkc62/T6pf6NCQ==",
+			"mode": 420,
+			"size": 181
+		},
+		"build/tools/healthchecks/jdk.js.map": {
+			"checkedAt": 1769965525268,
+			"integrity": "sha512-8gV28mZe61/iD74minyOCZAcUy3puCDLpfJ8tvTnFHHRHJ8a2wKCMx5gV4cn5CUsDBjIC62ZlQgLQTVnRxz25g==",
+			"mode": 420,
+			"size": 4228
+		},
+		"build/tools/healthchecks/nodeJS.d.ts.map": {
+			"checkedAt": 1769965525271,
+			"integrity": "sha512-e85Lnp90dB2TKGti4uhTKTT9ZK1guq8IFASYJYBYXVDJ+rcO9nby5J9qAR+GTUL2pzoNQhVcfx5LVfSLuESBww==",
+			"mode": 420,
+			"size": 187
+		},
+		"build/tools/healthchecks/nodeJS.js.map": {
+			"checkedAt": 1769965525287,
+			"integrity": "sha512-JQ0GyzKn3lwlX2D48anA55V/mIB1hRLBieu+AEP7Ia1N2NOsUFrKL3EORlpS3lSNcFp0mcBgloGLk4SUbSKAJw==",
+			"mode": 420,
+			"size": 1623
+		},
+		"build/tools/healthchecks/packageManagers.d.ts.map": {
+			"checkedAt": 1769965525290,
+			"integrity": "sha512-oTq2ak3QlIElrs/PL0/wUMme2BzCf2jg6t2Y8aeXbwSJ2OjSlSq0Cyvg2X30dbb5H0c0C28kkeibuE+sUbBKUA==",
+			"mode": 420,
+			"size": 393
+		},
+		"build/tools/healthchecks/packageManagers.js.map": {
+			"checkedAt": 1769965525292,
+			"integrity": "sha512-XtQU00HxBMpU+UEm1oBg1aZTztDwKmKTbAqweA3FH1p8cvDizdSlUYFJjq2/8h+wPmY6PTSNG1ENLw/rChhGmA==",
+			"mode": 420,
+			"size": 3935
+		},
+		"build/tools/printFixOptions.d.ts.map": {
+			"checkedAt": 1769965525294,
+			"integrity": "sha512-Ql1T2FiZbxKCjV+/wcnA6ku0rdqi0cAZ+sGZD3LexyHePznb8enTeovLjI0NcGeAZ1tBYWWIonzdY3e+bTPVWA==",
+			"mode": 420,
+			"size": 238
+		},
+		"build/tools/printFixOptions.js.map": {
+			"checkedAt": 1769965525296,
+			"integrity": "sha512-RUoDmsQsRvbj+XtcdNQStdzYnefe2OkrWBDmgrL3bFJeMtODZ8V9c9Mu9WRRBpdZ4Ls0BPaqgL+2IYwgio7YGA==",
+			"mode": 420,
+			"size": 2632
+		},
+		"build/tools/windows/processorType.d.ts.map": {
+			"checkedAt": 1769965525381,
+			"integrity": "sha512-EULgrwMtzC9fUG0RkLRHyTLwl8doXMYv3JQ+0fLA5djOVmSKkFAWgWQ6upwtY5wqrbOf6dijTB9zAJ5VIleRKA==",
+			"mode": 420,
+			"size": 184
+		},
+		"build/tools/windows/processorType.js.map": {
+			"checkedAt": 1769965525384,
+			"integrity": "sha512-BOp2rpGgKaX12I3eqfsNv5pIya/iH6QohzkTgunbkLkcm+lBDkDrywQR9/7Ca9cPiR6JlZYrB+BddcK/KaLlpA==",
+			"mode": 420,
+			"size": 518
+		},
+		"build/tools/healthchecks/ruby.d.ts.map": {
+			"checkedAt": 1769965525387,
+			"integrity": "sha512-H8QcuUIlJQS+qw6zrtVFsAUskaUDCh6ANN4WG5hXyqToMrOBMu2oMHPBiO7suZ1Cd5HqyTwVNelmdkn6ZepzQQ==",
+			"mode": 420,
+			"size": 219
+		},
+		"build/tools/healthchecks/ruby.js.map": {
+			"checkedAt": 1769965525389,
+			"integrity": "sha512-gqbBN+3gj+RcQTjkslrE7qh4iH4bztHFhnR7I2/CnqY3PgpODDN2xWPV2TkFpa6vPOQwZf8SW/RwwJdW5UNV1g==",
+			"mode": 420,
+			"size": 9514
+		},
+		"build/tools/runAutomaticFix.d.ts.map": {
+			"checkedAt": 1769965525392,
+			"integrity": "sha512-iGZrJvoGavDLk4MTirPaY8AzlNWwnAEmN8at+4PORlrn8dApn1WIDkt04A7liJCExa+ahFqi+PN6BUifOD7YuQ==",
+			"mode": 420,
+			"size": 650
+		},
+		"build/tools/runAutomaticFix.js.map": {
+			"checkedAt": 1769965525411,
+			"integrity": "sha512-rsrKodb9hB5rirbunEzwKcXuV/Iv7su2oiY9IyW7X5oQnSH17P7AOSYuzjJr9d5iu03LWiPDetMpAI/+3ixGwA==",
+			"mode": 420,
+			"size": 5340
+		},
+		"build/tools/runBundleInstall.d.ts.map": {
+			"checkedAt": 1769965525425,
+			"integrity": "sha512-EYtFezFz5OBsSorCQ+9ukLynL0N54s1y4Qyw47Nrqy0Z/gQpSkDNbLIwyGUNsLHvyLelrNahpEQq/y4WUxM00A==",
+			"mode": 420,
+			"size": 243
+		},
+		"build/tools/runBundleInstall.js.map": {
+			"checkedAt": 1769965525489,
+			"integrity": "sha512-7BbOaRyjiU0dpes0PLgBDM4X46nivlwPddE34P/yCZWs2kb+Tpfrmtl4mitwINumsI9Arw+jTjwskzs+NNw5gw==",
+			"mode": 420,
+			"size": 1423
+		},
+		"build/types.d.ts.map": {
+			"checkedAt": 1769965525492,
+			"integrity": "sha512-N5gpxd3QB8FYDaONdlwSvJMZdzj8vEtSBaukxtPJCLvIET9osq5D4SJm2YLZ2xcd3X0OnK2ceSbIxxUyUi+P1w==",
+			"mode": 420,
+			"size": 2888
+		},
+		"build/types.js.map": {
+			"checkedAt": 1769965525496,
+			"integrity": "sha512-zPOS/uxdeSEp5LVxQBcpaSI0xaMO0TNJeSdk7GJWrxweGwGmhwV6rp6sFnVqn8chI4d1HKIpa2pVD/NEdnxisw==",
+			"mode": 420,
+			"size": 2910
+		},
+		"build/tools/unzip.d.ts.map": {
+			"checkedAt": 1769965525551,
+			"integrity": "sha512-xiliWBtQk6j/RqehQaL5GEhPThWiPxr8XNUneVB6tPqpYPqbNDAWM1hOsMW4X46YeJeMxKJ0HZuSiNKzIKeYjg==",
+			"mode": 420,
+			"size": 196
+		},
+		"build/tools/unzip.js.map": {
+			"checkedAt": 1769965525561,
+			"integrity": "sha512-CUDNIgppogWDT+1tudQYxfY925I0zvB1BgyXSwwZgjSySvyDzz7cOqrrmPcxHs6SHrlClHi9a/lwa2P+zQoRhQ==",
+			"mode": 420,
+			"size": 1486
+		},
+		"build/tools/versionRanges.d.ts.map": {
+			"checkedAt": 1769965525566,
+			"integrity": "sha512-AOT4Umked/U/Dj65H4TAl2b7EJAYoezBdxhBVbD6tNrrHStnNk4c5qXrOa70Fd2MNxHUC3Ncqh0z7qyJ2+ckog==",
+			"mode": 420,
+			"size": 150
+		},
+		"build/tools/versionRanges.js.map": {
+			"checkedAt": 1769965525572,
+			"integrity": "sha512-0JWRG0M3pCDK37TrP20zkQCgaMMIvnLtvBnWjWlTKAGPxJuR89ZJFQUEO9mIgS050dZcvXTV5u8Lb9lAeDDFcA==",
+			"mode": 420,
+			"size": 683
+		},
+		"build/tools/healthchecks/watchman.d.ts.map": {
+			"checkedAt": 1769965525583,
+			"integrity": "sha512-buSleaAh7d7T1dafi82o+Xh82ar0bBOWWcWEZR+jDwqGoxvU9mOwFLx8MRUb29b7e/VeHdH0sFMJawAP8izDjw==",
+			"mode": 420,
+			"size": 190
+		},
+		"build/tools/healthchecks/watchman.js.map": {
+			"checkedAt": 1769965525593,
+			"integrity": "sha512-bKMJ/1AKYowFABpO/ejcgx/Yt+wv41XwjJOUwSmJuuWbzKg7FUlKKdesR+Q58BNAIOif0s7KgkN/UvQMcm4kQw==",
+			"mode": 420,
+			"size": 1256
+		},
+		"build/tools/healthchecks/xcode.d.ts.map": {
+			"checkedAt": 1769965525596,
+			"integrity": "sha512-JzjGZ2aWHCmCJbQbzvPXClJdv0isgaNrKoKmXYY/QfnEzb7Sx5KSznty5uMPbSOcmRjfW8t1+henhmIPcv5Hpg==",
+			"mode": 420,
+			"size": 185
+		},
+		"build/tools/healthchecks/xcode.js.map": {
+			"checkedAt": 1769965525598,
+			"integrity": "sha512-l0AS1VtZbTgXoNFDG95TMQYX7kRMQbH0/TJdQi8t7szmDouRd7fWn4UZjTOs2iz6qHdkAvHpTFIVUxBleZFh+A==",
+			"mode": 420,
+			"size": 1713
+		},
+		"build/tools/healthchecks/xcodeEnv.d.ts.map": {
+			"checkedAt": 1769965525603,
+			"integrity": "sha512-jVMZs1Vu8iwVvlMVTDSj4/GmdOHZ5Rkz6xl7eQiFtoPPIXQzhX20plDrwHQx6B0pcc6dKbZ7BbeYD/c3K+Gv1w==",
+			"mode": 420,
+			"size": 192
+		},
+		"build/tools/healthchecks/xcodeEnv.js.map": {
+			"checkedAt": 1769965525608,
+			"integrity": "sha512-6a1WSoihUgrJ92fC951wvrC8BS0hx5sJay4sHpHeModazFNU+hPgkJuaJUjyTAEzMJz/FQfMidKHGQurTu29OQ==",
+			"mode": 420,
+			"size": 4810
+		},
+		"README.md": {
+			"checkedAt": 1769965525612,
+			"integrity": "sha512-uqnNZpSzU9/KFCLlzOBvsZAvIZ30AmAYzUNJ+Es9xhdudhpFgJlx9eGjyd5f4QZFOEiT2m9IKghwtva/Ipu14Q==",
+			"mode": 420,
+			"size": 554
+		},
+		"build/tools/healthchecks/adb.d.ts": {
+			"checkedAt": 1769965525615,
+			"integrity": "sha512-rMd/PJZbJUHIV1oAYUC5GIJZRbJYkvR3cX9swWdF+njt5dpq3TKXhN9dIC5k1Q0EtZ50UCUjdsgjy6pLtsS7rg==",
+			"mode": 420,
+			"size": 156
+		},
+		"build/tools/healthchecks/androidHomeEnvVariable.d.ts": {
+			"checkedAt": 1769965525679,
+			"integrity": "sha512-UBNHuZ4d+tfTT3GFB+MXCC86w8hJYynG4ci/j2/9kIa4CH4BOCn9FV5CX7Pbz+QiIKNFPpJq8F+pQRm2XAB2rQ==",
+			"mode": 420,
+			"size": 175
+		},
+		"build/tools/healthchecks/androidNDK.d.ts": {
+			"checkedAt": 1769965525684,
+			"integrity": "sha512-Xj4WQk23o19uuuovlhF7h4t/jZy39EYFpOuaK/dYhQvhv6oQCT4CIzEPMZXWkH93Mov50nB4tBges15g0Zo80Q==",
+			"mode": 420,
+			"size": 163
+		},
+		"build/tools/healthchecks/androidSDK.d.ts": {
+			"checkedAt": 1769965525687,
+			"integrity": "sha512-XUvT8qOLzVdi3rrtEmLqqAcWbgNgPVXownM3nEfYMRVLx7orAD6FQVGS1B/6qecb1/8M5eBPcBNqCBAnrB6iBw==",
+			"mode": 420,
+			"size": 163
+		},
+		"build/tools/healthchecks/androidStudio.d.ts": {
+			"checkedAt": 1769965525704,
+			"integrity": "sha512-ANkDst630x9DfGiFwFf/rxLJiaxs1t2ZqdEPGbAMQ5MpiJeMel6t6JJY2J66NrLbqnAngEFWTaXPDwuo4ACZwQ==",
+			"mode": 420,
+			"size": 166
+		},
+		"build/tools/windows/androidWinHelpers.d.ts": {
+			"checkedAt": 1769965525707,
+			"integrity": "sha512-66jSWpbjJpcJZa7UZZ9N/SWhYcG+pDUR1UDbC1Nd94LP75IHklYq5AuORw94zYIl3CUWA7DB8klbRGvquiQL/g==",
+			"mode": 420,
+			"size": 2208
+		},
+		"build/tools/brewInstall.d.ts": {
+			"checkedAt": 1769965525725,
+			"integrity": "sha512-31V/dS1eJG5Z9VTxuNBhIevdzR5eqRzRs3eUCyMGLvwHNikIx1Z/oHWySPH535YHIBJk/wYyaNlURj0MXmcc1A==",
+			"mode": 420,
+			"size": 356
+		},
+		"build/tools/checkInstallation.d.ts": {
+			"checkedAt": 1769965525733,
+			"integrity": "sha512-nwRVlWwrp+WHO9JZX2UX77ojYHnjRsdQefVzvtiF3UCodYVsMupQQtwmmu3Ob5t4Y/qpYb9KQsnlPk3BEZIcQA==",
+			"mode": 420,
+			"size": 446
+		},
+		"build/tools/healthchecks/cocoaPods.d.ts": {
+			"checkedAt": 1769965525739,
+			"integrity": "sha512-2OsXTwh4t9kRgc0hux2SPJGIpfjbql3lACVrfKzBeMVKO45AUjMXiBTHpnr4P98sGigvbGMzrtYknU6kcUDA6g==",
+			"mode": 420,
+			"size": 162
+		},
+		"build/tools/healthchecks/common.d.ts": {
+			"checkedAt": 1769965525756,
+			"integrity": "sha512-tTQhHnLUVreJwRxzeCPaw5+AD5euTmFLQxDr6b1PMErJx9x/0VX5ieqV9mxwC4GAgm8+U2IIG625N7BNXlTYiA==",
+			"mode": 420,
+			"size": 947
+		},
+		"build/tools/windows/create-shortcut.d.ts": {
+			"checkedAt": 1769965525807,
+			"integrity": "sha512-LypHvVUX8Ev4H9lapSaGXl1vWYfZ/lTo04HPk/JMeB4wAnpbdKI7/OHG1DOuHqmfHTjdF17MVrgXJBn531MPww==",
+			"mode": 420,
+			"size": 276
+		},
+		"build/tools/deleteFile.d.ts": {
+			"checkedAt": 1769965525814,
+			"integrity": "sha512-dUNUS/XElNZHPZIIYWvq763h00+HR4jECNwq4OvsIjUOaQT8ESXTXQCXSwEVtl8y4cWGV/FIsuCLHC40F80tZQ==",
+			"mode": 420,
+			"size": 162
+		},
+		"build/commands/doctor.d.ts": {
+			"checkedAt": 1769965525816,
+			"integrity": "sha512-MRHDKxE1A/5TvutbBO8YqlRnySQUarKCfPMVkUAflb9kdhii4NgaRxsFibtosEGoMwpoxwCnnjEHjWyquAx7/w==",
+			"mode": 420,
+			"size": 428
+		},
+		"build/tools/downloadAndUnzip.d.ts": {
+			"checkedAt": 1769965525850,
+			"integrity": "sha512-TkmwBiV5Zd7TWgyne+qb1L6XQMJTR7SRcXnlrWzNijYN7jqXVPnVDguYl+EIc77LYegslOjyNaJP5o6ffFzM9Q==",
+			"mode": 420,
+			"size": 419
+		},
+		"build/tools/envinfo.d.ts": {
+			"checkedAt": 1769965525853,
+			"integrity": "sha512-G4YZDjsnjIdkiGKT2f2AygMpD2Rm5V6kx8WA7fsFcVYrXhvtLzhRY4biwogLVLr7lanpH+kswI6iiEJxM+QDzQ==",
+			"mode": 420,
+			"size": 523
+		},
+		"build/tools/windows/environmentVariables.d.ts": {
+			"checkedAt": 1769965525855,
+			"integrity": "sha512-EJeSTZivHK4D9dnXoUz7CPx5ahNuGA66o8Xb2cCPg3O35vIWC8+ILevMsv4NZTXov92LvekZIxwAb7fIjC/61A==",
+			"mode": 420,
+			"size": 548
+		},
+		"build/tools/windows/executeWinCommand.d.ts": {
+			"checkedAt": 1769965525859,
+			"integrity": "sha512-K7Q3FIeAOcx6UmVl9W4OzedD5+lMArwiyeyZie0c5XqUekc1nSuOHsiClvYc+hlRJTq7KlgUKAH9gnmChkoNaw==",
+			"mode": 420,
+			"size": 336
+		},
+		"build/index.d.ts": {
+			"checkedAt": 1769965525861,
+			"integrity": "sha512-l0s+eg8/UAQDKMK1Upgmn0COU/jeygb534q5JIme/5130aRKpqkTW79F1HSIjI/BMS8D8m6vO8rC6e1PL5aoOQ==",
+			"mode": 420,
+			"size": 896
+		},
+		"build/tools/healthchecks/index.d.ts": {
+			"checkedAt": 1769965525863,
+			"integrity": "sha512-Tl2FqhRtmZ7cJmmc56lIKW0bbKEUWwgki9XJOEURD1j/COEw6Xi4O/b638btNfCFz50ai7vj208Nf+F41Z5uWQ==",
+			"mode": 420,
+			"size": 335
+		},
+		"build/commands/info.d.ts": {
+			"checkedAt": 1769965525866,
+			"integrity": "sha512-7nbNt2QDnvZ1poqmmUYkk0Ee4Qtc3CtWxbmSHPxkitVbLoViUzMUJCvWODtIhDSgqlAQeJokmNhNsthQgIIkug==",
+			"mode": 420,
+			"size": 439
+		},
+		"build/tools/install.d.ts": {
+			"checkedAt": 1769965525884,
+			"integrity": "sha512-JlQ1u6ueR3flD9KKLJozztk1iBdJkDSz7iGYrn3Rn0YKMX+W2JrQIX2mLunzfIJaLbMhZ5DUVPvjIUznpRoEBQ==",
+			"mode": 420,
+			"size": 272
+		},
+		"build/tools/installPods.d.ts": {
+			"checkedAt": 1769965525896,
+			"integrity": "sha512-ed6ItX1RqgqHqq/TenPUaFZChUo+X6ipcX+dGCrf/Wjy22QNTBVV4hzKw0Pvr7fbyPjS/E6cJ0CRw/eKoqYQbQ==",
+			"mode": 420,
+			"size": 397
+		},
+		"build/tools/healthchecks/iosDeploy.d.ts": {
+			"checkedAt": 1769965525905,
+			"integrity": "sha512-S0Ykfv774jBzpQCVsKw5tmnRvnGLgSJVYFHbFkvjEypBHCUS6qaM6z7M0ViWOuQ03f9SbZEnC96rTidOYzeiqA==",
+			"mode": 420,
+			"size": 162
+		},
+		"build/tools/healthchecks/jdk.d.ts": {
+			"checkedAt": 1769965525909,
+			"integrity": "sha512-OUOLfHFJYvjJPMnghaS3uQMfCm0V+f5v84nHtPyJay0Uy6lGWsCW+sxKoMRYzSO2cyYnPevfbAfHC/w67Vv+hw==",
+			"mode": 420,
+			"size": 156
+		},
+		"build/tools/healthchecks/nodeJS.d.ts": {
+			"checkedAt": 1769965525941,
+			"integrity": "sha512-MmftbOaBYnF1uRJenLd2fkgrW6LbXyvlIsw55/VDm7W4VBKLIyqYOvoFfMVkhVsZ0JEKOX8ppLe5PoELf73Gkw==",
+			"mode": 420,
+			"size": 159
+		},
+		"build/tools/healthchecks/packageManagers.d.ts": {
+			"checkedAt": 1769965525962,
+			"integrity": "sha512-5WcsIHsGGjx/ezmoOUSKtfPb35tXu3bk0hUg3yOGvgybAyuzsPF1mPVdno88gS8zkUtrHnCCmDeKdr9bXcHD/g==",
+			"mode": 420,
+			"size": 335
+		},
+		"build/tools/printFixOptions.d.ts": {
+			"checkedAt": 1769965525965,
+			"integrity": "sha512-G/68+6TsAUCpm06nxGeofmhonEFPsM3tv6WIFkINqpVKtjZkdvItvHK6X2R4LVQ8FXqDtNmwlMKp1MbsoUkuaA==",
+			"mode": 420,
+			"size": 305
+		},
+		"build/tools/windows/processorType.d.ts": {
+			"checkedAt": 1769965525969,
+			"integrity": "sha512-bM2IWEWofTnnlbuDgNtbe89zneJtJ53kMYDzkQ1uXZvKPXW60qmSUXTNnW8GeLr693rB9TXPFcnjhcTgOVxxQw==",
+			"mode": 420,
+			"size": 157
+		},
+		"build/tools/healthchecks/ruby.d.ts": {
+			"checkedAt": 1769965525971,
+			"integrity": "sha512-bdG824PbNikU95kKiBVd8QDvmWP4HsEvxwWiGMJQIOZ7sTmW+r9gFA28/FzglbLV1FMM0gUw4fJn/2+USbhFqg==",
+			"mode": 420,
+			"size": 376
+		},
+		"build/tools/runAutomaticFix.d.ts": {
+			"checkedAt": 1769965525974,
+			"integrity": "sha512-i8r0FuC5nMoFbgyrSScFjfjwMDjHIMzAPcTE68C4PH0wTmKxjzhr1uTQBgqRkz1vVmzq//7Ud+ZwLG0uTSTnAw==",
+			"mode": 420,
+			"size": 732
+		},
+		"build/tools/runBundleInstall.d.ts": {
+			"checkedAt": 1769965526043,
+			"integrity": "sha512-1Wkdr2ZYdPqybAX8gBEfiS/7wrru3osyVIiPstkU+gCYsFh8kNRy4l8XEUfVYkJ2r0NqQ4Tlqg72Z9/FciU+DA==",
+			"mode": 420,
+			"size": 180
+		},
+		"build/types.d.ts": {
+			"checkedAt": 1769965526080,
+			"integrity": "sha512-23A5e9A9Out04+BOqjZPk/4/fTqzoX1sGh/fZvatTKp0hnOXDFDoKDYA/xRT1dju0CPpLpSA/irQYu2/oFHz2w==",
+			"mode": 420,
+			"size": 2912
+		},
+		"build/tools/unzip.d.ts": {
+			"checkedAt": 1769965526088,
+			"integrity": "sha512-/hU6x1qmVL/V0boZZDZmjNTaXB3IDiytdHL36Zub22jLh0fPr2Qr6KiVuvwiFPVvVeD+k66Lm0qI8Zv4W15k5w==",
+			"mode": 420,
+			"size": 133
+		},
+		"build/tools/versionRanges.d.ts": {
+			"checkedAt": 1769965526090,
+			"integrity": "sha512-Go6T05avUoWuFNLxJqNxbnSHEzSzUP4uKQyhQBcO4sxvm3FU4SX//nB6OmSyBreYQx0XXCZDNdETMKUcvcZt5Q==",
+			"mode": 420,
+			"size": 281
+		},
+		"build/tools/healthchecks/watchman.d.ts": {
+			"checkedAt": 1769965526092,
+			"integrity": "sha512-U3RdJAvyUjEkKydIrSgb9IV2K0mupy8NjTjiprQ44VkYJ0Sv0tgQOWvWRZMyJFPED/e+c5CpDE6XgsZ1wlrDkQ==",
+			"mode": 420,
+			"size": 161
+		},
+		"build/tools/healthchecks/xcode.d.ts": {
+			"checkedAt": 1769965526094,
+			"integrity": "sha512-zcscpzBWrDDv4YMYQE3kqjPP81frofON2v2pnS49C4++fBNujumMnowN+Htoucv+3T0jzctzyJQfV7+k12WfRg==",
+			"mode": 420,
+			"size": 158
+		},
+		"build/tools/healthchecks/xcodeEnv.d.ts": {
+			"checkedAt": 1769965526096,
+			"integrity": "sha512-9hUiwmXciouzO9Lh120b16OuDL23yRzqM4lpVxtx18ar4F4S0XL7lxaFZVMuYW0tA4hjKmJoiemJ4KsFRo+ZVw==",
+			"mode": 420,
+			"size": 161
+		}
+	}
+}

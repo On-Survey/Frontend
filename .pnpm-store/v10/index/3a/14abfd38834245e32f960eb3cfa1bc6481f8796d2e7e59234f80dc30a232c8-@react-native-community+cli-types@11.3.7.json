@@ -1,0 +1,97 @@
+{
+	"name": "@react-native-community/cli-types",
+	"version": "11.3.7",
+	"requiresBuild": false,
+	"files": {
+		"LICENSE": {
+			"checkedAt": 1769965447449,
+			"integrity": "sha512-dSzwBXLLj9pdIe7kr4FZA0H4A4Skhtb6D8m4zM/enfIEVDrKhnhHNh+xWlO5Sti3/DeDf2VLaNo+mSFT35QIJQ==",
+			"mode": 420,
+			"size": 1079
+		},
+		"build/android.js": {
+			"checkedAt": 1769965524168,
+			"integrity": "sha512-LCiZyayY6R65t4bHrNo717bLhpipoyImeUbN/1foh6WJu6qD2GKZscQx/gyHT0cwfTcw0eDVJH4JkmgLQQ9nUg==",
+			"mode": 420,
+			"size": 50
+		},
+		"build/index.js": {
+			"checkedAt": 1769965524171,
+			"integrity": "sha512-P59liw6WCiBQLgn5EaPMYWwX+6gqnnTtqAl7jBZJmpJDiLgGpdpIFYhhC0Nnquky4Yew6WLqluzQpK3yUXHW5g==",
+			"mode": 420,
+			"size": 1472
+		},
+		"build/ios.js": {
+			"checkedAt": 1769965524175,
+			"integrity": "sha512-sUao9GKnSvN9slqKyzJtiSKW3vwgBI0Yw0H0BR2vtPI+hCP4iXJHr+mcuEjovYNtsmJzklN36C7D7lt5HZ+zeA==",
+			"mode": 420,
+			"size": 46
+		},
+		"build/node-stream-zip.d.js": {
+			"checkedAt": 1769965524177,
+			"integrity": "sha512-/AZ7408MIjE2MJyRKwjNVKkJ6t36t0RVWsWdf6XMOmzlrR5ZOcAAt+WAGJ6hNt1dyeuWH7DTKM3Q0RD06/MdkA==",
+			"mode": 420,
+			"size": 13
+		},
+		"package.json": {
+			"checkedAt": 1769965524187,
+			"integrity": "sha512-pD/eJ77g9HU7N4dQjkH0lUGNZzggmsF9DvcUaeoOvsNYA7tk25KGEXRkI7DpLJaoVAcrjWuFnyKPpY/cuPDh+g==",
+			"mode": 420,
+			"size": 577
+		},
+		"build/android.d.ts.map": {
+			"checkedAt": 1769965524189,
+			"integrity": "sha512-65lQzro3hIduTb8uqyDN48Mob2scLJ1Fyq85Fg33A2OpcVLdzZh2JJrYpa4I4j9vpOR81Jbk0y/XOo/KY97kwQ==",
+			"mode": 420,
+			"size": 1243
+		},
+		"build/android.js.map": {
+			"checkedAt": 1769965524202,
+			"integrity": "sha512-pGosS64p/9GYWSbN7boYFfZOS5TgXWLOJ4/L/Wr07TXt1z88qip0BmiOhVEuGzAExzNC4NeVAf8OXAE4fxdotw==",
+			"mode": 420,
+			"size": 1182
+		},
+		"build/index.d.ts.map": {
+			"checkedAt": 1769965524205,
+			"integrity": "sha512-YloiApsBrMLgHyGscwH5VisPTHCVHHsCtXHvUeW+Iiz6uNqknNYemhs75Gj6UVzausYL3iewvolnu85Ks7MChA==",
+			"mode": 420,
+			"size": 3565
+		},
+		"build/index.js.map": {
+			"checkedAt": 1769965524207,
+			"integrity": "sha512-x77tNLWOVYitBJkk1yS0EnHwL3DwtXpvPFgc2A4N/bgc0QyoLj5VxVqZg3TCi40z60z6s2k9r6s+b/q+rwnM7A==",
+			"mode": 420,
+			"size": 4004
+		},
+		"build/ios.d.ts.map": {
+			"checkedAt": 1769965524209,
+			"integrity": "sha512-F24IXCgKVCFEHAo7mVMOVfreOzl2HsZcB9VOqiKX4O9tQ3jkkN70voZY9af+FUzrz3yEDr1tw5ISHStsIeSTGw==",
+			"mode": 420,
+			"size": 1008
+		},
+		"build/ios.js.map": {
+			"checkedAt": 1769965524216,
+			"integrity": "sha512-J9KS78v2zeP+gDR4aqZKdUmtVZmNU/PjVcpQSxrEZIy0crwFagjk7YTcyhShiA7LQYn84LS5yBHjcpp8NctjAw==",
+			"mode": 420,
+			"size": 1372
+		},
+		"build/android.d.ts": {
+			"checkedAt": 1769965524220,
+			"integrity": "sha512-Xkzgd3jsCT/3oa6QusUnpgH4sIDa0dWbmUzSkIM5wEH7anf4gnuRvOj/nN7TgDfEmffugzzX9YM8y7Xezsmamw==",
+			"mode": 420,
+			"size": 1142
+		},
+		"build/index.d.ts": {
+			"checkedAt": 1769965524222,
+			"integrity": "sha512-YYQtzcSbCd5mG1PyFFUzQDH4tPk41Ji6qzZpB8Oi98iI4NpoeHonoxuVLKEYZvrY1q+WjHzS/mNs1yTIuRoxVQ==",
+			"mode": 420,
+			"size": 3389
+		},
+		"build/ios.d.ts": {
+			"checkedAt": 1769965524229,
+			"integrity": "sha512-yX7DpiRlIujN1qECcitAvDQmXckk3buvD1Pc+FyJp6qkVQ8CI2yxLbXcvc0w3ht5hL/AlU53wBqtuTxQ+haMPg==",
+			"mode": 420,
+			"size": 1305
+		}
+	}
+}

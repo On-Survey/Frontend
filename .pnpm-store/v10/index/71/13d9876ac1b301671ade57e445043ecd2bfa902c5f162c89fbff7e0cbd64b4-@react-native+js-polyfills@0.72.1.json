@@ -1,0 +1,37 @@
+{
+	"name": "@react-native/js-polyfills",
+	"version": "0.72.1",
+	"requiresBuild": false,
+	"files": {
+		"console.js": {
+			"checkedAt": 1769965522056,
+			"integrity": "sha512-DqPWItYhtATOTEf5fRPWjD7/hTAgMG3v22R/iw92Qo18/iJiETe/uBa7qmdaF1Ak6qCOVnzuR+nFCECJtgjiYQ==",
+			"mode": 420,
+			"size": 17593
+		},
+		"error-guard.js": {
+			"checkedAt": 1769965522059,
+			"integrity": "sha512-D6UmF9BenonNOMqi6GuG+6qgL+IaF30BW14oelTwSzlBojtsryGeQp/q5EFpNgASX4FAQSDU0n8NNF2j/RmHXg==",
+			"mode": 420,
+			"size": 3786
+		},
+		"index.js": {
+			"checkedAt": 1769965522061,
+			"integrity": "sha512-nDrmksUtwydkS0cOqwqyVZvE7Ajx18fQXnYYQyCDXhu60qTgtooooBsTKDILYR9pvpJ8zD0hfegDCseSjYgqVw==",
+			"mode": 420,
+			"size": 361
+		},
+		"Object.es8.js": {
+			"checkedAt": 1769965522063,
+			"integrity": "sha512-PE6h7LGgirmKkLOAUwZ7B7l1sz+agFLLqqXLSEOeZ4AJ+PcEus7Htnf3X2nj5TwtmoREj1K4VXPyHqy+UDQ41g==",
+			"mode": 420,
+			"size": 1578
+		},
+		"package.json": {
+			"checkedAt": 1769965522067,
+			"integrity": "sha512-LdCMmqGkC6+s4vkq11nsEvylZeOZZ5/PqDQEyirNcVUvdbvWSojM99bJ+hNLxchOoQY8OARAQMJM2lSMWvG5Eg==",
+			"mode": 420,
+			"size": 269
+		}
+	}
+}

@@ -269,7 +269,7 @@ export const Survey = () => {
 		}
 
 		const source = locationState?.source ?? "main";
-		
+
 		// GTM 이벤트 전송
 		if (numericSurveyId) {
 			pushGtmEvent({
@@ -280,7 +280,7 @@ export const Survey = () => {
 				progress_percent: "0",
 			});
 		}
-		
+
 		// 섹션 기반 설문 페이지로 이동 (section=1로 시작)
 		navigate("/survey/section", {
 			state: {

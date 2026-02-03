@@ -115,7 +115,7 @@ export const MultipleChoiceQuestion = ({
 	const handleOptionToggle = (optionContent: string) => {
 		const isSelected = selectedAnswers.some(
 			(answer) =>
-				answer === optionContent || answer.startsWith(optionContent + ":"),
+				answer === optionContent || answer.startsWith(`${optionContent}:`),
 		);
 
 		if (isMultipleSelection) {
@@ -123,7 +123,7 @@ export const MultipleChoiceQuestion = ({
 				// 선택 해제
 				const newAnswers = selectedAnswers.filter(
 					(answer) =>
-						answer !== optionContent && !answer.startsWith(optionContent + ":"),
+						answer !== optionContent && !answer.startsWith(`${optionContent}:`),
 				);
 				onAnswerChange(
 					question.questionId,
@@ -267,7 +267,7 @@ export const MultipleChoiceQuestion = ({
 								const isSelected = selectedAnswers.some(
 									(answer) =>
 										answer === option.content ||
-										answer.startsWith(option.content + ":"),
+										answer.startsWith(`${option.content}:`),
 								);
 								return (
 									<ListRow

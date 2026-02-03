@@ -1,0 +1,25 @@
+{
+	"name": "flow-parser",
+	"version": "0.296.1",
+	"requiresBuild": false,
+	"files": {
+		"flow_parser.js": {
+			"checkedAt": 1769965467896,
+			"integrity": "sha512-XY5B0dCDWSaIXVmx+iTrXhaHuVgbUNc+gPZpziexj0c1P8/jbQ56hwOj4BHkqX7cRkCh7T72Oh5384pIhUKjoQ==",
+			"mode": 420,
+			"size": 761612
+		},
+		"package.json": {
+			"checkedAt": 1769965467972,
+			"integrity": "sha512-0cpRz9bLi01WnytnVAw2KY2aj1/11GMePv2V+IL0Tq9VT1WJXvk6TZfZ1M0K/a/nQShWlHpfhDCKM56VBo05lw==",
+			"mode": 420,
+			"size": 711
+		},
+		"README.md": {
+			"checkedAt": 1769965467977,
+			"integrity": "sha512-d3l0x3u/GLt55c+Hsec1U7uRVgrOgBJ1UYv6jW/J/DJGto4ENdwAtJYt3X2tOqkRs2gQtx8f4Ke6mR84gfOiRg==",
+			"mode": 420,
+			"size": 2222
+		}
+	}
+}

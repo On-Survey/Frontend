@@ -1,0 +1,25 @@
+{
+	"name": "@react-native/normalize-colors",
+	"version": "0.72.0",
+	"requiresBuild": false,
+	"files": {
+		"index.js.flow": {
+			"checkedAt": 1769965522162,
+			"integrity": "sha512-QDgtIkYALMj37hhnGZ0Fw6E8dVbt1EM0yCFf+Nf4GyLcLiWshZjAJkDmhd/MHuDsKLa4rbjGBwLFJW/jGIyvzA==",
+			"mode": 420,
+			"size": 281
+		},
+		"index.js": {
+			"checkedAt": 1769965522163,
+			"integrity": "sha512-d54yWRYOJfOgmvWGLDjeK0sIbHl89oAkd9K78125NM8rMER3mqnmzf0MARO3RpXUdTkqo+J6sVysjpI05qMEaA==",
+			"mode": 420,
+			"size": 12860
+		},
+		"package.json": {
+			"checkedAt": 1769965522166,
+			"integrity": "sha512-eAMutDgcWiW2sdy8V67/86XYYKPWQbDNI848NLq4/OuxW5H/w4QcP1WOeAE3/B/4EgNbInkzAFoj3KqJnKLt/A==",
+			"mode": 420,
+			"size": 289
+		}
+	}
+}

@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Border,
@@ -69,16 +70,24 @@ export const SectionBasedSurvey = () => {
 
 	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
 
-	// 섹션별 문항 조회 및 다음 섹션 확인
+	// 섹션별 문항 조회
 	useEffect(() => {
 		if (!surveyId) return;
 
 		const fetchSectionQuestions = async () => {
 			try {
-				const result = await getSurveyQuestions({
-					surveyId,
-					section: currentSection,
-				});
+				const result = await Sentry.startSpan(
+					{
+						op: "http.client",
+						name: `GET /survey/${surveyId}/questions?section=${currentSection}`,
+					},
+					async () => {
+						return await getSurveyQuestions({
+							surveyId,
+							section: currentSection,
+						});
+					},
+				);
 
 				if (result.info.length === 0) {
 					return;
@@ -92,9 +101,22 @@ export const SectionBasedSurvey = () => {
 					expanded[q.questionId] = index === 0; // 첫 번째 문항만 true
 				});
 				setExpandedQuestions(expanded);
+			} catch (error) {
+				Sentry.captureException(error);
+			}
+		};
 
+		fetchSectionQuestions();
+	}, [surveyId, currentSection]);
+
+	// 다음 섹션 확인 (분기처리 문항이 있는 경우 고려)
+	useEffect(() => {
+		if (!surveyId || questions.length === 0) return;
+
+		const checkNextSection = async () => {
+			try {
 				// 다음 섹션 확인 (분기처리 문항이 있는 경우 고려)
-				const sectionDecidableQuestion = result.info.find(
+				const sectionDecidableQuestion = questions.find(
 					(q) => q.isSectionDecidable === true,
 				);
 
@@ -135,22 +157,30 @@ export const SectionBasedSurvey = () => {
 
 				// 다음 섹션 문항 조회하여 마지막 섹션인지 확인
 				try {
-					const nextResult = await getSurveyQuestions({
-						surveyId,
-						section: nextSectionToCheck,
-					});
+					const nextResult = await Sentry.startSpan(
+						{
+							op: "http.client",
+							name: `GET /survey/${surveyId}/questions?section=${nextSectionToCheck}`,
+						},
+						async () => {
+							return await getSurveyQuestions({
+								surveyId,
+								section: nextSectionToCheck!,
+							});
+						},
+					);
 					setIsLastSection(nextResult.info.length === 0);
 				} catch {
 					// 다음 섹션 조회 실패 시 마지막 섹션으로 간주하지 않음
 					setIsLastSection(false);
 				}
 			} catch (error) {
-				console.error("섹션 문항 조회 실패:", error);
+				Sentry.captureException(error);
 			}
 		};
 
-		fetchSectionQuestions();
-	}, [surveyId, currentSection, answers]);
+		checkNextSection();
+	}, [surveyId, currentSection, questions, answers]);
 
 	const updateAnswer = (questionId: number, value: string) => {
 		const previousValue = answers[questionId];
@@ -245,25 +275,36 @@ export const SectionBasedSurvey = () => {
 	};
 
 	const handlePrev = () => {
-		if (currentSection === 1) {
-			// 첫 섹션인 경우 Survey 페이지로 이동
-			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
-		} else {
-			// 이전에 참여했던 섹션 중 현재 섹션보다 작은 섹션 중 가장 큰 섹션으로 이동
-			const previousSections = visitedSections
-				.filter((section) => section < currentSection)
-				.sort((a, b) => b - a); // 내림차순 정렬
+		Sentry.startSpan(
+			{ op: "ui.click", name: "SectionBasedSurvey.handlePrev" },
+			(span) => {
+				span.setAttribute("currentSection", currentSection);
+				if (currentSection === 1) {
+					// 첫 섹션인 경우 Survey 페이지로 이동
+					span.setAttribute("action", "navigate_to_survey");
+					navigate(`/survey?surveyId=${surveyId}`, { replace: true });
+				} else {
+					// 이전에 참여했던 섹션 중 현재 섹션보다 작은 섹션 중 가장 큰 섹션으로 이동
+					const previousSections = visitedSections
+						.filter((section) => section < currentSection)
+						.sort((a, b) => b - a); // 내림차순 정렬
 
-			if (previousSections.length > 0) {
-				// 이전에 참여했던 섹션이 있는 경우
-				setCurrentSection(previousSections[0]);
-			} else {
-				// 이전에 참여한 섹션이 없는 경우 이전 섹션으로 이동
-				setCurrentSection(currentSection - 1);
-			}
-			// 스크롤을 맨 위로
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		}
+					if (previousSections.length > 0) {
+						// 이전에 참여했던 섹션이 있는 경우
+						span.setAttribute("action", "navigate_to_previous_visited");
+						span.setAttribute("targetSection", previousSections[0]);
+						setCurrentSection(previousSections[0]);
+					} else {
+						// 이전에 참여한 섹션이 없는 경우 이전 섹션으로 이동
+						span.setAttribute("action", "navigate_to_previous");
+						span.setAttribute("targetSection", currentSection - 1);
+						setCurrentSection(currentSection - 1);
+					}
+					// 스크롤을 맨 위로
+					window.scrollTo({ top: 0, behavior: "smooth" });
+				}
+			},
+		);
 	};
 
 	const handleNext = async () => {

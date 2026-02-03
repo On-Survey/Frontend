@@ -1,0 +1,43 @@
+{
+	"name": "@apps-in-toss/analytics",
+	"version": "1.5.3",
+	"requiresBuild": false,
+	"files": {
+		"dist/index.cjs": {
+			"checkedAt": 1769965437252,
+			"integrity": "sha512-2be86aEBijhg9hyT7Lv7rwasd2lG+T/pZV2eu9lAS5j1wSBmdqoVtDUw7J1CKL8CCuFEX0lRHZv0LYCAUF1u8Q==",
+			"mode": 420,
+			"size": 18215
+		},
+		"dist/index.d.cts": {
+			"checkedAt": 1769965437255,
+			"integrity": "sha512-pPHEXXSJszAEX4QvQ0HMLZx2NmO/qBK5DYqoCUODtZEmAZanWx5C8efa3SdE2QHa/pZEaEb8ngD2b92lAaC7Iw==",
+			"mode": 420,
+			"size": 9043
+		},
+		"dist/index.js": {
+			"checkedAt": 1769965437262,
+			"integrity": "sha512-L0cQRK6ScS3N+MOghZMDx9jHQSnIL4E7HtyT1gD1FaY6+ElNpRym0B7XDDqOtNQJD+ZGS4Jx/+wpsicUSxXlUw==",
+			"mode": 420,
+			"size": 16388
+		},
+		"package.json": {
+			"checkedAt": 1769965437269,
+			"integrity": "sha512-dFPXwSxum93KhbEPHslmTZHCfvdS/uWiO3FgLeOK28ToLqhfQZxDb34UtyVgwr8mfDn8knDD6XZWZ8C09mQDDA==",
+			"mode": 420,
+			"size": 1215
+		},
+		"README.md": {
+			"checkedAt": 1769965414598,
+			"integrity": "sha512-yXZnbWtGha1r/F2j5EdWq9b4bQGjxjpH3n5qF3PHsiZGEX12nepgS3jCiKfgneN3gxUW898t/vn9ziWeenEa+g==",
+			"mode": 420,
+			"size": 54
+		},
+		"dist/index.d.ts": {
+			"checkedAt": 1769965437255,
+			"integrity": "sha512-pPHEXXSJszAEX4QvQ0HMLZx2NmO/qBK5DYqoCUODtZEmAZanWx5C8efa3SdE2QHa/pZEaEb8ngD2b92lAaC7Iw==",
+			"mode": 420,
+			"size": 9043
+		}
+	}
+}

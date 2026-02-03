@@ -1,0 +1,73 @@
+{
+	"name": "tiny-lru",
+	"version": "10.4.1",
+	"requiresBuild": false,
+	"files": {
+		"LICENSE": {
+			"checkedAt": 1769965485660,
+			"integrity": "sha512-hIzJ/f7YXyTg9xxCn6ymHnez0HVI2bYpZPD1RuFGfrsnJVdZtd1t//ekJ781Vw7Aq7dAJ/y0UhYBCaJSFXLz4A==",
+			"mode": 420,
+			"size": 1507
+		},
+		"dist/tiny-lru.cjs": {
+			"checkedAt": 1769965485704,
+			"integrity": "sha512-AvqZKdXaA8p0scIH7Vck8X9R9/8KEIaae6+8CYVa5MkIlAW5O2+o3kXeHfsrASA+s6QFSDpGJ4aTtiaclgCoGg==",
+			"mode": 420,
+			"size": 3198
+		},
+		"dist/tiny-lru.esm.js": {
+			"checkedAt": 1769965485713,
+			"integrity": "sha512-/LE+q+SdeCZFXCGXUu6gGpNA4I4DxsgHJ3+zAKedm55nIQulPJvrvBi10dre6JzvvZOhCYBzEiU89RJV9qL0uQ==",
+			"mode": 420,
+			"size": 3174
+		},
+		"dist/tiny-lru.esm.min.js": {
+			"checkedAt": 1769965485716,
+			"integrity": "sha512-Sru3Wll2JHmDPH7VKt7lKxOaTjs2HED1JT796bo0gsEii42CYMrhGw9auxbYjxi2cCUz+iWQXVxSeNJRt+05xQ==",
+			"mode": 420,
+			"size": 1821
+		},
+		"dist/tiny-lru.js": {
+			"checkedAt": 1769965485720,
+			"integrity": "sha512-Dn4UFjgsoh7VUtS7dFJBq+QJlwRySljxsM1Z/eATaJNGoXI3rNKBT7wiVcKkPq1FWwrouEFvDa3wB0EdUPfSqw==",
+			"mode": 420,
+			"size": 3431
+		},
+		"dist/tiny-lru.min.js": {
+			"checkedAt": 1769965485722,
+			"integrity": "sha512-pHCzfekMVNWFiWxvCMRfe9U6H/hdHqmIbRuVcU+IwfrrhgLplXFLcZXNj62woJ7xqz1hQfETJDSowExrLlI9eQ==",
+			"mode": 420,
+			"size": 2043
+		},
+		"package.json": {
+			"checkedAt": 1769965485724,
+			"integrity": "sha512-HUQNpHTBo2//WLPV0Z+oLUAZHCTmjp54LUpmagsPFuzpFIlFQx/cYwiQyzUxaNWlBScuaayBkHAEWQ+J5Ll5MA==",
+			"mode": 420,
+			"size": 1533
+		},
+		"dist/tiny-lru.esm.min.js.map": {
+			"checkedAt": 1769965485729,
+			"integrity": "sha512-cT1WTM6Nt7LZmLpq1UJF69WU0czDzPcel9UZwI9unqebkH3s/+bDjmcjR7TI0m1XG4oJglkdx2ksnHe8Ulxcsw==",
+			"mode": 420,
+			"size": 6338
+		},
+		"dist/tiny-lru.min.js.map": {
+			"checkedAt": 1769965485731,
+			"integrity": "sha512-K+H+bxwNcWwylphdf+1ussUk55Ha7FTTuli46naDJzx5SZAjCWIVSlJYpe00QhjLVUVBYTG7c1xAcL9lfo5wHA==",
+			"mode": 420,
+			"size": 6611
+		},
+		"README.md": {
+			"checkedAt": 1769965485733,
+			"integrity": "sha512-vSckib8uPvciyrxnGQqsDKvW7QjYbV6J6BIvJlEjglctX/9IjQ8Bl/NBwnEYK9G0hgF7vDBoJIoFRS5HHla47g==",
+			"mode": 420,
+			"size": 2924
+		},
+		"lru.d.ts": {
+			"checkedAt": 1769965485736,
+			"integrity": "sha512-6nj+XTuTraW/PH3uAZZFqEs18ktxJsWs1Se/sZc14YGPnKLNkSvx0B+DhrE/y4uR8zjHi8BalpzTrVSHqAzZKw==",
+			"mode": 420,
+			"size": 519
+		}
+	}
+}

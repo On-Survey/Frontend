@@ -75,8 +75,8 @@ export const ShortAnswerQuestion = ({
 				title={
 					<ListHeader.TitleParagraph
 						color={adaptive.grey800}
-						fontWeight="regular"
-						typography="t5"
+						fontWeight="bold"
+						typography="t4"
 					>
 						{question.title}
 					</ListHeader.TitleParagraph>
