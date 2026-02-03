@@ -54,8 +54,12 @@ export const logFirebaseEvent = async (
 	logEvent(analytics, eventName, params);
 };
 
-export const logPageView = async (path: string) => {
+export const logPageView = async (
+	path: string,
+	params?: { page_title?: string },
+) => {
 	await logFirebaseEvent("page_view", {
 		page_path: path,
+		...(params?.page_title && { page_title: params.page_title }),
 	});
 };
