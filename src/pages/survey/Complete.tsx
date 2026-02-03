@@ -58,7 +58,6 @@ export const SurveyComplete = () => {
 			pagePath: "/survey/complete",
 			survey_id: String(surveyId),
 			source,
-			progress_percent: "100",
 			reward_amount: "200",
 		});
 	}, [state.surveyId, surveyIdFromState, locationState?.source]);

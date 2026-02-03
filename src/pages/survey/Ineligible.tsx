@@ -78,7 +78,6 @@ export const Ineligible = () => {
 			pagePath: "/survey",
 			survey_id: String(survey.id),
 			source: "main",
-			progress_percent: "0",
 		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(

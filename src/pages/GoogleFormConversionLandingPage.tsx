@@ -5,11 +5,16 @@ import landing2 from "../assets/landingPage/landing2.svg";
 import landing3 from "../assets/landingPage/landing3.svg";
 import landing4 from "../assets/landingPage/landing4.svg";
 import landing5 from "../assets/landingPage/landing5.svg";
+import { pushGtmEvent } from "../utils/gtm";
 
 export const GoogleFormConversionLandingPage = () => {
 	const navigate = useNavigate();
 
 	const handleRegister = () => {
+		pushGtmEvent({
+			event: "form_convert_button_click",
+			pagePath: "/google-form-conversion-landing",
+		});
 		navigate("/payment/google-form-conversion");
 	};
 

@@ -76,10 +76,20 @@ export const PaymentProductPage = () => {
 				},
 				onEvent: (event) => {
 					if (event.type === "success") {
-						console.log(
-							"코인 충전 결제에 성공했어요. 주문 번호:",
-							event.data.orderId,
+						const { orderId } = event.data;
+						console.log("코인 충전 결제에 성공했어요. 주문 번호:", orderId);
+						const price = Number(
+							selectedCoinAmount.displayAmount.replace(/[^\d]/g, ""),
 						);
+						pushGtmEvent({
+							event: "purchase",
+							pagePath: "/payment/charge",
+							transaction_id: String(orderId),
+							value: String(price),
+							price: String(price),
+							item_name: selectedCoinAmount.displayName ?? "코인 충전",
+							entry_type: "mypage" as const,
+						});
 						queryClient.invalidateQueries({ queryKey: ["memberInfo"] });
 						setPaymentStep(2);
 					}

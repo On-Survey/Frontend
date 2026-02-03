@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/UseToggle";
+import { pushGtmEvent } from "../../utils/gtm";
 
 export const GoogleFormConversionPrecheckPage = () => {
 	const navigate = useNavigate();
@@ -24,6 +25,10 @@ export const GoogleFormConversionPrecheckPage = () => {
 	} = useModal(false);
 
 	const handleNext = () => {
+		pushGtmEvent({
+			event: "form_notice_button_click",
+			pagePath: "/payment/google-form-conversion-check",
+		});
 		handleConsentBottomSheetOpen();
 	};
 
@@ -32,6 +37,10 @@ export const GoogleFormConversionPrecheckPage = () => {
 	};
 
 	const handleConsentConfirm = () => {
+		pushGtmEvent({
+			event: "form_agreement_click",
+			pagePath: "/payment/google-form-conversion-check",
+		});
 		handleConsentBottomSheetClose();
 		// 결제 확인 페이지로 이동 (선택한 정보는 location.state로 전달)
 		const locationState = location.state as
