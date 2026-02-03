@@ -1,0 +1,97 @@
+{
+	"name": "react-devtools-inline",
+	"version": "5.3.2",
+	"requiresBuild": false,
+	"files": {
+		"backend.js": {
+			"checkedAt": 1769965510305,
+			"integrity": "sha512-LtBNWCSP/rOAj3rqvdxfw7l6k9Yd+YjJnf8kdys0HqhGsUnVGSuwHmzZHWd+52TW8XIWSiAH2KP3I0apKI89wA==",
+			"mode": 420,
+			"size": 44
+		},
+		"dist/backend.js": {
+			"checkedAt": 1769965510308,
+			"integrity": "sha512-DkQnBQyRtQdZwkRPCvVKtvk+/UeSjkfT4oeFPa33MgodreE52E3hkWHVqiW5ZCFLE01xgvYFTg7Fvrse0N/5AA==",
+			"mode": 420,
+			"size": 536048
+		},
+		"dist/frontend.js": {
+			"checkedAt": 1769965510325,
+			"integrity": "sha512-bQC3CZuaAthfyI0sIkFspuUQr/K49apS2v5s70mBq28zSYn0uhm/39T58q9wvxJ6aAEZMEveFy9gUhcPyLIekw==",
+			"mode": 420,
+			"size": 2350619
+		},
+		"frontend.js": {
+			"checkedAt": 1769965510327,
+			"integrity": "sha512-7sKKtDyv6jW/2j8UqFmI7xh6IxWjz9814FiZCrPKqZmPTh7T047YMe9sRumg02VM8KlrpbEQ2tQb1f1Je0LjBQ==",
+			"mode": 420,
+			"size": 45
+		},
+		"dist/hookNames.js": {
+			"checkedAt": 1769965510363,
+			"integrity": "sha512-sY+3zQ2fbr71N+ZkUNHC4LHCDlBuQvmQxfIDPSN9uwF3S184DFMIr01cjV9wdp9J0ln1Lvb9HILMPW6zgq3TBA==",
+			"mode": 420,
+			"size": 5384397
+		},
+		"hookNames.js": {
+			"checkedAt": 1769965510388,
+			"integrity": "sha512-N7yjJ5RGh2ehD0hJGZB/bX/4jcHha5cuvWYtAHqMTSm0W4lw9gY6iCNrpsBDxk28xAhhsOVaajQqVqCuFCNqWQ==",
+			"mode": 420,
+			"size": 46
+		},
+		"dist/importFile.worker.worker.js": {
+			"checkedAt": 1769965510396,
+			"integrity": "sha512-2VEsEnrSZC7RNGGtZX/jnrqHQmQbGIBWJfMyK7OgsjI/vMQlOMyiHQJJu08kwGEJ5tmcSnzSMVRWuj37hA2QpA==",
+			"mode": 420,
+			"size": 320011
+		},
+		"dist/parseSourceAndMetadata.worker.worker.js": {
+			"checkedAt": 1769965510409,
+			"integrity": "sha512-jOKMt0/gi5DqrSKKZ2U/spnyg0HAN4CmuuptmaCAh0FL6az3p3SzJNmeD8u+DPU2Z42reDUGvbSbAeZRkQW/lA==",
+			"mode": 420,
+			"size": 2515715
+		},
+		"package.json": {
+			"checkedAt": 1769965510422,
+			"integrity": "sha512-Jyyeb09sem+sWKs7q/Y7m8pxvfjbNGF5w/wLnOTOBDiUD+x963by7q0QPp5PIXc68ScLyRyLqNtbmYqK8Z6MKA==",
+			"mode": 420,
+			"size": 1572
+		},
+		"dist/backend.js.map": {
+			"checkedAt": 1769965510448,
+			"integrity": "sha512-8zt3gMuHqQrjiX6WwZEa+zEs2P7qnEFLH0DOgsf/PzWM7tXoY6KrnK0UFWgxqDWX2r+FnA1rLYRNDNyslasYQg==",
+			"mode": 420,
+			"size": 1063259
+		},
+		"dist/frontend.js.map": {
+			"checkedAt": 1769965510474,
+			"integrity": "sha512-hDf94hKuSn3gqvpMwdninWrheWEBSHwjtqhr9qRB3N5aPnCLGwsjxN+POdC/F8UrNU0q7q7nMO9jyhK36GsEdg==",
+			"mode": 420,
+			"size": 3886130
+		},
+		"dist/hookNames.js.map": {
+			"checkedAt": 1769965510496,
+			"integrity": "sha512-L2GGSfWWWHegKrDx3Zpa0a7hlVr/hbNWpgwDZfVRYD9yuCY6tEodEIzUp8kqU0tSjS6jrhS0ZiAuQ7HecpHVYg==",
+			"mode": 420,
+			"size": 6699603
+		},
+		"dist/importFile.worker.worker.js.map": {
+			"checkedAt": 1769965510499,
+			"integrity": "sha512-WmtzcO+JASJgDnfuFJrQk75+j2qe1MFTWrFrKu4mQUo0/9r+xPdjcmbQGul2fFlnK0qd/FlmD+ZMvLuVqKgujA==",
+			"mode": 420,
+			"size": 479338
+		},
+		"dist/parseSourceAndMetadata.worker.worker.js.map": {
+			"checkedAt": 1769965510573,
+			"integrity": "sha512-Ku6xcVOuA8B0lnZLLKAOJVshUiYctc11Rur5yIIi9Vh6WM4csErepD/1ayqsKFZmdA3FH+e8KlWOVl7PSlbX/A==",
+			"mode": 420,
+			"size": 5352729
+		},
+		"README.md": {
+			"checkedAt": 1769965510575,
+			"integrity": "sha512-XuJ3ntNspUEYaf0XySD/AxFhnOZDJRLq07DZ5CP4xZKEQLan6rXnlh2kHC2m7DxQRsDFH4QSu9ys91Wq3jsKxA==",
+			"mode": 420,
+			"size": 12169
+		}
+	}
+}

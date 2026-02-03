@@ -78,6 +78,7 @@ import { Ineligible } from "./pages/survey/Ineligible";
 import SurveyNPS from "./pages/survey/NPS";
 import SurveyNumber from "./pages/survey/Number";
 import SurveyRating from "./pages/survey/Rating";
+import { SectionBasedSurvey } from "./pages/survey/SectionBasedSurvey";
 import SurveyShortAnswer from "./pages/survey/ShortAnswer";
 import SurveySingleChoice from "./pages/survey/SingleChoice";
 import { logPageView } from "./utils/firebase";
@@ -219,6 +220,10 @@ export const App = () => {
 								<Route path="/survey/nps" element={<SurveyNPS />} />
 								<Route path="/survey/number" element={<SurveyNumber />} />
 								<Route path="/survey/date" element={<SurveyDate />} />
+								<Route
+									path="/survey/section"
+									element={<SectionBasedSurvey />}
+								/>
 								<Route path="/survey/complete" element={<SurveyComplete />} />
 								<Route path="/survey/ineligible" element={<Ineligible />} />
 							</Route>

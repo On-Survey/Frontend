@@ -1,0 +1,43 @@
+{
+	"name": "@granite-js/jest",
+	"version": "0.1.31",
+	"requiresBuild": false,
+	"files": {
+		"CHANGELOG.md": {
+			"checkedAt": 1769965447072,
+			"integrity": "sha512-651nRsuo8L90dzUKFuV4AImYcTEC0seWGqSptEAtuhsb8avKHaovm3Q/4kyQVwtQwpQVnCmu67AuVN4fVE9XCw==",
+			"mode": 420,
+			"size": 3590
+		},
+		"LICENSE": {
+			"checkedAt": 1769965414514,
+			"integrity": "sha512-taO/B1PKQTjxR6UFjUIBqfzBYip+q2+c7rpvbrYayfXjhdyPdZmB4f7CTG4F294Nnx/ZO2+A3OEpa2lHtbEjPw==",
+			"mode": 420,
+			"size": 11350
+		},
+		"README.md": {
+			"checkedAt": 1769965447073,
+			"integrity": "sha512-7TFgVhCzolIR6WOTGGfns9eNUwD3Bem8lGsuz7b7gkPwkSRQ2EYm43yHKMmfrbWK6zzHUNtMHv5tD1L2JyKvcA==",
+			"mode": 420,
+			"size": 708
+		},
+		"dist/index.d.ts": {
+			"checkedAt": 1769965447081,
+			"integrity": "sha512-+SEPPLxBQufw+bS+o7fLyiPjIkm9gAi4eakcHtJBcTFZoCkXhH9kqoaPGfZ6JtaJ7IbpmIQfoakHMScHRnOpVQ==",
+			"mode": 420,
+			"size": 799
+		},
+		"dist/index.js": {
+			"checkedAt": 1769965447091,
+			"integrity": "sha512-4Cy0DODv+WitDhLhpBxHJQE1q8tuR7tTgIZSYJ/pLOxCS9HmXidv8Ob+oj/IFHrpx+R23AwXUnmGLm/RSZLnHQ==",
+			"mode": 420,
+			"size": 5370
+		},
+		"package.json": {
+			"checkedAt": 1769965447102,
+			"integrity": "sha512-0icBPEgZtzVrccRChOSuYI4aw1/gqSEVm3ZiIdek0eYtp3kFvOIYWq5f8sUiTnuSi87vWAAR/+6m9LjBpzvGpQ==",
+			"mode": 420,
+			"size": 964
+		}
+	}
+}

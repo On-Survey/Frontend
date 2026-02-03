@@ -1,0 +1,25 @@
+{
+	"name": "metro-babel-transformer",
+	"version": "0.72.3",
+	"requiresBuild": false,
+	"files": {
+		"src/index.js.flow": {
+			"checkedAt": 1769965451095,
+			"integrity": "sha512-dUjaJd8S4fPYRvIxUSFww8TyMQ9zcZnygns9KGNqJnUqK6L/piICuHubVLlh2sL61y2eLhrsTYGUhdkmV0U6pQ==",
+			"mode": 420,
+			"size": 2677
+		},
+		"src/index.js": {
+			"checkedAt": 1769965451098,
+			"integrity": "sha512-vPfJHKDBbVt2G5d3o/9Svl78W3EvnZY+HU1Z2y5yMDY17kohHknA2CXrmvTcdOHI4pVlIvogam62hX/MazNH9w==",
+			"mode": 420,
+			"size": 1480
+		},
+		"package.json": {
+			"checkedAt": 1769965451105,
+			"integrity": "sha512-x2Azix4UW9PoSGfSuK64g9Ca5s0rwrnZQxsIAePAPlajaS1U3XBBGMSM46nmnf7FzutMwhywe5ne1f43/Wgueg==",
+			"mode": 420,
+			"size": 645
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"name": "@biomejs/cli-darwin-arm64",
+	"version": "2.2.5",
+	"requiresBuild": false,
+	"files": {
+		"biome": {
+			"checkedAt": 1769965427475,
+			"integrity": "sha512-8Fx0rTAqr4WZuA8mTbYiaK77h9VOcsb49L6SP2bdOgAnJqai12R//kvmpnsJdV5XcuKsVwGfMRMzx3qRw5dRNQ==",
+			"mode": 493,
+			"size": 36166400
+		},
+		"package.json": {
+			"checkedAt": 1769965427489,
+			"integrity": "sha512-/E8uYQiZ3TPJ0I4vT50EHJiX6pAZSxYrqcUvmB4PR7KfmIbj0t/r5LYcQkO+on1SDF8BpQEAdQamrSOw3Fx8fA==",
+			"mode": 420,
+			"size": 374
+		},
+		"CHANGELOG.md": {
+			"checkedAt": 1769965427493,
+			"integrity": "sha512-WZ5orcQLnkJkqtnoITkH+ms5EZfC+s1CoV6+/NWG34q51d52+496t7KwJl1mKs+tUx17vlMjZknmmBPD7akghQ==",
+			"mode": 420,
+			"size": 218
+		}
+	}
+}

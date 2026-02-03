@@ -1,0 +1,79 @@
+{
+	"name": "@granite-js/lottie",
+	"version": "0.1.31",
+	"requiresBuild": false,
+	"files": {
+		"CHANGELOG.md": {
+			"checkedAt": 1769965447128,
+			"integrity": "sha512-U/ShE2Ego4sC0cPAO1c2l5peCXccDiKcZVT3ei7rm8QryGkxGQzW8HYd8ZyTy+OaA+u0ACiJSvpu6olpcDJyIQ==",
+			"mode": 420,
+			"size": 2401
+		},
+		"LICENSE": {
+			"checkedAt": 1769965447129,
+			"integrity": "sha512-taO/B1PKQTjxR6UFjUIBqfzBYip+q2+c7rpvbrYayfXjhdyPdZmB4f7CTG4F294Nnx/ZO2+A3OEpa2lHtbEjPw==",
+			"mode": 420,
+			"size": 11350
+		},
+		"README.md": {
+			"checkedAt": 1769965447130,
+			"integrity": "sha512-vOcehrFZ7OtpQBgNS8kemiWr9e/Z60tlmurPGPM7+/9j++6yM9iegOM8RgKKcUhz2gQw8MA03FufGqKH4Ecr3g==",
+			"mode": 420,
+			"size": 710
+		},
+		"dist/index.d.mts": {
+			"checkedAt": 1769965447132,
+			"integrity": "sha512-zMYKc1tDzYuiGlM1psgkDvEYJ3XmZclpB5BY+dk/CER9blTp/IL2Anmkg0ZgJ+VPIAHDYrZ4+4TySvA1ZgQtTA==",
+			"mode": 420,
+			"size": 1067
+		},
+		"dist/index.d.ts": {
+			"checkedAt": 1769965447132,
+			"integrity": "sha512-zMYKc1tDzYuiGlM1psgkDvEYJ3XmZclpB5BY+dk/CER9blTp/IL2Anmkg0ZgJ+VPIAHDYrZ4+4TySvA1ZgQtTA==",
+			"mode": 420,
+			"size": 1067
+		},
+		"dist/index.js": {
+			"checkedAt": 1769965447134,
+			"integrity": "sha512-zIM2n7TEtZj2AtCrIBt5ItPZhHp+GFurq5Q7UkmByUztl6DaHmbKSINXWKRCpna4pdCyDHcAKWre9XYRr4kv/w==",
+			"mode": 420,
+			"size": 4086
+		},
+		"dist/index.mjs": {
+			"checkedAt": 1769965447137,
+			"integrity": "sha512-WfBCSd/cBNtxa1JiwkIxF9p0X3qXtHf1WIEDl3JgsW5kj0FTqsOveVBqvIkgG6b6mIdyk6ltDqheHTEiYMO58w==",
+			"mode": 420,
+			"size": 2214
+		},
+		"package.json": {
+			"checkedAt": 1769965447141,
+			"integrity": "sha512-bNBAt2QqJt5/cYOfvPPOQOrafNMBZRJShe3Od5lowgFpC1hs5543HZldvFxFGbllV0F/fNC63L4ahpmQFUT4QA==",
+			"mode": 420,
+			"size": 931
+		},
+		"src/Lottie.tsx": {
+			"checkedAt": 1769965447146,
+			"integrity": "sha512-faYIk+Mx8266nAhzI5Pz636/jH3vnLrumvi5P55lVuE78F2IngS2VimXh78Gtn9Nkeg1BibPOVvqbfXoaO92Pg==",
+			"mode": 420,
+			"size": 1993
+		},
+		"src/ensureSafeLottie.ts": {
+			"checkedAt": 1769965447148,
+			"integrity": "sha512-VBxviRPg/QhJyT8+0zLy5dTfyJK9xHobaSr27ozhDtg8FN/AZk34UTozPo1pkkJW9c3TjuBUeJnUTldbPeUPwg==",
+			"mode": 420,
+			"size": 801
+		},
+		"src/index.ts": {
+			"checkedAt": 1769965447153,
+			"integrity": "sha512-yDA0uh9iWPfpcg2TsmaVaL8Io8QDBBAGg5rIyeDEaqQqJ0ik3axZ/uAtgz+42afHoYSKQZ+Jgu7oN0tYIr/LCQ==",
+			"mode": 420,
+			"size": 26
+		},
+		"src/useFetchResource.tsx": {
+			"checkedAt": 1769965447155,
+			"integrity": "sha512-w7DWv0lix2OhEXobktVzeArM0PRDkJXlFrvVMzR8znyHY3i+1KtEzIz5Hg58HOKUg2fAfbObmuWSOv2jSSku6g==",
+			"mode": 420,
+			"size": 552
+		}
+	}
+}

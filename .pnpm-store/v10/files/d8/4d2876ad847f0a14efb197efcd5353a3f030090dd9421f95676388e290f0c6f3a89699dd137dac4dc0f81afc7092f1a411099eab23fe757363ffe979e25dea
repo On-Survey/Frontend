@@ -1,0 +1,11 @@
+import { TDSMobileProvider } from '@toss/tds-mobile';
+import { type ComponentProps } from 'react';
+export type TDSMobileAITProviderProps = Omit<Partial<ComponentProps<typeof TDSMobileProvider>>, 'userAgent'> & {
+    userAgent?: string;
+    /**
+     * 더큰텍스트 지원 여부
+     * 기본값은 false로 더큰텍스트 설정을 따르지 않아요.
+     */
+    fontScaleAvailable?: boolean;
+};
+export declare function TDSMobileAITProvider({ userAgent: stringUserAgent, fontScaleAvailable, children, ...props }: TDSMobileAITProviderProps): import("react/jsx-runtime").JSX.Element;

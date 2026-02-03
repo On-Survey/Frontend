@@ -1,0 +1,235 @@
+{
+	"name": "@react-native/gradle-plugin",
+	"version": "0.72.11",
+	"requiresBuild": false,
+	"files": {
+		"gradlew": {
+			"checkedAt": 1769965445691,
+			"integrity": "sha512-TXi01CY9viJM11aIF3Q+5ySLGICNFpQeqhDdX4X3VX/Rl3iseMveKj/DdaFGzR1OiGmoVbn1Mb4zNCvijGUpeQ==",
+			"mode": 493,
+			"size": 8188
+		},
+		"gradlew.bat": {
+			"checkedAt": 1769965522149,
+			"integrity": "sha512-FEqv/DK7U54EbosvP0PBaymppW71SPIlHuddNw2/O5QhbJn/1uctXz/iays2IGOmkAvhikS5FqbBOR5tm8weLA==",
+			"mode": 420,
+			"size": 2838
+		},
+		"gradle/wrapper/gradle-wrapper.jar": {
+			"checkedAt": 1769965447456,
+			"integrity": "sha512-9XOZiFF7e7tpBQv23m8WffeQMuIMcEoRlG52o6pOdXBDvf2qIPIDjTTwlVk1eIIHb3mOXk5AfNqaEvgmldKQjA==",
+			"mode": 420,
+			"size": 60756
+		},
+		"package.json": {
+			"checkedAt": 1769965522173,
+			"integrity": "sha512-ClG6IcqAKKpOruQmtxH+JDNl/XxuhWDI9TdjY5h0oYifMgj2D57zYyBYMa8TpTsOc3oqN6cPwaET+N7LW0GmuQ==",
+			"mode": 420,
+			"size": 712
+		},
+		"src/main/kotlin/com/facebook/react/utils/AgpConfiguratorUtils.kt": {
+			"checkedAt": 1769965522175,
+			"integrity": "sha512-fYqTpLk8N+0wUVjRS7TbKBjbZoOom6sI9h6CxefgkcLcv86OU2wGl+48wIhotye4sx4XOM9leD9Iwgu4KnPJ6w==",
+			"mode": 420,
+			"size": 2094
+		},
+		"src/main/kotlin/com/facebook/react/utils/BackwardCompatUtils.kt": {
+			"checkedAt": 1769965522177,
+			"integrity": "sha512-q8vc5hUnyOIwI1xzxRBNwVL/sX+CkW/itTBGIzJHWDAr/Pc3XWi0RiCm4osKqxfUsVrDkULVZdqysvjzdguyWQ==",
+			"mode": 420,
+			"size": 1530
+		},
+		"src/main/kotlin/com/facebook/react/tasks/BuildCodegenCLITask.kt": {
+			"checkedAt": 1769965522179,
+			"integrity": "sha512-r8t2Nkojft7pivnZFwrREtGHveokK9Hj8LQnuJAy4m6XntDeKh+nUB/egV5Q6laN2edega6gPxd4/PhkDKD8Cw==",
+			"mode": 420,
+			"size": 1826
+		},
+		"src/main/kotlin/com/facebook/react/tasks/BundleHermesCTask.kt": {
+			"checkedAt": 1769965522187,
+			"integrity": "sha512-9H5/MAZTuvNkdbOmqxzOyYP+cHE8BrDgKT8de5a0xIWVac02wWD2nCCJj0I2qSTIN7iM8UB0mKnr8X0sA6ZThw==",
+			"mode": 420,
+			"size": 6692
+		},
+		"src/main/kotlin/com/facebook/react/utils/DependencyUtils.kt": {
+			"checkedAt": 1769965522194,
+			"integrity": "sha512-ULp464hcTezHbjCCnw7mt0vv+qHh0cJf1eo5PwVaP5t/ZW4JTTUTczEN9bBHZ5fDY4nsUJjSojr0yS2cEXy8mw==",
+			"mode": 420,
+			"size": 5195
+		},
+		"src/main/kotlin/com/facebook/react/utils/FileUtils.kt": {
+			"checkedAt": 1769965522197,
+			"integrity": "sha512-d44S71+I5SSt3w2mt3oCNy3muLkEoUR5EjrlNvjYDVeqZRIkhjHTE74nK3xMc474wV/cE90U06Z3yORqSFGLGg==",
+			"mode": 420,
+			"size": 415
+		},
+		"src/main/kotlin/com/facebook/react/tasks/GenerateCodegenArtifactsTask.kt": {
+			"checkedAt": 1769965522201,
+			"integrity": "sha512-VQsmura3CqRzXHJEyXM55lhCFKLz2pblFoFBb2Tie6kK6QpdGa22l5uPqbeUHeb9d1c68kFVMSnTQAYbHEVS0w==",
+			"mode": 420,
+			"size": 3077
+		},
+		"src/main/kotlin/com/facebook/react/tasks/GenerateCodegenSchemaTask.kt": {
+			"checkedAt": 1769965522206,
+			"integrity": "sha512-eLejCJ5wizV8Ql+oq0cPHJqHnydwZSlvcfTNJEP3CSLaSRygZigvp+If6QQ24ORqVEhIVZhKWO1Jxn7wKaFohQ==",
+			"mode": 420,
+			"size": 2512
+		},
+		"src/main/kotlin/com/facebook/react/utils/JdkConfiguratorUtils.kt": {
+			"checkedAt": 1769965522208,
+			"integrity": "sha512-umoCQUPdVrYTRREYVz2ft2WV5GcxoLpdOJC0inRBOLNklz2fJiBtXuP5xWb99jC34+j0oKhZ4adU/1HPXs+BLA==",
+			"mode": 420,
+			"size": 2083
+		},
+		"src/main/kotlin/com/facebook/react/utils/JsonUtils.kt": {
+			"checkedAt": 1769965522212,
+			"integrity": "sha512-aOSl5MvHT+Rac/A/XDtF7ic++OqCarwrJsbHpHbZeyb8kbRnvL/Aea9RCcmGeURs4blUqlIGwr1OFi/VqtwMcA==",
+			"mode": 420,
+			"size": 574
+		},
+		"src/main/kotlin/com/facebook/react/utils/KotlinStdlibCompatUtils.kt": {
+			"checkedAt": 1769965522218,
+			"integrity": "sha512-1ZCH94SrD1do6JwU+/rmYk20bq5k+8a1xbLk46+p/xXFx9/M/uRoOl3ZhBb1Znz6S9/nJUHi2SUUPnX3i72N2A==",
+			"mode": 420,
+			"size": 871
+		},
+		"src/main/kotlin/com/facebook/react/model/ModelCodegenConfig.kt": {
+			"checkedAt": 1769965522251,
+			"integrity": "sha512-a0GEErWa3DSp05Kctat5PDzWbQANRAYPCrkM1Tq2lR5xK263WYwj3Itq0JSZIByJVXQscGv8r6acgdTyGClF1g==",
+			"mode": 420,
+			"size": 376
+		},
+		"src/main/kotlin/com/facebook/react/model/ModelCodegenConfigAndroid.kt": {
+			"checkedAt": 1769965522266,
+			"integrity": "sha512-5Xc/f9sk4M96bYZ3jD0nnufz6wcuq5J1GdWs8Gv/Efvwh1EEckB/Aja38eM7tDI/Sj3/yToBXvf6EdueKIONHg==",
+			"mode": 420,
+			"size": 292
+		},
+		"src/main/kotlin/com/facebook/react/model/ModelPackageJson.kt": {
+			"checkedAt": 1769965522271,
+			"integrity": "sha512-h714/KNg7KfWYe8E0TiGMAbf4bTKgkLgp/xeFkAE3tWS8i6QaJA9I71bsMPYXNGWt3rj/N04UF1V4r7juB651Q==",
+			"mode": 420,
+			"size": 293
+		},
+		"src/main/kotlin/com/facebook/react/utils/NdkConfiguratorUtils.kt": {
+			"checkedAt": 1769965522273,
+			"integrity": "sha512-2AV6G95XwWrAz/3mUaQp9EEydUuGKSchrfFZGhTqic8IHyVwQffydyKjdV9BSo1WV7Lup3J7CTSBZjppTaChhA==",
+			"mode": 420,
+			"size": 6461
+		},
+		"src/main/kotlin/com/facebook/react/utils/Os.kt": {
+			"checkedAt": 1769965522277,
+			"integrity": "sha512-Je2mX3dlZN3F5dMLQzQW9q4u+j18kmSU7INpkCPGQb24GUwXMMB1RUdlowgh3WRHE1M++yGnFrU8joqlA2KCww==",
+			"mode": 420,
+			"size": 1336
+		},
+		"src/main/kotlin/com/facebook/react/utils/PathUtils.kt": {
+			"checkedAt": 1769965522279,
+			"integrity": "sha512-SMyg5VmkmHBTkGZR+/9b241UYDUs2GTKJr3HJukGhcezwV5y3GeZqD51mN6BbeJ8ywiIJjNOs3aoqgVunA9zdA==",
+			"mode": 420,
+			"size": 8773
+		},
+		"src/main/kotlin/com/facebook/react/tasks/internal/utils/PrefabPreprocessingEntry.kt": {
+			"checkedAt": 1769965522282,
+			"integrity": "sha512-AvHt1mZiz8utLkD1PCG4AjOjtWGYdprGye6MPMZAByjlqhzeBq/pSlXdweicXC3QedmbfFfTPd24lYUBE+pgxw==",
+			"mode": 420,
+			"size": 1009
+		},
+		"src/main/kotlin/com/facebook/react/tasks/internal/PrepareBoostTask.kt": {
+			"checkedAt": 1769965522287,
+			"integrity": "sha512-2Sj15QpAgRVp6W0anN3m4FLZnvF/gdmiER9WmrrhrlE/UD41zJi9ZsddxpVE3f1qgQpciI9zM69q/6Jf7HoWlw==",
+			"mode": 420,
+			"size": 1331
+		},
+		"src/main/kotlin/com/facebook/react/tasks/internal/PrepareGlogTask.kt": {
+			"checkedAt": 1769965522290,
+			"integrity": "sha512-CCKQXd+93uIS0sC3nyr5WGRg4W0leKo603RtQn9CbHo4bajkwoZS6LG3jbyjtUSvJj+ukNGESNzAK23khEVbPg==",
+			"mode": 420,
+			"size": 3036
+		},
+		"src/main/kotlin/com/facebook/react/tasks/internal/PrepareJSCTask.kt": {
+			"checkedAt": 1769965522302,
+			"integrity": "sha512-TacXswSArJWDUsSHCiBTbLV3EwuH9/+3mkoQ7mifmWFeS/BM+10p4ER16mqN5pocFB0VrsHIb7BjME9O0kQFOQ==",
+			"mode": 420,
+			"size": 1721
+		},
+		"src/main/kotlin/com/facebook/react/tasks/internal/PrepareLibeventTask.kt": {
+			"checkedAt": 1769965522306,
+			"integrity": "sha512-nKENGBFkm5H+jmQ496qscbZtSHWNwa14s6Zt63ewjHNHwOvLexC8sF3dGYTDPo3wMcYO7epi9N+IIYux1gIiEw==",
+			"mode": 420,
+			"size": 1665
+		},
+		"src/main/kotlin/com/facebook/react/tasks/internal/PreparePrefabHeadersTask.kt": {
+			"checkedAt": 1769965522308,
+			"integrity": "sha512-YG5aP+G84/eTKy3QVyg3xr9uNoVaT9HiLrFtRdwoQSRiqxGP+VtTwc9ty0jeASA6cEWZlfEA/vNDqrM8QCw9dQ==",
+			"mode": 420,
+			"size": 2203
+		},
+		"src/main/kotlin/com/facebook/react/internal/PrivateReactExtension.kt": {
+			"checkedAt": 1769965522319,
+			"integrity": "sha512-5n6sFvL3wWUMdvmXDNk+OLtIQKbddyckjSz5JgEPzqrD3Dcj4s1O8arzB0h9XVG4lsaARgV6G9vHgcRNMw+hhg==",
+			"mode": 420,
+			"size": 2432
+		},
+		"src/main/kotlin/com/facebook/react/utils/ProjectUtils.kt": {
+			"checkedAt": 1769965522324,
+			"integrity": "sha512-0lguB6/ciBZ1cGyXoEfiaW+oHNU34DMF2L0u2bPV5LE9p3IJOPzuPZ+cOmWMHNPCYxlzeMHeZk8cigetFhK1PA==",
+			"mode": 420,
+			"size": 2312
+		},
+		"src/main/kotlin/com/facebook/react/utils/PropertyUtils.kt": {
+			"checkedAt": 1769965522328,
+			"integrity": "sha512-FsGWjqDtVR4Pv8seGU2FDmh0cDBxUngAOUHzOP5VtJIXIsBeT3sWlmExJqIaumKZGy1PCDL1Y5pCNkJdai6ImA==",
+			"mode": 420,
+			"size": 585
+		},
+		"src/main/kotlin/com/facebook/react/ReactExtension.kt": {
+			"checkedAt": 1769965522330,
+			"integrity": "sha512-rbhtYvMqp+N0bodQwAcUUieXfBLf1xds4ZnPLER8BkkM83zAkKEcTOg0+36drk8/VmQU3bZGGdg3cqq19/kHpg==",
+			"mode": 420,
+			"size": 5856
+		},
+		"src/main/kotlin/com/facebook/react/ReactPlugin.kt": {
+			"checkedAt": 1769965522337,
+			"integrity": "sha512-Ms9h8I6oWh0UafergkGootPxLWwY+i6oW2xypcA+6B0hYAiRUe8kAmTmQFLWATBbIjC5HdZussvLVRvJZMEKHg==",
+			"mode": 420,
+			"size": 9193
+		},
+		"src/main/kotlin/com/facebook/react/TaskConfiguration.kt": {
+			"checkedAt": 1769965522356,
+			"integrity": "sha512-leNzS8Uv+4i82tXLJBnt11hFEV3HvErmj8EyNQk+lYdTTz+4SOIs0xZtxs6xHYn/0gk2/qdRcRRP5nv/261RXQ==",
+			"mode": 420,
+			"size": 3787
+		},
+		"src/main/kotlin/com/facebook/react/utils/TaskUtils.kt": {
+			"checkedAt": 1769965522358,
+			"integrity": "sha512-0tmeRjj2fHhU7eTfMpZORouaTqxi4QV0hF2LSx9SKhRVetm31QiL33ZAyGUvc/S9Jpt5opfzegdtulWumDXyZA==",
+			"mode": 420,
+			"size": 733
+		},
+		"build.gradle.kts": {
+			"checkedAt": 1769965522375,
+			"integrity": "sha512-r5RXGWAadL20HeK6zx3o0Fyb/fgv9Kb4TgckrjA51dIlD/gTfUvaoxeWGzT/9Mhnqo7uBUAn9CgiL0AP5xAUcg==",
+			"mode": 420,
+			"size": 1680
+		},
+		"settings.gradle.kts": {
+			"checkedAt": 1769965522435,
+			"integrity": "sha512-BcguMVsoHrX0i3mSiz8LrIPXngDRmBLr12Xe5mURt8cm3d9la8m9KnWuQHe0vi9rA1d7Y3esL0pRbQDwL5VQhg==",
+			"mode": 420,
+			"size": 339
+		},
+		"README.md": {
+			"checkedAt": 1769965522441,
+			"integrity": "sha512-frSxfPWdNwRBd9HlPHRjzsUtfDANsrRtFnKMXGE8y+twbb2Zrb9VBt2O67GkwAWV2/MaD++ApZ3G3Cs+7Ok3Lg==",
+			"mode": 420,
+			"size": 492
+		},
+		"gradle/wrapper/gradle-wrapper.properties": {
+			"checkedAt": 1769965522443,
+			"integrity": "sha512-9wLN9BbyXrr9T5ebFODrGy6yJtTLo7RkSIAXUvDAIrwfhGSMTv4VhdSkWBCvPCtKlcYw4nJ1h36yj8Bx+SN4mg==",
+			"mode": 420,
+			"size": 202
+		}
+	}
+}

@@ -1,0 +1,157 @@
+{
+	"name": "@apps-in-toss/types",
+	"version": "1.5.3",
+	"requiresBuild": false,
+	"files": {
+		"dist/index.cjs": {
+			"checkedAt": 1769965437196,
+			"integrity": "sha512-MN+YsvUnd2bjrhSvATraqnIC19/igI+2uhVPbqjpvOwAzYTuP0KJpYOjP1OV0QEQIeg0OPt4cZ0h0tMOfT1qLQ==",
+			"mode": 420,
+			"size": 4316
+		},
+		"dist/index.d.cts": {
+			"checkedAt": 1769965437206,
+			"integrity": "sha512-KMyc91clZk1Iph6Q06xSKTEV/M7jM2/bhayt2RT0D+H/87egu4uORk6dmOvkd3BC5vj/1CMbah3iVKV53g1oIQ==",
+			"mode": 420,
+			"size": 10484
+		},
+		"dist/index.js": {
+			"checkedAt": 1769965437215,
+			"integrity": "sha512-aMgMq9BXsaMMIJXtatSmKElpQz4LwjEKcZVHtHgOQOHobifzQ8yB9NMbfsoBHAG1+EruH08MDAG4bUs2Xhtv9A==",
+			"mode": 420,
+			"size": 2783
+		},
+		"package.json": {
+			"checkedAt": 1769965437223,
+			"integrity": "sha512-hnJu3QKJ8CvArugzY2/Q97oXNVpuusDzD94ggveYRAGK2pOYc/e000eYOS3q7jMbqIZ27EokYpsX8U+hY/GRFQ==",
+			"mode": 420,
+			"size": 801
+		},
+		"README.md": {
+			"checkedAt": 1769965437230,
+			"integrity": "sha512-MJdB3IPTXJr3nMZIgfae/gRUH2OFnLvQVPi+iEFw3xoHM8S908LQE/ukSyeYZ2tH8L8p2ZfL6JUd7dm9ApNIiA==",
+			"mode": 420,
+			"size": 46
+		},
+		"src/permissions/fetchAlbumPhotos.ts": {
+			"checkedAt": 1769965437252,
+			"integrity": "sha512-tEmlTWvcHhjidKnW/+/TKx6Da/5W+XhfI0uZtuSdePXVpXK22jJ60m1ehiqF8XKEC1jvuEiQ07yvpCck2amx0Q==",
+			"mode": 420,
+			"size": 877
+		},
+		"src/permissions/FetchAlbumPhotosPermissionError.ts": {
+			"checkedAt": 1769965437296,
+			"integrity": "sha512-MqL5D5POF8Jv+4x7+k2ZEiM7+Ze6H1OpvXl0vZbNDDfKddyRCfrcArJDrym7UMsn3m36CIFNXK8Zyvsi5qOLpw==",
+			"mode": 420,
+			"size": 524
+		},
+		"src/permissions/fetchContacts.ts": {
+			"checkedAt": 1769965437300,
+			"integrity": "sha512-2FjlPaLOxJTvMk/A3au4zXTcxRtLDXLTrKe7W0XxeHZaMZI59EJdofZbZ5nncutIA59bb216f1XZnZFuqVQQ8w==",
+			"mode": 420,
+			"size": 548
+		},
+		"src/permissions/FetchContactsPermissionError.ts": {
+			"checkedAt": 1769965437309,
+			"integrity": "sha512-VMcvwdMi4yobcvk8bJtDPFH1Qcqd6YV5IQzkBoUjWFUg+sHOZUADmViZ84N3s3lcwxX8Ee7PakufePkktSfoNQ==",
+			"mode": 420,
+			"size": 512
+		},
+		"src/permissions/getClipboardText.ts": {
+			"checkedAt": 1769965437311,
+			"integrity": "sha512-vXfJXRJ07SfWpjvB1DdqhtauU/dyjsijl58lQlbQNK2YobRMEevD3WQ5F5TYEBb6Q22hAoagrjreyuYfcux6FA==",
+			"mode": 420,
+			"size": 54
+		},
+		"src/permissions/GetClipboardTextPermissionError.ts": {
+			"checkedAt": 1769965437313,
+			"integrity": "sha512-QPeNistygT3jaPxhD94Rie8IXGdUtC1cSJOV9Kqfpp/xEZkMyBqOLMoi7U3l2yjDHe8aywAgs85F3BAWkb4sjg==",
+			"mode": 420,
+			"size": 544
+		},
+		"src/permissions/getCurrentLocation.ts": {
+			"checkedAt": 1769965437314,
+			"integrity": "sha512-5T0zcq57uM3V3a7yg/7Sok31zrbTTuVNOHGPtAtei5LM8hvGezs10Bi89/+YrRh6h6pxNY75e68zj7gHmP1M6g==",
+			"mode": 420,
+			"size": 1926
+		},
+		"src/permissions/GetCurrentLocationPermissionError.ts": {
+			"checkedAt": 1769965437382,
+			"integrity": "sha512-CcjY5DC5fExeg7JV2AveGkV2mX23vxuNCIbK3mxkGpXSHkJfLNyQxc/KUNuYLs4z1Xygft2gcwaY4NhDXV0PkA==",
+			"mode": 420,
+			"size": 527
+		},
+		"dist/index.d.ts": {
+			"checkedAt": 1769965437206,
+			"integrity": "sha512-KMyc91clZk1Iph6Q06xSKTEV/M7jM2/bhayt2RT0D+H/87egu4uORk6dmOvkd3BC5vj/1CMbah3iVKV53g1oIQ==",
+			"mode": 420,
+			"size": 10484
+		},
+		"src/index.ts": {
+			"checkedAt": 1769965437392,
+			"integrity": "sha512-KkUUFL4ZFOgLQNgQcao5xPe3EHgSXynE3KfHAhJVmnvw59WLl/tc5WXiWsozM/u/s+PL6hBuH8bLDQ56jZaUSQ==",
+			"mode": 420,
+			"size": 31
+		},
+		"src/permissions/index.ts": {
+			"checkedAt": 1769965437457,
+			"integrity": "sha512-ZCYlA1/D33Miwb7sB226upvAHuNa9Ynto2gbxcBr8pNhslc6UcpzwI44PmeMhqeHIH8C/U7oZuYKAvnlbI33hA==",
+			"mode": 420,
+			"size": 768
+		},
+		"src/permissions/nativeModules.ts": {
+			"checkedAt": 1769965437497,
+			"integrity": "sha512-02ZuMItkLZq1zivyHbPlOX3sdLGouzc/VDutM0XkkDb3lkQGQGngLrFyhpVed0OGqoSdkOOI86eJsyQbdHY/uw==",
+			"mode": 420,
+			"size": 221
+		},
+		"src/permissions/openCamera.ts": {
+			"checkedAt": 1769965437523,
+			"integrity": "sha512-ndBLaFuJD+Xn5ste2KK9L/IhuEMYWObBt8Eau7PkKeAXEw01jksHwoSEIfv6fpLcCMUBbfm2H1/5rwWo6bpVSA==",
+			"mode": 420,
+			"size": 466
+		},
+		"src/permissions/OpenCameraPermissionError.ts": {
+			"checkedAt": 1769965437561,
+			"integrity": "sha512-smaFa7UA3quvsRfo8D8P+Ahd6Zla0yPB9UBg/AFOPeiQ31NE7gOT21hoCLPVIpbzVBCkc+aVLENYddy+zQjbJA==",
+			"mode": 420,
+			"size": 500
+		},
+		"src/permissions/permission.ts": {
+			"checkedAt": 1769965437571,
+			"integrity": "sha512-eR4s/WBV2rdaYS3T8A6GQf5rv7UEc7xICYoE9QR47cMKclj19lffVUlmE5c9nawvATMAC7rUbNwHZsY2Obe2jA==",
+			"mode": 420,
+			"size": 1537
+		},
+		"src/permissions/PermissionError.ts": {
+			"checkedAt": 1769965437587,
+			"integrity": "sha512-UOh4bakmUV+gC+XarlT9Ru40gUJBessZMRcVFC4bD/rr6ZTXF6nQfxU81qwCJ5vawD0uLfOmDQWUfiUWOiE32g==",
+			"mode": 420,
+			"size": 582
+		},
+		"src/permissions/setClipboardText.ts": {
+			"checkedAt": 1769965437601,
+			"integrity": "sha512-nVYeI3tC/OzKbiN5Vd+aqrr5gogYrD0w48XtzjFNeNIrSkZlrvrWYjqsgGj6HZrAB+DJ+0QslRcra5MYVo+0qA==",
+			"mode": 420,
+			"size": 126
+		},
+		"src/permissions/SetClipboardTextPermissionError.ts": {
+			"checkedAt": 1769965437613,
+			"integrity": "sha512-1btSNwmF1nXDoOaTlbVmM5+vThcxMA7CyS4IiDzdEBObjQceGMvoJsY1xAJS9AMTuHGDCyxSxvL8MDSgUbkhRg==",
+			"mode": 420,
+			"size": 544
+		},
+		"src/permissions/startUpdateLocation.ts": {
+			"checkedAt": 1769965437622,
+			"integrity": "sha512-mvP8Bv9JNBlh7x3nTwz+270l1E10Zd+r1CiA8a5XPuGOWTBp7b2jhc42yDlSdajgUmZdWkbzD9Auu+ifPbr1xw==",
+			"mode": 420,
+			"size": 657
+		},
+		"src/permissions/StartUpdateLocationPermissionError.ts": {
+			"checkedAt": 1769965437647,
+			"integrity": "sha512-BAEjN7glx6grl2GKK5ezI8ELiEtfv/5/VW15hPPRko8AGgW16kGvse6w9KIv7CxS2n7lkhifSJfSJb3Iziwjdg==",
+			"mode": 420,
+			"size": 468
+		}
+	}
+}

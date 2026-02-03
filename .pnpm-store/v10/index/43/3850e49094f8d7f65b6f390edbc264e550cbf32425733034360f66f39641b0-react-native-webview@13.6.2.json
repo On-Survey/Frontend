@@ -1,0 +1,775 @@
+{
+	"name": "react-native-webview",
+	"version": "13.6.2",
+	"requiresBuild": false,
+	"files": {
+		"windows/.gitignore": {
+			"checkedAt": 1769965445956,
+			"integrity": "sha512-7dA1dzjKVmXXYC/F0fULTTkqk2sOmyPJ2jBcFn2eEH7d+9om/gnWDIOv4eck/NmMWiu4Kubu9EWIRg/WR904Ww==",
+			"mode": 420,
+			"size": 6088
+		},
+		"LICENSE": {
+			"checkedAt": 1769965445966,
+			"integrity": "sha512-tR2qoo0XGyWfe6P1gRRgauRg7t984ES9y6kjFWnJHS6LuwKLOxXlcrVxST8NduxBrpPnd74WTVFTINaADfrGbg==",
+			"mode": 420,
+			"size": 1080
+		},
+		"windows/ReactNativeWebView/packages.config": {
+			"checkedAt": 1769965445971,
+			"integrity": "sha512-wOqIHaH2gDsRoyaSYbOddrekOQluBlk9V/wKkHAtGApf0JH4B2QiZ/MkFxI0vPbsWMtKFA2KF+3o1cYu6eJ5tw==",
+			"mode": 420,
+			"size": 257
+		},
+		"windows/ReactNativeWebView/pch.cpp": {
+			"checkedAt": 1769965445973,
+			"integrity": "sha512-8ERC6Gzk/VlGPrxA73DJL0LmJ0nwZzy7YyIZNrT6ybQiJ8eSpyxPv8BM2gjHkrn9e3i4BxmZ62IqAedqsd6KxA==",
+			"mode": 420,
+			"size": 20
+		},
+		"windows/ReactNativeWebView/ReactPackageProvider.cpp": {
+			"checkedAt": 1769965445974,
+			"integrity": "sha512-aESk8MFL0kAxeQS9x6owZEG3dh8aLhprAQU31XSgBi9Ba5ayq8iypwUPrLJvOGxDgPt8aDobDAZm9iUo3eibPQ==",
+			"mode": 420,
+			"size": 718
+		},
+		"windows/ReactNativeWebView/ReactWebView.cpp": {
+			"checkedAt": 1769965445979,
+			"integrity": "sha512-ZMymvN2ZDF45RgOGDlZTOEOJbNFmNlT24w0TfQRNC2o4T4a5VyrhnD1/U1dQlRkqjhYXzsirR2mXI6GglhPmDw==",
+			"mode": 420,
+			"size": 7104
+		},
+		"windows/ReactNativeWebView/ReactWebView2.cpp": {
+			"checkedAt": 1769965445983,
+			"integrity": "sha512-y9QY71sbkkc9v6lKZxcG3X9BtsFKc1tcEwMXdWAIAshvY69zEDtcu+CYLCb4navutTKZblLdLWnOsb8p7uSnMw==",
+			"mode": 420,
+			"size": 11844
+		},
+		"windows/ReactNativeWebView/ReactWebView2Manager.cpp": {
+			"checkedAt": 1769965445986,
+			"integrity": "sha512-aktGer5b8QwEJpcm633W83TIW2AdntD1TBrnTK3a2x7kzBr4rT1fyTmWxZgoUy29MWP/4Sh3Qvyokip7LY0nOQ==",
+			"mode": 420,
+			"size": 7441
+		},
+		"windows/ReactNativeWebView/ReactWebViewManager.cpp": {
+			"checkedAt": 1769965446013,
+			"integrity": "sha512-gZFhyF4NLjsZ5gRCJVH0udEJjnfofZL3iCKFUKoPK9DvhH5WXV9rxf2/JlcYHkecLQPko5v1trSwZrfiznZ2Og==",
+			"mode": 420,
+			"size": 9510
+		},
+		"windows/ReactNativeWebView/WebBridge.cpp": {
+			"checkedAt": 1769965446033,
+			"integrity": "sha512-gsMdPEPatP+P4NUyVybqEbkAWgh4ds59Hyd+JY3mgCyeAK8g6Lee5chgD3YzLO3Oexh94p2Ignqm4cTKTFNcoQ==",
+			"mode": 420,
+			"size": 527
+		},
+		"windows/ReactNativeWebView/ReactNativeWebView.def": {
+			"checkedAt": 1769965446050,
+			"integrity": "sha512-Bh6LWt6NyS3AxuPJqmOgLlY+M6UnU6k7oBkgsu26R3pBtWbRaKgxYXn0jS0T/9RBATVahFqqEl4FHkn1/Gj0CA==",
+			"mode": 420,
+			"size": 142
+		},
+		"windows/ReactNativeWebView/ReactNativeWebView.filters": {
+			"checkedAt": 1769965446054,
+			"integrity": "sha512-v4Ou5uGI6mjCp3PlZF6xakpaT3z8D3MhBUheEokKxV5q1w4YQmW7Xkse7EieWKyemqnbNuvbf6IEPIAMuo7r4Q==",
+			"mode": 420,
+			"size": 1235
+		},
+		"android/build.gradle": {
+			"checkedAt": 1769965446059,
+			"integrity": "sha512-e0xqO5xT1qS70fGUDKhPhKvBTZF4cUBzrPzlIYZJz3GyGP2qdpO0IFzLnLVy++CvdDXMnPHbPE/kE2GqUGHjOQ==",
+			"mode": 420,
+			"size": 3384
+		},
+		"windows/ReactNativeWebView/pch.h": {
+			"checkedAt": 1769965446062,
+			"integrity": "sha512-042CwrijMLjip0PE5ok3Tpo2Epj/RYFWNFKZMC02h/fr3HmT2a/rHiN4IOU8IEFYo+jJWSBwJuXvZ8TR7cmLRA==",
+			"mode": 420,
+			"size": 909
+		},
+		"windows/ReactNativeWebView/ReactPackageProvider.h": {
+			"checkedAt": 1769965446081,
+			"integrity": "sha512-R5lfqj2JfFjMcckVY69ykKMP3SWKvyBNgDxH66+9S0JmF5bVrWZINEix3Ck2TARpWKpa4un2nOc8oszdgzgPkA==",
+			"mode": 420,
+			"size": 648
+		},
+		"windows/ReactNativeWebView/ReactWebView.h": {
+			"checkedAt": 1769965446089,
+			"integrity": "sha512-rLT9XzwjZQKdExljiVHMSjVRpJvb6fLuBsycUBplz2Hje1cGLaA/LAalirB/X3w1y8/6CtYuY71bHD4gn7FZ3w==",
+			"mode": 420,
+			"size": 2411
+		},
+		"windows/ReactNativeWebView/ReactWebView2.h": {
+			"checkedAt": 1769965446098,
+			"integrity": "sha512-JYm0WEnxY6ZSCxll+sFhW8HCCrxD+prFS0ePzgozNjl3xtetyFYLRox2YS2ZxUVsiXiskK0+YwiX8HLOdO9qOw==",
+			"mode": 420,
+			"size": 2868
+		},
+		"windows/ReactNativeWebView/ReactWebView2Manager.h": {
+			"checkedAt": 1769965446107,
+			"integrity": "sha512-5MVikcK/Ui053Dp6d6VqefqwGMCOTKhhgmP6Fr1EM7ZrRzpiImyqiTU/wc4N7V4HOh6XnSFYSDX6JZP8DgrRZQ==",
+			"mode": 420,
+			"size": 2374
+		},
+		"windows/ReactNativeWebView/ReactWebViewManager.h": {
+			"checkedAt": 1769965446119,
+			"integrity": "sha512-zoLVqecNuXyl075J8GmVjIKvjn2S3V6O07lmHtxexAqCoXTUHVheU/8Hhs1Jye9G8rYvbbTXlz5rqxzt4jH9vA==",
+			"mode": 420,
+			"size": 2322
+		},
+		"apple/RNCWebView.h": {
+			"checkedAt": 1769965446124,
+			"integrity": "sha512-94RWY1Nz9Q21x43sB+sOycqrvwmryX61nTV/BWigoBw1SmGMTF7uJXV5skfWtpz5RMJEZJiyx2M0GhnPXWLKJg==",
+			"mode": 420,
+			"size": 773
+		},
+		"apple/RNCWebViewDecisionManager.h": {
+			"checkedAt": 1769965446135,
+			"integrity": "sha512-9M+xh0CIQE6a1WG0I1b1zkDnJcpCW5bamQGrA1d7+M+2g50hHpwC9v8hyXTsNdQT2dMGc0Z9ovHezMk19hYgmQ==",
+			"mode": 420,
+			"size": 528
+		},
+		"apple/RNCWebViewImpl.h": {
+			"checkedAt": 1769965446150,
+			"integrity": "sha512-DwXa/o0P+MGjTwKnF5Dh0VdBVCLwzLnGOM+7WYlZcjXLB9nZjciQF2WmEHVaFhhoM8p6utpDgqwg2cRBPDvH3A==",
+			"mode": 420,
+			"size": 6482
+		},
+		"apple/RNCWebViewManager.h": {
+			"checkedAt": 1769965446236,
+			"integrity": "sha512-+6Chc4xY8fYWy4Vryc4tH2L+ZNlynZ92s1RNQzKysUa68EW9yQ5AtIwy9s6Ua16iiRV2KQLATDNBvlxKo8ykFg==",
+			"mode": 420,
+			"size": 176
+		},
+		"apple/RNCWKProcessPoolManager.h": {
+			"checkedAt": 1769965446240,
+			"integrity": "sha512-P/IPFSYId7aO8m4+FmkSOPnzZbIXs3oviSW9t7i67+Stu9K4zw0ExENklnBWl6dazGDfdqn9Q1m5F2sfMxYpzg==",
+			"mode": 420,
+			"size": 334
+		},
+		"windows/ReactNativeWebView/WebBridge.h": {
+			"checkedAt": 1769965446246,
+			"integrity": "sha512-qLs0ybFBBZ6ojgRhwfLMsiQIcPijIZLXfDYc0f0NCN52lqn0I7aaQZP/KJYBjYRefRtuOh8UAVV/DP5BqGtDag==",
+			"mode": 420,
+			"size": 662
+		},
+		"windows/ReactNativeWebView/ReactPackageProvider.idl": {
+			"checkedAt": 1769965446248,
+			"integrity": "sha512-tp9N8IZqSl/ux0rAkrr61r8n6WbK1WmVVaohlwPyy/nPjZrhP6djLc4+/YCs6UW8wmf2UbKrnfdQ4l/4Kuqitg==",
+			"mode": 420,
+			"size": 220
+		},
+		"windows/ReactNativeWebView/ReactWebView.idl": {
+			"checkedAt": 1769965446251,
+			"integrity": "sha512-SccUAt4poq0wrs5FjIlsX2T8VtSMhyi8J1v/DU5sKwJDVxua/MiZ2+erHjobvuAImMScpeQMcTLyhZetdOBILQ==",
+			"mode": 420,
+			"size": 847
+		},
+		"windows/ReactNativeWebView/WebBridge.idl": {
+			"checkedAt": 1769965446265,
+			"integrity": "sha512-JOdDBDvOLlesxGpqMaPHED8WtQ4VKKVMuiMIjgSuTjVwWP8Vwhae8qVK2cuiLXH89sBMM8RNFv+ylC8LC/tIDA==",
+			"mode": 420,
+			"size": 258
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCBasicAuthCredential.java": {
+			"checkedAt": 1769965446267,
+			"integrity": "sha512-onvZe+BfbIgBzB5ABRSo2JnBPWRq6p48mDf/J/EPO+MJnbNCfHGNUz/WCVHwnL8ra2mLErOynqcwyY2qm89wuQ==",
+			"mode": 420,
+			"size": 255
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebChromeClient.java": {
+			"checkedAt": 1769965446298,
+			"integrity": "sha512-DyC5kfDlOjnZ0lQV9qG3N4r/D+0c32LTXZ2K+QxHI3QFDYu89knFldFxet9ZSJBlGpQ9HCVGkSfCIXS1cJynFA==",
+			"mode": 420,
+			"size": 15025
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebView.java": {
+			"checkedAt": 1769965446314,
+			"integrity": "sha512-JHNg+RHjvi/qjXp3qz6nxdT7vuoowXG+BsdE9krJ+UYb6UoEdolgCv51CeAzcGqBQEudzXKsEjbqd1Ao7lSj3A==",
+			"mode": 420,
+			"size": 14761
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewClient.java": {
+			"checkedAt": 1769965446323,
+			"integrity": "sha512-e8qGD1x7/XSwknIK/rLzaN7G7YqWszPQx6RHdm4APgd4HUnqlIb/bPEovnI7vhcBWDv7UaA8ukrm78DSP9FsLw==",
+			"mode": 420,
+			"size": 14298
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewConfig.java": {
+			"checkedAt": 1769965446327,
+			"integrity": "sha512-67rWv3TbJTKKDpaYPmjh2p5awlKnMYTh53Vm/rVQakLOtAGlLvPgSiMbQiD2nqeJg2Odq7Fg8+FA3409i1VqUg==",
+			"mode": 420,
+			"size": 346
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewFileProvider.java": {
+			"checkedAt": 1769965446330,
+			"integrity": "sha512-xkNkeHaKcb8tM5jCmzmbV4nAjLBw83YFJpW17CoPM77yqf8HhQt2JW8kAuqRfjaKXah8R1veBDkTnwlP6O7CAA==",
+			"mode": 420,
+			"size": 397
+		},
+		"android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java": {
+			"checkedAt": 1769965446332,
+			"integrity": "sha512-LNo3JrPuaPDi409+MXfwWECzWLXiP5KCB0vaByecUm7SgvtRzOwdprbbjHc2389bSBHu6sgy7qx8WNauA6MC2w==",
+			"mode": 420,
+			"size": 20083
+		},
+		"android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java": {
+			"checkedAt": 1769965446335,
+			"integrity": "sha512-WiV35trZQusB2HwCDtwJxbZDf71xuNEI14JB4CEnmBiS+UQIJHzK7bPkTt6RnCjg2sF1QYcSU8Rpj6zTbVWauw==",
+			"mode": 420,
+			"size": 13876
+		},
+		"android/src/newarch/com/reactnativecommunity/webview/RNCWebViewModule.java": {
+			"checkedAt": 1769965446337,
+			"integrity": "sha512-wCZY1NfU/dHYgkN1m9e70vmwW0L/Op2V2UwevULXTX5HKZJZYjc+rEG91YCUxVdy/lbC8QCydqgY62HLD/nkQA==",
+			"mode": 420,
+			"size": 2152
+		},
+		"android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewModule.java": {
+			"checkedAt": 1769965446339,
+			"integrity": "sha512-qzUyLdMRLe3M0r7YIod2wYJF0q+RqQDm6cN+4aLfC+fnO6DjO3jA4GaiZ2qdezkvTAYCk7PxvXB4fUX8bL2wiQ==",
+			"mode": 420,
+			"size": 2271
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java": {
+			"checkedAt": 1769965446341,
+			"integrity": "sha512-vlDJcKqmOL0kUYdbDiyrIEb8HEYYg0dDXULH/+AWdYUnQVe73y+AuSTq9ilHDi1sGwj+DQeu3DOezMQAgActig==",
+			"mode": 420,
+			"size": 21413
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewPackage.java": {
+			"checkedAt": 1769965446343,
+			"integrity": "sha512-OKQrQ6r2sCh5FsxuoOZzBKez0aScvGrITPPKxDarfPM2yxLp0Qp7Pp1y5jTQeNud2UvPW5aLPsYCCBT/3cYppQ==",
+			"mode": 420,
+			"size": 1929
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/URLUtil.java": {
+			"checkedAt": 1769965446346,
+			"integrity": "sha512-HLqsYlF41HzzgRPqtOuDcqHqhEsK55LKrp1mV2h3D71UJJTwmeLy1+HfzbD1ii8qkoRdeGwF5reVuNrEt6Yk2A==",
+			"mode": 420,
+			"size": 7563
+		},
+		"index.js": {
+			"checkedAt": 1769965446348,
+			"integrity": "sha512-2pR2HHWzoPj49oJh9IK5roqwN3ApRtG3JwAFQvelJBnECTQcxNLA/NRHJYvLh7kEFiI7uFNvzcdU7FEGhUnibg==",
+			"mode": 420,
+			"size": 82
+		},
+		"lib/index.js": {
+			"checkedAt": 1769965446350,
+			"integrity": "sha512-vkv2QZdRPhDw1IZOizqP2g3FwyeVB6b6JYjR0j92vI5ZozJLT3w9iww9VMUnR3VSJgnyiuQKbs6P1Ar+XnMixQ==",
+			"mode": 420,
+			"size": 77
+		},
+		"lib/NativeRNCWebView.js": {
+			"checkedAt": 1769965446352,
+			"integrity": "sha512-blH0esorZB9R4IdUrJY5fIuqQawj9iF4OoXR8FHMCgqDo2fYtSvr/UaI8xWnwHed/sPUuiE+Z1QQo6TjSCZC5A==",
+			"mode": 420,
+			"size": 115
+		},
+		"react-native.config.js": {
+			"checkedAt": 1769965446354,
+			"integrity": "sha512-qB3OBR/uG/sM+KxkqGJCfPl0W8TBMZ6b8NP7+/snYKI/USn6CfjJNdduMPj+Za8X2b6XXV/WzuLh7/7YT0v1tA==",
+			"mode": 420,
+			"size": 1281
+		},
+		"lib/RNCWebViewNativeComponent.js": {
+			"checkedAt": 1769965446356,
+			"integrity": "sha512-STvITDPCllKX/ErFJk74WZso5vBIrx+2iSAeBCk6nylQRX7yKTl2p5ZGKBsPYB45o5HbA3CoV4HqzU+e4c/6eg==",
+			"mode": 420,
+			"size": 470
+		},
+		"lib/WebView.android.js": {
+			"checkedAt": 1769965446358,
+			"integrity": "sha512-L95xiYpsgHf03wN+wQpvP+7MAtvBtvtxsUoKklIRuZCrciGFFs7JcAxPk4+7ZN8gPaKiD5Sv8+jCumACMWRwQw==",
+			"mode": 420,
+			"size": 11026
+		},
+		"lib/WebView.ios.js": {
+			"checkedAt": 1769965446360,
+			"integrity": "sha512-4Igig2urq8/XpkHIfbC4Mt3sCJ8HUuImEpsRIrcmeHFtFV47wF1xsUQwGvUFg2MJmzqFST2hDZjGxLwN9yaYVg==",
+			"mode": 420,
+			"size": 14014
+		},
+		"lib/WebView.js": {
+			"checkedAt": 1769965446362,
+			"integrity": "sha512-vNSO7bZrntQKR9egV6nAmXjHcv6m6qlXMzkJq24m/mEJFjii4r8/rpBRWQ0E3j3W418W8f++jGVxPFZddv3kuw==",
+			"mode": 420,
+			"size": 426
+		},
+		"lib/WebView.macos.js": {
+			"checkedAt": 1769965446364,
+			"integrity": "sha512-OzxGTM4qLM8Fdxt0KQq63hv0SDO3TGvRxCTe6ph988H/h6V653G892d/RlP+Cdg5AEp/MN3hlGr7R0bE9l+XDw==",
+			"mode": 420,
+			"size": 10455
+		},
+		"lib/WebView.styles.js": {
+			"checkedAt": 1769965446366,
+			"integrity": "sha512-/qivNADPVTJTgf28itGg/5/qdqIELnnqd9Exz6y6APo3UiDUtfoDuQlKXJ72i3uxWPmRw80RlzJVix0jgbhD/w==",
+			"mode": 420,
+			"size": 705
+		},
+		"lib/WebView.windows.js": {
+			"checkedAt": 1769965446372,
+			"integrity": "sha512-5aSR2S88tfEONesC1t2bereuXGrLAtxpszR5aGs3w+dnGCrKhxUHyKEsWKpZfg0qPxOv7AzUhOp+20x4IsSj2Q==",
+			"mode": 420,
+			"size": 9336
+		},
+		"lib/WebViewNativeComponent.macos.js": {
+			"checkedAt": 1769965446381,
+			"integrity": "sha512-GDvYjhbMlAXBqnDAvmJ/tzTEiHSkfwoHR9DkfbYZER9DeMS7rB/o1K+pRqWQvYBQt41WUj0QaA11EqEWqQ9mfg==",
+			"mode": 420,
+			"size": 137
+		},
+		"lib/WebViewNativeComponent.windows.js": {
+			"checkedAt": 1769965446387,
+			"integrity": "sha512-6wlKZHOBZAZdHGjMoI/HZeQEcv93ZRjqCEYoKuAQUR6QLkK/y19idjrkmlQCE0QN9LUil2ptTbYLaUganFrdlA==",
+			"mode": 420,
+			"size": 181
+		},
+		"src/__tests__/WebViewShared-test.js": {
+			"checkedAt": 1769965446389,
+			"integrity": "sha512-ZlU5PbySdAa+vdV/AneRCSpvhLt9iOkFO3R2u/dsV3HsNsNQUDsXXditFF6dcDoasqqo1sEnTL/Fu3GG1Ruu0w==",
+			"mode": 420,
+			"size": 8375
+		},
+		"lib/WebViewShared.js": {
+			"checkedAt": 1769965446419,
+			"integrity": "sha512-PTObYDZTCX+KO64G1Q/Mb+jXX5noBDNmWY7wNGT+FToscxx6XoQQhUQivySXTnZgBgwRQMQ4DzyKwnhwxG3NXw==",
+			"mode": 420,
+			"size": 8041
+		},
+		"lib/WebViewTypes.js": {
+			"checkedAt": 1769965446533,
+			"integrity": "sha512-2vnp1ylpTZU4GfKfrMYvtJsW/WbHphg59tQwDuEptCvHSZ2zzqPXGR/8X1ArErYuKE9LN4Q3UGh1phBk4x0oAQ==",
+			"mode": 420,
+			"size": 1489
+		},
+		"package.json": {
+			"checkedAt": 1769965446548,
+			"integrity": "sha512-QY8nPqWupxw2G8InO7LFEC+B1jG1mZ8IpgK5HTokBCFKkSeI3KiLQIi7th9q1AoN5WLf253NJHH5cx1wHnic1A==",
+			"mode": 420,
+			"size": 3275
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt": {
+			"checkedAt": 1769965446557,
+			"integrity": "sha512-rdiGQwClWE0cpUCcWJkk+D7eW/gCaA7lIeG7WlMjV/7Z7WNz3Mnl8/QvWCg7e57YWq/YxrzFObfFJWsrQzhMpQ==",
+			"mode": 420,
+			"size": 29343
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/RNCWebViewWrapper.kt": {
+			"checkedAt": 1769965446576,
+			"integrity": "sha512-iJ1J3WXKam+POxI3et6TuNd/ZZxhRmU1XPg81w71+uPM8C7nAyZN6ibDmwPiZIQD2ALrCfWNAqWqJNz6CVLL1Q==",
+			"mode": 420,
+			"size": 1460
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopCustomMenuSelectionEvent.kt": {
+			"checkedAt": 1769965446626,
+			"integrity": "sha512-EJIKfCb6Z9xfYpYvM6BlNp1d+ZFWMclx6pktHJiw2520holzcDo0+L+czEsvVWuijG/MvSZP4aZsymAxZ1JmaA==",
+			"mode": 420,
+			"size": 751
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopHttpErrorEvent.kt": {
+			"checkedAt": 1769965446635,
+			"integrity": "sha512-3zdjMQImZVP+jG6ynPiTvp05m5KOVg8k5SOx3ml2Q3AkbkKYsJO9omb/I85VppPH2O2hC4Moh3EXfUEZFaiD9A==",
+			"mode": 420,
+			"size": 729
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingErrorEvent.kt": {
+			"checkedAt": 1769965446640,
+			"integrity": "sha512-fPjiYhJObAR7diZVVSRylNUL3bFqtS0A8XnqBI2HGDL97BWKzIVdExE6sWP70KpVdqN5kFzepofE/j+qiQP9Yw==",
+			"mode": 420,
+			"size": 726
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingFinishEvent.kt": {
+			"checkedAt": 1769965446646,
+			"integrity": "sha512-eJjyyQ0gkG5GgiB2H3RTR/3zXPwCLcZGmDbgMKXQ92l6TpokbDK/SsAp8JA6m/Fk2bW3xcpwyuhfe3rjD3mxjQ==",
+			"mode": 420,
+			"size": 720
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingProgressEvent.kt": {
+			"checkedAt": 1769965446649,
+			"integrity": "sha512-8nI29LnnJZomP04wPSY8pDAYbzP9/ntUFvLM8ipFxpULPX9AElBi4j7Ya7+Q0XzU0M02ECyZKO1+fk1HXY2OQQ==",
+			"mode": 420,
+			"size": 739
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopLoadingStartEvent.kt": {
+			"checkedAt": 1769965446657,
+			"integrity": "sha512-hlFjJlZiJdAoi9qPWntTWaF8hA+DHfuuZLGrNdYdnq1txdpRICXs9vlEWuXEWXR9KR8CxR4ddluBV66m/Jkk5A==",
+			"mode": 420,
+			"size": 716
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopMessageEvent.kt": {
+			"checkedAt": 1769965446665,
+			"integrity": "sha512-rJM5Z/WmgT2h+uSjBVE+WArsrelAnylX6NI3Cxl6ZG41Kl9YftMm49Udr6HkGL23Ak2RFMeGjjVETEkeIYqz0g==",
+			"mode": 420,
+			"size": 713
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopNewWindowEvent.kt": {
+			"checkedAt": 1769965446672,
+			"integrity": "sha512-GZnmXdkIILqwj4efhRumSjDpZcUEE+qjpkaGFXS58QPvCTrk1F5VrqMpcfpxbRA2jB2iYog73zNoq77Ksulnlg==",
+			"mode": 420,
+			"size": 742
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopRenderProcessGoneEvent.kt": {
+			"checkedAt": 1769965446674,
+			"integrity": "sha512-6mjrXERvzUvoHbO8TZtGTYkd25YYxRNyz5F5hHKj8IQaxFDIleu/oX2ND/dxaOHEr9nyLXoZwOFkRS3PuPgtEw==",
+			"mode": 420,
+			"size": 773
+		},
+		"android/src/main/java/com/reactnativecommunity/webview/events/TopShouldStartLoadWithRequestEvent.kt": {
+			"checkedAt": 1769965446680,
+			"integrity": "sha512-oWvLsH7ss5DwLK5WIU9EkE/6nrXsd/WPrqYRgsmvUIOntfjPWjYWB3notaQN4bWe9AvNruGIPd8LpbinUdxyQQ==",
+			"mode": 420,
+			"size": 935
+		},
+		"apple/RNCWebViewDecisionManager.m": {
+			"checkedAt": 1769965446683,
+			"integrity": "sha512-z6cGFu7z9YCfgPqGLBUPpvGWzi6/xe6Q0lj640VBLcCeagW1F0FMzlu+Ixbi/aQwdvDT5iG4fNJnelRexEVY1w==",
+			"mode": 420,
+			"size": 1129
+		},
+		"apple/RNCWebViewImpl.m": {
+			"checkedAt": 1769965446686,
+			"integrity": "sha512-alGzC0XnmI84tu1UlP5TB660fRRJpHfCQuOFMIJ1f6v+bmguyngKat0HjuSFcBQ5w2BRCxvELf9+asZ3eX5sgQ==",
+			"mode": 420,
+			"size": 71437
+		},
+		"apple/RNCWKProcessPoolManager.m": {
+			"checkedAt": 1769965446699,
+			"integrity": "sha512-eaCgCYd1jsPq14xoYXXRYa3DMKFtS41dsAngKZteXxAKCARrNQS8QfPzLFTkQERLE/x7HzOT0+btEu8p0FiPDg==",
+			"mode": 420,
+			"size": 765
+		},
+		"lib/index.d.ts.map": {
+			"checkedAt": 1769965446701,
+			"integrity": "sha512-BM8FbUJs9Z/3oN7Z9hIob2vWLdPkdGtS9K2Xunsu4bSTc8jVBI319KaIx5EYmn1QlcBEUf0RJk0Mx6EXf4Qo2w==",
+			"mode": 420,
+			"size": 185
+		},
+		"lib/NativeRNCWebView.d.ts.map": {
+			"checkedAt": 1769965446706,
+			"integrity": "sha512-7eZii9+gOtbb9N2v1flkJBw9XCscFsiJqGRA5CLiiBcFIRmVEq6k1Rh2+9susC5eD6GH6GItvp2vrun6AK/zgA==",
+			"mode": 420,
+			"size": 415
+		},
+		"lib/RNCWebViewNativeComponent.d.ts.map": {
+			"checkedAt": 1769965446720,
+			"integrity": "sha512-q5t9KY+7zRKRe5QZG6/PirRloihCNkoZqY4F/Vt1cRZ5woYBS9pjaHerXptOkxNkZ3V6MYIRY9NLjjU5tsWyZg==",
+			"mode": 420,
+			"size": 8343
+		},
+		"lib/WebView.android.d.ts.map": {
+			"checkedAt": 1769965446722,
+			"integrity": "sha512-OIfs6CfkvUMRZMFnxd8dRVQCsw5MsjprKfEvJhstERlzxLwUcVvY0iHgLezzxi5Bz2+6jY3Pz1A93cZb3m0WfA==",
+			"mode": 420,
+			"size": 257
+		},
+		"lib/WebView.d.ts.map": {
+			"checkedAt": 1769965446733,
+			"integrity": "sha512-c5gLuFjgAR0n59kf0QCJc8py713prcP27GorPbe29MBYsidhfOE206ir1xfgMsP4uI0dGJclbwdrzS9x7+60jA==",
+			"mode": 420,
+			"size": 376
+		},
+		"lib/WebView.ios.d.ts.map": {
+			"checkedAt": 1769965446736,
+			"integrity": "sha512-f9AZ2vSZbB03dgrPOQMT16qe9KABP3AhI5JKyUjw9HEVowV6eyYf+D/v5K08j75ZBVTK5YfXk8CCpAHxhu2EDQ==",
+			"mode": 420,
+			"size": 268
+		},
+		"lib/WebView.macos.d.ts.map": {
+			"checkedAt": 1769965446744,
+			"integrity": "sha512-d+zxs2lOd04ArdQuX3zZxOstb90NKpmLaohSkq/SL3bP30PEAPUaH4Mss7ytfhDOK2bsajG/zhtj/HMrBiwIRQ==",
+			"mode": 420,
+			"size": 274
+		},
+		"lib/WebView.styles.d.ts.map": {
+			"checkedAt": 1769965446746,
+			"integrity": "sha512-hmI7JhHovtxmLdLX8SOKszEOgA6nI80bTZ4Op8+hhmr2VUYB3/jXR+KdzXrmvi4rZ57U+JD/8VyYlKD3jFTg8w==",
+			"mode": 420,
+			"size": 403
+		},
+		"lib/WebView.windows.d.ts.map": {
+			"checkedAt": 1769965446756,
+			"integrity": "sha512-RlHPFsnA6tWJiLgTZgv10fXPaOaNnt70OkF5NAfdX/2OwuWl/fOOdcnI0AQ0vwF+GMP7fICEpv3knpShf8NM8Q==",
+			"mode": 420,
+			"size": 296
+		},
+		"lib/WebViewNativeComponent.macos.d.ts.map": {
+			"checkedAt": 1769965446763,
+			"integrity": "sha512-A2FThaRdlu7ff3F7lpVjchHy8jFBG9mopvAWfZXdNlcPV2QE//tSXPQmG5xAvusdlC1bQgupzwxrNcJRq2Xt+g==",
+			"mode": 420,
+			"size": 261
+		},
+		"lib/WebViewNativeComponent.windows.d.ts.map": {
+			"checkedAt": 1769965446778,
+			"integrity": "sha512-LzE4Gmh8W4JOvG/uGPNmFhsdWKkVSiVVE4HTIGwa9XLbM0GLbKnx2Gat+2xgixSdnkU664pRmUUDCkDrLQ6PSQ==",
+			"mode": 420,
+			"size": 287
+		},
+		"lib/WebViewShared.d.ts.map": {
+			"checkedAt": 1769965446798,
+			"integrity": "sha512-QJ/Yiq7XcWGGLq4Py7olQ0d/SUMfLq+Dwiv1Xj7jlr8lNY4DWpgEltD3ulZ97kH4h+G767jqXFTFj6IYDoe99w==",
+			"mode": 420,
+			"size": 940
+		},
+		"lib/WebViewTypes.d.ts.map": {
+			"checkedAt": 1769965446817,
+			"integrity": "sha512-RUiRipbTHKEKaOCxWchrWzsojEKMH5X62z2kp5TTJAAoX+SDF8EK4/sECvVf+BVGfNYVXWj56uODipZZkMuGpA==",
+			"mode": 420,
+			"size": 13136
+		},
+		"README.md": {
+			"checkedAt": 1769965446820,
+			"integrity": "sha512-0do/cMmeBw2LPdzTfnhGaxhdiDTAs+Xl/UQhe5HkhOwuhfpOmOFqJUtP0E16t/qEAQu6UDD5qv2S9wPknmO+qg==",
+			"mode": 420,
+			"size": 4241
+		},
+		"apple/RNCWebView.mm": {
+			"checkedAt": 1769965446822,
+			"integrity": "sha512-6VsbtpfUvig2PNqVJPzE63oKSgLZlpfw4uMTxlQTYwJ0nEUsXy2ldg6EO1JuHOj8nTFks9ccqx+QOk0EScthFw==",
+			"mode": 420,
+			"size": 28431
+		},
+		"apple/RNCWebViewManager.mm": {
+			"checkedAt": 1769965446830,
+			"integrity": "sha512-vnoF+2gadD4M/iQKXxhYdlooFLCPf3Qx2peozBAUk3q7qnjtgcl/8JPbMEicmRXVAe3HhTmZys7k1YJKsSkO7g==",
+			"mode": 420,
+			"size": 11547
+		},
+		"ios/RNCWebView.xcodeproj/project.pbxproj": {
+			"checkedAt": 1769965446834,
+			"integrity": "sha512-IIBA4YkIzLU8KzP2TzKkLezizAKXyZ699rolM7lUX1L25VHmSbASL6lTk7gDAsQpWA1qRHR9DiD0kod/vBn71w==",
+			"mode": 420,
+			"size": 10063
+		},
+		"macos/RNCWebView.xcodeproj/project.pbxproj": {
+			"checkedAt": 1769965446852,
+			"integrity": "sha512-ce7FMbx+EAkEgd1JNR7GevWWph59Oi7tylD0F/Ms5Sec3dydTwpQOF4U7crhpktZ7yZK/T+vEDzqULYAqUXoyQ==",
+			"mode": 420,
+			"size": 13642
+		},
+		"react-native-webview.podspec": {
+			"checkedAt": 1769965446862,
+			"integrity": "sha512-TWJKfoSPBmzilWfX871nuk4Er9qiu7TFQXcX3EKeAZ+Lje9TQXxFrI/XueOb0IZLcB9uxQs0pJVkQ+Ot0OJxwg==",
+			"mode": 420,
+			"size": 1289
+		},
+		"android/gradle.properties": {
+			"checkedAt": 1769965446864,
+			"integrity": "sha512-ur6XblXcORviNm8DXdbFzHMvokVUM5MMDJcv/x1wSNrgeChqAycOWkGM0phmylTGPVqqLi8cwFuNYqqgr9Ie/Q==",
+			"mode": 420,
+			"size": 193
+		},
+		"windows/ExperimentalFeatures.props": {
+			"checkedAt": 1769965446868,
+			"integrity": "sha512-xLxllxkUsqjPuQT/pFQ0Q85RDompNF7DCHKiVReZf+D1a3cnP8MUuWq3KCVrNuagKiMOxkXg0ZMD/Y7Ho83M9A==",
+			"mode": 420,
+			"size": 426
+		},
+		"windows/ReactNativeWebView/PropertySheet.props": {
+			"checkedAt": 1769965446871,
+			"integrity": "sha512-9udzbk7z7CXfmI+cP//04ptI82ktoHCC4mphHHBvairkVIJduNzy8L4eTW0RZZlvKti8xNrHmXi/wUbQWll5ZQ==",
+			"mode": 420,
+			"size": 600
+		},
+		"windows/ReactNativeWebView.sln": {
+			"checkedAt": 1769965446883,
+			"integrity": "sha512-/kV6JRNEkN7m5gr9+jIhItGB8YZDOMAFNSzLiGm2Ht23xJYNjTiMqK3BbclaGRm2XVbR7LXwY86SQDblPK8omA==",
+			"mode": 420,
+			"size": 14277
+		},
+		"src/__tests__/__snapshots__/WebViewShared-test.js.snap": {
+			"checkedAt": 1769965446984,
+			"integrity": "sha512-yeXSUH0y9t8j5sruas0vgXWVyDishZSjbUyp/qFwaVmR5Q30UD+WHX+r4rvps+gcv/KUYiZtlzv6GdWxd0Srxg==",
+			"mode": 420,
+			"size": 142
+		},
+		"index.d.ts": {
+			"checkedAt": 1769965446996,
+			"integrity": "sha512-I+wKqPgFjtTsf4zPiI46QeNVhhFgr5H0jmj4tvfiXUknHz+shgL4W8dqMcWAUx3qDz2m/s09DwjsFohSqcvPrQ==",
+			"mode": 420,
+			"size": 1599
+		},
+		"lib/index.d.ts": {
+			"checkedAt": 1769965446998,
+			"integrity": "sha512-HO2bSn57sZQ6NkE7Rsi0a4FB83gcp+8iV8QuaYW7wxKXKx5IRvzkThPcsLr/A8LTafy5N56QQqMyRFXBfK3WWA==",
+			"mode": 420,
+			"size": 112
+		},
+		"src/index.ts": {
+			"checkedAt": 1769965447002,
+			"integrity": "sha512-SXMPQfKWodfujOfbX6j9RBCLH+prAp+ukEnDc1UTTTu4D0lU5pr3EpTUnCtvlpiz5EKl/CGkDMonWopqJn11Og==",
+			"mode": 420,
+			"size": 78
+		},
+		"lib/NativeRNCWebView.d.ts": {
+			"checkedAt": 1769965447003,
+			"integrity": "sha512-iFgo3/00A8yyhxfn7PmhBAX1HqwVAHY+fp+1MaLmyJnafpdNjbiihtVcIWKRUVtrIBEL/FIB/B58CB2somEF3Q==",
+			"mode": 420,
+			"size": 437
+		},
+		"src/NativeRNCWebView.ts": {
+			"checkedAt": 1769965447005,
+			"integrity": "sha512-H3VZ6jTFS3Xja9Az4VR9yvAXXfPbcoeHF86Q8snfIxbB0IDkej7yE/g/b5S6sCLeXjDqgo4LcGBARyORPy75zw==",
+			"mode": 420,
+			"size": 540
+		},
+		"lib/RNCWebViewNativeComponent.d.ts": {
+			"checkedAt": 1769965447007,
+			"integrity": "sha512-MseyYaoO2nXJ16u4WpAi0uCIdnpL7dOQ0q1YTTb2gSNqrptPp8azI0SkNn311D1/21A/fbctDlOqSrvBj0qd2g==",
+			"mode": 420,
+			"size": 8878
+		},
+		"src/RNCWebViewNativeComponent.ts": {
+			"checkedAt": 1769965447011,
+			"integrity": "sha512-7ZqdNqi7+yZ8FPKXrypnVnQFjWEDCAJpjCmHXRA+lQelbwg1drqDfPpJHCbjqranT8I9+74HriXZG8mYq+WmzQ==",
+			"mode": 420,
+			"size": 9101
+		},
+		"lib/WebView.android.d.ts": {
+			"checkedAt": 1769965447016,
+			"integrity": "sha512-l6AEm579GWy4nhakutQie+uWxF4jGINOH1FSztWjo+ubq1vgiIr+3tvzA2G1JoHUCre1EcyxyHr08bDHSGIwOw==",
+			"mode": 420,
+			"size": 310
+		},
+		"lib/WebView.d.ts": {
+			"checkedAt": 1769965447054,
+			"integrity": "sha512-c0gI916sIw7ymFx9dgC4sQz6CarZDIh5334LbBEI5M9jr21PXZpCV1PzQ4bNTe3q10lPGQAYxxolVdrpPpcDzA==",
+			"mode": 420,
+			"size": 358
+		},
+		"lib/WebView.ios.d.ts": {
+			"checkedAt": 1769965447064,
+			"integrity": "sha512-gGZXaomYr6kS15FWnIDLlVGeUvSi1MXpaY1IAJgqbIb1Ivvbg4Erpf5oTd36mr6hQB6YaVq7TGPXdt9XzcnMqg==",
+			"mode": 420,
+			"size": 298
+		},
+		"lib/WebView.macos.d.ts": {
+			"checkedAt": 1769965447068,
+			"integrity": "sha512-nfTIznxfPUnH3f8fJAQrh0I6bMR0MN0cYng8DUyz5xLk16igZ5xz3kqoKS06fPESkDw5OnJCOOfcvF+u/IPulA==",
+			"mode": 420,
+			"size": 304
+		},
+		"lib/WebView.styles.d.ts": {
+			"checkedAt": 1769965447070,
+			"integrity": "sha512-lfYTslHgoTznevvtetszHyF+KNzynVx+l4YfPv9hnNwicG1rBx2+pTA38Rx581mNvAyqUs68Y8S4OVgn6sV02w==",
+			"mode": 420,
+			"size": 348
+		},
+		"src/WebView.styles.ts": {
+			"checkedAt": 1769965447081,
+			"integrity": "sha512-lyDLyE4rzgoldeDJI6lK32bP1UvTn4c6PWBILXs4UiFvBfi/NbI+tYmTbiJ2CfxdnvzXPYhBIKyTJ/8jp9A4/g==",
+			"mode": 420,
+			"size": 840
+		},
+		"lib/WebView.windows.d.ts": {
+			"checkedAt": 1769965447086,
+			"integrity": "sha512-ar6sktGmiMHohF9ZiiTuaOKGoKaQl/fKqi1LoHxh5YdeNmABkdw7kj7RRoq/6ynhQgOxaKKx11+OZKV1TVMUsQ==",
+			"mode": 420,
+			"size": 649
+		},
+		"lib/WebViewNativeComponent.macos.d.ts": {
+			"checkedAt": 1769965447088,
+			"integrity": "sha512-wVsbMI5FVgcMb2Pf1xdskfXk4cAH1dUlgK4ja/Vckp5wSKIiQ1CyDPvWinvah42qVe2B2F7R2TtnmNcskfS4pA==",
+			"mode": 420,
+			"size": 196
+		},
+		"src/WebViewNativeComponent.macos.ts": {
+			"checkedAt": 1769965447090,
+			"integrity": "sha512-S3swoZKMFhZuJgACET1o0tFvCbyhwayt3PmxjlI3lHyHPlvn9O0AA8yo/Tkr6Y3aFw4fhejfMrTX9q+uysWvzQ==",
+			"mode": 420,
+			"size": 231
+		},
+		"lib/WebViewNativeComponent.windows.d.ts": {
+			"checkedAt": 1769965447092,
+			"integrity": "sha512-oHQzXhIVZWrWFfxpXaJ6vYQlVarKWCmT/er7PoTA3sfZT6C2QHRjm1zSQpDUAqhwDdSrrJiffq2x8KuH8reWCg==",
+			"mode": 420,
+			"size": 245
+		},
+		"src/WebViewNativeComponent.windows.ts": {
+			"checkedAt": 1769965447094,
+			"integrity": "sha512-YDhalYPXZcuRiKlKTd0+KJRXZvbeqCseNQCNyXeHcqiR/3+n3HE5/DOgSrKr/m0TW00M3ScDLzqwseLZW3TxOA==",
+			"mode": 420,
+			"size": 315
+		},
+		"lib/WebViewShared.d.ts": {
+			"checkedAt": 1769965447101,
+			"integrity": "sha512-Pzv9r1uqe2E9BsVbXMK87YRM9uEW73mBeMvMPHePhrJv1i2WHif8sgp3yI5VhDL4T3qPdCnJXjkzKPWpkP0k2A==",
+			"mode": 420,
+			"size": 3381
+		},
+		"lib/WebViewTypes.d.ts": {
+			"checkedAt": 1769965447106,
+			"integrity": "sha512-gInxQLXxaqCbq3qIC3WcsPvkLDH/q+//8PO5TWJOedGWpvPzAvZsHIGU1YXKX+F1TVR3uEYnHb0BtI+t09SoPQ==",
+			"mode": 420,
+			"size": 41115
+		},
+		"src/WebViewTypes.ts": {
+			"checkedAt": 1769965447123,
+			"integrity": "sha512-STcgkPyZWJU9Su9PLh+4YpvXHE+gmCMJoy6JuQeStvC7tUJ8szUg9IkgoeIz0M8vFnCOQvCcGhzXJ87deI/M9Q==",
+			"mode": 420,
+			"size": 39676
+		},
+		"src/WebView.android.tsx": {
+			"checkedAt": 1769965447133,
+			"integrity": "sha512-Bj722ZKdGOphBX12oQWAWSBSzvwH05e4wd0QLhKjVTOiHUekjKygOVZmFBBXWd6nxZ5nvmW1imsgCFIMTpGB2Q==",
+			"mode": 420,
+			"size": 7877
+		},
+		"src/WebView.ios.tsx": {
+			"checkedAt": 1769965447143,
+			"integrity": "sha512-1vwx3SyKRkORIiBk9NwjmRu7A1XDDrrzIzYp22qKLtFIOofivQyMpa3yspdno/hUABaP0y+XhqDNlYA5/sqD0A==",
+			"mode": 420,
+			"size": 8097
+		},
+		"src/WebView.macos.tsx": {
+			"checkedAt": 1769965447175,
+			"integrity": "sha512-2W+E185v3ZmnqQunufte1cCnDnBWnE2b42/hT169NSjnrULvjG1nc1w29bMqxGVrGoLt1+Ezk1G7IthpPAMeWg==",
+			"mode": 420,
+			"size": 5811
+		},
+		"src/WebView.tsx": {
+			"checkedAt": 1769965447179,
+			"integrity": "sha512-TAwab/HhBdHk7nc8DBxyBCV+NtmWXcin6MfIzcmAvpneJXCx5AQhQIFGOCb14CmUKwMF1W745a05cmBCiMoStw==",
+			"mode": 420,
+			"size": 635
+		},
+		"src/WebView.windows.tsx": {
+			"checkedAt": 1769965447267,
+			"integrity": "sha512-a7rTBNyJ/TaM7lErywcfn/BbzMKnMUujLy78V4yNQhir8eCE+nRnNFtPl76XWDTxikPlUMwOYJKUnSjPKnWN1A==",
+			"mode": 420,
+			"size": 5090
+		},
+		"src/WebViewShared.tsx": {
+			"checkedAt": 1769965447270,
+			"integrity": "sha512-dCr2Pl8veXd0s2Cf9RwbNK6IUCHr9PZYs4irgVrLCJHW/5htqgccnb/eH+HhwDgH1IuR2rQT1x3toxuTHbl0EA==",
+			"mode": 420,
+			"size": 7619
+		},
+		"windows/ReactNativeWebView/ReactNativeWebView.vcxproj": {
+			"checkedAt": 1769965447279,
+			"integrity": "sha512-krtn/YkpuiAo62nEKNA99Z7HZVrn4QWyAdYfifnn1PyAjg5Qw9m0G5+ROt9NVd6xL5jUiJXBh/02z7lf/mE8Hg==",
+			"mode": 420,
+			"size": 13290
+		},
+		"android/src/main/AndroidManifest.xml": {
+			"checkedAt": 1769965447292,
+			"integrity": "sha512-lcvZvIoYOKjrQ/7wGHO7VquzYq6iQozeFlR2qrGJeMY+WGsuMH9Cks6uWgBPCyEvJsYDGbSUoQB4NxI8dZOyrw==",
+			"mode": 420,
+			"size": 498
+		},
+		"android/src/main/AndroidManifestNew.xml": {
+			"checkedAt": 1769965447295,
+			"integrity": "sha512-YZ4vUqiDWwDj2jGUsd0B9cuGjA/F3FtnJ/a+QnJpKRMpDR98Bz/tGk+832G8D0pAAgtf+ROeyQQGWLh7PZeuLA==",
+			"mode": 420,
+			"size": 452
+		},
+		"android/src/main/res/xml/file_provider_paths.xml": {
+			"checkedAt": 1769965447307,
+			"integrity": "sha512-8SLLu6HE9E4F0luPL+jHX0s4uqXD6ntfD+RarGHqKNrx10IHSnBWt3/QIrKOm7wq4Z7ubdTWw/XG5eVyqR/bOQ==",
+			"mode": 420,
+			"size": 107
+		}
+	}
+}

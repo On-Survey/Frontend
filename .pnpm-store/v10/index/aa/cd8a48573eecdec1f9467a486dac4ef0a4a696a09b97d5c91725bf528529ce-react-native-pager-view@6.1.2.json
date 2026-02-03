@@ -1,0 +1,361 @@
+{
+	"name": "react-native-pager-view",
+	"version": "6.1.2",
+	"requiresBuild": false,
+	"files": {
+		"LICENSE": {
+			"checkedAt": 1769965444645,
+			"integrity": "sha512-Igu7783tih1xBcC4M2vQ36s435/2FAcbZ6BFDcBYRkfETvA/3UgQsYip7Gf1ZwQMxRzAjFTJVFvC2dBgLbNEQQ==",
+			"mode": 420,
+			"size": 1066
+		},
+		"android/build.gradle": {
+			"checkedAt": 1769965444660,
+			"integrity": "sha512-eTDAQ/MbF8AXxTXFpH5kMqI7MT5WFTHU94MYpeuk2gVePOjP8ws80DdwRn3H4WXOxIdDhDnDzyoLdEzTbv4Yng==",
+			"mode": 420,
+			"size": 4130
+		},
+		"ios/RCTConvert+UIPageViewControllerNavigationOrientation.h": {
+			"checkedAt": 1769965444690,
+			"integrity": "sha512-MzvesoY010zflhejrnLOC0owgLapfUeQNmXyMSqlADEOseaaCbzEPxr3Kw8O1zgvePAzQ2E7BvRrWGA4lBX1lA==",
+			"mode": 420,
+			"size": 175
+		},
+		"ios/RCTOnPageScrollEvent.h": {
+			"checkedAt": 1769965444701,
+			"integrity": "sha512-I+J0S0D75dK5aWfSTKv+8pfuk2JX+MRIrjdnAoqEMC2MDvX106X7lVwXdXPUoMUEkxa4ORPj7zA/xeghFdRWIw==",
+			"mode": 420,
+			"size": 341
+		},
+		"ios/RCTOnPageScrollStateChanged.h": {
+			"checkedAt": 1769965444704,
+			"integrity": "sha512-JpqvGoOpYB5DyXuzzv+nx9N3ODZUIZ18F7TcUeUO3A+EkzQeIy9xSKvUeJ3htTTmSIFYNKdOEH4qxVyILYOIzA==",
+			"mode": 420,
+			"size": 350
+		},
+		"ios/RCTOnPageSelected.h": {
+			"checkedAt": 1769965444708,
+			"integrity": "sha512-7IA0waQHgaCrYytUQGNQIPIqkcxrddrNZvA8r0xXrZtxxu+u9woqQ/Luyy78sX30xf/DUAgaMpeGMWn1RmjMLg==",
+			"mode": 420,
+			"size": 343
+		},
+		"ios/ReactNativePageView.h": {
+			"checkedAt": 1769965444720,
+			"integrity": "sha512-4uLBUWJA79BRPP/HlLucZvYo/Je/rRFSpTjnXCgFV8YSAFiLtEMDoGB6bas/DrFCmSyKgltZoNi3i2ZCmjjllQ==",
+			"mode": 420,
+			"size": 1220
+		},
+		"ios/ReactViewPagerManager.h": {
+			"checkedAt": 1769965444724,
+			"integrity": "sha512-DuuA/RISruNHDFAk8iz1Oy9szukNPQWmeg9PmYl7a0DfKJcr1s5EaN/uDk3hufcObm1N9eivh2Yc/zckSAXiSg==",
+			"mode": 420,
+			"size": 250
+		},
+		"ios/Fabric/RNCPagerViewComponentView.h": {
+			"checkedAt": 1769965444729,
+			"integrity": "sha512-zYc5C7dnBGlD4esBMkNmPstSW+jmQOcwSUCFKmgyC5lB3hZGOHjJaZ95a93b9b7hi8qH1vFlI4HnDYNp3fXv4Q==",
+			"mode": 420,
+			"size": 872
+		},
+		"ios/UIViewController+CreateExtension.h": {
+			"checkedAt": 1769965444737,
+			"integrity": "sha512-iUkSDSfYJamXiq07L2Axg/yZ4/SICKHoJyrBWdFTFjtuMJ5Lap0HaDlkjH7H3QzQ7qexkojCcJp8+dgk5QXorg==",
+			"mode": 420,
+			"size": 171
+		},
+		"lib/commonjs/index.js": {
+			"checkedAt": 1769965444739,
+			"integrity": "sha512-C8YZ35JzIaM+Wg/KwZf4BzYQyu8BCAhyEUKkUSUCV4RL7g4PN4iwqKVpjklqDucRtsE6AZm6OoTtU7hAMZoBZQ==",
+			"mode": 420,
+			"size": 245
+		},
+		"lib/module/index.js": {
+			"checkedAt": 1769965444744,
+			"integrity": "sha512-lPCY3K1mEW0NErL/wL+nuumqN3NS1CKDawpvcVHHmLYQHZEyqx8qe60+22xtOVR7XPxQLo6+LbWfKz4NS1Og/Q==",
+			"mode": 420,
+			"size": 100
+		},
+		"lib/commonjs/PagerView.js": {
+			"checkedAt": 1769965444749,
+			"integrity": "sha512-5qOEV2EbAGpMfsvTUYhPztalT2yRm6q4YQfnw9u1p8JUR/BiYgIw9iEOyZ0zNhn6Ea+e73uxdz9vaWlpsbR9mg==",
+			"mode": 420,
+			"size": 5639
+		},
+		"lib/module/PagerView.js": {
+			"checkedAt": 1769965444755,
+			"integrity": "sha512-LBmGuj7TFdxukHkoNbzhJKSc08Hq1UXh47RC/gH53dKT2ne2/9TPh6NLrR4hHpsmEX9T2m2dR2j67CwPZZpqTw==",
+			"mode": 420,
+			"size": 4195
+		},
+		"lib/commonjs/PagerViewNativeComponent.js": {
+			"checkedAt": 1769965444764,
+			"integrity": "sha512-VPMbH42BVdsH3xBVLB2hyZEwJwM74TfZh4PKx4cm6Xjn5gHvBkT1MJlJMUlyd/OkOwBqGGxUK2DAe57IOr3A1Q==",
+			"mode": 420,
+			"size": 792
+		},
+		"lib/module/PagerViewNativeComponent.js": {
+			"checkedAt": 1769965444794,
+			"integrity": "sha512-bzakewWstiJAsdu7F7gWLd5DZ2WLeqjejjSAEKy7aGsqGjsv3TyuFjKSxkY2drEEaBkpHq9X4Gt4jJVp1d1FGg==",
+			"mode": 420,
+			"size": 437
+		},
+		"lib/commonjs/utils.js": {
+			"checkedAt": 1769965444805,
+			"integrity": "sha512-u28wGhnka7lIDnv1qakmTcGcloVxaBlHJ9vC6eC0jYoKrP/wlhgenUcgNBDMMLMFtjKUBNElGHE3IfxLohYtVg==",
+			"mode": 420,
+			"size": 2058
+		},
+		"lib/module/utils.js": {
+			"checkedAt": 1769965444816,
+			"integrity": "sha512-+qAiMg56xCzgvSt9Giyt5PokFu8jUHoSFiUo8PqNdnDFTul3B19cLJzvx2YWUL5yXpjM6jvVgb/sskrpPscstg==",
+			"mode": 420,
+			"size": 681
+		},
+		"package.json": {
+			"checkedAt": 1769965444819,
+			"integrity": "sha512-2bb0H9HbG0b0loKmNE8kyS5Q9Zpwl/t2M1Je1EVbLUjrk0DLaLQR2vFMyO6SEmO1bycutyNkkfupeZy/EqY7Kw==",
+			"mode": 420,
+			"size": 3315
+		},
+		"android/src/main/java/com/reactnativepagerview/Helper.kt": {
+			"checkedAt": 1769965444826,
+			"integrity": "sha512-oLb7x1cycSgcthjJJOZrcSLpctuZX1OmIZx/9Jxrnr5PsE5lQe3Fi9sluGzU4HwWNtszmtRqN5Wd1O7kyDP2wQ==",
+			"mode": 420,
+			"size": 689
+		},
+		"android/src/main/java/com/reactnativepagerview/NestedScrollableHost.kt": {
+			"checkedAt": 1769965444828,
+			"integrity": "sha512-IfQrPauKkUTJFPj+10LxOkl3QnT6kIFIzKy2dX123gLSxmcl4J02j5plykdsPo6BZ1cAng9U97Px0df4JFOOiA==",
+			"mode": 420,
+			"size": 3620
+		},
+		"android/src/fabric/java/com/reactnativepagerview/PagerViewViewManager.kt": {
+			"checkedAt": 1769965444834,
+			"integrity": "sha512-vMcp4ddjETs44UU+QbVpJdHmv1ReA8hELFj2iWfLblqoyrGVd36qMlYu/uhG2QEjVuHMPGogiB7WjaKXzvfb4w==",
+			"mode": 420,
+			"size": 8535
+		},
+		"android/src/paper/java/com/reactnativepagerview/PagerViewViewManager.kt": {
+			"checkedAt": 1769965444869,
+			"integrity": "sha512-0xvNkj6t2e4dwe+xLlqX6Qe7IBbJ7BqQ7fsUHQYCJ+qEjtAFz0OcyRdDU3DjrpBKT3DpB3SFR6iQigw02LaCmA==",
+			"mode": 420,
+			"size": 7512
+		},
+		"android/src/main/java/com/reactnativepagerview/PagerViewViewManagerImpl.kt": {
+			"checkedAt": 1769965444880,
+			"integrity": "sha512-gSGnPr7VQY0q5wXp2Akyr/mo8snJ3mCo7kpTfU1cnbkZR9vcTrqcBavaNv3T4zFcmx2M9HFzYNEBEDoRS6HebQ==",
+			"mode": 420,
+			"size": 5923
+		},
+		"android/src/main/java/com/reactnativepagerview/PagerViewViewPackage.kt": {
+			"checkedAt": 1769965444915,
+			"integrity": "sha512-QIYtUIdGaCutreGHioWNbd1arwR1vRA826IMcZWB4Wh6tskOy9FgKzNh31/J4m80YDfE5Bn/45YfIivIxuCxbQ==",
+			"mode": 420,
+			"size": 554
+		},
+		"android/src/main/java/com/reactnativepagerview/event/PageScrollEvent.kt": {
+			"checkedAt": 1769965444923,
+			"integrity": "sha512-YyDhXJ35YGWcLDciePfPVLlEX4hlh8771jF0AxiKvPRxLyzQQaULVDD8Hh6TFjmT10ICBi3Ydh0kbzi6RfRH6Q==",
+			"mode": 420,
+			"size": 1598
+		},
+		"android/src/main/java/com/reactnativepagerview/event/PageScrollStateChangedEvent.kt": {
+			"checkedAt": 1769965444947,
+			"integrity": "sha512-ptR9PdPulAj+2ybS+HtlouK3vh0TlhkkLi5AOY1rrpEgLcCJv3nzlZr11qF9s0u4P7UDB5r/DWIUEA14TUIDSQ==",
+			"mode": 420,
+			"size": 1055
+		},
+		"android/src/main/java/com/reactnativepagerview/event/PageSelectedEvent.kt": {
+			"checkedAt": 1769965444966,
+			"integrity": "sha512-Bo28S7wRKOhVC6h8lm78ridrBUcCGB7ZFbi9MuxpJTfQfWMLaLT/VwSjmEve0nSWvg0IGivd3Xd/fj+np8qQ7A==",
+			"mode": 420,
+			"size": 996
+		},
+		"android/src/main/java/com/reactnativepagerview/ViewPagerAdapter.kt": {
+			"checkedAt": 1769965445024,
+			"integrity": "sha512-ZA7SAt0Y3rSUDQMCSaSLSe4P8+WJDAbkEfs8ajucBUnFMpS53x/sSe1IKfr1+udKBqBR3qAIQWCF0fBJpGiTlQ==",
+			"mode": 420,
+			"size": 1699
+		},
+		"android/src/main/java/com/reactnativepagerview/ViewPagerViewHolder.kt": {
+			"checkedAt": 1769965445056,
+			"integrity": "sha512-L9Eyh6iSnN3+7RCKEMsesLPY2LuVAq9PUDtOVWXggnKpT4bErKxrXhq0CyrxX5xQolI7uQuT+ZDn6vSvhrwCdw==",
+			"mode": 420,
+			"size": 724
+		},
+		"ios/RCTConvert+UIPageViewControllerNavigationOrientation.m": {
+			"checkedAt": 1769965445087,
+			"integrity": "sha512-1JQSnpt/gzmOpWEMzodKmNGNraN4LlaGthW5PmA3FzrNRSZcDxPZULCq4tJN2eAH9Foi1ouoSrLiFelHeNZyXg==",
+			"mode": 420,
+			"size": 615
+		},
+		"ios/RCTOnPageScrollEvent.m": {
+			"checkedAt": 1769965445107,
+			"integrity": "sha512-hZC6SmH4Ee3ecgRaAPv8NPOpRI1Ubzr2HZhEG0LUIOtO0EtkJGXS84jO/jwfCzdkHtRzaIV63Llv8iwI+y0b0g==",
+			"mode": 420,
+			"size": 1087
+		},
+		"ios/RCTOnPageScrollStateChanged.m": {
+			"checkedAt": 1769965445132,
+			"integrity": "sha512-0RTVuR4dVCSjnVY3yiu/sQFOFh0GdkSW44bThRkTVg1VV+lipDDp+JBJVZSMwf7HNpgX6KpRtl8HZRdOOx+FqA==",
+			"mode": 420,
+			"size": 1106
+		},
+		"ios/RCTOnPageSelected.m": {
+			"checkedAt": 1769965445170,
+			"integrity": "sha512-N6p2VRa7ODPbmyg2R6KWRk2i6zyu3gESpMyUq3oVI+o4/uGsAc20klVLYWvKcSTJOuYCUsR1NO2SvEREAh6Hnw==",
+			"mode": 420,
+			"size": 1085
+		},
+		"ios/ReactNativePageView.m": {
+			"checkedAt": 1769965445177,
+			"integrity": "sha512-vuStgCRwoOz8uNEx9EJr5UxIBxZIQhYzPSF371QajHyezlXk+HS8bfMv3V/XNrSNG5jr1ZJvqNoeS5ysktADcg==",
+			"mode": 420,
+			"size": 17895
+		},
+		"ios/ReactViewPagerManager.m": {
+			"checkedAt": 1769965445198,
+			"integrity": "sha512-v7QYc7f4S8639vC3HfBDgVoEV2zizICvgRwqVqB9AYP5KMFvPyULjegxW2dPMmc/sKwv4x0itxttPm+oUz0f5g==",
+			"mode": 420,
+			"size": 2987
+		},
+		"ios/UIViewController+CreateExtension.m": {
+			"checkedAt": 1769965445203,
+			"integrity": "sha512-I4UjSWpGwW9OsQyntfg+s18Snbgvd0DPvwpt9O198kyGePBw42iAGSyiZ4Jer69SaB4+Rj72cd0GecheoPo9tw==",
+			"mode": 420,
+			"size": 231
+		},
+		"lib/commonjs/index.js.map": {
+			"checkedAt": 1769965445214,
+			"integrity": "sha512-IGQxdpzIAVnFNU6n968XMRi5kzhpkyx2jZyrOt8ZpDD+WN4kkZInGpbQjXIreCiHDHIOfHvYkYTWkvTZmky7oQ==",
+			"mode": 420,
+			"size": 1040
+		},
+		"lib/module/index.js.map": {
+			"checkedAt": 1769965445216,
+			"integrity": "sha512-JIT1ZkHI9/NTlqs1FjTS1m8xIaz6ognvFdPj3C61K5TcPCmhiGVKQdZisyZ/emOksWbtpv/e3sXKcv/YiFfJKQ==",
+			"mode": 420,
+			"size": 1048
+		},
+		"lib/commonjs/PagerView.js.map": {
+			"checkedAt": 1769965445224,
+			"integrity": "sha512-+ndXj9vdurhtoN6YmMqBKOgJA/bfe3k6pMHjjsSASmGaeMcIhykrx4o9dRq+iMGcaggLo2bHfu4gNGHFuRqi1g==",
+			"mode": 420,
+			"size": 7395
+		},
+		"lib/module/PagerView.js.map": {
+			"checkedAt": 1769965445243,
+			"integrity": "sha512-GIugq6dPYLnK2mSZDDdg7Uy2bEfFe4tcIes1NzMKEWitygOnXI82FFKKsmgweSTUs3kfEfGoG08iY04oYHQIcw==",
+			"mode": 420,
+			"size": 7544
+		},
+		"lib/commonjs/PagerViewNativeComponent.js.map": {
+			"checkedAt": 1769965445255,
+			"integrity": "sha512-/KaD3Xlen7XBkXgO6P8qhOqPzUpek75yxbxdqzdoAHGbRWpcBZudxkF4kF8kEK8YNwcxfoeHLUTjI1llSMw53g==",
+			"mode": 420,
+			"size": 2558
+		},
+		"lib/module/PagerViewNativeComponent.js.map": {
+			"checkedAt": 1769965445262,
+			"integrity": "sha512-4Fg74PYLyWwwXqT9Z28iRo9v/1hdb6v242T8c5fJv3c1oVNW8RP3WWrQso5aq5nj4uaqaOsTa/erI+XqvjyHwQ==",
+			"mode": 420,
+			"size": 2582
+		},
+		"lib/commonjs/utils.js.map": {
+			"checkedAt": 1769965445282,
+			"integrity": "sha512-b5mMVwgzZULg3JylQ/pFBWuTZqgBJzSnUu5nRIWTotuMlfhWNDXK9djWGPrQVNJJxyFfe1zW7H6UypXxBe0XqA==",
+			"mode": 420,
+			"size": 1353
+		},
+		"lib/module/utils.js.map": {
+			"checkedAt": 1769965445289,
+			"integrity": "sha512-nafDpEXZjqjN0OfKjPYBsnSzcvc0N11s2rYAuGcIgQQmHXkYq0cEtAbuJKPBW0H891o0kXTG7baV07ZKde+MAA==",
+			"mode": 420,
+			"size": 1406
+		},
+		"README.md": {
+			"checkedAt": 1769965445322,
+			"integrity": "sha512-bvOUbSwOZqa5SQKQ+R5RUg7owWkHp9iGRTt0Qz8+Y1f0/BNWCRxN4BC6B9mt5wCBpwX4h5QV35wJixfaILfnEg==",
+			"mode": 420,
+			"size": 14824
+		},
+		"ios/Fabric/RNCPagerViewComponentView.mm": {
+			"checkedAt": 1769965445374,
+			"integrity": "sha512-mAG+3zM1vxU68/PCVFzkV00YJxhkfFZRYV4TLXvcGzQaza2UpdhuXDrePKKN+qSd1hOLk3rzWxyli7fVFQvAkg==",
+			"mode": 420,
+			"size": 16479
+		},
+		"ios/PagerView.xcodeproj/project.pbxproj": {
+			"checkedAt": 1769965445378,
+			"integrity": "sha512-DD8MvjiCUIqmqqilPTRUscrFIBQvTEoBSChCV68dovPEcy1YhCV9RCj5qt5THe6tJvpzXDLmzqW5a9ljL+kPBQ==",
+			"mode": 420,
+			"size": 8950
+		},
+		"react-native-pager-view.podspec": {
+			"checkedAt": 1769965445384,
+			"integrity": "sha512-TtXswgD4W4CCFN3AB57ByeIcBR09Y4Ll4nFn+OF3EWgN+0Gwmp1uRIInaWHe/LIcWYSDPQqnFD4l1XXQ46ihvA==",
+			"mode": 420,
+			"size": 1346
+		},
+		"android/gradle.properties": {
+			"checkedAt": 1769965445390,
+			"integrity": "sha512-o2WsmQj27xqw72CryJ8LebDupaRmfz4unkdSCDg3b/qpVxQUQtrNTn+RuoQjAIrUCj5gD4en2EdTNHbunt5hZg==",
+			"mode": 420,
+			"size": 152
+		},
+		"lib/typescript/index.d.ts": {
+			"checkedAt": 1769965445423,
+			"integrity": "sha512-iDC6rgFgEflJCCPjfVt822ho0jYm3He+4H95achH9ydzAPo3xYEHxpQOrufNwmINy/KrIwdXcwB168l0t/KRfQ==",
+			"mode": 420,
+			"size": 890
+		},
+		"lib/typescript/PagerView.d.ts": {
+			"checkedAt": 1769965445430,
+			"integrity": "sha512-720xrZFwORXSOgvTHhovezfhTvB2aGcJGyY3Hoqq7dS61oKic+94vnBxmFHE1DfTG9AeYNRiw5cXGh3E1SYc1A==",
+			"mode": 420,
+			"size": 2211
+		},
+		"lib/typescript/PagerViewNativeComponent.d.ts": {
+			"checkedAt": 1769965445436,
+			"integrity": "sha512-MqtScgca0x1bQtynbNgi6dMW+9HeRHJV5uf/88K7zdegQagEP41RQdz8wd4JXOGljiM7AZ8dl9K+gY6epK+E5g==",
+			"mode": 420,
+			"size": 1782
+		},
+		"src/PagerViewNativeComponent.ts": {
+			"checkedAt": 1769965445441,
+			"integrity": "sha512-eJykmtTJ82pMwydjBzWmrEQVkOM5VqdtHvM5R6Dm1qOtdyg/ruXxVm1fHtus9fqECzMv9DC5iX6wJurf8Odo/A==",
+			"mode": 420,
+			"size": 2125
+		},
+		"lib/typescript/utils.d.ts": {
+			"checkedAt": 1769965445446,
+			"integrity": "sha512-P7i9ZP7/Rg/71zA/jyU4O5uLcAA8RbHiWJLZ6pmgar/V5XyfTZ2bTWfeLoFfA+PsH7FSyoSHYsk2XsRfaDAhJA==",
+			"mode": 420,
+			"size": 145
+		},
+		"src/index.tsx": {
+			"checkedAt": 1769965445460,
+			"integrity": "sha512-6eEOt/ZH0xvcJIMX/hyqxRNMjQeMzGt8O8dNzCzrmqxmxQBY7NPgvrY6swHmwpom8Wl1MTQJ38pjpDF9waiy4Q==",
+			"mode": 420,
+			"size": 888
+		},
+		"src/PagerView.tsx": {
+			"checkedAt": 1769965445465,
+			"integrity": "sha512-Me/wh6CFvknQMgCb9kSpH+a4TTwDNWRbGWVKvbv6ms+PmMYcORohTKyze8K1RnHU5GNsaYA5hmpCpnwXIsebOQ==",
+			"mode": 420,
+			"size": 4486
+		},
+		"src/utils.tsx": {
+			"checkedAt": 1769965445468,
+			"integrity": "sha512-7PY3EwgjBqwXL5tNoIzC3Sk/+OSFRAZNNcOkulnSbdo+lDbTBu7FdeHrIxwITHCRb1LaqB+CKUQaMSW0HCM9+A==",
+			"mode": 420,
+			"size": 679
+		},
+		"android/src/main/AndroidManifest.xml": {
+			"checkedAt": 1769965445477,
+			"integrity": "sha512-ukI3yge2L2iIv6NLlqkImyeUNMEUFPpua28/uj3QTSlgRwgvkYKL2f65IQo5gALMMQAfjYWAlgFY53ERstXFoA==",
+			"mode": 420,
+			"size": 128
+		}
+	}
+}

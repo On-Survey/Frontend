@@ -1,0 +1,79 @@
+{
+	"name": "@toss/tds-mobile-ait",
+	"version": "2.2.0",
+	"requiresBuild": false,
+	"files": {
+		"dist/cjs/index.js": {
+			"checkedAt": 1769965409151,
+			"integrity": "sha512-8/n5OA/Hzqi6Sgb/PE4q4M+83bc2VkswauGF6G7XH39ATf0FHBZP0GcfntI/du1Mi72gcAvZ/3p9TCDHmh6jmg==",
+			"mode": 420,
+			"size": 32602
+		},
+		"dist/esm/index.js": {
+			"checkedAt": 1769965409152,
+			"integrity": "sha512-ppT/uuBlJpSZZQ1Gkyn+Owf+McigBDetQUIhTyQcRs+RfmtF8DFlAP/gwDkWyl+0xbSQQwcw6h1aeI81Jz8bBg==",
+			"mode": 420,
+			"size": 32144
+		},
+		"dist/cjs/package.json": {
+			"checkedAt": 1769965409154,
+			"integrity": "sha512-31R+Wv1QpdoIo1QQe0371/hxoUPUt3ievB95FicybOeaoWgsFUpgX7m6Jx3qmIYimZzqHBSXbJJkrliPK4zeLg==",
+			"mode": 420,
+			"size": 21
+		},
+		"package.json": {
+			"checkedAt": 1769965409155,
+			"integrity": "sha512-jfr2lRye6FUem9TXPM1KZEN2jdkzcBT+rgjGf+JfKK99GcqRnYQ9tZniO2QXQMy1PpbsVwi/npeDOw2nja2Uhw==",
+			"mode": 420,
+			"size": 944
+		},
+		"dist/cjs/GlobalCSSVariables.d.ts": {
+			"checkedAt": 1769965409156,
+			"integrity": "sha512-fv/M0l9eBQLUuimAO2nimYbHytrSxM4IL7wo2b2qV6pcM13/v0uJw0pb5yQX9WNELjunPsBZqUxgKZgZPL66ow==",
+			"mode": 420,
+			"size": 87
+		},
+		"dist/esm/GlobalCSSVariables.d.ts": {
+			"checkedAt": 1769965409156,
+			"integrity": "sha512-fv/M0l9eBQLUuimAO2nimYbHytrSxM4IL7wo2b2qV6pcM13/v0uJw0pb5yQX9WNELjunPsBZqUxgKZgZPL66ow==",
+			"mode": 420,
+			"size": 87
+		},
+		"dist/cjs/index.d.ts": {
+			"checkedAt": 1769965409157,
+			"integrity": "sha512-TQse6UjrDvF+3NFiTZ7EwBQXBrYDedeywvlcH9V35R4ibZxQzW5R5ZCm4SbyDKgAlRK3M2WUi7Hc7wZdF8wwzA==",
+			"mode": 420,
+			"size": 98
+		},
+		"dist/esm/index.d.ts": {
+			"checkedAt": 1769965409157,
+			"integrity": "sha512-TQse6UjrDvF+3NFiTZ7EwBQXBrYDedeywvlcH9V35R4ibZxQzW5R5ZCm4SbyDKgAlRK3M2WUi7Hc7wZdF8wwzA==",
+			"mode": 420,
+			"size": 98
+		},
+		"dist/cjs/SafeAreaInsets.d.ts": {
+			"checkedAt": 1769965409160,
+			"integrity": "sha512-wONhMB1bYaLld50hBZlgHwaMFv8XOVVFDVJxjCsB2G3Ee6QOL8F0ZNGZtY9kHH8Fd1eBclc41eoJyvFqUjZvGg==",
+			"mode": 420,
+			"size": 207
+		},
+		"dist/esm/SafeAreaInsets.d.ts": {
+			"checkedAt": 1769965409160,
+			"integrity": "sha512-wONhMB1bYaLld50hBZlgHwaMFv8XOVVFDVJxjCsB2G3Ee6QOL8F0ZNGZtY9kHH8Fd1eBclc41eoJyvFqUjZvGg==",
+			"mode": 420,
+			"size": 207
+		},
+		"dist/cjs/TDSMobileAITProvider.d.ts": {
+			"checkedAt": 1769965409162,
+			"integrity": "sha512-2E0odq2EfwoU77GX781TU6PwMAkN2UIflWdjiOKQ8MbzqJaZ3RN9rE3A+Br8cJLxpBEJnqsj/nVzY//peeJd6g==",
+			"mode": 420,
+			"size": 588
+		},
+		"dist/esm/TDSMobileAITProvider.d.ts": {
+			"checkedAt": 1769965409162,
+			"integrity": "sha512-2E0odq2EfwoU77GX781TU6PwMAkN2UIflWdjiOKQ8MbzqJaZ3RN9rE3A+Br8cJLxpBEJnqsj/nVzY//peeJd6g==",
+			"mode": 420,
+			"size": 588
+		}
+	}
+}

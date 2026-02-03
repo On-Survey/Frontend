@@ -1,0 +1,43 @@
+{
+	"name": "@toss/tds-color-utils",
+	"version": "0.0.2",
+	"requiresBuild": false,
+	"files": {
+		"dist/cjs/index.js": {
+			"checkedAt": 1769965519806,
+			"integrity": "sha512-nji2hPBNxda3G8khQp85wKddc1OrjyN9iZIXeGNpyn1fCUxiq2UeD4kHSso0dwqmbVO4lz0d+YW9q2hKI6eonQ==",
+			"mode": 420,
+			"size": 28081
+		},
+		"dist/esm/index.js": {
+			"checkedAt": 1769965519824,
+			"integrity": "sha512-9wLkOfB0GEhiNl//JQfZg6pDo74dTYCYLkTM7HKancACIEkwKiI/Dq1SA2Gcsp+Wfe3OgUT5yaDz4k3nd0bZVA==",
+			"mode": 420,
+			"size": 27963
+		},
+		"dist/cjs/package.json": {
+			"checkedAt": 1769965519841,
+			"integrity": "sha512-31R+Wv1QpdoIo1QQe0371/hxoUPUt3ievB95FicybOeaoWgsFUpgX7m6Jx3qmIYimZzqHBSXbJJkrliPK4zeLg==",
+			"mode": 420,
+			"size": 21
+		},
+		"package.json": {
+			"checkedAt": 1769965519842,
+			"integrity": "sha512-xXWW//k4pl51r2Kg6RyFCIICub+u+EH3ANiv5OlUzy4uDvW/otK19upo3jfxKJo7ZT/wJ9q3a/dVt48Dpwk7mw==",
+			"mode": 420,
+			"size": 783
+		},
+		"dist/cjs/index.d.ts": {
+			"checkedAt": 1769965519845,
+			"integrity": "sha512-eLjiMs9T4ZWLyxQlvNpPHkFUQa/duyHE7QvV82SFPc3Um/6x9jSPbpjz8uP4XbQZgQqamtqs9Wd+R2yJUiqyfg==",
+			"mode": 420,
+			"size": 16379
+		},
+		"dist/esm/index.d.ts": {
+			"checkedAt": 1769965519845,
+			"integrity": "sha512-eLjiMs9T4ZWLyxQlvNpPHkFUQa/duyHE7QvV82SFPc3Um/6x9jSPbpjz8uP4XbQZgQqamtqs9Wd+R2yJUiqyfg==",
+			"mode": 420,
+			"size": 16379
+		}
+	}
+}

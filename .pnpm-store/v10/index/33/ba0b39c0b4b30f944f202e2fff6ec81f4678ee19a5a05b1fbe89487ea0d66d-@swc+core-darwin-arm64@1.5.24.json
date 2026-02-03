@@ -1,0 +1,25 @@
+{
+	"name": "@swc/core-darwin-arm64",
+	"version": "1.5.24",
+	"requiresBuild": false,
+	"files": {
+		"package.json": {
+			"checkedAt": 1769965492646,
+			"integrity": "sha512-3wgXOuEFQbCHW0p1j/2K4vQMI4La3eJS2AIKDRZqCHKGVbX8qDnAy1FqwAmzdh6biyAqo5g3xMp/8EwOxmkLKA==",
+			"mode": 420,
+			"size": 798
+		},
+		"README.md": {
+			"checkedAt": 1769965492648,
+			"integrity": "sha512-Uwb0zA1nV+TzlcNAUt5nuJEGT1OVy49igoC8ZWEkBnAtysPH/bwQMWr0v03KIiGtoY6vfz5W1F1UhXdF4F6RZw==",
+			"mode": 420,
+			"size": 88
+		},
+		"swc.darwin-arm64.node": {
+			"checkedAt": 1769965493425,
+			"integrity": "sha512-5ZgH3FPeXsIJbdQEKIKjqG7AfqgcRRuLu167gc+cscdJdKh2frFp6YUS5VbhJ53DvGqOY/pus/pkKsE9bTb/rA==",
+			"mode": 420,
+			"size": 37662616
+		}
+	}
+}
