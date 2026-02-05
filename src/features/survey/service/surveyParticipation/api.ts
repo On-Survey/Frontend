@@ -52,6 +52,8 @@ export const getSurveyQuestions = async (
 	info: TransformedSurveyQuestion[];
 	sectionTitle?: string;
 	sectionDescription?: string;
+	currSection?: number;
+	nextSection?: number;
 }> => {
 	const result = await apiCall<SurveyQuestionsInfo>({
 		method: "GET",
@@ -110,6 +112,8 @@ export const getSurveyQuestions = async (
 		info: transformed,
 		sectionTitle: result.sectionTitle,
 		sectionDescription: result.sectionDescription,
+		currSection: result.currSection,
+		nextSection: result.nextSection,
 	};
 };
 
