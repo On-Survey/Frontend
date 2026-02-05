@@ -108,6 +108,8 @@ export interface SurveyQuestionsInfo {
 	info: SurveyParticipationQuestion[];
 	sectionTitle?: string; // 섹션 제목
 	sectionDescription?: string; // 섹션 설명
+	currSection?: number; // 현재 섹션 번호
+	nextSection?: number; // 다음 섹션 번호 (0이면 설문 종료)
 }
 
 // 섹션 타입
