@@ -1,19 +1,14 @@
 import { colors } from "@toss/tds-colors";
 import { Asset, Text } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
 
 interface BottomNavigationProps {
 	currentPage: "home" | "mysurvey" | "more";
-	onHomeClick?: () => void;
-	onMySurveyClick?: () => void;
-	onMyPageClick?: () => void;
 }
 
-export const BottomNavigation = ({
-	currentPage,
-	onHomeClick,
-	onMySurveyClick,
-	onMyPageClick,
-}: BottomNavigationProps) => {
+export const BottomNavigation = ({ currentPage }: BottomNavigationProps) => {
+	const navigate = useNavigate();
+
 	const getIconColor = (page: string) => {
 		return currentPage === page ? colors.grey800 : colors.grey400;
 	};
@@ -22,29 +17,9 @@ export const BottomNavigation = ({
 		return currentPage === page ? colors.grey900 : colors.grey600;
 	};
 
-	const handleHomeClick = () => {
-		if (onHomeClick) {
-			onHomeClick();
-		} else {
-			window.location.href = "/home";
-		}
-	};
-
-	const handleMySurveyClick = () => {
-		if (onMySurveyClick) {
-			onMySurveyClick();
-		} else {
-			window.location.href = "/mysurvey";
-		}
-	};
-
-	const handleMyPageClick = () => {
-		if (onMyPageClick) {
-			onMyPageClick();
-		} else {
-			window.location.href = "/mypage";
-		}
-	};
+	const handleHomeClick = () => navigate("/home");
+	const handleMySurveyClick = () => navigate("/mysurvey");
+	const handleMyPageClick = () => navigate("/mypage");
 
 	return (
 		<div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 mb-3 rounded-[30px] shadow-[0px_20px_20px_-16px_#191F2911,0px_40px_200px_0px_#191F293f]">

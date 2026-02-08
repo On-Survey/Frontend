@@ -13,13 +13,13 @@ const getTopicTag = (topicId: string): string => {
 interface CustomSurveyListProps {
 	surveys: SurveyListItem[];
 	userName: string;
-	onViewAll?: () => void;
+	viewAllPath?: string;
 }
 
 export const CustomSurveyList = ({
 	surveys,
 	userName,
-	onViewAll,
+	viewAllPath = "/surveyList?type=recommended",
 }: CustomSurveyListProps) => {
 	const navigate = useNavigate();
 
@@ -47,7 +47,11 @@ export const CustomSurveyList = ({
 					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
 						{userName}님 맞춤 설문
 					</Text>
-					<button type="button" onClick={onViewAll} aria-label="더보기">
+					<button
+						type="button"
+						onClick={() => navigate(viewAllPath)}
+						aria-label="더보기"
+					>
 						<Text color={adaptive.grey700} typography="t6">
 							더보기
 						</Text>

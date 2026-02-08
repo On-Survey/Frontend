@@ -12,7 +12,6 @@ export const MySurvey = () => {
 
 	const handleAddSurvey = () =>
 		navigate("/createFormStart", { state: { source: "mysurvey_button" } });
-	const handleMyPage = () => navigate("/mypage");
 
 	return (
 		<div className="flex flex-col w-full h-screen bg-white">
@@ -36,7 +35,7 @@ export const MySurvey = () => {
 				</Button>
 			</div>
 
-			<BottomNavigation currentPage="mysurvey" onMyPageClick={handleMyPage} />
+			<BottomNavigation currentPage="mysurvey" />
 		</div>
 	);
 };

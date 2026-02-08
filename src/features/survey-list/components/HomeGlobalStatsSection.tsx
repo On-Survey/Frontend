@@ -1,18 +1,27 @@
+import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, ProgressBar, Text } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
 import homeBanner from "../../../assets/HomeBanner.png";
 import { useGlobalStats } from "../hooks/useGlobalStats";
 
 export interface HomeGlobalStatsSectionProps {
 	totalPromotionAmount: number;
-	onQuizClick: () => void;
 }
 
 export const HomeGlobalStatsSection = ({
 	totalPromotionAmount,
-	onQuizClick,
 }: HomeGlobalStatsSectionProps) => {
+	const navigate = useNavigate();
 	const { data: globalStats } = useGlobalStats();
+
+	const handleQuizClick = () => {
+		pushGtmEvent({
+			event: "start_screening_quiz",
+			source: "메인에서 진입(main)",
+		});
+		navigate("/oxScreening");
+	};
 
 	return (
 		<>
@@ -41,7 +50,7 @@ export const HomeGlobalStatsSection = ({
 				<button
 					type="button"
 					className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay cursor-pointer border-0 bg-transparent p-0 w-full h-full"
-					onClick={onQuizClick}
+					onClick={handleQuizClick}
 				/>
 				<div className="relative p-6 flex flex-col h-full">
 					<div className="flex-1 flex flex-col justify-between">
@@ -62,7 +71,7 @@ export const HomeGlobalStatsSection = ({
 							color="light"
 							variant="weak"
 							className="max-w-20 p-0.1! z-999"
-							onClick={onQuizClick}
+							onClick={handleQuizClick}
 							style={
 								{
 									"--button-background-color": "rgba(7, 44, 77, 0.20)",

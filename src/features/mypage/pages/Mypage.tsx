@@ -33,14 +33,6 @@ export const Mypage = () => {
 		};
 	}, [memberInfo]);
 
-	const handleHome = () => {
-		navigate("/home");
-	};
-
-	const handleMySurvey = () => {
-		navigate("/mysurvey");
-	};
-
 	const handleOrderHistory = () => {
 		navigate("/mypage/orderHistory");
 	};
@@ -226,11 +218,7 @@ export const Mypage = () => {
 				</List>
 			</div>
 
-			<BottomNavigation
-				currentPage="more"
-				onHomeClick={handleHome}
-				onMySurveyClick={handleMySurvey}
-			/>
+			<BottomNavigation currentPage="more" />
 		</div>
 	);
 };

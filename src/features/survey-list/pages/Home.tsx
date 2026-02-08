@@ -65,12 +65,6 @@ export const Home = () => {
 			method: "로그인 수단 (Toss)",
 		});
 	}, []);
-
-	const handleMySurvey = () => navigate("/mysurvey");
-	const handleMyPage = () => navigate("/mypage");
-	const handleViewAllRecommended = () =>
-		navigate("/surveyList?type=recommended");
-	const handleViewAllImpending = () => navigate("/surveyList?type=impending");
 	const handleCreateSurvey = () => {
 		pushGtmEvent({
 			event: "main_banner_click",
@@ -81,15 +75,6 @@ export const Home = () => {
 			state: { source: "main_cta" },
 		}); //구글폼 설문 랜딩 페이지로 이동
 	};
-	const handleQuizClick = () => {
-		pushGtmEvent({
-			event: "start_screening_quiz",
-			// pagePath: "/home",
-			source: "메인에서 진입(main)",
-		});
-		navigate("/oxScreening");
-	};
-
 	const customSurveysToShow = recommended.slice(0, 3);
 	const urgentSurveysToShow = impending.slice(0, 3);
 
@@ -108,10 +93,7 @@ export const Home = () => {
 			/>
 			<div className="flex flex-col w-full min-h-screen">
 				<Suspense fallback={<HomeGlobalStatsSectionLoading />}>
-					<HomeGlobalStatsSection
-						totalPromotionAmount={totalPromotionAmount}
-						onQuizClick={handleQuizClick}
-					/>
+					<HomeGlobalStatsSection totalPromotionAmount={totalPromotionAmount} />
 				</Suspense>
 
 				<div className="px-4 pb-4">
@@ -184,29 +166,19 @@ export const Home = () => {
 										<CustomSurveyList
 											surveys={customSurveysToShow}
 											userName={userInfo.result.name}
-											onViewAll={handleViewAllRecommended}
 										/>
 									)}
 
 									<Border variant="height16" />
 
-									<UrgentSurveyList
-										surveys={urgentSurveysToShow}
-										onViewAll={handleViewAllImpending}
-									/>
+									<UrgentSurveyList surveys={urgentSurveysToShow} />
 								</>
 							)}
 						</>
 					)}
 				</ErrorBoundary>
-
 				<div className="mb-24" />
-
-				<BottomNavigation
-					currentPage="home"
-					onMySurveyClick={handleMySurvey}
-					onMyPageClick={handleMyPage}
-				/>
+				<BottomNavigation currentPage="home" />
 			</div>
 		</>
 	);

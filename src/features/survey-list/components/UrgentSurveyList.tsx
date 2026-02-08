@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 
 interface UrgentSurveyListProps {
 	surveys: SurveyListItem[];
-	onViewAll?: () => void;
+	viewAllPath?: string;
 }
 
 export const UrgentSurveyList = ({
 	surveys,
-	onViewAll,
+	viewAllPath = "/surveyList?type=impending",
 }: UrgentSurveyListProps) => {
 	const navigate = useNavigate();
 
@@ -80,7 +80,11 @@ export const UrgentSurveyList = ({
 					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
 						마감 임박 설문
 					</Text>
-					<button type="button" onClick={onViewAll} aria-label="더보기">
+					<button
+						type="button"
+						onClick={() => navigate(viewAllPath)}
+						aria-label="더보기"
+					>
 						<Text color={adaptive.grey700} typography="t6">
 							더보기
 						</Text>
