@@ -3,8 +3,8 @@ import { List, ListRow } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
 const MENU_ITEMS = [
-	{ label: "코인 사용 내역", path: "/mypage/orderHistory" },
-	{ label: "결제내역", path: "/mypage/coinHistory" },
+	{ label: "코인 사용 내역", path: "/mypage/coinHistory" },
+	{ label: "결제내역", path: "/mypage/orderHistory" },
 	{ label: "프로모션 안내 및 유의사항", path: "/mypage/promotionNotice" },
 	{ label: "환불 정책", path: "/mypage/refundPolicy" },
 	{ label: "서비스 이용약관", path: "/mypage/termsOfService" },

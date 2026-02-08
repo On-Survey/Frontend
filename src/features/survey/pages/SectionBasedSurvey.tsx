@@ -136,7 +136,7 @@ export const SectionBasedSurvey = () => {
 		setSelectedDateQuestionId(null);
 	};
 
-	const validateSection = () => {
+	const validateSection = (): Record<number, string> => {
 		const errors = validateSectionAnswers(questions, answers);
 		setQuestionErrors(errors);
 		setExpandedQuestions((p) => {
@@ -146,7 +146,20 @@ export const SectionBasedSurvey = () => {
 			}
 			return next;
 		});
-		return Object.keys(errors).length === 0;
+		return errors;
+	};
+
+	const scrollToFirstError = (errors: Record<number, string>) => {
+		const firstErrorQuestionId = Object.keys(errors)[0];
+		if (firstErrorQuestionId) {
+			const questionId = parseInt(firstErrorQuestionId, 10);
+			const element = document.querySelector(
+				`[data-question-id="${questionId}"]`,
+			);
+			if (element) {
+				element.scrollIntoView({ behavior: "smooth", block: "center" });
+			}
+		}
 	};
 
 	const submitCurrentSectionAnswers = async () => {
@@ -184,18 +197,9 @@ export const SectionBasedSurvey = () => {
 			source: locationState?.source ?? "main",
 		});
 
-		if (!validateSection()) {
-			// 에러가 있는 경우 첫 번째 에러 문항으로 스크롤
-			const firstErrorQuestionId = Object.keys(questionErrors)[0];
-			if (firstErrorQuestionId) {
-				const questionId = parseInt(firstErrorQuestionId, 10);
-				const element = document.querySelector(
-					`[data-question-id="${questionId}"]`,
-				);
-				if (element) {
-					element.scrollIntoView({ behavior: "smooth", block: "center" });
-				}
-			}
+		const errors = validateSection();
+		if (Object.keys(errors).length > 0) {
+			scrollToFirstError(errors);
 			return;
 		}
 
@@ -252,17 +256,9 @@ export const SectionBasedSurvey = () => {
 			});
 		}
 
-		if (!validateSection()) {
-			const firstErrorQuestionId = Object.keys(questionErrors)[0];
-			if (firstErrorQuestionId) {
-				const questionId = parseInt(firstErrorQuestionId, 10);
-				const element = document.querySelector(
-					`[data-question-id="${questionId}"]`,
-				);
-				if (element) {
-					element.scrollIntoView({ behavior: "smooth", block: "center" });
-				}
-			}
+		const errors = validateSection();
+		if (Object.keys(errors).length > 0) {
+			scrollToFirstError(errors);
 			return;
 		}
 

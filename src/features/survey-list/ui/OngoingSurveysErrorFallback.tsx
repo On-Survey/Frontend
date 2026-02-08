@@ -3,15 +3,16 @@ import { Button, Text } from "@toss/tds-mobile";
 import type { FallbackProps } from "react-error-boundary";
 
 export interface OngoingSurveysErrorFallbackProps extends FallbackProps {
-	onRetry?: () => void;
+	/** refetch 완료 후 ErrorBoundary를 리셋합니다. Promise를 반환하면 resolve 후 리셋합니다. */
+	onRetry?: () => unknown;
 }
 
 export const OngoingSurveysErrorFallback = ({
 	resetErrorBoundary,
 	onRetry,
 }: OngoingSurveysErrorFallbackProps) => {
-	const handleRetry = () => {
-		onRetry?.();
+	const handleRetry = async () => {
+		await Promise.resolve(onRetry?.());
 		resetErrorBoundary();
 	};
 

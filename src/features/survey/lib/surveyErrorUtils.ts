@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { getRefreshToken } from "@shared/lib/tokenManager";
 import type { ReturnTo } from "@shared/types/navigation";
 import type { SurveyListItem } from "@shared/types/surveyList";
@@ -30,6 +31,7 @@ export const getAuthErrorFromException = async (
 	const is401Error = error.response?.status === 401;
 
 	if (is401Error || (isNetworkError && !(await getRefreshToken()))) {
+		Sentry.captureException(err);
 		return {
 			open: true,
 			title: "로그인이 필요합니다",
@@ -50,6 +52,7 @@ export const getAuthErrorFromException = async (
 	}
 
 	if (error.response?.status === 403) {
+		Sentry.captureException(err);
 		return {
 			open: true,
 			title: "권한이 없는 설문입니다",
