@@ -135,12 +135,20 @@ export const PaymentProductPage = () => {
 				const response = await IAP.getProductItemList();
 				const products = response?.products ?? [];
 
-				// 가격 기준 오름차순 sorting
-				const sortedProducts = [...products].sort((a, b) => {
-					const priceA = parseInt(a.displayAmount.replace(/[^\d]/g, ""), 10);
-					const priceB = parseInt(b.displayAmount.replace(/[^\d]/g, ""), 10);
-					return priceA - priceB;
-				});
+				const getPrice = (p: IapProductListItem) =>
+					parseInt(p.displayAmount.replace(/[^\d]/g, ""), 10) || 0;
+				const byPriceAsc = (a: IapProductListItem, b: IapProductListItem) =>
+					getPrice(a) - getPrice(b);
+
+				// 큐시즘 라벨 상품 먼저, 그다음 나머지. 각 그룹은 가격 낮은순
+				const qusizm = products.filter((p) =>
+					p.displayName?.includes("큐시즘"),
+				);
+				const rest = products.filter((p) => !p.displayName?.includes("큐시즘"));
+				const sortedProducts = [
+					...qusizm.sort(byPriceAsc),
+					...rest.sort(byPriceAsc),
+				];
 
 				setProducts(sortedProducts);
 				const userInfoResult = await getUserInfo();
