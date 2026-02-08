@@ -1,32 +1,54 @@
 import { closeView } from "@apps-in-toss/web-framework";
-import type { OngoingSurveySummary } from "@features/survey-list/service/surveyList/types";
 import { BottomNavigation } from "@shared/components/BottomNavigation";
 import { ExitConfirmDialog } from "@shared/components/ExitConfirmDialog";
-import { topics } from "@shared/constants/topics";
 import { useUserInfo } from "@shared/contexts/UserContext";
 import { useModal } from "@shared/hooks/UseToggle";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
-import { formatRemainingTime } from "@shared/lib/FormatDate";
 import { pushGtmEvent } from "@shared/lib/gtm";
-import { getUniqueSurveyIdsFromArrays } from "@shared/lib/surveyListUtils";
-import type { SurveyListItem } from "@shared/types/surveyList";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, Border, Button, ProgressBar, Text } from "@toss/tds-mobile";
-import { useEffect, useMemo } from "react";
+import { Border, Text } from "@toss/tds-mobile";
+import { Suspense, useEffect } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useNavigate } from "react-router-dom";
 import formBanner from "../../../assets/formBanner.png";
-import homeBanner from "../../../assets/HomeBanner.png";
 import { CustomSurveyList } from "../components/CustomSurveyList";
+import { HomeGlobalStatsSection } from "../components/HomeGlobalStatsSection";
 import { UrgentSurveyList } from "../components/UrgentSurveyList";
-import { useGlobalStats } from "../hooks/useGlobalStats";
 import { useOngoingSurveys } from "../hooks/useOngoingSurveys";
+import { useProcessedOngoingSurveys } from "../hooks/useProcessedOngoingSurveys";
+import { HomeGlobalStatsSectionLoading } from "../ui/HomeGlobalStatsSectionLoading";
+import { OngoingSurveysErrorFallback } from "../ui/OngoingSurveysErrorFallback";
+import { ThrowOnError } from "../ui/ThrowOnError";
 export const Home = () => {
 	const navigate = useNavigate();
 
 	const { userInfo } = useUserInfo();
 
-	const { data: globalStats } = useGlobalStats();
-	const { data: result, error: ongoingSurveysError } = useOngoingSurveys();
+	const {
+		data: result,
+		error: ongoingSurveysError,
+		refetch: refetchOngoingSurveys,
+	} = useOngoingSurveys();
+
+	const { recommended, impending, totalPromotionAmount } =
+		useProcessedOngoingSurveys(result);
+
+	const {
+		isOpen: isConfirmDialogOpen,
+		handleOpen: handleConfirmDialogOpen,
+		handleClose: handleConfirmDialogClose,
+	} = useModal(false);
+
+	const handleConfirmDialogCancel = () => {
+		handleConfirmDialogClose();
+	};
+
+	const handleConfirmDialogConfirm = () => {
+		handleConfirmDialogClose();
+		closeView();
+	};
+
+	useBackEventListener(handleConfirmDialogOpen);
 
 	// 온보딩 미완료 시 온보딩 페이지로 리다이렉트
 	useEffect(() => {
@@ -42,14 +64,6 @@ export const Home = () => {
 			pagePath: "/home",
 			method: "로그인 수단 (Toss)",
 		});
-
-		// pushGtmEvent({
-		// 	event: "user_info",
-		// 	login_method: "toss",
-		// 	user_region: userInfo?.result.residence ?? "",
-		// 	user_age: userInfo?.result.age ?? "",
-		// 	user_gender: userInfo?.result.gender ?? "",
-		// });
 	}, []);
 
 	const handleMySurvey = () => navigate("/mysurvey");
@@ -76,89 +90,14 @@ export const Home = () => {
 		navigate("/oxScreening");
 	};
 
-	const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
-
-	const { recommended, impending, totalPromotionAmount } = useMemo(() => {
-		if (!result) {
-			return {
-				recommended: [],
-				impending: [],
-				totalPromotionAmount: 0,
-			};
-		}
-
-		const mapSurveyToItem = (survey: OngoingSurveySummary): SurveyListItem => {
-			const topicId =
-				(survey.interests && survey.interests.length > 0
-					? survey.interests[0]
-					: survey.interest) ?? DEFAULT_TOPIC;
-			const topic = topics.find((t) => t.id === topicId);
-			const iconSrc = topic?.icon.type === "image" ? topic.icon.src : undefined;
-
-			const remainingTime = formatRemainingTime(survey.deadline);
-			return {
-				id: String(survey.surveyId),
-				topicId: topicId as SurveyListItem["topicId"],
-				title: survey.title,
-				iconType: iconSrc ? "image" : "icon",
-				iconSrc,
-				iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
-				description: survey.description,
-				remainingTimeText: remainingTime,
-				isClosed: remainingTime === "마감됨",
-				isFree: survey.isFree,
-				responseCount: survey.responseCount,
-			};
-		};
-
-		// 마감된 설문 필터링
-		const filterClosedSurveys = (surveys?: OngoingSurveySummary[]) => {
-			if (!surveys) return [];
-			return surveys.filter((survey) => {
-				const remainingTime = formatRemainingTime(survey.deadline);
-				return remainingTime !== "마감됨";
-			});
-		};
-
-		const filteredRecommended = filterClosedSurveys(result.recommended);
-		const filteredImpending = filterClosedSurveys(result.impending);
-
-		const rec = filteredRecommended.map(mapSurveyToItem);
-		const imp = filteredImpending.map(mapSurveyToItem);
-
-		const uniqueSurveyIds = getUniqueSurveyIdsFromArrays(
-			result.recommended,
-			result.impending,
-		);
-
-		const totalAmount = uniqueSurveyIds.size * 200;
-
-		return {
-			recommended: rec,
-			impending: imp,
-			totalPromotionAmount: totalAmount,
-		};
-	}, [result]);
-
 	const customSurveysToShow = recommended.slice(0, 3);
 	const urgentSurveysToShow = impending.slice(0, 3);
 
-	const {
-		isOpen: isConfirmDialogOpen,
-		handleOpen: handleConfirmDialogOpen,
-		handleClose: handleConfirmDialogClose,
-	} = useModal(false);
-
-	const handleConfirmDialogCancel = () => {
-		handleConfirmDialogClose();
-	};
-
-	const handleConfirmDialogConfirm = () => {
-		handleConfirmDialogClose();
-		closeView();
-	};
-
-	useBackEventListener(handleConfirmDialogOpen);
+	const hasNoSurveys =
+		result != null &&
+		!ongoingSurveysError &&
+		recommended.length === 0 &&
+		impending.length === 0;
 
 	return (
 		<>
@@ -168,108 +107,12 @@ export const Home = () => {
 				onConfirm={handleConfirmDialogConfirm}
 			/>
 			<div className="flex flex-col w-full min-h-screen">
-				<div className="p-4">
-					<div className="w-full h-fit rounded-[24px] p-4 backdrop-blur-none flex items-center gap-2 bg-gray-100">
-						<Asset.Image
-							frameShape={Asset.frameShape.CleanW24}
-							backgroundColor="transparent"
-							src="https://static.toss.im/2d-emojis/png/4x/u1F440.png"
-							aria-hidden={true}
-							style={{ aspectRatio: "1/1" }}
-						/>
-						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
-							현재
-						</Text>
-						<Text
-							color={adaptive.green400}
-							typography="t6"
-							fontWeight="semibold"
-						>
-							{globalStats ? globalStats.dailyUserCount.toLocaleString() : 0}명
-						</Text>
-						<Text color={adaptive.grey800} typography="t6" fontWeight="medium">
-							이 설문을 보고 있어요
-						</Text>
-					</div>
-				</div>
-				<div className="relative mx-4 mb-6 rounded-4xl overflow-hidden shrink-0 h-[337px]">
-					<div className="absolute inset-0 home-banner-gradient" />
-					<button
-						type="button"
-						className="absolute bottom-0 left-0 right-0 z-100 home-banner-overlay cursor-pointer border-0 bg-transparent p-0 w-full h-full"
-						onClick={handleQuizClick}
+				<Suspense fallback={<HomeGlobalStatsSectionLoading />}>
+					<HomeGlobalStatsSection
+						totalPromotionAmount={totalPromotionAmount}
+						onQuizClick={handleQuizClick}
 					/>
-					<div className="relative p-6 flex flex-col h-full">
-						<div className="flex-1 flex flex-col justify-between">
-							<div className="block">
-								<Text
-									color="white"
-									typography="t2"
-									fontWeight="bold"
-									className="mb-2! z-999"
-								>
-									간단한 OX 퀴즈 풀고 <br />
-									설문 참여 하기
-								</Text>
-							</div>
-
-							<Button
-								size="small"
-								color="light"
-								variant="weak"
-								className="max-w-20 p-0.1! z-999"
-								onClick={handleQuizClick}
-								style={
-									{
-										"--button-background-color": "rgba(7, 44, 77, 0.20)",
-										"--button-color": "#FFF",
-										"--button-border-radius": "12px",
-									} as React.CSSProperties
-								}
-							>
-								퀴즈 풀기
-							</Button>
-
-							<div className="mt-auto">
-								<Text
-									color="white"
-									typography="t5"
-									fontWeight="bold"
-									className="mb-1 z-999"
-								>
-									설문에 참여하면 {totalPromotionAmount.toLocaleString()}원을
-									받을 수 있어요
-								</Text>
-								<Text
-									color="white"
-									typography="t6"
-									fontWeight="regular"
-									className="z-999 opacity-80"
-								>
-									지금까지{" "}
-									{globalStats?.totalPromotionCount.toLocaleString() ?? 0}명이
-									받았어요
-								</Text>
-								<ProgressBar
-									size="normal"
-									color="#15c67f"
-									progress={
-										globalStats && globalStats.totalCompletedCount > 0
-											? globalStats.totalPromotionCount /
-												globalStats.totalCompletedCount
-											: 0
-									}
-									className="z-999 mt-2"
-								/>
-							</div>
-						</div>
-						<img
-							src={homeBanner}
-							alt="메인 배너"
-							className="absolute bottom-0 right-0 h-100 object-contain opacity-90 z-1"
-						/>
-					</div>
-				</div>
+				</Suspense>
 
 				<div className="px-4 pb-4">
 					<div className="bg-gray-50 rounded-[24px] flex items-center justify-between gap-4">
@@ -293,32 +136,69 @@ export const Home = () => {
 						<img
 							src={formBanner}
 							alt="구글폼 배너"
-							className="h-full max-h-[84px] w-auto object-contain flex-shrink-0"
+							className="h-full max-h-[84px] w-auto object-contain"
 						/>
 					</div>
 				</div>
 
-				{/* 에러 UI */}
-				{ongoingSurveysError && (
-					<div className="px-4 py-6 text-center text-sm text-red-500">
-						노출 중 설문 조회 실패
-					</div>
-				)}
+				<ErrorBoundary
+					FallbackComponent={(props) => (
+						<OngoingSurveysErrorFallback
+							{...props}
+							onRetry={refetchOngoingSurveys}
+						/>
+					)}
+				>
+					{ongoingSurveysError ? (
+						<ThrowOnError error={ongoingSurveysError} />
+					) : (
+						<>
+							{/* 설문 없음 UI */}
+							{hasNoSurveys && (
+								<div className="px-4 pb-4">
+									<div
+										className="rounded-2xl px-4 py-8 flex flex-col items-center justify-center gap-2 min-h-[140px]"
+										style={{ backgroundColor: adaptive.grey50 }}
+									>
+										<Text
+											color={adaptive.grey700}
+											typography="t6"
+											fontWeight="medium"
+										>
+											아직 노출 중인 설문이 없어요
+										</Text>
+										<Text
+											color={adaptive.grey500}
+											typography="t7"
+											fontWeight="regular"
+										>
+											곧 새로운 설문이 올라올 거예요
+										</Text>
+									</div>
+								</div>
+							)}
 
-				{userInfo?.result?.name && (
-					<CustomSurveyList
-						surveys={customSurveysToShow}
-						userName={userInfo.result.name}
-						onViewAll={handleViewAllRecommended}
-					/>
-				)}
+							{!hasNoSurveys && (
+								<>
+									{userInfo?.result?.name && (
+										<CustomSurveyList
+											surveys={customSurveysToShow}
+											userName={userInfo.result.name}
+											onViewAll={handleViewAllRecommended}
+										/>
+									)}
 
-				<Border variant="height16" />
+									<Border variant="height16" />
 
-				<UrgentSurveyList
-					surveys={urgentSurveysToShow}
-					onViewAll={handleViewAllImpending}
-				/>
+									<UrgentSurveyList
+										surveys={urgentSurveysToShow}
+										onViewAll={handleViewAllImpending}
+									/>
+								</>
+							)}
+						</>
+					)}
+				</ErrorBoundary>
 
 				<div className="mb-24" />
 
