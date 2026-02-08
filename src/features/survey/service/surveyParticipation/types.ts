@@ -47,11 +47,12 @@ export interface DateQuestion extends BaseSurveyParticipationQuestion {
 	date?: string;
 }
 
-// 평가형 문항
+// 평가형 문항 (minValue/maxValue: 양끝 라벨, rate: 옵션 개수 1~rate)
 export interface RatingQuestion extends BaseSurveyParticipationQuestion {
 	questionType: "RATING";
 	minValue?: string;
 	maxValue?: string;
+	rate?: number;
 }
 
 // 기타 문항 타입
@@ -164,6 +165,7 @@ export interface TransformedSurveyQuestion {
 	date?: string;
 	minValue?: string;
 	maxValue?: string;
+	rate?: number; // RATING: 옵션 개수 (1~rate)
 }
 
 export interface SubmitSurveyParticipationAnswer {
