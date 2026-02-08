@@ -10,8 +10,8 @@ import { Border, Text } from "@toss/tds-mobile";
 import { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigate } from "react-router-dom";
-import formBanner from "../../../assets/formBanner.png";
 import { CustomSurveyList } from "../components/CustomSurveyList";
+import { GoogleFormCreateSurveyBanner } from "../components/GoogleFormCreateSurveyBanner";
 import { HomeGlobalStatsSection } from "../components/HomeGlobalStatsSection";
 import { UrgentSurveyList } from "../components/UrgentSurveyList";
 import { useOngoingSurveys } from "../hooks/useOngoingSurveys";
@@ -65,16 +65,6 @@ export const Home = () => {
 			method: "로그인 수단 (Toss)",
 		});
 	}, []);
-	const handleCreateSurvey = () => {
-		pushGtmEvent({
-			event: "main_banner_click",
-			pagePath: "/home",
-			source: "home_ad_main",
-		});
-		navigate("/google-form-conversion-landing", {
-			state: { source: "main_cta" },
-		}); //구글폼 설문 랜딩 페이지로 이동
-	};
 	const customSurveysToShow = recommended.slice(0, 3);
 	const urgentSurveysToShow = impending.slice(0, 3);
 
@@ -95,34 +85,7 @@ export const Home = () => {
 				<Suspense fallback={<HomeGlobalStatsSectionLoading />}>
 					<HomeGlobalStatsSection totalPromotionAmount={totalPromotionAmount} />
 				</Suspense>
-
-				<div className="px-4 pb-4">
-					<div className="bg-gray-50 rounded-[24px] flex items-center justify-between gap-4">
-						<button
-							type="button"
-							onClick={handleCreateSurvey}
-							className="flex-1 p-4"
-							style={{ background: "none", border: "none", padding: 0 }}
-						>
-							<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-								구글폼으로 설문 등록하기
-							</Text>
-							<Text
-								color={adaptive.grey600}
-								typography="t7"
-								fontWeight="regular"
-							>
-								등록만 하면 패널에게 즉시 노출
-							</Text>
-						</button>
-						<img
-							src={formBanner}
-							alt="구글폼 배너"
-							className="h-full max-h-[84px] w-auto object-contain"
-						/>
-					</div>
-				</div>
-
+				<GoogleFormCreateSurveyBanner />
 				<ErrorBoundary
 					FallbackComponent={(props) => (
 						<OngoingSurveysErrorFallback
