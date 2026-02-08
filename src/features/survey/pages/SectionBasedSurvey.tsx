@@ -1,10 +1,7 @@
-import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import {
 	getSurveyInfo,
-	getSurveyQuestions,
 	submitSurveyParticipation,
 } from "@features/survey/service/surveyParticipation";
-import * as Sentry from "@sentry/react";
 import { queryClient } from "@shared/contexts/queryClient";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { buildSectionAnswersPayload } from "@shared/lib/surveySubmission";
@@ -17,8 +14,11 @@ import {
 	WheelDatePicker,
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCompleteSurvey } from "../hooks/useCompleteSurvey";
+import { useSurveyRouteParams } from "../hooks/useSurveyRouteParams";
+import { useSurveySectionQuestions } from "../hooks/useSurveySectionQuestions";
+import { validateSectionAnswers } from "../lib/validateSectionAnswers";
 import { issuePromotion } from "../service/promotion";
 import { QuestionRenderer } from "./components/QuestionRenderer";
 
@@ -34,16 +34,22 @@ interface SectionBasedSurveyState {
 
 export const SectionBasedSurvey = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const locationState = location.state as SectionBasedSurveyState | undefined;
-
-	const surveyId = locationState?.surveyId ?? null;
+	const { numericSurveyId, locationState: routeState } = useSurveyRouteParams();
+	const locationState = routeState as SectionBasedSurveyState | undefined;
+	const surveyId = numericSurveyId ?? locationState?.surveyId ?? null;
 
 	const [currentSection, setCurrentSection] = useState(
 		locationState?.currentSection ?? 1,
 	);
-	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
-	const [sectionNext, setSectionNext] = useState<number>(0);
+
+	const { data } = useSurveySectionQuestions(surveyId, currentSection);
+
+	const questions = data?.info ?? [];
+	const nextSectionFromApi = data?.nextSection;
+
+	const isLastSection =
+		nextSectionFromApi === undefined || nextSectionFromApi === 0;
+	const sectionNext = nextSectionFromApi ?? currentSection + 1;
 
 	const [answers, setAnswers] = useState<Record<number, string>>(
 		locationState?.answers ?? {},
@@ -68,39 +74,15 @@ export const SectionBasedSurvey = () => {
 
 	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
 
-	/* ======================
-     섹션 문항 조회
-  ====================== */
 	useEffect(() => {
-		if (!surveyId) return;
+		if (!data?.info.length) return;
+		const expanded: Record<number, boolean> = {};
+		data.info.forEach((q, idx) => {
+			expanded[q.questionId] = idx === 0;
+		});
+		setExpandedQuestions(expanded);
+	}, [data]);
 
-		const fetchQuestions = async () => {
-			try {
-				const result = await getSurveyQuestions({
-					surveyId,
-					section: currentSection,
-				});
-
-				setQuestions(result.info);
-				// nextSection이 없으면 기본값: 현재 섹션 + 1
-				setSectionNext(result.nextSection ?? currentSection + 1);
-
-				const expanded: Record<number, boolean> = {};
-				result.info.forEach((q, idx) => {
-					expanded[q.questionId] = idx === 0;
-				});
-				setExpandedQuestions(expanded);
-			} catch (e) {
-				Sentry.captureException(e);
-			}
-		};
-
-		fetchQuestions();
-	}, [surveyId, currentSection]);
-
-	/* ======================
-     답변 업데이트
-  ====================== */
 	const updateAnswer = (questionId: number, value: string) => {
 		const prev = answers[questionId];
 
@@ -135,9 +117,6 @@ export const SectionBasedSurvey = () => {
 		}
 	};
 
-	/* ======================
-     토글 핸들러
-  ====================== */
 	const handleToggleExpand = (questionId: number) => {
 		setExpandedQuestions((p) => ({
 			...p,
@@ -145,9 +124,6 @@ export const SectionBasedSurvey = () => {
 		}));
 	};
 
-	/* ======================
-     날짜 Picker 핸들러
-  ====================== */
 	const handleDatePickerOpen = (questionId: number) => {
 		setSelectedDateQuestionId(questionId);
 		const currentAnswer = answers[questionId];
@@ -160,35 +136,19 @@ export const SectionBasedSurvey = () => {
 		setSelectedDateQuestionId(null);
 	};
 
-	/* ======================
-     섹션 검증
-  ====================== */
 	const validateSection = () => {
-		const errors: Record<number, string> = {};
-
-		questions.forEach((q) => {
-			const a = answers[q.questionId];
-			if (q.isRequired && (!a || !a.trim())) {
-				errors[q.questionId] = "해당 문항을 완료해주세요";
-			}
-		});
-
+		const errors = validateSectionAnswers(questions, answers);
 		setQuestionErrors(errors);
-
 		setExpandedQuestions((p) => {
-			const cp = { ...p };
-			Object.keys(errors).forEach((id) => {
-				cp[Number(id)] = true;
-			});
-			return cp;
+			const next = { ...p };
+			for (const id of Object.keys(errors)) {
+				next[Number(id)] = true;
+			}
+			return next;
 		});
-
 		return Object.keys(errors).length === 0;
 	};
 
-	/* ======================
-     섹션 답변 제출
-  ====================== */
 	const submitCurrentSectionAnswers = async () => {
 		if (!surveyId) return;
 
@@ -203,9 +163,6 @@ export const SectionBasedSurvey = () => {
 		}
 	};
 
-	/* ======================
-     이전 버튼
-  ====================== */
 	const handlePrev = () => {
 		if (currentSection === 1) {
 			// 첫 섹션인 경우 Survey 페이지로 이동
@@ -217,18 +174,15 @@ export const SectionBasedSurvey = () => {
 		}
 	};
 
-	/* ======================
-     다음 버튼
-  ====================== */
 	const handleNext = async () => {
-		if (surveyId) {
-			pushGtmEvent({
-				event: "survey_progress_button_click",
-				pagePath: "/survey",
-				survey_id: String(surveyId),
-				source: locationState?.source ?? "main",
-			});
-		}
+		if (!surveyId) return;
+
+		pushGtmEvent({
+			event: "survey_progress_button_click",
+			pagePath: "/survey",
+			survey_id: String(surveyId),
+			source: locationState?.source ?? "main",
+		});
 
 		if (!validateSection()) {
 			// 에러가 있는 경우 첫 번째 에러 문항으로 스크롤
@@ -247,63 +201,24 @@ export const SectionBasedSurvey = () => {
 
 		await submitCurrentSectionAnswers();
 
-		// 섹션 분기 로직:
-		// 1. 섹션 내에 isSectionDecidable=true인 문항이 있는지 확인
-		// 2. 있으면 → 선택한 보기의 nextSection 사용 (첫 번째 선택한 보기 기준)
-		// 3. 없으면 → 섹션의 nextSection 사용 (기본값: currentSection + 1)
-		// 4. nextSection === 0 → 설문 종료
 		const decidable = questions.find((q) => q.isSectionDecidable);
+		const nextSection =
+			decidable?.type === "multipleChoice" && answers[decidable.questionId]
+				? (() => {
+						const selected = answers[decidable.questionId]
+							.split("|||")
+							.filter(Boolean);
+						const option = decidable.options?.find((o) =>
+							selected.includes(o.content),
+						);
+						return option?.nextSection ?? sectionNext ?? currentSection + 1;
+					})()
+				: (sectionNext ?? currentSection + 1);
 
-		let nextSection: number;
-
-		if (decidable && decidable.type === "multipleChoice") {
-			const answer = answers[decidable.questionId];
-			if (answer) {
-				const selected = answer.split("|||").filter(Boolean);
-				const selectedOption = decidable.options?.find((o) =>
-					selected.includes(o.content),
-				);
-				if (selectedOption?.nextSection !== undefined) {
-					nextSection = selectedOption.nextSection;
-				} else {
-					nextSection = currentSection + 1;
-				}
-			} else {
-				nextSection = sectionNext ?? currentSection + 1;
-			}
-		} else {
-			nextSection = sectionNext ?? currentSection + 1;
-		}
-
-		if (nextSection === 0) {
-			await handleSubmit();
-			return;
-		}
-
-		// 다음 섹션 문항 조회
-		try {
-			const result = await getSurveyQuestions({
-				surveyId: surveyId!,
-				section: nextSection,
-			});
-
-			if (result.info.length === 0) {
-				// 문항이 없으면 제출 완료
-				await handleSubmit();
-				return;
-			}
-
-			// 다음 섹션으로 이동
-			setCurrentSection(nextSection);
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		} catch (error) {
-			console.error("다음 섹션 조회 실패:", error);
-		}
+		setCurrentSection(nextSection);
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
-	/* ======================
-     최종 제출
-  ====================== */
 	const handleSubmit = async () => {
 		if (!surveyId) return;
 
@@ -326,6 +241,33 @@ export const SectionBasedSurvey = () => {
 				source: locationState?.source,
 			},
 		});
+	};
+	const handleSubmitClick = async () => {
+		if (surveyId) {
+			pushGtmEvent({
+				event: "survey_progress_button_click",
+				pagePath: "/survey",
+				survey_id: String(surveyId),
+				source: locationState?.source ?? "main",
+			});
+		}
+
+		if (!validateSection()) {
+			const firstErrorQuestionId = Object.keys(questionErrors)[0];
+			if (firstErrorQuestionId) {
+				const questionId = parseInt(firstErrorQuestionId, 10);
+				const element = document.querySelector(
+					`[data-question-id="${questionId}"]`,
+				);
+				if (element) {
+					element.scrollIntoView({ behavior: "smooth", block: "center" });
+				}
+			}
+			return;
+		}
+
+		await submitCurrentSectionAnswers();
+		await handleSubmit();
 	};
 
 	if (questions.length === 0) return null;
@@ -382,9 +324,13 @@ export const SectionBasedSurvey = () => {
 					</CTAButton>
 				}
 				rightButton={
-					<CTAButton loading={submitting} onClick={handleNext}>
-						{sectionNext === 0 ? "제출" : "다음"}
-					</CTAButton>
+					isLastSection ? (
+						<CTAButton loading={submitting} onClick={handleSubmitClick}>
+							제출
+						</CTAButton>
+					) : (
+						<CTAButton onClick={handleNext}>다음</CTAButton>
+					)
 				}
 			/>
 		</>
