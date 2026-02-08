@@ -1,9 +1,6 @@
-import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
-import { type InterestId, topics } from "@shared/constants/topics";
+import type { InterestId } from "@shared/constants/topics";
 import { formatRemainingTime } from "@shared/lib/FormatDate";
-import { getRefreshToken } from "@shared/lib/tokenManager";
 import type { ReturnTo } from "@shared/types/navigation";
-import type { SurveyListItem } from "@shared/types/surveyList";
 import { colors } from "@toss/tds-colors";
 import {
 	Asset,
@@ -15,45 +12,19 @@ import {
 	useToast,
 } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { SurveyRewardInfoCard } from "../components/SurveyRewardInfoCard";
+import { useSurveyAccessCheck } from "../hooks/useSurveyAccessCheck";
+import { useSurveyDisplayInfo } from "../hooks/useSurveyDisplayInfo";
 import { useSurveyInfo } from "../hooks/useSurveyInfo";
 import { useSurveyQuestions } from "../hooks/useSurveyQuestions";
+import { useSurveyRouteParams } from "../hooks/useSurveyRouteParams";
 
 export const Survey = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const [searchParams] = useSearchParams();
 	const { openToast } = useToast();
-	const locationState = location.state as
-		| {
-				survey?: SurveyListItem;
-				surveyId?: string;
-				source?: "main" | "quiz" | "after_complete";
-				quiz_id?: number;
-		  }
-		| undefined;
-	const surveyFromState = locationState?.survey;
-	const surveyIdFromState = locationState?.surveyId ?? surveyFromState?.id;
-	const surveyIdFromQuery = searchParams.get("surveyId");
-	const surveyId = surveyIdFromQuery ?? surveyIdFromState ?? null;
-	const numericSurveyId = useMemo(() => {
-		if (!surveyId) return null;
-		const parsed = Number(surveyId);
-		return Number.isNaN(parsed) ? null : parsed;
-	}, [surveyId]);
 
-	const [questions, setQuestions] = useState<TransformedSurveyQuestion[]>([]);
 	const [error, setError] = useState<string | null>(null);
-	const [surveyInfo, setSurveyInfo] = useState<{
-		title: string;
-		description: string;
-		topicId?: InterestId;
-		remainingTimeText?: string;
-		isClosed?: boolean;
-		isFree?: boolean;
-		responseCount?: number;
-	} | null>(null);
-
 	// 에러 다이얼로그 상태
 	const [errorDialog, setErrorDialog] = useState<{
 		open: boolean;
@@ -66,192 +37,91 @@ export const Survey = () => {
 		title: "",
 	});
 
-	const { data: surveyBasicInfoData } = useSurveyInfo(
-		numericSurveyId ?? undefined,
-		{ enabled: Boolean(numericSurveyId) },
-	);
+	const { surveyId, numericSurveyId, surveyFromState, locationState } =
+		useSurveyRouteParams();
 
-	const { data: surveyQuestionsData } = useSurveyQuestions(
-		numericSurveyId ?? undefined,
-		{ enabled: Boolean(numericSurveyId) },
+	// 설문 기본 정보 (제목, 설명, 마감일, 보상 여부, 스크리닝 필요 여부 등)
+	const { data: surveyBasicInfoData, error: surveyBasicInfoError } =
+		useSurveyInfo(numericSurveyId ?? undefined, {
+			enabled: Boolean(numericSurveyId),
+		});
+
+	// 설문 문항 목록
+	const { data: surveyQuestionsData, error: surveyQuestionsError } =
+		useSurveyQuestions(numericSurveyId ?? undefined, {
+			enabled: Boolean(numericSurveyId),
+		});
+
+	const surveyInfo = useMemo(() => {
+		if (!surveyBasicInfoData) return null;
+		const remainingTimeText = surveyBasicInfoData.deadline
+			? formatRemainingTime(surveyBasicInfoData.deadline)
+			: undefined;
+		return {
+			title: surveyBasicInfoData.title ?? "",
+			description: surveyBasicInfoData.description ?? "",
+			topicId: (surveyBasicInfoData.interests?.[0] ?? "CAREER") as InterestId,
+			remainingTimeText,
+			isClosed: remainingTimeText === "마감됨",
+			isFree: surveyBasicInfoData.isFree ?? false,
+			responseCount: surveyBasicInfoData.responseCount ?? 0,
+		};
+	}, [surveyBasicInfoData]);
+
+	// 이전 페이지 데이터 + API 응답 병합하여 화면 표시용 값 반환 (이전 페이지 우선, 없으면 API)
+	const {
+		surveyTitle,
+		surveyDescription,
+		surveyTopicName,
+		remainingTimeText,
+		isClosed,
+		isFree,
+	} = useSurveyDisplayInfo({ surveyFromState, surveyInfo });
+
+	const sortedQuestions = useMemo(() => {
+		const info = surveyQuestionsData?.info ?? [];
+		return [...info].sort(
+			(a, b) => (a.questionOrder ?? 0) - (b.questionOrder ?? 0),
+		);
+	}, [surveyQuestionsData?.info]);
+
+	const { getScreeningError, getAuthErrorFromException } = useSurveyAccessCheck(
+		{
+			surveyBasicInfoData: surveyBasicInfoData ?? null,
+			surveyId,
+			surveyFromState,
+			locationState,
+		},
 	);
 
 	useEffect(() => {
-		if (!numericSurveyId) {
+		if (!numericSurveyId) return;
+
+		const screeningError = getScreeningError();
+		if (screeningError) {
+			setErrorDialog(screeningError);
+			return;
+		}
+	}, [numericSurveyId, getScreeningError]);
+
+	const apiError = surveyBasicInfoError ?? surveyQuestionsError;
+
+	useEffect(() => {
+		if (!apiError) {
+			setError(null);
 			return;
 		}
 
-		if (surveyBasicInfoData?.isScreenRequired) {
-			setErrorDialog({
-				open: true,
-				title: "스크리닝이 필요합니다",
-				description: "스크리닝을 완료한 후 참여할 수 있어요.",
-				redirectTo: "/oxScreening",
-			});
-			return;
-		}
-
-		if (surveyBasicInfoData?.isScreened) {
-			setErrorDialog({
-				open: true,
-				title: "스크리닝 조건이 맞지 않습니다",
-				description:
-					"설정하신 스크리닝 조건에 맞지 않아 설문에 참여할 수 없어요.",
-				redirectTo: "/home",
-			});
-			return;
-		}
-
-		let isMounted = true;
-
-		const fetchSurveyParticipation = async () => {
-			try {
-				setError(null);
-				const result = {
-					info: surveyQuestionsData?.info ?? [],
-					title: surveyBasicInfoData?.title ?? "",
-					description: surveyBasicInfoData?.description ?? "",
-					interests: surveyBasicInfoData?.interests ?? [],
-					deadline: surveyBasicInfoData?.deadline ?? "",
-					isFree: surveyBasicInfoData?.isFree ?? false,
-					responseCount: surveyBasicInfoData?.responseCount ?? 0,
-				};
-				if (!isMounted) {
-					return;
-				}
-				setQuestions(result.info ?? []);
-
-				// API 응답에서 설문 메타 정보 설정
-				const remainingTimeText = result.deadline
-					? formatRemainingTime(result.deadline)
-					: undefined;
-				const isClosed = remainingTimeText === "마감됨";
-
-				setSurveyInfo({
-					title: result.title,
-					description: result.description,
-					topicId: (result.interests?.[0] ?? "CAREER") as InterestId,
-					remainingTimeText,
-					isClosed,
-					isFree: result.isFree,
-					responseCount: result.responseCount,
-				});
-			} catch (err) {
-				console.log("err", err);
-				console.error("설문 조회 실패:", err);
-				if (!isMounted) {
-					return;
-				}
-
-				// HTTP 상태 코드별 분기 처리
-				const error = err as {
-					response?: { status: number };
-					code?: string;
-				};
-
-				// CORS 에러나 네트워크 에러로 인해 response가 없을 수 있음
-				// ERR_NETWORK이면서 토큰이 없는 경우는 인증 문제로 간주
-				const isNetworkError = error.code === "ERR_NETWORK";
-				const is401Error = error.response?.status === 401;
-
-				if (is401Error || (isNetworkError && !(await getRefreshToken()))) {
-					// 인증 실패 - 로그인 페이지로 이동
-					setErrorDialog({
-						open: true,
-						title: "로그인이 필요합니다",
-						description: "로그인 후 이용해주세요",
-						redirectTo: "/",
-						returnTo: surveyId
-							? {
-									path: "/survey",
-									state: {
-										surveyId,
-										survey: surveyFromState,
-										source: locationState?.source ?? "main",
-										quiz_id: locationState?.quiz_id,
-									},
-								}
-							: undefined,
-					});
-					return;
-				}
-
-				if (error.response) {
-					const status = error.response.status;
-
-					if (status === 403) {
-						// 권한 없음 - 메인 페이지로 이동
-						setErrorDialog({
-							open: true,
-							title: "권한이 없는 설문입니다",
-							description: "해당 설문에 참여할 권한이 없습니다",
-							redirectTo: "/survey/ineligible",
-						});
-						return;
-					}
-				}
-
-				// 기타 에러
+		const handleError = async () => {
+			const authError = await getAuthErrorFromException(apiError);
+			if (authError) {
+				setErrorDialog(authError);
+			} else {
 				setError("설문 정보를 불러오지 못했습니다.");
 			}
 		};
-
-		void fetchSurveyParticipation();
-
-		return () => {
-			isMounted = false;
-		};
-	}, [
-		numericSurveyId,
-		surveyBasicInfoData,
-		surveyId,
-		surveyFromState,
-		locationState?.source,
-		locationState?.quiz_id,
-		surveyQuestionsData?.info,
-	]);
-	surveyQuestionsData?.info;
-
-	const sortedQuestions = useMemo(
-		() =>
-			[...questions].sort(
-				(a, b) => (a.questionOrder ?? 0) - (b.questionOrder ?? 0),
-			),
-		[questions],
-	);
-
-	const questionCount = sortedQuestions.length;
-	const estimatedTime = useMemo(() => {
-		if (questionCount <= 10) {
-			return 2;
-		} else if (questionCount <= 20) {
-			return 4;
-		}
-		return 4;
-	}, [questionCount]);
-
-	const currentSurvey =
-		surveyFromState ??
-		(surveyInfo
-			? {
-					id: surveyId ?? "",
-					topicId: surveyInfo.topicId ?? "CAREER",
-					title: surveyInfo.title,
-					iconType: "icon" as const,
-					description: surveyInfo.description,
-					remainingTimeText: surveyInfo.remainingTimeText,
-					isClosed: surveyInfo.isClosed,
-					isFree: surveyInfo.isFree,
-				}
-			: null);
-
-	const surveyTitle = currentSurvey?.title;
-	const surveyDescription = currentSurvey?.description;
-	const surveyTopicName = currentSurvey?.topicId
-		? topics.find((topic) => topic.id === currentSurvey.topicId)?.name
-		: undefined;
-	const remainingTimeText = currentSurvey?.remainingTimeText;
-	const isClosed = currentSurvey?.isClosed || remainingTimeText === "마감됨";
+		void handleError();
+	}, [apiError, getAuthErrorFromException]);
 
 	const handleStart = () => {
 		if (sortedQuestions.length === 0 || isClosed) {
@@ -276,9 +146,8 @@ export const Survey = () => {
 				currentSection: 1,
 				answers: {},
 				previousAnswers: {},
-				surveyTitle: surveyInfo?.title ?? currentSurvey?.title ?? "",
-				surveyDescription:
-					surveyInfo?.description ?? currentSurvey?.description ?? "",
+				surveyTitle: surveyTitle ?? "",
+				surveyDescription: surveyDescription ?? "",
 				source,
 			},
 		});
@@ -340,39 +209,11 @@ export const Survey = () => {
 						}
 					/>
 
-					<div className="px-4">
-						<div className="w-full rounded-2xl border border-green-500 p-5 shadow-sm">
-							<Text
-								color={colors.grey900}
-								typography="t5"
-								fontWeight="semibold"
-							>
-								{surveyFromState?.isFree === true || surveyInfo?.isFree === true
-									? "참여보상이 없는 설문이에요"
-									: "참여 보상 : 200원"}
-							</Text>
-							<div className="h-2" />
-							<Text
-								color={colors.grey900}
-								typography="t5"
-								fontWeight="semibold"
-							>
-								소요 시간 : {estimatedTime}분
-							</Text>
-							{remainingTimeText ? (
-								<>
-									<div className="h-2" />
-									<Text
-										color={colors.grey700}
-										typography="t7"
-										fontWeight="regular"
-									>
-										{remainingTimeText}
-									</Text>
-								</>
-							) : null}
-						</div>
-					</div>
+					<SurveyRewardInfoCard
+						isFree={isFree}
+						questionCount={sortedQuestions.length}
+						remainingTimeText={remainingTimeText}
+					/>
 
 					<div className="px-4">
 						<div className="flex items-center gap-3 my-6">
@@ -411,9 +252,22 @@ export const Survey = () => {
 					)}
 					{error && (
 						<div className="px-4 mt-6">
-							<Text color={colors.red500} typography="t7">
-								{error}
-							</Text>
+							<div
+								className="rounded-2xl px-4 py-5 flex items-center gap-3 min-h-[72px]"
+								style={{ backgroundColor: "#FEF2F2" }}
+							>
+								<Asset.Icon
+									frameShape={Asset.frameShape.CleanW24}
+									backgroundColor="transparent"
+									name="icon-error-circle-mono"
+									color={colors.red500}
+									aria-hidden={true}
+									ratio="1/1"
+								/>
+								<Text color={colors.red600} typography="t6" fontWeight="medium">
+									{error}
+								</Text>
+							</div>
 						</div>
 					)}
 				</div>
