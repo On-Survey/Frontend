@@ -1,5 +1,5 @@
 import { getUserSurveys } from "@features/mysurvey/service/mysurvey/api";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import type {
 	ActiveSurvey,
@@ -12,7 +12,7 @@ export const useUserSurveys = () => {
 		data: resultObj,
 		isLoading,
 		error,
-	} = useQuery({
+	} = useSuspenseQuery({
 		queryKey: ["userSurveys"],
 		queryFn: getUserSurveys,
 	});

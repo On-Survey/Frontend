@@ -87,14 +87,6 @@ export const SurveyResponseDetail = () => {
 
 	const badge = SURVEY_BADGE_CONFIG[surveyResponse.status];
 
-	const handleGoMySurvey = () => {
-		navigate("/mysurvey");
-	};
-
-	const handleGoMyPage = () => {
-		navigate("/mypage");
-	};
-
 	const getQuestionTypeLabel = (type: string, required: boolean) => {
 		const requiredLabel = required ? "필수" : "선택";
 		const typeLabel = QUESTION_TYPE_LABELS[type] || type;
@@ -256,11 +248,7 @@ export const SurveyResponseDetail = () => {
 				</List>
 			</div>
 
-			<BottomNavigation
-				currentPage="mysurvey"
-				onMySurveyClick={handleGoMySurvey}
-				onMyPageClick={handleGoMyPage}
-			/>
+			<BottomNavigation currentPage="mysurvey" />
 			<SurveyFilterBottomSheet
 				open={isFilterOpen}
 				onClose={() => setIsFilterOpen(false)}

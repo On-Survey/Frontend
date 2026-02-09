@@ -22,8 +22,8 @@ export const RatingQuestion = ({
 	isExpanded = true,
 	onToggleExpand,
 }: RatingQuestionProps) => {
-	const minValue = parseInt(question.minValue ?? "1", 10);
-	const maxValue = parseInt(question.maxValue ?? "10", 10);
+	// rate: 옵션 개수(1~rate), minValue/maxValue: 양끝 라벨 문자열
+	const optionCount = question.rate ?? 5;
 	const selectedValue = answer ? parseInt(answer, 10) : null;
 
 	const handleScoreChange = (value: number) => {
@@ -34,12 +34,10 @@ export const RatingQuestion = ({
 		return question.isRequired ? "필수" : "선택";
 	};
 
-	const ratingOptions = useMemo(() => {
-		return Array.from({ length: maxValue - minValue + 1 }, (_, idx) => {
-			const value = minValue + idx;
-			return value;
-		});
-	}, [minValue, maxValue]);
+	const ratingOptions = useMemo(
+		() => Array.from({ length: optionCount }, (_, idx) => idx + 1),
+		[optionCount],
+	);
 
 	return (
 		<>
@@ -85,35 +83,62 @@ export const RatingQuestion = ({
 			{isExpanded && (
 				<>
 					<Spacing size={19} />
-					<div className="px-4 flex gap-2.5">
+					<div className="px-4 flex justify-center gap-2.5">
 						{ratingOptions.map((value) => {
 							const isActive = selectedValue !== null && value <= selectedValue;
 							const isSelected = selectedValue === value;
+							const isFirst = value === 1;
+							const isLast = value === optionCount;
 							return (
-								<Asset.Text
-									key={value}
-									frameShape={Asset.frameShape.CircleSmall}
-									backgroundColor={
-										isSelected
-											? adaptive.green300
-											: isActive
-												? adaptive.grey200
-												: adaptive.greyOpacity100
-									}
-									style={{
-										color: isSelected
-											? adaptive.grey200
-											: isActive
-												? adaptive.grey700
-												: adaptive.grey600,
-										fontSize: "11px",
-										fontWeight: "bold",
-									}}
-									aria-label={`${value}점`}
-									onClick={() => handleScoreChange(value)}
-								>
-									{value}
-								</Asset.Text>
+								<div key={value} className="flex flex-col items-center gap-1">
+									<button
+										type="button"
+										aria-label={`${value}점`}
+										onClick={() => handleScoreChange(value)}
+										className="cursor-pointer border-none bg-transparent p-0"
+									>
+										<Asset.Text
+											frameShape={Asset.frameShape.CircleSmall}
+											backgroundColor={
+												isSelected
+													? adaptive.green300
+													: isActive
+														? adaptive.grey200
+														: adaptive.greyOpacity100
+											}
+											style={{
+												color: isSelected
+													? adaptive.grey200
+													: isActive
+														? adaptive.grey700
+														: adaptive.grey600,
+												fontSize: "11px",
+												fontWeight: "bold",
+											}}
+											aria-hidden
+										/>
+									</button>
+									{isFirst && question.minValue ? (
+										<Text
+											display="block"
+											color={adaptive.grey700}
+											typography="t7"
+											fontWeight="regular"
+										>
+											{question.minValue}
+										</Text>
+									) : null}
+									{isLast && question.maxValue ? (
+										<Text
+											display="block"
+											color={adaptive.grey700}
+											typography="t7"
+											fontWeight="regular"
+										>
+											{question.maxValue}
+										</Text>
+									) : null}
+								</div>
 							);
 						})}
 					</div>

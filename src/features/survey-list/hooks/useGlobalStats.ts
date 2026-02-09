@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getGlobalStats } from "../service/surveyList";
 
 export const useGlobalStats = () => {
-	return useQuery({
+	return useSuspenseQuery({
 		queryKey: ["globalStats"],
 		queryFn: getGlobalStats,
 	});

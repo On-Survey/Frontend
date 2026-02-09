@@ -103,6 +103,7 @@ export const getSurveyQuestions = async (
 		if (question.questionType === "RATING" && "minValue" in question) {
 			base.minValue = question.minValue;
 			base.maxValue = question.maxValue;
+			if ("rate" in question) base.rate = question.rate;
 		}
 
 		return base;
