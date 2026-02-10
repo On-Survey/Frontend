@@ -30,8 +30,7 @@ export const Home = () => {
 		refetch: refetchOngoingSurveys,
 	} = useOngoingSurveys();
 
-	const { recommended, impending, totalPromotionAmount } =
-		useProcessedOngoingSurveys(result);
+	const { recommended, impending } = useProcessedOngoingSurveys(result);
 
 	const {
 		isOpen: isConfirmDialogOpen,
@@ -83,7 +82,7 @@ export const Home = () => {
 			/>
 			<div className="flex flex-col w-full min-h-screen">
 				<Suspense fallback={<HomeGlobalStatsSectionLoading />}>
-					<HomeGlobalStatsSection totalPromotionAmount={totalPromotionAmount} />
+					<HomeGlobalStatsSection />
 				</Suspense>
 				<GoogleFormCreateSurveyBanner />
 				<ErrorBoundary
