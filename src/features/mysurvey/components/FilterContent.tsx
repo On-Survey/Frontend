@@ -45,8 +45,10 @@ export const FilterContent = ({
 		if (!surveyInfo) return AGE_RANGES;
 
 		if (surveyInfo.ages.includes("ALL")) {
-			return AGE_RANGES;
+			// 전체 선택한 경우: "전체" 버튼만 표시
+			return ["전체"];
 		}
+		// 특정 항목 선택한 경우: 선택한 항목들만 표시 (전체 제거)
 		const availableAgeLabels = surveyInfo.ages
 			.map((age) => getAgeLabelSimple(age as AgeCode))
 			.filter((label) => label !== "");
@@ -55,22 +57,26 @@ export const FilterContent = ({
 			const indexB = AGE_RANGES.indexOf(b);
 			return indexA - indexB;
 		});
-		return ["전체", ...sortedAges];
+		return sortedAges;
 	};
 
 	const getAvailableGenders = () => {
 		if (!surveyInfo || surveyInfo.gender === "ALL") {
-			return ["전체", "남성", "여성"];
+			// 전체 선택한 경우: "전체" 버튼만 표시
+			return ["전체"];
 		}
-		return ["전체", getGenderLabel(surveyInfo.gender as GenderCode)];
+		// 특정 항목 선택한 경우: 선택한 항목만 표시 (전체 제거)
+		return [getGenderLabel(surveyInfo.gender as GenderCode)];
 	};
 
 	// 거주지 탭 임시 제거
 	// const getAvailableLocations = () => {
 	// 	if (!surveyInfo || surveyInfo.residence === "ALL") {
-	// 		return ["전체", ...regions.map((r) => r.name)];
+	// 		// 전체 선택한 경우: "전체" 버튼만 표시
+	// 		return ["전체"];
 	// 	}
-	// 	return ["전체", getRegionLabelFromCode(surveyInfo.residence)];
+	// 	// 특정 항목 선택한 경우: 선택한 항목만 표시 (전체 제거)
+	// 	return [getRegionLabelFromCode(surveyInfo.residence)];
 	// };
 
 	switch (activeTab) {
