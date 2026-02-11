@@ -18,6 +18,7 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IneligibleSurveyBottomSheet } from "../components/IneligibleSurveyBottomSheet";
 
 export const OxScreening = () => {
 	const navigate = useNavigate();
@@ -27,6 +28,8 @@ export const OxScreening = () => {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedOption, setSelectedOption] = useState<boolean | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+	const [isIneligibleBottomSheetOpen, setIsIneligibleBottomSheetOpen] =
+		useState(false);
 	const [showNoQuiz, setShowNoQuiz] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [nextSurveyId, setNextSurveyId] = useState<number | null>(null);
@@ -165,59 +168,6 @@ export const OxScreening = () => {
 			}
 		} else {
 			navigate("/survey");
-		}
-	};
-
-	const handleSkipToNextScreening = async () => {
-		if (currentQuestion && selectedOption !== null) {
-			try {
-				const content = String(selectedOption);
-				await submitScreening({
-					screeningId: currentQuestion.screeningId,
-					payload: { content },
-					surveyId: nextSurveyId,
-				});
-				pushGtmEvent({
-					event: "complete_screening_quiz",
-					pagePath: "/screening",
-					quiz_id: String(currentQuestion.screeningId),
-					result: "fail",
-				});
-			} catch (err) {
-				console.error("스크리닝 응답 제출 실패:", err);
-			}
-		}
-
-		setSelectedOption(null);
-
-		if (!isLastQuestion) {
-			const nextIndex = currentQuestionIndex + 1;
-			const nextQuestion = screeningQuestions[nextIndex];
-			if (currentQuestion && nextQuestion) {
-				pushGtmEvent({
-					event: "redirect_to_another_quiz",
-					pagePath: "/screening",
-					from_quiz_id: String(currentQuestion.screeningId),
-					to_quiz_id: String(nextQuestion.screeningId),
-					reason: "screening_fail",
-				});
-			}
-
-			setCurrentQuestionIndex(nextIndex);
-			if (nextQuestion) {
-				const nextSurveyId = nextQuestion.surveyId;
-				setNextSurveyId(nextSurveyId);
-				// 다음 설문의 responseCount 조회
-				getSurveyInfo(nextSurveyId)
-					.then((surveyInfo) => {
-						setResponseCount(surveyInfo.responseCount);
-					})
-					.catch((err) => {
-						console.error("설문 정보 조회 실패:", err);
-					});
-			}
-		} else {
-			setShowNoQuiz(true);
 		}
 	};
 
@@ -392,7 +342,8 @@ export const OxScreening = () => {
 						}
 						setIsBottomSheetOpen(true);
 					} else {
-						await handleSkipToNextScreening();
+						// 정답이 아닐 때 바텀시트 표시
+						setIsIneligibleBottomSheetOpen(true);
 					}
 				}}
 				disabled={selectedOption === null}
@@ -449,6 +400,12 @@ export const OxScreening = () => {
 					/>
 				</div>
 			</BottomSheet>
+
+			{/* 참여 불가 바텀시트 */}
+			<IneligibleSurveyBottomSheet
+				open={isIneligibleBottomSheetOpen}
+				onClose={() => setIsIneligibleBottomSheetOpen(false)}
+			/>
 		</>
 	);
 };
