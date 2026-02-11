@@ -1,4 +1,3 @@
-import { adaptive } from "@toss/tds-colors";
 import { Asset, BottomSheet } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
