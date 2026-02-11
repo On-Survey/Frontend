@@ -122,12 +122,7 @@ export const Home = () => {
 
 							{!hasNoSurveys && (
 								<>
-									{userInfo?.result?.name && (
-										<CustomSurveyList
-											surveys={customSurveysToShow}
-											userName={userInfo.result.name}
-										/>
-									)}
+									<CustomSurveyList surveys={customSurveysToShow} />
 
 									{/* <Border variant="height16" />
 

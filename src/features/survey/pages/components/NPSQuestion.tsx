@@ -109,7 +109,7 @@ export const NPSQuestion = ({
 													isActive ? adaptive.green300 : adaptive.greyOpacity100
 												}
 												style={{
-													color: isActive ? adaptive.grey200 : adaptive.grey600,
+													color: isActive ? adaptive.grey50 : adaptive.grey600,
 													fontSize: "11px",
 													fontWeight: "bold",
 												}}
