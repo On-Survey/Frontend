@@ -212,7 +212,7 @@ export const SurveyComplete = () => {
 			</div>
 
 			<div className="fixed bottom-6 left-0 right-0 flex flex-col gap-2 px-4 pb-4 bg-white">
-				{isFree !== true && (
+				{isFree === false && (
 					<div className="mb-6 flex items-center gap-2 rounded-[18px] bg-gray-100 px-4 py-3">
 						<Asset.Icon
 							frameShape={Asset.frameShape.CleanW24}
