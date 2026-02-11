@@ -24,15 +24,16 @@ export const GoogleFormCreateSurveyBanner = () => {
 				<button
 					type="button"
 					onClick={handleCreateSurvey}
-					className="flex-1 p-4"
-					style={{ background: "none", border: "none", padding: 0 }}
+					className="flex-1 p-4 text-left"
 				>
-					<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
-						구글폼으로 설문 등록하기
-					</Text>
-					<Text color={adaptive.grey600} typography="t7" fontWeight="regular">
-						등록만 하면 패널에게 즉시 노출
-					</Text>
+					<div className="flex flex-col items-start gap-1">
+						<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
+							구글폼으로 설문 등록하기
+						</Text>
+						<Text color={adaptive.grey600} typography="t7" fontWeight="regular">
+							등록만 하면 패널에게 즉시 노출
+						</Text>
+					</div>
 				</button>
 				<img
 					src={formBanner}
