@@ -2,8 +2,8 @@ import { useMultiStep } from "@shared/contexts/MultiStepContext";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
-	EstimatePage,
 	PaymentConfirmationPage,
+	PaymentEstimatePage,
 	PaymentLoading,
 	PaymentProductPage,
 	PaymentSuccessPage,
@@ -23,7 +23,7 @@ export const PaymentMain = () => {
 
 	return (
 		<>
-			{!isChargeFlow && paymentStep === 0 && <EstimatePage />}
+			{!isChargeFlow && paymentStep === 0 && <PaymentEstimatePage />}
 			{paymentStep === 1 && <PaymentProductPage />}
 			{!isChargeFlow && paymentStep === 2 && <PaymentConfirmationPage />}
 			{paymentStep === (isChargeFlow ? 2 : 3) && <PaymentLoading />}

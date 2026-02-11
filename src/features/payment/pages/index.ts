@@ -2,6 +2,7 @@ export * from "./EstimatePage";
 export * from "./FreeRegistrationNotice";
 export * from "./LocationSelectPage";
 export * from "./PaymentConfirmationPage";
+export * from "./PaymentEstimatePage";
 export * from "./PaymentLoading";
 export * from "./PaymentMain";
 export * from "./PaymentProductPage";

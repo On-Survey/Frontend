@@ -6,14 +6,13 @@ import { useModal } from "@shared/hooks/UseToggle";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
-import { Border, Text } from "@toss/tds-mobile";
+import { Text } from "@toss/tds-mobile";
 import { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigate } from "react-router-dom";
 import { CustomSurveyList } from "../components/CustomSurveyList";
 import { GoogleFormCreateSurveyBanner } from "../components/GoogleFormCreateSurveyBanner";
 import { HomeGlobalStatsSection } from "../components/HomeGlobalStatsSection";
-import { UrgentSurveyList } from "../components/UrgentSurveyList";
 import { useOngoingSurveys } from "../hooks/useOngoingSurveys";
 import { useProcessedOngoingSurveys } from "../hooks/useProcessedOngoingSurveys";
 import { HomeGlobalStatsSectionLoading } from "../ui/HomeGlobalStatsSectionLoading";
@@ -65,7 +64,6 @@ export const Home = () => {
 		});
 	}, []);
 	const customSurveysToShow = recommended.slice(0, 3);
-	const urgentSurveysToShow = impending.slice(0, 3);
 
 	const hasNoSurveys =
 		result != null &&
@@ -131,9 +129,9 @@ export const Home = () => {
 										/>
 									)}
 
-									<Border variant="height16" />
+									{/* <Border variant="height16" />
 
-									<UrgentSurveyList surveys={urgentSurveysToShow} />
+									<UrgentSurveyList surveys={urgentSurveysToShow} /> */}
 								</>
 							)}
 						</>
