@@ -25,7 +25,6 @@ export const OxScreening = () => {
 	const [screeningQuestions, setScreeningQuestions] = useState<
 		ScreeningQuestion[]
 	>([]);
-	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedOption, setSelectedOption] = useState<boolean | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 	const [isIneligibleBottomSheetOpen, setIsIneligibleBottomSheetOpen] =
@@ -68,31 +67,13 @@ export const OxScreening = () => {
 		void fetchScreenings();
 	}, []);
 
-	const currentQuestion = screeningQuestions[currentQuestionIndex];
-	const isLastQuestion = currentQuestionIndex === screeningQuestions.length - 1;
+	const currentQuestion = screeningQuestions[0];
 
 	const handleCloseModal = () => {
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
-
-		if (!isLastQuestion) {
-			const nextIndex = currentQuestionIndex + 1;
-			setCurrentQuestionIndex(nextIndex);
-			if (screeningQuestions[nextIndex]) {
-				const nextSurveyId = screeningQuestions[nextIndex].surveyId;
-				setNextSurveyId(nextSurveyId);
-				// 다음 설문의 responseCount 조회
-				getSurveyInfo(nextSurveyId)
-					.then((surveyInfo) => {
-						setResponseCount(surveyInfo.responseCount);
-					})
-					.catch((err) => {
-						console.error("설문 정보 조회 실패:", err);
-					});
-			}
-		} else {
-			setShowNoQuiz(true);
-		}
+		// 닫기 버튼 클릭 시 홈으로 이동
+		navigate("/home");
 	};
 
 	const handleNextQuestion = async () => {
@@ -201,7 +182,7 @@ export const OxScreening = () => {
 			<div className="flex flex-col items-center justify-center px-4 py-6 bg-white">
 				<div className="mb-6">
 					<Button size="small" color="dark" variant="weak">
-						Q{currentQuestionIndex + 1}
+						질문
 					</Button>
 				</div>
 
