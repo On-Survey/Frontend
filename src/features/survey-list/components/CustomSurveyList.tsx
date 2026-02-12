@@ -73,12 +73,9 @@ export const CustomSurveyList = ({ surveys }: CustomSurveyListProps) => {
 				};
 
 				// 참여 가능한 설문만 필터링
-				// 스크리닝이 없거나, 세그먼트가 맞는 경우
-				const hasScreening = surveyWithInfo.hasScreening ?? false;
-				const isEligible = surveyWithInfo.isEligible ?? true; // 기본값은 true (recommended에 포함된 설문은 참여 가능)
+				const isEligible = surveyWithInfo.isEligible ?? false;
 
-				// 스크리닝이 없거나, 세그먼트가 맞는 경우 참여 가능
-				return !hasScreening || isEligible;
+				return isEligible;
 			})
 		: surveys; // 필터가 꺼져있으면 모든 설문 표시
 
