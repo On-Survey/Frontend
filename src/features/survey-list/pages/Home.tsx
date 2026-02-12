@@ -122,8 +122,6 @@ export const Home = () => {
 		return uniqueSurveys;
 	}, [surveysWithScreeningInfo]);
 
-	const customSurveysToShow = allSurveys.slice(0, 3);
-
 	const hasNoSurveys =
 		allSurveysData != null && !hasError && allSurveys.length === 0;
 
@@ -185,7 +183,7 @@ export const Home = () => {
 
 							{!hasNoSurveys && (
 								<>
-									<CustomSurveyList surveys={customSurveysToShow} />
+									<CustomSurveyList surveys={allSurveys} />
 
 									{/* <Border variant="height16" />
 

@@ -136,40 +136,37 @@ export const CustomSurveyList = ({ surveys }: CustomSurveyListProps) => {
 				let statusColor = adaptive.grey500;
 				let statusIcon: React.ReactNode = null;
 
-				if (!hasScreening) {
-					// 스크리닝이 없는 경우
+				if (!isEligible) {
+					// 세그먼트가 맞지 않는 경우 (스크리닝 여부와 관계없이)
+					statusText = "설문 설정 조건에 따라 참여가 제한돼요";
+					statusColor = adaptive.red400;
+					statusIcon = (
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW16}
+							backgroundColor="transparent"
+							name="icon-warning-circle-red-opacity"
+							aria-hidden={true}
+							ratio="1/1"
+						/>
+					);
+				} else if (hasScreening) {
+					// 세그먼트 일치 + 스크리닝이 있는 경우
+					statusText = "설문 참여를 위한 간단한 질문이 있어요";
+					statusColor = adaptive.grey500;
+					statusIcon = (
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW20}
+							backgroundColor="transparent"
+							name="icon-o-x-quiz-mono"
+							color={adaptive.grey600}
+							aria-hidden={true}
+							ratio="1/1"
+						/>
+					);
+				} else {
+					// 세그먼트 일치 + 스크리닝이 없는 경우
 					statusText = "누구나 참여 가능해요";
 					statusColor = adaptive.grey500;
-				} else if (hasScreening) {
-					// 스크리닝이 있는 경우
-					if (!isEligible) {
-						// 세그먼트가 맞지 않는 경우
-						statusText = "설문 설정 조건에 따라 참여가 제한돼요";
-						statusColor = adaptive.red400;
-						statusIcon = (
-							<Asset.Icon
-								frameShape={Asset.frameShape.CleanW16}
-								backgroundColor="transparent"
-								name="icon-warning-circle-red-opacity"
-								aria-hidden={true}
-								ratio="1/1"
-							/>
-						);
-					} else {
-						// 스크리닝이 있고 참여 가능한 경우
-						statusText = "설문 참여를 위한 간단한 질문이 있어요";
-						statusColor = adaptive.grey500;
-						statusIcon = (
-							<Asset.Icon
-								frameShape={Asset.frameShape.CleanW20}
-								backgroundColor="transparent"
-								name="icon-o-x-quiz-mono"
-								color={adaptive.grey600}
-								aria-hidden={true}
-								ratio="1/1"
-							/>
-						);
-					}
 				}
 
 				return (

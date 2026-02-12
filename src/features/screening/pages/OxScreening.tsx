@@ -96,25 +96,8 @@ export const OxScreening = () => {
 	};
 
 	const handleNextQuestion = async () => {
-		if (currentQuestion && selectedOption !== null) {
-			try {
-				const content = String(selectedOption);
-				await submitScreening({
-					screeningId: currentQuestion.screeningId,
-					payload: { content },
-					surveyId: nextSurveyId,
-				});
-				pushGtmEvent({
-					event: "complete_screening_quiz",
-					pagePath: "/screening",
-					quiz_id: String(currentQuestion.screeningId),
-					result: "pass",
-				});
-			} catch (err) {
-				console.error("스크리닝 응답 제출 실패:", err);
-			}
-		}
-
+		// handleNextQuestion은 정답일 때만 호출되므로 이미 제출된 상태
+		// 여기서는 제출하지 않고 바로 다음 설문으로 이동
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
 		if (nextSurveyId) {
@@ -324,6 +307,19 @@ export const OxScreening = () => {
 				loading={false}
 				onClick={async () => {
 					if (selectedOption === null || !currentQuestion) return;
+
+					// 스크리닝 응답 제출 (정답/오답 관계없이)
+					try {
+						const content = String(selectedOption);
+						await submitScreening({
+							screeningId: currentQuestion.screeningId,
+							payload: { content },
+							surveyId: nextSurveyId,
+						});
+					} catch (err) {
+						console.error("스크리닝 응답 제출 실패:", err);
+					}
+
 					pushGtmEvent({
 						event: "answer_screening_quiz",
 						pagePath: "/screening",
@@ -340,9 +336,21 @@ export const OxScreening = () => {
 								source: "screening_quiz",
 							});
 						}
+						pushGtmEvent({
+							event: "complete_screening_quiz",
+							pagePath: "/screening",
+							quiz_id: String(currentQuestion.screeningId),
+							result: "pass",
+						});
 						setIsBottomSheetOpen(true);
 					} else {
 						// 정답이 아닐 때 바텀시트 표시
+						pushGtmEvent({
+							event: "complete_screening_quiz",
+							pagePath: "/screening",
+							quiz_id: String(currentQuestion.screeningId),
+							result: "fail",
+						});
 						setIsIneligibleBottomSheetOpen(true);
 					}
 				}}
