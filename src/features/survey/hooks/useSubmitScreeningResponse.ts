@@ -13,14 +13,26 @@ export const useSubmitScreeningResponse = () => {
 			screeningId: number;
 			payload: SubmitScreeningResponsePayload;
 			surveyId?: number | null;
+			isCorrect?: boolean;
 		}) => submitScreeningResponse(screeningId, payload),
-		onSuccess: (_, variables) => {
+		onSuccess: async (_, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: ["surveyInfo", variables.surveyId],
 			});
 			queryClient.invalidateQueries({
 				queryKey: ["surveyQuestions", variables.surveyId],
 			});
+
+			if (variables.isCorrect) {
+				await Promise.all([
+					queryClient.invalidateQueries({ queryKey: ["allOngoingSurveys"] }),
+					queryClient.invalidateQueries({ queryKey: ["screenings"] }),
+					queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] }),
+					queryClient.invalidateQueries({ queryKey: ["recommendedSurveys"] }),
+					queryClient.invalidateQueries({ queryKey: ["impendingSurveys"] }),
+					queryClient.invalidateQueries({ queryKey: ["ongoingSurveysList"] }),
+				]);
+			}
 		},
 	});
 };
