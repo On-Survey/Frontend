@@ -55,7 +55,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	const questionPackage = locationState?.questionPackage ?? "light";
 	const respondentCount = locationState?.respondentCount ?? 50;
 	const deadline = locationState?.deadline ?? "";
-	const price = locationState?.price ?? 0;
+	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
 	useEffect(() => {
