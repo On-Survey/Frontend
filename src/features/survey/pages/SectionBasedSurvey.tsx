@@ -3,6 +3,7 @@ import {
 	submitSurveyParticipation,
 } from "@features/survey/service/surveyParticipation";
 import { queryClient } from "@shared/contexts/queryClient";
+import { formatDateToISO } from "@shared/lib/FormatDate";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { buildSectionAnswersPayload } from "@shared/lib/surveySubmission";
 import { adaptive } from "@toss/tds-colors";
@@ -13,7 +14,7 @@ import {
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCompleteSurvey } from "../hooks/useCompleteSurvey";
 import { useSurveyRouteParams } from "../hooks/useSurveyRouteParams";
@@ -69,6 +70,20 @@ export const SectionBasedSurvey = () => {
 		number | null
 	>(null);
 	const [datePickerValue, setDatePickerValue] = useState<Date | null>(null);
+	const datePickerContainerRef = useRef<HTMLDivElement | null>(null);
+
+	// WheelDatePicker 트리거 자동 클릭
+	useEffect(() => {
+		if (selectedDateQuestionId && datePickerContainerRef.current) {
+			// 다음 렌더 사이클에서 트리거 버튼 클릭
+			requestAnimationFrame(() => {
+				const triggerButton = datePickerContainerRef.current?.querySelector(
+					'button, [role="button"], input[type="button"]',
+				) as HTMLElement;
+				triggerButton?.click();
+			});
+		}
+	}, [selectedDateQuestionId]);
 
 	const [submitting, setSubmitting] = useState(false);
 
@@ -125,14 +140,14 @@ export const SectionBasedSurvey = () => {
 	};
 
 	const handleDatePickerOpen = (questionId: number) => {
-		setSelectedDateQuestionId(questionId);
 		const currentAnswer = answers[questionId];
 		setDatePickerValue(currentAnswer ? new Date(currentAnswer) : new Date());
+		setSelectedDateQuestionId(questionId);
 	};
 
 	const handleDateChange = (date: Date) => {
 		if (!selectedDateQuestionId) return;
-		updateAnswer(selectedDateQuestionId, date.toISOString().split("T")[0]);
+		updateAnswer(selectedDateQuestionId, formatDateToISO(date));
 		setSelectedDateQuestionId(null);
 	};
 
@@ -233,8 +248,9 @@ export const SectionBasedSurvey = () => {
 			const surveyInfo = await getSurveyInfo(surveyId);
 			if (!surveyInfo.isFree) {
 				await issuePromotion({ surveyId });
-				queryClient.invalidateQueries();
 			}
+			// 무료/유료 구분 없이 홈 설문 리스트 갱신
+			queryClient.invalidateQueries({ queryKey: ["allOngoingSurveys"] });
 		} catch {
 			// 실패해도 완료 페이지 이동
 		}
@@ -303,7 +319,15 @@ export const SectionBasedSurvey = () => {
 				))}
 			</div>
 
-			{selectedDateQuestionId && (
+			<div
+				ref={datePickerContainerRef}
+				style={{
+					position: "absolute",
+					left: "-9999px",
+					opacity: 0,
+					pointerEvents: "none",
+				}}
+			>
 				<WheelDatePicker
 					title="날짜를 선택해 주세요"
 					value={datePickerValue ?? new Date()}
@@ -311,7 +335,7 @@ export const SectionBasedSurvey = () => {
 					triggerLabel="날짜"
 					buttonText="선택하기"
 				/>
-			)}
+			</div>
 
 			<FixedBottomCTA.Double
 				leftButton={

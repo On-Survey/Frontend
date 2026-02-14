@@ -16,6 +16,7 @@ export interface OngoingSurveySummary {
 	deadline?: string;
 	isFree?: boolean;
 	responseCount?: number;
+	isEligible?: boolean; // 세그먼트 일치 여부 (true: 일치, false: 불일치)
 }
 
 export interface OngoingSurveyResult {
@@ -52,4 +53,14 @@ export interface GlobalStats {
 
 export interface GlobalStatsResponse extends BaseResponse {
 	result: GlobalStats;
+}
+
+// 모든 설문 조회 API 응답 (세그먼트 불일치 포함)
+export interface AllOngoingSurveysResult {
+	surveys: OngoingSurveySummary[];
+	hasNext: boolean;
+}
+
+export interface AllOngoingSurveysResponse extends BaseResponse {
+	result: AllOngoingSurveysResult;
 }

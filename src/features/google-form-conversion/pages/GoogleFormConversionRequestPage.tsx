@@ -237,6 +237,8 @@ export const GoogleFormConversionRequestPage = () => {
 					}
 					onClick={() => setIsRespondentSheetOpen(true)}
 				/>
+
+				<DateSelectBottomSheet value={deadline} onChange={handleDateChange} />
 			</div>
 
 			<BottomSheet
@@ -286,8 +288,6 @@ export const GoogleFormConversionRequestPage = () => {
 					/>
 				</div>
 			</BottomSheet>
-
-			<DateSelectBottomSheet value={deadline} onChange={handleDateChange} />
 
 			<FixedBottomCTA
 				loading={false}

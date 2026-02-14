@@ -27,7 +27,12 @@ export const RatingQuestion = ({
 	const selectedValue = answer ? parseInt(answer, 10) : null;
 
 	const handleScoreChange = (value: number) => {
-		onAnswerChange(question.questionId, value.toString());
+		// 같은 값을 다시 클릭하면 선택 해제
+		if (selectedValue === value) {
+			onAnswerChange(question.questionId, "");
+		} else {
+			onAnswerChange(question.questionId, value.toString());
+		}
 	};
 
 	const getDescriptionText = () => {
@@ -83,64 +88,77 @@ export const RatingQuestion = ({
 			{isExpanded && (
 				<>
 					<Spacing size={19} />
-					<div className="px-4 flex justify-center gap-2.5">
-						{ratingOptions.map((value) => {
-							const isActive = selectedValue !== null && value <= selectedValue;
-							const isSelected = selectedValue === value;
-							const isFirst = value === 1;
-							const isLast = value === optionCount;
-							return (
-								<div key={value} className="flex flex-col items-center gap-1">
-									<button
-										type="button"
-										aria-label={`${value}점`}
-										onClick={() => handleScoreChange(value)}
-										className="cursor-pointer border-none bg-transparent p-0"
-									>
-										<Asset.Text
-											frameShape={Asset.frameShape.CircleSmall}
-											backgroundColor={
-												isSelected
-													? adaptive.green300
-													: isActive
-														? adaptive.grey200
-														: adaptive.greyOpacity100
-											}
-											style={{
-												color: isSelected
-													? adaptive.grey200
-													: isActive
-														? adaptive.grey700
-														: adaptive.grey600,
-												fontSize: "11px",
-												fontWeight: "bold",
-											}}
-											aria-hidden
-										/>
-									</button>
-									{isFirst && question.minValue ? (
-										<Text
-											display="block"
-											color={adaptive.grey700}
-											typography="t7"
-											fontWeight="regular"
+					<div className="px-6">
+						<div
+							className="overflow-x-auto -mx-6 px-6 [&::-webkit-scrollbar]:hidden"
+							style={
+								{
+									scrollbarWidth: "none",
+									msOverflowStyle: "none",
+								} as React.CSSProperties
+							}
+						>
+							<div className="flex justify-center gap-3 min-w-fit">
+								{ratingOptions.map((value) => {
+									const isActive =
+										selectedValue !== null && value <= selectedValue;
+									const isFirst = value === 1;
+									const isLast = value === optionCount;
+									return (
+										<div
+											key={value}
+											className="flex flex-col items-center gap-2 flex-shrink-0"
 										>
-											{question.minValue}
-										</Text>
-									) : null}
-									{isLast && question.maxValue ? (
-										<Text
-											display="block"
-											color={adaptive.grey700}
-											typography="t7"
-											fontWeight="regular"
-										>
-											{question.maxValue}
-										</Text>
-									) : null}
-								</div>
-							);
-						})}
+											<button
+												type="button"
+												aria-label={`${value}점`}
+												onClick={() => handleScoreChange(value)}
+												className="cursor-pointer border-none bg-transparent p-0 transition-transform active:scale-95"
+											>
+												<Asset.Text
+													frameShape={Asset.frameShape.CircleSmall}
+													backgroundColor={
+														isActive
+															? adaptive.green300
+															: adaptive.greyOpacity100
+													}
+													style={{
+														color: isActive
+															? adaptive.grey200
+															: adaptive.grey600,
+														fontSize: "11px",
+														fontWeight: "bold",
+													}}
+													aria-hidden
+												/>
+											</button>
+											{isFirst && question.minValue ? (
+												<Text
+													display="block"
+													color={adaptive.grey700}
+													typography="t7"
+													fontWeight="regular"
+													className="whitespace-nowrap"
+												>
+													{question.minValue}
+												</Text>
+											) : null}
+											{isLast && question.maxValue ? (
+												<Text
+													display="block"
+													color={adaptive.grey700}
+													typography="t7"
+													fontWeight="regular"
+													className="whitespace-nowrap"
+												>
+													{question.maxValue}
+												</Text>
+											) : null}
+										</div>
+									);
+								})}
+							</div>
+						</div>
 					</div>
 					{error && errorMessage && (
 						<Text

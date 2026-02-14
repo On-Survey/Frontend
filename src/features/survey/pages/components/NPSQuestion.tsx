@@ -24,7 +24,12 @@ export const NPSQuestion = ({
 	const selectedValue = answer ? parseInt(answer, 10) : null;
 
 	const handleScoreChange = (value: number) => {
-		onAnswerChange(question.questionId, value.toString());
+		// 같은 값을 다시 클릭하면 선택 해제
+		if (selectedValue === value) {
+			onAnswerChange(question.questionId, "");
+		} else {
+			onAnswerChange(question.questionId, value.toString());
+		}
 	};
 
 	const getDescriptionText = () => {
@@ -75,38 +80,48 @@ export const NPSQuestion = ({
 			{isExpanded && (
 				<>
 					<Spacing size={19} />
-					<div className="px-4 flex gap-2.5">
-						{Array.from({ length: 10 }, (_, idx) => {
-							const value = idx + 1;
-							const isActive = selectedValue !== null && value <= selectedValue;
-							const isSelected = selectedValue === value;
-							return (
-								<Asset.Text
-									key={value}
-									frameShape={Asset.frameShape.CircleSmall}
-									backgroundColor={
-										isSelected
-											? adaptive.green300
-											: isActive
-												? adaptive.grey200
-												: adaptive.greyOpacity100
-									}
-									style={{
-										color: isSelected
-											? adaptive.grey200
-											: isActive
-												? adaptive.grey700
-												: adaptive.grey600,
-										fontSize: "11px",
-										fontWeight: "bold",
-									}}
-									aria-label={`${value}점`}
-									onClick={() => handleScoreChange(value)}
-								>
-									{value}
-								</Asset.Text>
-							);
-						})}
+					<div className="px-6">
+						<div
+							className="overflow-x-auto -mx-6 px-6 [&::-webkit-scrollbar]:hidden"
+							style={
+								{
+									scrollbarWidth: "none",
+									msOverflowStyle: "none",
+								} as React.CSSProperties
+							}
+						>
+							<div className="flex justify-center gap-3 min-w-fit">
+								{Array.from({ length: 10 }, (_, idx) => {
+									const value = idx + 1;
+									const isActive =
+										selectedValue !== null && value <= selectedValue;
+									return (
+										<button
+											key={value}
+											type="button"
+											aria-label={`${value}점`}
+											onClick={() => handleScoreChange(value)}
+											className="cursor-pointer border-none bg-transparent p-0 transition-transform active:scale-95 flex-shrink-0"
+										>
+											<Asset.Text
+												frameShape={Asset.frameShape.CircleSmall}
+												backgroundColor={
+													isActive ? adaptive.green300 : adaptive.greyOpacity100
+												}
+												style={{
+													color: isActive ? adaptive.grey50 : adaptive.grey600,
+													fontSize: "11px",
+													fontWeight: "bold",
+												}}
+												aria-hidden
+											>
+												{value}
+											</Asset.Text>
+										</button>
+									);
+								})}
+							</div>
+						</div>
 					</div>
 					{error && errorMessage && (
 						<Text

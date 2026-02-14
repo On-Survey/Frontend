@@ -18,15 +18,17 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IneligibleSurveyBottomSheet } from "../components/IneligibleSurveyBottomSheet";
 
 export const OxScreening = () => {
 	const navigate = useNavigate();
 	const [screeningQuestions, setScreeningQuestions] = useState<
 		ScreeningQuestion[]
 	>([]);
-	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [selectedOption, setSelectedOption] = useState<boolean | null>(null);
 	const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+	const [isIneligibleBottomSheetOpen, setIsIneligibleBottomSheetOpen] =
+		useState(false);
 	const [showNoQuiz, setShowNoQuiz] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [nextSurveyId, setNextSurveyId] = useState<number | null>(null);
@@ -65,53 +67,18 @@ export const OxScreening = () => {
 		void fetchScreenings();
 	}, []);
 
-	const currentQuestion = screeningQuestions[currentQuestionIndex];
-	const isLastQuestion = currentQuestionIndex === screeningQuestions.length - 1;
+	const currentQuestion = screeningQuestions[0];
 
 	const handleCloseModal = () => {
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
-
-		if (!isLastQuestion) {
-			const nextIndex = currentQuestionIndex + 1;
-			setCurrentQuestionIndex(nextIndex);
-			if (screeningQuestions[nextIndex]) {
-				const nextSurveyId = screeningQuestions[nextIndex].surveyId;
-				setNextSurveyId(nextSurveyId);
-				// 다음 설문의 responseCount 조회
-				getSurveyInfo(nextSurveyId)
-					.then((surveyInfo) => {
-						setResponseCount(surveyInfo.responseCount);
-					})
-					.catch((err) => {
-						console.error("설문 정보 조회 실패:", err);
-					});
-			}
-		} else {
-			setShowNoQuiz(true);
-		}
+		// 닫기 버튼 클릭 시 홈으로 이동
+		navigate("/home");
 	};
 
 	const handleNextQuestion = async () => {
-		if (currentQuestion && selectedOption !== null) {
-			try {
-				const content = String(selectedOption);
-				await submitScreening({
-					screeningId: currentQuestion.screeningId,
-					payload: { content },
-					surveyId: nextSurveyId,
-				});
-				pushGtmEvent({
-					event: "complete_screening_quiz",
-					pagePath: "/screening",
-					quiz_id: String(currentQuestion.screeningId),
-					result: "pass",
-				});
-			} catch (err) {
-				console.error("스크리닝 응답 제출 실패:", err);
-			}
-		}
-
+		// handleNextQuestion은 정답일 때만 호출되므로 이미 제출된 상태
+		// 여기서는 제출하지 않고 바로 다음 설문으로 이동
 		setIsBottomSheetOpen(false);
 		setSelectedOption(null);
 		if (nextSurveyId) {
@@ -168,59 +135,6 @@ export const OxScreening = () => {
 		}
 	};
 
-	const handleSkipToNextScreening = async () => {
-		if (currentQuestion && selectedOption !== null) {
-			try {
-				const content = String(selectedOption);
-				await submitScreening({
-					screeningId: currentQuestion.screeningId,
-					payload: { content },
-					surveyId: nextSurveyId,
-				});
-				pushGtmEvent({
-					event: "complete_screening_quiz",
-					pagePath: "/screening",
-					quiz_id: String(currentQuestion.screeningId),
-					result: "fail",
-				});
-			} catch (err) {
-				console.error("스크리닝 응답 제출 실패:", err);
-			}
-		}
-
-		setSelectedOption(null);
-
-		if (!isLastQuestion) {
-			const nextIndex = currentQuestionIndex + 1;
-			const nextQuestion = screeningQuestions[nextIndex];
-			if (currentQuestion && nextQuestion) {
-				pushGtmEvent({
-					event: "redirect_to_another_quiz",
-					pagePath: "/screening",
-					from_quiz_id: String(currentQuestion.screeningId),
-					to_quiz_id: String(nextQuestion.screeningId),
-					reason: "screening_fail",
-				});
-			}
-
-			setCurrentQuestionIndex(nextIndex);
-			if (nextQuestion) {
-				const nextSurveyId = nextQuestion.surveyId;
-				setNextSurveyId(nextSurveyId);
-				// 다음 설문의 responseCount 조회
-				getSurveyInfo(nextSurveyId)
-					.then((surveyInfo) => {
-						setResponseCount(surveyInfo.responseCount);
-					})
-					.catch((err) => {
-						console.error("설문 정보 조회 실패:", err);
-					});
-			}
-		} else {
-			setShowNoQuiz(true);
-		}
-	};
-
 	const handleOptionSelect = (answer: boolean) => {
 		setSelectedOption(answer);
 	};
@@ -268,7 +182,7 @@ export const OxScreening = () => {
 			<div className="flex flex-col items-center justify-center px-4 py-6 bg-white">
 				<div className="mb-6">
 					<Button size="small" color="dark" variant="weak">
-						Q{currentQuestionIndex + 1}
+						질문
 					</Button>
 				</div>
 
@@ -374,6 +288,19 @@ export const OxScreening = () => {
 				loading={false}
 				onClick={async () => {
 					if (selectedOption === null || !currentQuestion) return;
+
+					// 스크리닝 응답 제출 (정답/오답 관계없이)
+					try {
+						const content = String(selectedOption);
+						await submitScreening({
+							screeningId: currentQuestion.screeningId,
+							payload: { content },
+							surveyId: nextSurveyId,
+						});
+					} catch (err) {
+						console.error("스크리닝 응답 제출 실패:", err);
+					}
+
 					pushGtmEvent({
 						event: "answer_screening_quiz",
 						pagePath: "/screening",
@@ -390,9 +317,22 @@ export const OxScreening = () => {
 								source: "screening_quiz",
 							});
 						}
+						pushGtmEvent({
+							event: "complete_screening_quiz",
+							pagePath: "/screening",
+							quiz_id: String(currentQuestion.screeningId),
+							result: "pass",
+						});
 						setIsBottomSheetOpen(true);
 					} else {
-						await handleSkipToNextScreening();
+						// 정답이 아닐 때 바텀시트 표시
+						pushGtmEvent({
+							event: "complete_screening_quiz",
+							pagePath: "/screening",
+							quiz_id: String(currentQuestion.screeningId),
+							result: "fail",
+						});
+						setIsIneligibleBottomSheetOpen(true);
 					}
 				}}
 				disabled={selectedOption === null}
@@ -449,6 +389,12 @@ export const OxScreening = () => {
 					/>
 				</div>
 			</BottomSheet>
+
+			{/* 참여 불가 바텀시트 */}
+			<IneligibleSurveyBottomSheet
+				open={isIneligibleBottomSheetOpen}
+				onClose={() => setIsIneligibleBottomSheetOpen(false)}
+			/>
 		</>
 	);
 };

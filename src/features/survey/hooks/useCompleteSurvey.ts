@@ -17,6 +17,7 @@ export const useCompleteSurvey = () => {
 			// 홈 및 설문 리스트 새로고침
 			queryClient.invalidateQueries({ queryKey: ["globalStats"] });
 			queryClient.invalidateQueries({ queryKey: ["ongoingSurveys"] });
+			queryClient.invalidateQueries({ queryKey: ["allOngoingSurveys"] });
 			queryClient.invalidateQueries({ queryKey: ["recommendedSurveys"] });
 			queryClient.invalidateQueries({ queryKey: ["impendingSurveys"] });
 			queryClient.invalidateQueries({ queryKey: ["ongoingSurveysList"] });
