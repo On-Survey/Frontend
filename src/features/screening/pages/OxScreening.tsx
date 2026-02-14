@@ -296,6 +296,7 @@ export const OxScreening = () => {
 							screeningId: currentQuestion.screeningId,
 							payload: { content },
 							surveyId: nextSurveyId,
+							isCorrect: selectedOption === currentQuestion.answer,
 						});
 					} catch (err) {
 						console.error("스크리닝 응답 제출 실패:", err);
