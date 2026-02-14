@@ -248,8 +248,9 @@ export const SectionBasedSurvey = () => {
 			const surveyInfo = await getSurveyInfo(surveyId);
 			if (!surveyInfo.isFree) {
 				await issuePromotion({ surveyId });
-				queryClient.invalidateQueries();
 			}
+			// 무료/유료 구분 없이 홈 설문 리스트 갱신
+			queryClient.invalidateQueries({ queryKey: ["allOngoingSurveys"] });
 		} catch {
 			// 실패해도 완료 페이지 이동
 		}
