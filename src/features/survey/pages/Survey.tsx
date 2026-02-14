@@ -1,10 +1,12 @@
 import type { InterestId } from "@shared/constants/topics";
 import { formatRemainingTime } from "@shared/lib/FormatDate";
+import { shareSurveyById } from "@shared/lib/shareSurvey";
 import type { ReturnTo } from "@shared/types/navigation";
 import { colors } from "@toss/tds-colors";
 import {
 	Asset,
 	Border,
+	Button,
 	ConfirmDialog,
 	FixedBottomCTA,
 	Text,
@@ -153,6 +155,17 @@ export const Survey = () => {
 		});
 	};
 
+	const handleShare = async () => {
+		if (!numericSurveyId) return;
+
+		await shareSurveyById(numericSurveyId, () => {
+			openToast("공유 링크가 생성되었어요", {
+				type: "bottom",
+				higherThanCTA: true,
+			});
+		});
+	};
+
 	const handleErrorDialogConfirm = () => {
 		setErrorDialog({ open: false, title: "" });
 		if (errorDialog.redirectTo) {
@@ -214,6 +227,17 @@ export const Survey = () => {
 						questionCount={sortedQuestions.length}
 						remainingTimeText={remainingTimeText}
 					/>
+					<div className="px-4 mt-4">
+						<Button
+							size="medium"
+							variant="weak"
+							display="block"
+							disabled={!numericSurveyId}
+							onClick={handleShare}
+						>
+							공유하기
+						</Button>
+					</div>
 
 					<div className="px-4">
 						<div className="flex items-center gap-3 my-6">
