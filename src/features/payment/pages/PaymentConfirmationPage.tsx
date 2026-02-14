@@ -94,7 +94,9 @@ export const PaymentConfirmationPage = () => {
 					try {
 						await createPayment({
 							orderId,
-							price: Number(selectedCoinAmount.displayAmount.replace("원", "")),
+							price: Number(
+								selectedCoinAmount.displayAmount.replace(/[^\d]/g, ""),
+							),
 						});
 						return true;
 					} catch (error) {
