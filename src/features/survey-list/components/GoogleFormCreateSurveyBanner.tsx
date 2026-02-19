@@ -19,13 +19,9 @@ export const GoogleFormCreateSurveyBanner = () => {
 	};
 
 	return (
-		<div className="px-4">
+		<button type="button" className="px-4" onClick={handleCreateSurvey}>
 			<div className="bg-gray-50 rounded-[24px] flex items-center justify-between gap-4">
-				<button
-					type="button"
-					onClick={handleCreateSurvey}
-					className="flex-1 p-4 text-left"
-				>
+				<div className="flex-1 p-4 text-left">
 					<div className="flex flex-col items-start gap-1">
 						<Text color={adaptive.grey800} typography="t5" fontWeight="bold">
 							구글폼으로 설문 등록하기
@@ -34,13 +30,13 @@ export const GoogleFormCreateSurveyBanner = () => {
 							등록만 하면 패널에게 즉시 노출
 						</Text>
 					</div>
-				</button>
+				</div>
 				<img
 					src={formBanner}
 					alt="구글폼 배너"
 					className="h-full max-h-[84px] w-auto object-contain"
 				/>
 			</div>
-		</div>
+		</button>
 	);
 };
