@@ -15,7 +15,7 @@ export const SURVEY_STATUS_LABELS: Record<SurveyStatus, string> = {
 // 질문 타입별 라벨
 export const QUESTION_TYPE_LABELS: Record<string, string> = {
 	shortAnswer: "주관식 단답형",
-	longAnswer: "주관식 서술형",
+	longAnswer: "주관식 장문형",
 	multipleChoice: "객관식",
 	rating: "평가형",
 	nps: "NPS",

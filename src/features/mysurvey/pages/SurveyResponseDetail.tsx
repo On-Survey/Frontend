@@ -209,42 +209,47 @@ export const SurveyResponseDetail = () => {
 						verticalPadding="small"
 						horizontalPadding="small"
 					/>
-					{surveyResponse.questions.map((question) => (
-						<ListRow
-							key={question.id}
-							contents={
-								<ListRow.Texts
-									type="2RowTypeA"
-									top={`${question.order !== undefined ? question.order + 1 : parseInt(question.id, 10)}. ${question.title}`}
-									topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
-									bottom={getQuestionTypeLabel(
-										question.type,
-										question.required,
-									)}
-									bottomProps={{ color: adaptive.grey600 }}
-								/>
-							}
-							right={
-								<div className="[&_button]:!text-[#15c67f]">
-									<Button
-										size="medium"
-										variant="weak"
-										onClick={() =>
-											handleResultNavigation(question.type, question.id)
-										}
-										style={
-											{
-												"--button-background-color": "#f0faf6",
-											} as React.CSSProperties
-										}
-									>
-										{question.responseCount}명
-									</Button>
-								</div>
-							}
-							verticalPadding="large"
-						/>
-					))}
+					{(() => {
+						const firstQuestionOrder = surveyResponse.questions[0]?.order;
+						const offset = firstQuestionOrder === 0 ? 1 : 0;
+
+						return surveyResponse.questions.map((question) => (
+							<ListRow
+								key={question.id}
+								contents={
+									<ListRow.Texts
+										type="2RowTypeA"
+										top={`${question.order !== undefined ? question.order + offset : parseInt(question.id, 10)}. ${question.title}`}
+										topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+										bottom={getQuestionTypeLabel(
+											question.type,
+											question.required,
+										)}
+										bottomProps={{ color: adaptive.grey600 }}
+									/>
+								}
+								right={
+									<div className="[&_button]:!text-[#15c67f]">
+										<Button
+											size="medium"
+											variant="weak"
+											onClick={() =>
+												handleResultNavigation(question.type, question.id)
+											}
+											style={
+												{
+													"--button-background-color": "#f0faf6",
+												} as React.CSSProperties
+											}
+										>
+											{question.responseCount}명
+										</Button>
+									</div>
+								}
+								verticalPadding="large"
+							/>
+						));
+					})()}
 				</List>
 			</div>
 

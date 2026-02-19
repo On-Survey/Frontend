@@ -48,13 +48,37 @@ export const SectionBasedSurvey = () => {
 	const questions = data?.info ?? [];
 	const nextSectionFromApi = data?.nextSection;
 
-	const isLastSection =
-		nextSectionFromApi === undefined || nextSectionFromApi === 0;
-	const sectionNext = nextSectionFromApi ?? currentSection + 1;
-
 	const [answers, setAnswers] = useState<Record<number, string>>(
 		locationState?.answers ?? {},
 	);
+
+	// isSectionDecidable인 문항이 있고 답변이 있으면, 옵션의 nextSection도 확인
+	const decidableQuestion = questions.find((q) => q.isSectionDecidable);
+	const hasDecidableAnswer =
+		decidableQuestion !== undefined &&
+		decidableQuestion.type === "multipleChoice" &&
+		answers[decidableQuestion.questionId] !== undefined;
+
+	let actualNextSection: number | undefined;
+	if (hasDecidableAnswer && decidableQuestion) {
+		const answerValue = answers[decidableQuestion.questionId];
+		if (answerValue) {
+			const selected = answerValue.split("|||").filter(Boolean);
+			const option = decidableQuestion.options?.find((o) =>
+				selected.includes(o.content),
+			);
+			actualNextSection = option?.nextSection ?? undefined;
+		}
+	}
+
+	// 실제 다음 섹션이 0이 아니면 마지막 섹션이 아님
+	const isLastSection =
+		(actualNextSection !== undefined && actualNextSection === 0) ||
+		(actualNextSection === undefined &&
+			(nextSectionFromApi === undefined || nextSectionFromApi === 0));
+
+	const sectionNext =
+		actualNextSection ?? nextSectionFromApi ?? currentSection + 1;
 	const [previousAnswers, setPreviousAnswers] = useState<
 		Record<number, string>
 	>(locationState?.previousAnswers ?? {});

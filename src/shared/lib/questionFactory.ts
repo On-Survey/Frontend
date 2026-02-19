@@ -7,7 +7,9 @@ export const mapApiQuestionTypeToComponentType = (
 	const typeMap: Record<string, QuestionType> = {
 		CHOICE: "multipleChoice",
 		SHORT_ANSWER: "shortAnswer",
+		SHORT: "shortAnswer",
 		LONG_ANSWER: "longAnswer",
+		LONG: "longAnswer",
 		RATING: "rating",
 		NPS: "nps",
 		DATE: "date",
