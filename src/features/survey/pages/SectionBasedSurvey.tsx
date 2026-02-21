@@ -1,6 +1,7 @@
 import {
 	getSurveyInfo,
 	submitSurveyParticipation,
+	type TransformedSurveyQuestion,
 } from "@features/survey/service/surveyParticipation";
 import { queryClient } from "@shared/contexts/queryClient";
 import { formatDateToISO } from "@shared/lib/FormatDate";
@@ -31,6 +32,7 @@ interface SectionBasedSurveyState {
 	surveyTitle?: string;
 	surveyDescription?: string;
 	source?: "main" | "quiz" | "after_complete";
+	sectionHistory?: number[];
 }
 
 export const SectionBasedSurvey = () => {
@@ -43,6 +45,11 @@ export const SectionBasedSurvey = () => {
 		locationState?.currentSection ?? 1,
 	);
 
+	// 섹션 이동 경로 추적
+	const [sectionHistory, setSectionHistory] = useState<number[]>(
+		locationState?.sectionHistory ?? [locationState?.currentSection ?? 1],
+	);
+
 	const { data } = useSurveySectionQuestions(surveyId, currentSection);
 
 	const questions = data?.info ?? [];
@@ -52,33 +59,48 @@ export const SectionBasedSurvey = () => {
 		locationState?.answers ?? {},
 	);
 
-	// isSectionDecidable인 문항이 있고 답변이 있으면, 옵션의 nextSection도 확인
-	const decidableQuestion = questions.find((q) => q.isSectionDecidable);
-	const hasDecidableAnswer =
-		decidableQuestion !== undefined &&
-		decidableQuestion.type === "multipleChoice" &&
-		answers[decidableQuestion.questionId] !== undefined;
+	// 다음 섹션 계산 함수
+	const calculateNextSection = (
+		questions: TransformedSurveyQuestion[],
+		answers: Record<number, string>,
+		currentSection: number,
+		nextSectionFromApi?: number,
+	): number => {
+		const decidableQuestion = questions.find(
+			(q: TransformedSurveyQuestion) => q.isSectionDecidable,
+		);
+		const hasDecidableAnswer =
+			decidableQuestion !== undefined &&
+			decidableQuestion.type === "multipleChoice" &&
+			answers[decidableQuestion.questionId] !== undefined;
 
-	let actualNextSection: number | undefined;
-	if (hasDecidableAnswer && decidableQuestion) {
-		const answerValue = answers[decidableQuestion.questionId];
-		if (answerValue) {
-			const selected = answerValue.split("|||").filter(Boolean);
-			const option = decidableQuestion.options?.find((o) =>
-				selected.includes(o.content),
-			);
-			actualNextSection = option?.nextSection ?? undefined;
+		if (hasDecidableAnswer && decidableQuestion) {
+			const answerValue = answers[decidableQuestion.questionId];
+			if (answerValue) {
+				const selected = answerValue.split("|||").filter(Boolean);
+				// 다중 선택의 경우, nextSection이 있는 첫 번째 옵션을 찾음
+				const option = decidableQuestion.options?.find(
+					(o) => selected.includes(o.content) && o.nextSection !== undefined,
+				);
+				if (option?.nextSection !== undefined) {
+					return option.nextSection;
+				}
+			}
 		}
-	}
 
-	// 실제 다음 섹션이 0이 아니면 마지막 섹션이 아님
-	const isLastSection =
-		(actualNextSection !== undefined && actualNextSection === 0) ||
-		(actualNextSection === undefined &&
-			(nextSectionFromApi === undefined || nextSectionFromApi === 0));
+		return nextSectionFromApi ?? currentSection + 1;
+	};
 
-	const sectionNext =
-		actualNextSection ?? nextSectionFromApi ?? currentSection + 1;
+	// 현재 상태에서 다음 섹션 계산
+	const actualNextSection = calculateNextSection(
+		questions,
+		answers,
+		currentSection,
+		nextSectionFromApi,
+	);
+
+	// 실제 다음 섹션이 0이면 마지막 섹션
+	const isLastSection = actualNextSection === 0;
 	const [previousAnswers, setPreviousAnswers] = useState<
 		Record<number, string>
 	>(locationState?.previousAnswers ?? {});
@@ -220,8 +242,27 @@ export const SectionBasedSurvey = () => {
 			// 첫 섹션인 경우 Survey 페이지로 이동
 			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
 		} else {
-			// 이전 섹션으로 이동
-			setCurrentSection(currentSection - 1);
+			const currentIndex = sectionHistory.indexOf(currentSection);
+			let prevSection: number;
+			let newHistory: number[];
+
+			if (currentIndex > 0) {
+				// 경로에 현재 섹션이 있고 이전 섹션이 있으면
+				prevSection = sectionHistory[currentIndex - 1];
+				// 경로에서 현재 섹션 이후 제거
+				newHistory = sectionHistory.slice(0, currentIndex);
+			} else if (sectionHistory.length > 1) {
+				// 경로에 현재 섹션이 없지만 경로가 있으면 마지막에서 하나 제거
+				newHistory = sectionHistory.slice(0, -1);
+				prevSection = newHistory[newHistory.length - 1];
+			} else {
+				// 경로가 없거나 하나만 있으면 단순히 -1
+				prevSection = currentSection - 1;
+				newHistory = prevSection >= 1 ? [prevSection] : [1];
+			}
+
+			setCurrentSection(prevSection);
+			setSectionHistory(newHistory);
 			window.scrollTo({ top: 0, behavior: "smooth" });
 		}
 	};
@@ -244,19 +285,20 @@ export const SectionBasedSurvey = () => {
 
 		await submitCurrentSectionAnswers();
 
-		const decidable = questions.find((q) => q.isSectionDecidable);
-		const nextSection =
-			decidable?.type === "multipleChoice" && answers[decidable.questionId]
-				? (() => {
-						const selected = answers[decidable.questionId]
-							.split("|||")
-							.filter(Boolean);
-						const option = decidable.options?.find((o) =>
-							selected.includes(o.content),
-						);
-						return option?.nextSection ?? sectionNext ?? currentSection + 1;
-					})()
-				: (sectionNext ?? currentSection + 1);
+		const nextSection = calculateNextSection(
+			questions,
+			answers,
+			currentSection,
+			nextSectionFromApi,
+		);
+
+		// 섹션 이동 경로에 다음 섹션 추가
+		setSectionHistory((prev) => {
+			if (prev.length === 0 || prev[prev.length - 1] !== currentSection) {
+				return [...prev, currentSection, nextSection];
+			}
+			return [...prev, nextSection];
+		});
 
 		setCurrentSection(nextSection);
 		window.scrollTo({ top: 0, behavior: "smooth" });
