@@ -106,15 +106,26 @@ export const SurveyResponseDetail = () => {
 		const path = getQuestionResultRoute(type);
 
 		const responseCount =
-			(questionDetail.type === "CHOICE" ||
-				questionDetail.type === "RATING" ||
-				questionDetail.type === "NPS") &&
-			questionDetail.answerMap
+			questionDetail.type === "CHOICE" &&
+			questionDetail.respondentCount !== undefined
+				? questionDetail.respondentCount
+				: (questionDetail.type === "CHOICE" ||
+							questionDetail.type === "RATING" ||
+							questionDetail.type === "NPS") &&
+						questionDetail.answerMap
+					? (Object.values(questionDetail.answerMap) as number[]).reduce(
+							(sum, count) => sum + (count as number),
+							0,
+						)
+					: questionDetail.answerList?.length || 0;
+
+		const totalAnswerCount =
+			questionDetail.type === "CHOICE" && questionDetail.answerMap
 				? (Object.values(questionDetail.answerMap) as number[]).reduce(
 						(sum, count) => sum + (count as number),
 						0,
 					)
-				: questionDetail.answerList?.length || 0;
+				: undefined;
 
 		navigate(path, {
 			state: {
@@ -132,6 +143,7 @@ export const SurveyResponseDetail = () => {
 				surveyTitle: surveyResponse?.title || "",
 				surveyStatus: surveyResponse?.status || "active",
 				responseCount,
+				totalAnswerCount,
 				surveyId: Number(surveyId),
 				filters,
 			},
