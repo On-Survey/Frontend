@@ -17,11 +17,16 @@ import {
 	Text,
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { IneligibleSurveyBottomSheet } from "../components/IneligibleSurveyBottomSheet";
 
 export const OxScreening = () => {
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const targetSurveyId = searchParams.get("surveyId")
+		? Number(searchParams.get("surveyId"))
+		: null;
+
 	const [screeningQuestions, setScreeningQuestions] = useState<
 		ScreeningQuestion[]
 	>([]);
@@ -41,20 +46,37 @@ export const OxScreening = () => {
 		const fetchScreenings = async () => {
 			try {
 				setIsLoading(true);
+
+				if (!targetSurveyId) {
+					console.error("surveyId가 필요합니다.");
+					setShowNoQuiz(true);
+					return;
+				}
+
 				const result = await getScreenings();
 				if (result.data.length === 0) {
 					setShowNoQuiz(true);
-				} else {
-					setScreeningQuestions(result.data);
-					const firstSurveyId = result.data[0].surveyId;
-					setNextSurveyId(firstSurveyId);
-					// 첫 번째 설문의 responseCount 조회
-					try {
-						const surveyInfo = await getSurveyInfo(firstSurveyId);
-						setResponseCount(surveyInfo.responseCount);
-					} catch (err) {
-						console.error("설문 정보 조회 실패:", err);
-					}
+					return;
+				}
+
+				const targetScreening = result.data.find(
+					(screening) => screening.surveyId === targetSurveyId,
+				);
+				if (!targetScreening) {
+					console.error(
+						`설문 ID ${targetSurveyId}에 해당하는 스크리닝을 찾을 수 없습니다.`,
+					);
+					setShowNoQuiz(true);
+					return;
+				}
+
+				setScreeningQuestions([targetScreening]);
+				setNextSurveyId(targetScreening.surveyId);
+				try {
+					const surveyInfo = await getSurveyInfo(targetScreening.surveyId);
+					setResponseCount(surveyInfo.responseCount);
+				} catch (err) {
+					console.error("설문 정보 조회 실패:", err);
 				}
 			} catch (err) {
 				console.error("스크리닝 설문 조회 실패:", err);
@@ -65,7 +87,7 @@ export const OxScreening = () => {
 		};
 
 		void fetchScreenings();
-	}, []);
+	}, [targetSurveyId]);
 
 	const currentQuestion = screeningQuestions[0];
 
