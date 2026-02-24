@@ -242,7 +242,7 @@ export const SectionBasedSurvey = () => {
 			// 첫 섹션인 경우 Survey 페이지로 이동
 			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
 		} else {
-			const currentIndex = sectionHistory.indexOf(currentSection);
+			const currentIndex = sectionHistory.lastIndexOf(currentSection);
 			let prevSection: number;
 			let newHistory: number[];
 
