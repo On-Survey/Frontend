@@ -21,5 +21,6 @@ export const useSurveyInfo = (
 			return getSurveyInfo(surveyId);
 		},
 		enabled: Boolean(surveyId) && enabled,
+		retry: false,
 	});
 };

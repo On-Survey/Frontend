@@ -23,5 +23,6 @@ export const useSurveyQuestions = (
 			return getSurveyQuestions({ surveyId });
 		},
 		enabled: Boolean(surveyId) && enabled,
+		retry: false,
 	});
 };

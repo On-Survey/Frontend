@@ -43,10 +43,14 @@ export const Survey = () => {
 		useSurveyRouteParams();
 
 	// 설문 기본 정보 (제목, 설명, 마감일, 보상 여부, 스크리닝 필요 여부 등)
-	const { data: surveyBasicInfoData, error: surveyBasicInfoError } =
-		useSurveyInfo(numericSurveyId ?? undefined, {
-			enabled: Boolean(numericSurveyId),
-		});
+	const {
+		data: surveyBasicInfoData,
+		error: surveyBasicInfoError,
+		isLoading: isSurveyBasicInfoLoading,
+		isFetching: isSurveyBasicInfoFetching,
+	} = useSurveyInfo(numericSurveyId ?? undefined, {
+		enabled: Boolean(numericSurveyId),
+	});
 
 	// 설문 문항 목록
 	const { data: surveyQuestionsData, error: surveyQuestionsError } =
@@ -95,16 +99,21 @@ export const Survey = () => {
 			locationState,
 		},
 	);
+	const screeningError = getScreeningError();
+	const isAccessChecking =
+		Boolean(numericSurveyId) &&
+		(isSurveyBasicInfoLoading || isSurveyBasicInfoFetching);
+	const isStartDisabled =
+		isClosed ||
+		sortedQuestions.length === 0 ||
+		!numericSurveyId ||
+		isAccessChecking ||
+		Boolean(screeningError);
 
 	useEffect(() => {
-		if (!numericSurveyId) return;
-
-		const screeningError = getScreeningError();
-		if (screeningError) {
-			setErrorDialog(screeningError);
-			return;
-		}
-	}, [numericSurveyId, getScreeningError]);
+		if (!numericSurveyId || !screeningError) return;
+		setErrorDialog(screeningError);
+	}, [numericSurveyId, screeningError]);
 
 	const apiError = surveyBasicInfoError ?? surveyQuestionsError;
 
@@ -126,7 +135,10 @@ export const Survey = () => {
 	}, [apiError, getAuthErrorFromException]);
 
 	const handleStart = () => {
-		if (sortedQuestions.length === 0 || isClosed) {
+		if (isStartDisabled) {
+			if (screeningError) {
+				setErrorDialog(screeningError);
+			}
 			return;
 		}
 
@@ -314,7 +326,7 @@ export const Survey = () => {
 				<FixedBottomCTA
 					loading={false}
 					onClick={handleStart}
-					disabled={isClosed || sortedQuestions.length === 0}
+					disabled={isStartDisabled}
 					style={
 						{ "--button-background-color": "#15c67f" } as React.CSSProperties
 					}
