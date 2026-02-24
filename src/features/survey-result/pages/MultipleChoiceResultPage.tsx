@@ -92,9 +92,9 @@ export const MultipleChoiceResultPage = () => {
 						variant="weak"
 						display="inline"
 					>
-						{totalAnswerCount !== undefined && totalAnswerCount > responseCount
-							? `${responseCount}명 응답 · 총 ${totalAnswerCount}개 답변`
-							: `${responseCount || totalResponses}명 응답`}
+						{totalResponses === 0 || totalResponses > responseCount
+							? `${responseCount}명 응답 · 총 ${totalResponses}개 답변`
+							: `${responseCount}명 응답`}
 					</Top.LowerButton>
 				}
 			/>

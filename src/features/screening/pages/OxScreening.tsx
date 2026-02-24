@@ -53,7 +53,10 @@ export const OxScreening = () => {
 					return;
 				}
 
-				const result = await getScreenings();
+				const result = await getScreenings({
+					lastSurveyId: 0,
+					size: 100,
+				});
 				if (result.data.length === 0) {
 					setShowNoQuiz(true);
 					return;
