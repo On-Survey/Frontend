@@ -20,6 +20,7 @@ export const MultipleChoiceResultPage = () => {
 		surveyTitle,
 		surveyStatus,
 		responseCount,
+		totalAnswerCount,
 		requiredLabel,
 	} = useResultPageData();
 
@@ -56,11 +57,9 @@ export const MultipleChoiceResultPage = () => {
 
 	const maxCount =
 		options.length > 0 ? Math.max(...options.map((o) => o.count)) : 0;
-	// answerMap의 모든 값의 합이 전체 응답 수 (기타 응답 포함)
-	const totalResponses = Object.values(answerMap).reduce(
-		(sum, count) => sum + count,
-		0,
-	);
+	const totalResponses =
+		totalAnswerCount ??
+		Object.values(answerMap).reduce((sum, count) => sum + count, 0);
 
 	return (
 		<div className="min-h-screen">
@@ -93,7 +92,9 @@ export const MultipleChoiceResultPage = () => {
 						variant="weak"
 						display="inline"
 					>
-						{totalResponses || responseCount}명 응답
+						{totalResponses === 0 || totalResponses > responseCount
+							? `${responseCount}명 응답 · 총 ${totalResponses}개 답변`
+							: `${responseCount}명 응답`}
 					</Top.LowerButton>
 				}
 			/>

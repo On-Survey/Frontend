@@ -40,16 +40,20 @@ export const useSurveyAnswerDetail = (
 
 		const questions = answerDetails.detailInfoList.map((detail) => {
 			const questionType = mapApiQuestionTypeToComponentType(detail.type);
+			// 복수 선택 가능한 CHOICE 타입의 경우 respondentCount 사용
+			// 없으면 기존 방식으로 계산 (하위 호환성)
 			const responseCount =
-				(detail.type === "CHOICE" ||
-					detail.type === "RATING" ||
-					detail.type === "NPS") &&
-				detail.answerMap
-					? Object.values(detail.answerMap).reduce(
-							(sum, count) => sum + count,
-							0,
-						)
-					: detail.answerList?.length || 0;
+				detail.type === "CHOICE" && detail.respondentCount !== undefined
+					? detail.respondentCount
+					: (detail.type === "CHOICE" ||
+								detail.type === "RATING" ||
+								detail.type === "NPS") &&
+							detail.answerMap
+						? Object.values(detail.answerMap).reduce(
+								(sum, count) => sum + count,
+								0,
+							)
+						: detail.answerList?.length || 0;
 
 			return {
 				id: String(detail.questionId),

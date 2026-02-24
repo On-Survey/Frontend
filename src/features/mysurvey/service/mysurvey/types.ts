@@ -80,6 +80,7 @@ export interface SurveyAnswerDetailInfo {
 	answerMap: Record<string, number>;
 	answerList: string[];
 	rate?: number;
+	respondentCount?: number; // 복수 선택 가능한 문항의 실제 응답자 수
 }
 
 export interface SurveyInfo {

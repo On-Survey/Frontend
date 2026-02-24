@@ -151,9 +151,16 @@ export const Home = () => {
 						<>
 							{/* 설문 없음 UI */}
 							{hasNoSurveys && (
-								<div className="px-4 pb-4">
+								<div className="p-4">
+									<Text
+										color={adaptive.grey800}
+										typography="t4"
+										fontWeight="bold"
+									>
+										지금 열려있는 설문
+									</Text>
 									<div
-										className="rounded-2xl px-4 py-8 flex flex-col items-center justify-center gap-2 min-h-[140px]"
+										className="rounded-2xl px-4 py-8 flex flex-col items-center justify-center gap-2 min-h-[140px] mt-2"
 										style={{ backgroundColor: adaptive.grey50 }}
 									>
 										<Asset.Icon

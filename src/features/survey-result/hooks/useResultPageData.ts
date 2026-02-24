@@ -12,6 +12,7 @@ export const useResultPageData = () => {
 	const surveyTitle = state?.surveyTitle || "설문 제목";
 	const surveyStatus = state?.surveyStatus || "active";
 	const responseCount = state?.responseCount || 0;
+	const totalAnswerCount = state?.totalAnswerCount;
 	const isRequired = question?.isRequired ?? true;
 
 	const requiredLabel = isRequired ? "필수" : "선택";
@@ -23,6 +24,7 @@ export const useResultPageData = () => {
 		surveyTitle,
 		surveyStatus,
 		responseCount,
+		totalAnswerCount,
 		isRequired,
 		requiredLabel,
 	};

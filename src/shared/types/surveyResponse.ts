@@ -40,7 +40,8 @@ export interface ResultPageState {
 	answerList?: string[];
 	surveyTitle: string;
 	surveyStatus: "active" | "closed";
-	responseCount: number;
+	responseCount: number; // 실제 응답자 수 (respondentCount)
+	totalAnswerCount?: number; // 총 답변 수 (복수 선택 시 responseCount보다 많을 수 있음)
 	surveyId?: number;
 	filters?: {
 		ages?: string[];
