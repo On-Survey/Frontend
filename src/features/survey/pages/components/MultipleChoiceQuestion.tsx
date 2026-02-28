@@ -1,3 +1,4 @@
+import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -228,7 +229,7 @@ export const MultipleChoiceQuestion = ({
 						fontWeight="bold"
 						typography="t4"
 					>
-						{question.title}
+						<TextWithLinks text={question.title} variant="inline" />
 					</ListHeader.TitleParagraph>
 				}
 				description={
@@ -249,15 +250,9 @@ export const MultipleChoiceQuestion = ({
 				}
 			/>
 			{question.description && (
-				<Text
-					display="block"
-					color={adaptive.grey700}
-					typography="t6"
-					fontWeight="regular"
-					className="px-6! mb-2!"
-				>
-					{question.description}
-				</Text>
+				<div className="px-6! mb-2!">
+					<TextWithLinks text={question.description} />
+				</div>
 			)}
 			{isExpanded && (
 				<>
