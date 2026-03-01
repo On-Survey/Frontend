@@ -70,6 +70,7 @@ export const getSurveyQuestions = async (
 			description: question.description,
 			isRequired: question.isRequired,
 			questionOrder: question.questionOrder,
+			...(question.imageUrl != null && { imageUrl: question.imageUrl }),
 		};
 
 		// 문항 자체의 nextSection과 isSectionDecidable 필드 추가 (모든 타입에 공통)
@@ -87,7 +88,8 @@ export const getSurveyQuestions = async (
 			base.options = question.options?.map((opt, idx) => ({
 				...opt,
 				order: idx,
-				nextSection: opt.nextSection, // 분기처리용 다음 섹션 번호
+				nextSection: opt.nextSection,
+				...(opt.imageUrl != null && { imageUrl: opt.imageUrl }),
 			}));
 		}
 
@@ -104,6 +106,10 @@ export const getSurveyQuestions = async (
 			base.minValue = question.minValue;
 			base.maxValue = question.maxValue;
 			if ("rate" in question) base.rate = question.rate;
+		}
+
+		if (question.questionType === "IMAGE" && "imageUrl" in question) {
+			base.imageUrl = question.imageUrl;
 		}
 
 		return base;

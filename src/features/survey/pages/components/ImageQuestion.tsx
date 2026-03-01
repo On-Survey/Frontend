@@ -2,32 +2,26 @@ import { SurveyImage } from "@features/survey/components/SurveyImage";
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, ListHeader, Spacing, Text, TextField } from "@toss/tds-mobile";
+import { Asset, ListHeader, Spacing } from "@toss/tds-mobile";
 
-interface DateQuestionProps {
+interface ImageQuestionProps {
 	question: TransformedSurveyQuestion;
 	answer?: string;
 	onAnswerChange: (questionId: number, answer: string) => void;
 	error?: boolean;
 	errorMessage?: string;
-	onDatePickerOpen?: () => void;
 	isExpanded?: boolean;
 	onToggleExpand?: () => void;
 }
 
-export const DateQuestion = ({
+/**
+ * 이미지 전용 문항: 타이틀·보조설명·이미지만 표시 (객관식 아님)
+ */
+export const ImageQuestion = ({
 	question,
-	answer = "",
-	error,
-	errorMessage,
-	onDatePickerOpen,
 	isExpanded = true,
 	onToggleExpand,
-}: DateQuestionProps) => {
-	const getDescriptionText = () => {
-		return question.isRequired ? "필수" : "선택";
-	};
-
+}: ImageQuestionProps) => {
 	return (
 		<>
 			<ListHeader
@@ -42,9 +36,11 @@ export const DateQuestion = ({
 					</ListHeader.TitleParagraph>
 				}
 				description={
-					<ListHeader.DescriptionParagraph>
-						{getDescriptionText()}
-					</ListHeader.DescriptionParagraph>
+					question.description ? (
+						<ListHeader.DescriptionParagraph>
+							<TextWithLinks text={question.description} variant="inline" />
+						</ListHeader.DescriptionParagraph>
+					) : undefined
 				}
 				right={
 					<div style={{ marginRight: "20px" }}>
@@ -58,12 +54,7 @@ export const DateQuestion = ({
 					</div>
 				}
 			/>
-			{question.description && (
-				<div className="px-6! mb-2!">
-					<TextWithLinks text={question.description} />
-				</div>
-			)}
-			{question.imageUrl && (
+			{isExpanded && question.imageUrl && (
 				<div className="px-6 mt-2 mb-2">
 					<SurveyImage
 						src={question.imageUrl}
@@ -71,38 +62,6 @@ export const DateQuestion = ({
 						variant="square"
 					/>
 				</div>
-			)}
-			{isExpanded && (
-				<>
-					<TextField.Button
-						variant="line"
-						hasError={error}
-						label="날짜"
-						labelOption="sustain"
-						value={answer}
-						placeholder="날짜를 선택해 주세요"
-						right={
-							<Asset.Icon
-								frameShape={Asset.frameShape.CleanW24}
-								name="icon-arrow-down-mono"
-								color={adaptive.grey400}
-								aria-hidden={true}
-							/>
-						}
-						onClick={onDatePickerOpen}
-					/>
-					{error && errorMessage && (
-						<Text
-							display="block"
-							color={adaptive.red500}
-							typography="t7"
-							fontWeight="regular"
-							className="px-6! mt-2!"
-						>
-							{errorMessage}
-						</Text>
-					)}
-				</>
 			)}
 			<Spacing size={32} />
 		</>

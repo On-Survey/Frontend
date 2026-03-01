@@ -7,7 +7,8 @@ export type QuestionType =
 	| "shortAnswer" // 단답형
 	| "longAnswer" // 장문형
 	| "date" // 날짜 (ex: 2025-10-26)
-	| "number"; // 숫자형 (1~100)
+	| "number" // 숫자형 (1~100)
+	| "image"; // 이미지 전용 (타이틀·보조설명·이미지만 표시)
 
 export interface BaseQuestion {
 	surveyId: number;
@@ -70,6 +71,12 @@ export interface NumberQuestion extends BaseQuestion {
 	type: "number";
 }
 
+// 이미지 전용 문항 (참여 화면 전용, 타이틀·보조설명·이미지만)
+export interface ImageQuestion extends BaseQuestion {
+	type: "image";
+	imageUrl: string;
+}
+
 // 모든 문항 타입의 유니온
 export type Question =
 	| MultipleChoiceQuestion
@@ -78,7 +85,8 @@ export type Question =
 	| ShortAnswerQuestion
 	| LongAnswerQuestion
 	| DateQuestion
-	| NumberQuestion;
+	| NumberQuestion
+	| ImageQuestion;
 
 // 문항 정보 구조
 export interface QuestionInfo {
@@ -228,4 +236,10 @@ export const isNumberQuestion = (
 	question: Question | undefined,
 ): question is NumberQuestion => {
 	return question?.type === "number";
+};
+
+export const isImageQuestion = (
+	question: Question | undefined,
+): question is ImageQuestion => {
+	return question?.type === "image";
 };

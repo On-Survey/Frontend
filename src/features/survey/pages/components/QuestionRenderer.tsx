@@ -1,5 +1,6 @@
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { DateQuestion } from "./DateQuestion";
+import { ImageQuestion } from "./ImageQuestion";
 import { LongAnswerQuestion } from "./LongAnswerQuestion";
 import { MultipleChoiceQuestion } from "./MultipleChoiceQuestion";
 import { NPSQuestion } from "./NPSQuestion";
@@ -55,6 +56,8 @@ export const QuestionRenderer = ({
 			return <RatingQuestion {...commonProps} />;
 		case "nps":
 			return <NPSQuestion {...commonProps} />;
+		case "image":
+			return <ImageQuestion {...commonProps} />;
 		default:
 			return null;
 	}

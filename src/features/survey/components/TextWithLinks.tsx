@@ -1,5 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import { Text } from "@toss/tds-mobile";
+import { Text, TextButton } from "@toss/tds-mobile";
 
 const URL_REGEX = /(https?:\/\/\S+)/g;
 
@@ -11,19 +11,14 @@ export type TextWithLinksProps = {
 	text: string;
 	variant?: "inline" | "block";
 	textProps?: React.ComponentProps<typeof Text>;
-	linkProps?: React.ComponentProps<typeof Text>;
-};
-
-const linkStyle = {
-	color: adaptive.blue400,
-	textDecoration: "underline" as const,
-	fontWeight: 400,
+	linkProps?: Partial<React.ComponentProps<typeof TextButton>>;
 };
 
 export function TextWithLinks({
 	text,
 	variant = "block",
 	textProps = {},
+	linkProps = {},
 }: TextWithLinksProps) {
 	const parts = text.split(URL_REGEX);
 	const hasLinks = parts.length > 1;
@@ -34,15 +29,16 @@ export function TextWithLinks({
 			if (isUrl) {
 				const href = trimTrailingPunctuation(part);
 				return (
-					<a
+					<TextButton
 						key={`link-${href}`}
-						href={href}
-						target="_blank"
-						rel="noopener noreferrer"
-						style={linkStyle}
+						{...linkProps}
+						size="medium"
+						variant="underline"
+						color={adaptive.blue400}
+						onClick={() => window.open(href, "_blank", "noopener,noreferrer")}
 					>
 						{part}
-					</a>
+					</TextButton>
 				);
 			}
 			return <span key={`text-${part}`}>{part}</span>;

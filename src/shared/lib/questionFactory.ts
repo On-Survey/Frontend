@@ -28,6 +28,7 @@ export const getQuestionTypeLabel = (type: Question["type"]): string => {
 		longAnswer: "주관식 (장문형)",
 		date: "날짜",
 		number: "숫자",
+		image: "이미지",
 	};
 	return typeLabels[type];
 };

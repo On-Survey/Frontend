@@ -1,3 +1,4 @@
+import { SurveyImage } from "@features/survey/components/SurveyImage";
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { adaptive } from "@toss/tds-colors";
@@ -254,6 +255,15 @@ export const MultipleChoiceQuestion = ({
 					<TextWithLinks text={question.description} />
 				</div>
 			)}
+			{question.imageUrl && (
+				<div className="px-6 mt-2 mb-2">
+					<SurveyImage
+						src={question.imageUrl}
+						alt={question.title}
+						variant="square"
+					/>
+				</div>
+			)}
 			{isExpanded && (
 				<>
 					{regularOptions.length > 0 && (
@@ -270,11 +280,22 @@ export const MultipleChoiceQuestion = ({
 										role="checkbox"
 										aria-checked={isSelected}
 										contents={
-											<ListRow.Texts
-												type="1RowTypeA"
-												top={option.content}
-												topProps={{ color: adaptive.grey700 }}
-											/>
+											<div className="flex flex-col gap-2 w-full min-w-0">
+												<ListRow.Texts
+													type="1RowTypeA"
+													top={option.content}
+													topProps={{ color: adaptive.grey700 }}
+												/>
+												{option.imageUrl && (
+													<div className="shrink-0">
+														<SurveyImage
+															src={option.imageUrl}
+															alt={option.content}
+															variant="choice"
+														/>
+													</div>
+												)}
+											</div>
 										}
 										right={
 											<Checkbox.Line

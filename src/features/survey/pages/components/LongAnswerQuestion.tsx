@@ -1,3 +1,4 @@
+import { SurveyImage } from "@features/survey/components/SurveyImage";
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { adaptive } from "@toss/tds-colors";
@@ -93,6 +94,15 @@ export const LongAnswerQuestion = ({
 			{question.description && (
 				<div className="px-6! mb-2!">
 					<TextWithLinks text={question.description} />
+				</div>
+			)}
+			{question.imageUrl && (
+				<div className="px-6 mt-2 mb-2">
+					<SurveyImage
+						src={question.imageUrl}
+						alt={question.title}
+						variant="square"
+					/>
 				</div>
 			)}
 			{isExpanded && (

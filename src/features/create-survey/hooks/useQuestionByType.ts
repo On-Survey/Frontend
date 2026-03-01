@@ -1,7 +1,9 @@
 import { useSurvey } from "@shared/contexts/SurveyContext";
 import {
 	type DateQuestion,
+	type ImageQuestion,
 	isDateQuestion,
+	isImageQuestion,
 	isLongAnswerQuestion,
 	isMultipleChoiceQuestion,
 	isNPSQuestion,
@@ -26,6 +28,7 @@ type QuestionTypeMap = {
 	nps: NPSQuestion;
 	number: NumberQuestion;
 	multipleChoice: MultipleChoiceQuestion;
+	image: ImageQuestion;
 };
 
 const typeGuardMap = {
@@ -36,6 +39,7 @@ const typeGuardMap = {
 	nps: isNPSQuestion,
 	number: isNumberQuestion,
 	multipleChoice: isMultipleChoiceQuestion,
+	image: isImageQuestion,
 } as const;
 
 export const useQuestionByType = <T extends QuestionType>(type: T) => {

@@ -1,4 +1,5 @@
 export * from "./DateQuestion";
+export * from "./ImageQuestion";
 export * from "./LongAnswerQuestion";
 export * from "./MultipleChoiceQuestion";
 export * from "./NPSQuestion";
