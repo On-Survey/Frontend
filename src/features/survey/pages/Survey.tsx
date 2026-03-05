@@ -1,6 +1,7 @@
 import type { InterestId } from "@shared/constants/topics";
 import { formatRemainingTime } from "@shared/lib/FormatDate";
 import { shareSurveyById } from "@shared/lib/shareSurvey";
+import { getAccessToken, getRefreshToken } from "@shared/lib/tokenManager";
 import type { ReturnTo } from "@shared/types/navigation";
 import { colors } from "@toss/tds-colors";
 import {
@@ -14,7 +15,7 @@ import {
 	useToast,
 } from "@toss/tds-mobile";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SurveyRewardInfoCard } from "../components/SurveyRewardInfoCard";
 import { useSurveyAccessCheck } from "../hooks/useSurveyAccessCheck";
 import { useSurveyDisplayInfo } from "../hooks/useSurveyDisplayInfo";
@@ -24,6 +25,7 @@ import { useSurveyRouteParams } from "../hooks/useSurveyRouteParams";
 
 export const Survey = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { openToast } = useToast();
 
 	const [error, setError] = useState<string | null>(null);
@@ -38,9 +40,48 @@ export const Survey = () => {
 		open: false,
 		title: "",
 	});
+	const [hasAuthToken, setHasAuthToken] = useState<boolean | null>(null);
 
 	const { surveyId, numericSurveyId, surveyFromState, locationState } =
 		useSurveyRouteParams();
+
+	useEffect(() => {
+		let isMounted = true;
+
+		const checkAuthToken = async () => {
+			const [accessToken, refreshToken] = await Promise.all([
+				getAccessToken(),
+				getRefreshToken(),
+			]);
+
+			if (!isMounted) return;
+
+			const hasToken = Boolean(accessToken || refreshToken);
+			setHasAuthToken(hasToken);
+
+			if (!hasToken) {
+				setErrorDialog({
+					open: true,
+					title: "로그인이 필요합니다",
+					description: "로그인 후 이용해주세요",
+					redirectTo: "/",
+					returnTo: {
+						path: `${location.pathname}${location.search}${location.hash}`,
+						state:
+							locationState && typeof locationState === "object"
+								? (locationState as Record<string, unknown>)
+								: undefined,
+					},
+				});
+			}
+		};
+
+		void checkAuthToken();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [location.hash, location.pathname, location.search, locationState]);
 
 	// 설문 기본 정보 (제목, 설명, 마감일, 보상 여부, 스크리닝 필요 여부 등)
 	const {
@@ -49,13 +90,13 @@ export const Survey = () => {
 		isLoading: isSurveyBasicInfoLoading,
 		isFetching: isSurveyBasicInfoFetching,
 	} = useSurveyInfo(numericSurveyId ?? undefined, {
-		enabled: Boolean(numericSurveyId),
+		enabled: Boolean(numericSurveyId) && hasAuthToken === true,
 	});
 
 	// 설문 문항 목록
 	const { data: surveyQuestionsData, error: surveyQuestionsError } =
 		useSurveyQuestions(numericSurveyId ?? undefined, {
-			enabled: Boolean(numericSurveyId),
+			enabled: Boolean(numericSurveyId) && hasAuthToken === true,
 		});
 
 	const surveyInfo = useMemo(() => {
@@ -101,8 +142,9 @@ export const Survey = () => {
 	);
 	const screeningError = getScreeningError();
 	const isAccessChecking =
-		Boolean(numericSurveyId) &&
-		(isSurveyBasicInfoLoading || isSurveyBasicInfoFetching);
+		hasAuthToken === null ||
+		(Boolean(numericSurveyId) &&
+			(isSurveyBasicInfoLoading || isSurveyBasicInfoFetching));
 	const isStartDisabled =
 		isClosed ||
 		sortedQuestions.length === 0 ||
@@ -122,6 +164,7 @@ export const Survey = () => {
 			setError(null);
 			return;
 		}
+		if (hasAuthToken === false) return;
 
 		const handleError = async () => {
 			const authError = await getAuthErrorFromException(apiError);
@@ -132,7 +175,7 @@ export const Survey = () => {
 			}
 		};
 		void handleError();
-	}, [apiError, getAuthErrorFromException]);
+	}, [apiError, getAuthErrorFromException, hasAuthToken]);
 
 	const handleStart = () => {
 		if (isStartDisabled) {
