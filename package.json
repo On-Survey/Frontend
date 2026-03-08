@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "granite dev",
-		"build": "granite build",
+		"build": "ait build",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"type-check": "tsc --noEmit",

@@ -355,10 +355,10 @@ export const SectionBasedSurvey = () => {
 		<>
 			<Top
 				title={
-					data?.sectionTitle ? (
+					(data?.sectionTitle ?? locationState?.surveyTitle) ? (
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
 							<TextWithLinks
-								text={data.sectionTitle}
+								text={data?.sectionTitle ?? locationState?.surveyTitle ?? ""}
 								variant="inline"
 								inheritLinkSize
 							/>
@@ -366,9 +366,16 @@ export const SectionBasedSurvey = () => {
 					) : undefined
 				}
 				subtitleBottom={
-					data?.sectionDescription ? (
+					(data?.sectionDescription ?? locationState?.surveyDescription) ? (
 						<Top.SubtitleParagraph size={15}>
-							<TextWithLinks text={data.sectionDescription} variant="inline" />
+							<TextWithLinks
+								text={
+									data?.sectionDescription ??
+									locationState?.surveyDescription ??
+									""
+								}
+								variant="inline"
+							/>
 						</Top.SubtitleParagraph>
 					) : undefined
 				}
