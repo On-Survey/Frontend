@@ -12,7 +12,6 @@ import {
 	Border,
 	CTAButton,
 	FixedBottomCTA,
-	Text,
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
@@ -356,41 +355,25 @@ export const SectionBasedSurvey = () => {
 		<>
 			<Top
 				title={
-					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{locationState?.surveyTitle}
-					</Top.TitleParagraph>
+					data?.sectionTitle ? (
+						<Top.TitleParagraph size={22} color={adaptive.grey900}>
+							<TextWithLinks
+								text={data.sectionTitle}
+								variant="inline"
+								inheritLinkSize
+							/>
+						</Top.TitleParagraph>
+					) : undefined
 				}
 				subtitleBottom={
-					locationState?.surveyDescription ? (
+					data?.sectionDescription ? (
 						<Top.SubtitleParagraph size={15}>
-							{locationState.surveyDescription}
+							<TextWithLinks text={data.sectionDescription} variant="inline" />
 						</Top.SubtitleParagraph>
 					) : undefined
 				}
 			/>
 			<Border variant="height16" />
-
-			{(data?.sectionTitle ?? data?.sectionDescription) && (
-				<div className="px-4 pt-4 pb-2">
-					{data.sectionTitle && (
-						<Text
-							display="block"
-							color={adaptive.grey900}
-							typography="t4"
-							fontWeight="bold"
-							className="mb-1"
-						>
-							<TextWithLinks text={data.sectionTitle} variant="inline" />
-						</Text>
-					)}
-					{data.sectionDescription && (
-						<TextWithLinks
-							text={data.sectionDescription}
-							textProps={{ className: "mt-1" }}
-						/>
-					)}
-				</div>
-			)}
 
 			<div className="pb-14">
 				{questions.map((q) => (

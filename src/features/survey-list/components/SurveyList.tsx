@@ -1,3 +1,4 @@
+import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import { topics } from "@shared/constants/topics";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import type { SurveyListItem } from "@shared/types/surveyList";
@@ -64,7 +65,14 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 								type="3RowTypeC"
 								top={getTopicTag(survey.topicId)}
 								topProps={{ color: adaptive.green500 }}
-								middle={survey.title}
+								middle={
+									<TextWithLinks
+										text={survey.title}
+										variant="inline"
+										inheritLinkSize
+										linksClickable={false}
+									/>
+								}
 								middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
 								bottom={survey.isFree ? "보상이 없어요" : "3분이면 200원 획득"}
 								bottomProps={{ color: adaptive.grey600 }}

@@ -80,7 +80,11 @@ export const ShortAnswerQuestion = ({
 						fontWeight="bold"
 						typography="t4"
 					>
-						<TextWithLinks text={question.title} variant="inline" />
+						<TextWithLinks
+							text={question.title}
+							variant="inline"
+							inheritLinkSize
+						/>
 					</ListHeader.TitleParagraph>
 				}
 				description={
@@ -105,7 +109,7 @@ export const ShortAnswerQuestion = ({
 					<TextWithLinks text={question.description} />
 				</div>
 			)}
-			{question.imageUrl && (
+			{isExpanded && question.imageUrl && (
 				<div className="px-6 mt-2 mb-2">
 					<SurveyImage
 						src={question.imageUrl}

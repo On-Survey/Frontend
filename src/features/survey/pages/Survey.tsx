@@ -17,6 +17,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SurveyRewardInfoCard } from "../components/SurveyRewardInfoCard";
+import { TextWithLinks } from "../components/TextWithLinks";
 import { useSurveyAccessCheck } from "../hooks/useSurveyAccessCheck";
 import { useSurveyDisplayInfo } from "../hooks/useSurveyDisplayInfo";
 import { useSurveyInfo } from "../hooks/useSurveyInfo";
@@ -271,7 +272,11 @@ export const Survey = () => {
 						title={
 							surveyTitle ? (
 								<Top.TitleParagraph size={22} color={colors.grey900}>
-									{surveyTitle}
+									<TextWithLinks
+										text={surveyTitle}
+										variant="inline"
+										inheritLinkSize
+									/>
 								</Top.TitleParagraph>
 							) : undefined
 						}
@@ -332,14 +337,7 @@ export const Survey = () => {
 
 					{surveyDescription && (
 						<div className="px-4 mt-6">
-							<Text
-								display="block"
-								color={colors.grey700}
-								typography="t6"
-								fontWeight="regular"
-							>
-								{surveyDescription}
-							</Text>
+							<TextWithLinks text={surveyDescription} />
 						</div>
 					)}
 					{error && (

@@ -32,7 +32,11 @@ export const ImageQuestion = ({
 						fontWeight="bold"
 						typography="t4"
 					>
-						<TextWithLinks text={question.title} variant="inline" />
+						<TextWithLinks
+							text={question.title}
+							variant="inline"
+							inheritLinkSize
+						/>
 					</ListHeader.TitleParagraph>
 				}
 				description={

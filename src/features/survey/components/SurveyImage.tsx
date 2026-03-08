@@ -1,6 +1,7 @@
 import { adaptive } from "@toss/tds-colors";
 import { Asset } from "@toss/tds-mobile";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 export type SurveyImageVariant = "square" | "choice";
 
@@ -82,46 +83,47 @@ export const SurveyImage = ({
 				</button>
 			</div>
 
-			{isFullscreen && (
-				<div
-					className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
-					role="dialog"
-					aria-modal="true"
-					aria-label="이미지 전체 보기"
-				>
-					{/* 어두운 배경 */}
-					<button
-						type="button"
-						aria-label="닫기"
-						className="absolute inset-0 bg-black/60"
-						onClick={() => setIsFullscreen(false)}
-					/>
-					{/* 전체 이미지 + 닫기 버튼 */}
-					<div className="relative z-10 flex flex-col items-center gap-4 max-w-[90vw] max-h-[85vh]">
-						<img
-							src={src}
-							alt={alt}
-							className="max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-2xl"
-						/>
+			{isFullscreen &&
+				typeof document !== "undefined" &&
+				createPortal(
+					<div
+						className="fixed inset-0 z-9999 flex flex-col items-center justify-center p-4"
+						role="dialog"
+						aria-modal="true"
+						aria-label="이미지 전체 보기"
+					>
 						<button
 							type="button"
-							aria-label="전체 이미지 닫기"
+							aria-label="닫기"
+							className="absolute inset-0 bg-black/60 backdrop-blur-[1px]"
 							onClick={() => setIsFullscreen(false)}
-							className="flex items-center justify-center border-0 shrink-0"
-							style={CLOSE_BUTTON_STYLE}
-						>
-							<Asset.Icon
-								frameShape={Asset.frameShape.CleanW24}
-								backgroundColor="transparent"
-								name="icon-x-mono"
-								color={adaptive.grey600}
-								aria-hidden={true}
-								ratio="1/1"
+						/>
+						<div className="relative z-10 flex flex-col items-center gap-4 w-full max-w-[90vw]">
+							<img
+								src={src}
+								alt={alt}
+								className="max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-2xl shadow-lg"
 							/>
-						</button>
-					</div>
-				</div>
-			)}
+							<button
+								type="button"
+								aria-label="전체 이미지 닫기"
+								onClick={() => setIsFullscreen(false)}
+								className="flex items-center justify-center border-0 shrink-0 rounded-full"
+								style={CLOSE_BUTTON_STYLE}
+							>
+								<Asset.Icon
+									frameShape={Asset.frameShape.CleanW24}
+									backgroundColor="transparent"
+									name="icon-x-mono"
+									color={adaptive.grey600}
+									aria-hidden={true}
+									ratio="1/1"
+								/>
+							</button>
+						</div>
+					</div>,
+					document.body,
+				)}
 		</>
 	);
 };

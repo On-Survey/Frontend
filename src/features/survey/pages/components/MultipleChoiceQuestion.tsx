@@ -230,7 +230,11 @@ export const MultipleChoiceQuestion = ({
 						fontWeight="bold"
 						typography="t4"
 					>
-						<TextWithLinks text={question.title} variant="inline" />
+						<TextWithLinks
+							text={question.title}
+							variant="inline"
+							inheritLinkSize
+						/>
 					</ListHeader.TitleParagraph>
 				}
 				description={
@@ -255,7 +259,7 @@ export const MultipleChoiceQuestion = ({
 					<TextWithLinks text={question.description} />
 				</div>
 			)}
-			{question.imageUrl && (
+			{isExpanded && question.imageUrl && (
 				<div className="px-6 mt-2 mb-2">
 					<SurveyImage
 						src={question.imageUrl}
@@ -275,37 +279,36 @@ export const MultipleChoiceQuestion = ({
 										answer.startsWith(`${option.content}:`),
 								);
 								return (
-									<ListRow
-										key={option.optionId}
-										role="checkbox"
-										aria-checked={isSelected}
-										contents={
-											<div className="flex flex-col gap-2 w-full min-w-0">
+									<div key={option.optionId}>
+										<ListRow
+											role="checkbox"
+											aria-checked={isSelected}
+											contents={
 												<ListRow.Texts
 													type="1RowTypeA"
 													top={option.content}
 													topProps={{ color: adaptive.grey700 }}
 												/>
-												{option.imageUrl && (
-													<div className="shrink-0">
-														<SurveyImage
-															src={option.imageUrl}
-															alt={option.content}
-															variant="choice"
-														/>
-													</div>
-												)}
+											}
+											right={
+												<Checkbox.Line
+													size={24}
+													checked={isSelected}
+													aria-hidden={true}
+												/>
+											}
+											onClick={() => handleOptionToggle(option.content)}
+										/>
+										{option.imageUrl && (
+											<div className="px-6 pt-2 pb-3">
+												<SurveyImage
+													src={option.imageUrl}
+													alt={option.content}
+													variant="choice"
+												/>
 											</div>
-										}
-										right={
-											<Checkbox.Line
-												size={24}
-												checked={isSelected}
-												aria-hidden={true}
-											/>
-										}
-										onClick={() => handleOptionToggle(option.content)}
-									/>
+										)}
+									</div>
 								);
 							})}
 						</List>
