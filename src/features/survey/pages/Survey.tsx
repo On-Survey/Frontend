@@ -47,32 +47,40 @@ export const Survey = () => {
 
 	useEffect(() => {
 		let isMounted = true;
+		const loginRequiredDialog = {
+			open: true,
+			title: "로그인이 필요합니다",
+			description: "로그인 후 이용해주세요",
+			redirectTo: "/",
+			returnTo: {
+				path: `${location.pathname}${location.search}${location.hash}`,
+				state:
+					locationState && typeof locationState === "object"
+						? (locationState as Record<string, unknown>)
+						: undefined,
+			},
+		};
 
 		const checkAuthToken = async () => {
-			const [accessToken, refreshToken] = await Promise.all([
-				getAccessToken(),
-				getRefreshToken(),
-			]);
+			try {
+				const [accessToken, refreshToken] = await Promise.all([
+					getAccessToken(),
+					getRefreshToken(),
+				]);
 
-			if (!isMounted) return;
+				if (!isMounted) return;
 
-			const hasToken = Boolean(accessToken || refreshToken);
-			setHasAuthToken(hasToken);
+				const hasToken = Boolean(accessToken || refreshToken);
+				setHasAuthToken(hasToken);
 
-			if (!hasToken) {
-				setErrorDialog({
-					open: true,
-					title: "로그인이 필요합니다",
-					description: "로그인 후 이용해주세요",
-					redirectTo: "/",
-					returnTo: {
-						path: `${location.pathname}${location.search}${location.hash}`,
-						state:
-							locationState && typeof locationState === "object"
-								? (locationState as Record<string, unknown>)
-								: undefined,
-					},
-				});
+				if (!hasToken) {
+					setErrorDialog(loginRequiredDialog);
+				}
+			} catch (error) {
+				console.error("토큰 확인 실패:", error);
+				if (!isMounted) return;
+				setHasAuthToken(false);
+				setErrorDialog(loginRequiredDialog);
 			}
 		};
 
@@ -167,10 +175,15 @@ export const Survey = () => {
 		if (hasAuthToken === false) return;
 
 		const handleError = async () => {
-			const authError = await getAuthErrorFromException(apiError);
-			if (authError) {
-				setErrorDialog(authError);
-			} else {
+			try {
+				const authError = await getAuthErrorFromException(apiError);
+				if (authError) {
+					setErrorDialog(authError);
+					return;
+				}
+				setError("설문 정보를 불러오지 못했습니다.");
+			} catch (error) {
+				console.error("설문 에러 처리 실패:", error);
 				setError("설문 정보를 불러오지 못했습니다.");
 			}
 		};
