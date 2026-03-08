@@ -4,7 +4,7 @@ import { Text, TextButton } from "@toss/tds-mobile";
 
 const URL_REGEX = /(https?:\/\/\S+)/g;
 
-/** http/https만 허용 (javascript:, data: 등 스킴 차단) */
+/** http/https만 허용 */
 function isSafeHref(href: string): boolean {
 	const trimmed = href.trim();
 	return /^https?:\/\//i.test(trimmed);
