@@ -20,6 +20,7 @@ export function LinkSpan({
 				fontWeight: "inherit",
 				lineHeight: "inherit",
 			}}
+			data-href={href}
 			onClick={onClick}
 		>
 			{children}
