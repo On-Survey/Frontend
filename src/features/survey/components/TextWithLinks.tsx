@@ -4,6 +4,12 @@ import { Text, TextButton } from "@toss/tds-mobile";
 
 const URL_REGEX = /(https?:\/\/\S+)/g;
 
+/** http/https만 허용 (javascript:, data: 등 스킴 차단) */
+function isSafeHref(href: string): boolean {
+	const trimmed = href.trim();
+	return /^https?:\/\//i.test(trimmed);
+}
+
 /** <a href="...">...</a> 형태 파싱 */
 const ANCHOR_REGEX = /<a\s+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
 
@@ -31,12 +37,22 @@ function parseSegments(html: string): (Segment & { id: string })[] {
 				content: html.slice(lastIndex, match.index),
 			});
 		}
-		segments.push({
-			id: `a-${segId++}`,
-			type: "link",
-			href: match[1].trim(),
-			displayText: match[2].replace(/<[^>]+>/g, "").trim() || match[1],
-		});
+		const href = match[1].trim();
+		const displayText = match[2].replace(/<[^>]+>/g, "").trim() || match[1];
+		if (isSafeHref(href)) {
+			segments.push({
+				id: `a-${segId++}`,
+				type: "link",
+				href,
+				displayText,
+			});
+		} else {
+			segments.push({
+				id: `t-${segId++}`,
+				type: "text",
+				content: displayText,
+			});
+		}
 		lastIndex = match.index + match[0].length;
 		match = ANCHOR_REGEX.exec(html);
 	}
@@ -59,6 +75,7 @@ const LINK_STYLE_INHERIT = {
 } as const;
 
 function openLink(href: string) {
+	if (!isSafeHref(href)) return;
 	openURL(href).catch(() => {
 		window.open(href, "_blank", "noopener,noreferrer");
 	});
