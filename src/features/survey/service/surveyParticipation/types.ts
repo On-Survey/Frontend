@@ -77,21 +77,22 @@ export type SurveyParticipationQuestion =
 	| ImageQuestion
 	| OtherQuestion;
 
-// 백엔드 questionType을 프론트엔드 QuestionType으로 변환
 export const mapBackendQuestionType = (
-	backendType: BackendQuestionType,
+	backendType: BackendQuestionType | string,
 ): QuestionType => {
-	const mapping: Record<BackendQuestionType, QuestionType> = {
+	const mapping: Record<string, QuestionType> = {
 		CHOICE: "multipleChoice",
 		RATING: "rating",
 		NPS: "nps",
 		SHORT_ANSWER: "shortAnswer",
+		SHORT: "shortAnswer",
 		LONG_ANSWER: "longAnswer",
+		LONG: "longAnswer",
 		DATE: "date",
 		NUMBER: "number",
 		IMAGE: "image",
 	};
-	return mapping[backendType] || "shortAnswer";
+	return mapping[backendType] ?? "shortAnswer";
 };
 
 export interface SurveyParticipationInfo {
