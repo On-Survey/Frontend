@@ -8,7 +8,8 @@ export type BackendQuestionType =
 	| "SHORT_ANSWER"
 	| "LONG_ANSWER"
 	| "DATE"
-	| "NUMBER";
+	| "NUMBER"
+	| "IMAGE"; // 이미지 전용 문항
 
 // 백엔드 응답의 옵션 타입
 export interface BackendOption {
@@ -16,6 +17,7 @@ export interface BackendOption {
 	content: string;
 	nextQuestionId: number;
 	nextSection?: number; // 분기처리용 다음 섹션 번호 (0이면 설문 종료, 기본값은 현재 section + 1)
+	imageUrl?: string; // 객관식 보기 내 이미지
 }
 
 // 백엔드 응답의 문항 타입 (기본)
@@ -30,6 +32,7 @@ export interface BaseSurveyParticipationQuestion {
 	section?: number; // 섹션 번호 (null이면 전체 조회)
 	nextSection?: number; // 분기처리용 다음 섹션 번호 (문항 자체에 있는 경우, 0이면 설문 종료)
 	isSectionDecidable?: boolean; // 섹션 분기처리 가능 여부
+	imageUrl?: string; // 문항 내 이미지 또는 이미지 전용 문항
 }
 
 // 객관식 문항 (추가 필드 포함)
@@ -55,6 +58,12 @@ export interface RatingQuestion extends BaseSurveyParticipationQuestion {
 	rate?: number;
 }
 
+// 이미지 전용 문항 (타이틀·보조설명·이미지만)
+export interface ImageQuestion extends BaseSurveyParticipationQuestion {
+	questionType: "IMAGE";
+	imageUrl: string; // 필수
+}
+
 // 기타 문항 타입
 export type OtherQuestion = BaseSurveyParticipationQuestion & {
 	questionType: "NPS" | "SHORT_ANSWER" | "LONG_ANSWER" | "NUMBER";
@@ -65,22 +74,25 @@ export type SurveyParticipationQuestion =
 	| ChoiceQuestion
 	| DateQuestion
 	| RatingQuestion
+	| ImageQuestion
 	| OtherQuestion;
 
-// 백엔드 questionType을 프론트엔드 QuestionType으로 변환
 export const mapBackendQuestionType = (
-	backendType: BackendQuestionType,
+	backendType: BackendQuestionType | string,
 ): QuestionType => {
-	const mapping: Record<BackendQuestionType, QuestionType> = {
+	const mapping: Record<string, QuestionType> = {
 		CHOICE: "multipleChoice",
 		RATING: "rating",
 		NPS: "nps",
 		SHORT_ANSWER: "shortAnswer",
+		SHORT: "shortAnswer",
 		LONG_ANSWER: "longAnswer",
+		LONG: "longAnswer",
 		DATE: "date",
 		NUMBER: "number",
+		IMAGE: "image",
 	};
-	return mapping[backendType] || "shortAnswer";
+	return mapping[backendType] ?? "shortAnswer";
 };
 
 export interface SurveyParticipationInfo {
@@ -149,6 +161,7 @@ export interface TransformedSurveyQuestion {
 	isRequired: boolean;
 	questionOrder: number;
 	section?: number; // 섹션 번호
+	imageUrl?: string; // 문항 내 이미지 또는 이미지 전용 문항
 	// 타입별 추가 필드
 	maxChoice?: number;
 	hasNoneOption?: boolean;
@@ -161,6 +174,7 @@ export interface TransformedSurveyQuestion {
 		nextQuestionId: number;
 		order: number;
 		nextSection?: number; // 분기처리용 다음 섹션 번호 (보기에 있는 경우, 0이면 설문 종료)
+		imageUrl?: string; // 객관식 보기 내 이미지
 	}>;
 	date?: string;
 	minValue?: string;

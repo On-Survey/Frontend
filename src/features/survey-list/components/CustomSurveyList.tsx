@@ -1,4 +1,5 @@
 import { IneligibleSurveyBottomSheet } from "@features/screening/components/IneligibleSurveyBottomSheet";
+import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import { topics } from "@shared/constants/topics";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import type { SurveyListItem } from "@shared/types/surveyList";
@@ -207,7 +208,12 @@ export const CustomSurveyList = ({ surveys }: CustomSurveyListProps) => {
 									typography="t5"
 									fontWeight="bold"
 								>
-									{survey.title}
+									<TextWithLinks
+										text={survey.title}
+										variant="inline"
+										inheritLinkSize
+										linksClickable={false}
+									/>
 								</Text>
 								<div className="flex items-center gap-1">
 									{statusIcon}

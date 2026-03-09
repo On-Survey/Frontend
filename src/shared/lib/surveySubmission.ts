@@ -23,6 +23,9 @@ export const buildSectionAnswersPayload = ({
 	const payload: SubmitSurveyParticipationAnswer[] = [];
 
 	questions.forEach((question) => {
+		if (question.type === "image") {
+			return; // 이미지 전용 문항은 제출 항목 없음
+		}
 		const answer = answers[question.questionId];
 		const previousAnswer = previousAnswers[question.questionId];
 

@@ -1,3 +1,5 @@
+import { SurveyImage } from "@features/survey/components/SurveyImage";
+import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, ListHeader, Spacing, Text } from "@toss/tds-mobile";
@@ -54,7 +56,11 @@ export const RatingQuestion = ({
 						fontWeight="bold"
 						typography="t4"
 					>
-						{question.title}
+						<TextWithLinks
+							text={question.title}
+							variant="inline"
+							inheritLinkSize
+						/>
 					</ListHeader.TitleParagraph>
 				}
 				description={
@@ -75,15 +81,18 @@ export const RatingQuestion = ({
 				}
 			/>
 			{question.description && (
-				<Text
-					display="block"
-					color={adaptive.grey700}
-					typography="t6"
-					fontWeight="regular"
-					className="px-6! mb-2!"
-				>
-					{question.description}
-				</Text>
+				<div className="px-6! mb-2!">
+					<TextWithLinks text={question.description} />
+				</div>
+			)}
+			{isExpanded && question.imageUrl && (
+				<div className="px-6 mt-2 mb-2">
+					<SurveyImage
+						src={question.imageUrl}
+						alt={question.title}
+						variant="square"
+					/>
+				</div>
 			)}
 			{isExpanded && (
 				<>

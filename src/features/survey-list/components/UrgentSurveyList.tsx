@@ -1,3 +1,4 @@
+import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import type { SurveyListItem } from "@shared/types/surveyList";
 import { adaptive } from "@toss/tds-colors";
@@ -118,7 +119,12 @@ export const UrgentSurveyList = ({
 								fontWeight="bold"
 								className="mb-2 line-clamp-2"
 							>
-								{survey.title}
+								<TextWithLinks
+									text={survey.title}
+									variant="inline"
+									inheritLinkSize
+									linksClickable={false}
+								/>
 							</Text>
 							{survey.iconType === "image" && survey.remainingTimeText ? (
 								<div className="flex items-center gap-1 mb-2">

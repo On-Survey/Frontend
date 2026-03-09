@@ -9,4 +9,5 @@ export const QUESTION_TYPE_ROUTES: Record<QuestionType, string> = {
 	longAnswer: "/createForm/longAnswer",
 	date: "/createForm/date",
 	number: "/createForm/number",
+	image: "/createForm/image",
 };

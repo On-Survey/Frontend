@@ -1,3 +1,5 @@
+import { SurveyImage } from "@features/survey/components/SurveyImage";
+import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -228,7 +230,11 @@ export const MultipleChoiceQuestion = ({
 						fontWeight="bold"
 						typography="t4"
 					>
-						{question.title}
+						<TextWithLinks
+							text={question.title}
+							variant="inline"
+							inheritLinkSize
+						/>
 					</ListHeader.TitleParagraph>
 				}
 				description={
@@ -249,15 +255,18 @@ export const MultipleChoiceQuestion = ({
 				}
 			/>
 			{question.description && (
-				<Text
-					display="block"
-					color={adaptive.grey700}
-					typography="t6"
-					fontWeight="regular"
-					className="px-6! mb-2!"
-				>
-					{question.description}
-				</Text>
+				<div className="px-6! mb-2!">
+					<TextWithLinks text={question.description} />
+				</div>
+			)}
+			{isExpanded && question.imageUrl && (
+				<div className="px-6 mt-2 mb-2">
+					<SurveyImage
+						src={question.imageUrl}
+						alt={question.title}
+						variant="square"
+					/>
+				</div>
 			)}
 			{isExpanded && (
 				<>
@@ -270,26 +279,36 @@ export const MultipleChoiceQuestion = ({
 										answer.startsWith(`${option.content}:`),
 								);
 								return (
-									<ListRow
-										key={option.optionId}
-										role="checkbox"
-										aria-checked={isSelected}
-										contents={
-											<ListRow.Texts
-												type="1RowTypeA"
-												top={option.content}
-												topProps={{ color: adaptive.grey700 }}
-											/>
-										}
-										right={
-											<Checkbox.Line
-												size={24}
-												checked={isSelected}
-												aria-hidden={true}
-											/>
-										}
-										onClick={() => handleOptionToggle(option.content)}
-									/>
+									<div key={option.optionId}>
+										<ListRow
+											role="checkbox"
+											aria-checked={isSelected}
+											contents={
+												<ListRow.Texts
+													type="1RowTypeA"
+													top={option.content}
+													topProps={{ color: adaptive.grey700 }}
+												/>
+											}
+											right={
+												<Checkbox.Line
+													size={24}
+													checked={isSelected}
+													aria-hidden={true}
+												/>
+											}
+											onClick={() => handleOptionToggle(option.content)}
+										/>
+										{option.imageUrl && (
+											<div className="px-6 pt-2 pb-3">
+												<SurveyImage
+													src={option.imageUrl}
+													alt={option.content}
+													variant="choice"
+												/>
+											</div>
+										)}
+									</div>
 								);
 							})}
 						</List>

@@ -17,6 +17,7 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TextWithLinks } from "../components/TextWithLinks";
 import { useCompleteSurvey } from "../hooks/useCompleteSurvey";
 import { useSurveyRouteParams } from "../hooks/useSurveyRouteParams";
 import { useSurveySectionQuestions } from "../hooks/useSurveySectionQuestions";
@@ -354,14 +355,27 @@ export const SectionBasedSurvey = () => {
 		<>
 			<Top
 				title={
-					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{locationState?.surveyTitle}
-					</Top.TitleParagraph>
+					(data?.sectionTitle ?? locationState?.surveyTitle) ? (
+						<Top.TitleParagraph size={22} color={adaptive.grey900}>
+							<TextWithLinks
+								text={data?.sectionTitle ?? locationState?.surveyTitle ?? ""}
+								variant="inline"
+								inheritLinkSize
+							/>
+						</Top.TitleParagraph>
+					) : undefined
 				}
 				subtitleBottom={
-					locationState?.surveyDescription ? (
+					(data?.sectionDescription ?? locationState?.surveyDescription) ? (
 						<Top.SubtitleParagraph size={15}>
-							{locationState.surveyDescription}
+							<TextWithLinks
+								text={
+									data?.sectionDescription ??
+									locationState?.surveyDescription ??
+									""
+								}
+								variant="inline"
+							/>
 						</Top.SubtitleParagraph>
 					) : undefined
 				}
