@@ -2,6 +2,7 @@ import { useMultiStep } from "@shared/contexts/MultiStepContext";
 import { queryClient } from "@shared/contexts/queryClient";
 import { useSurvey } from "@shared/contexts/SurveyContext";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { adaptive } from "@toss/tds-colors";
 import { FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useEffect, useRef, useState } from "react";
@@ -28,6 +29,11 @@ export const FormTitleStep = () => {
 			step: "title",
 			status: "new",
 		});
+
+		trackEvent("Create Survey Step Viewed", {
+			pagePath: "/createForm",
+			step: "title",
+		});
 	}, []);
 
 	useEffect(() => {
@@ -53,6 +59,11 @@ export const FormTitleStep = () => {
 			status: "new",
 		});
 		setStep(true);
+
+		trackEvent("Create Survey Step Viewed", {
+			pagePath: "/createForm",
+			step: "description",
+		});
 	};
 
 	const handleNextPage = () => {
@@ -62,6 +73,11 @@ export const FormTitleStep = () => {
 			pagePath: "/createForm",
 			step: "description",
 			status: "new",
+		});
+
+		trackEvent("Create Survey Step Completed", {
+			pagePath: "/createForm",
+			step: "title_and_description",
 		});
 
 		if (state.surveyId) {

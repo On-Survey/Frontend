@@ -1,4 +1,5 @@
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, List, ListRow, Top } from "@toss/tds-mobile";
 import { useEffect, useRef } from "react";
@@ -24,6 +25,11 @@ export const SurveyStart = () => {
 			source,
 			step: "intro",
 			status: "new",
+		});
+
+		trackEvent("Create Survey Started", {
+			pagePath: "/createFormStart",
+			source,
 		});
 	}, [locationState?.source]);
 
