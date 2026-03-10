@@ -351,8 +351,6 @@ export const SectionBasedSurvey = () => {
 		await handleSubmit();
 	};
 
-	if (questions.length === 0) return null;
-
 	return (
 		<>
 			<Top
