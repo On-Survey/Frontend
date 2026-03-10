@@ -27,6 +27,7 @@ export const SurveyComplete = () => {
 				isFree?: boolean;
 				source?: "main" | "quiz" | "after_complete";
 				promotionIssued?: boolean;
+				price?: number;
 		  }
 		| undefined;
 	const surveyIdFromState = locationState?.surveyId;
@@ -57,9 +58,14 @@ export const SurveyComplete = () => {
 			pagePath: "/survey/complete",
 			survey_id: String(surveyId),
 			source,
-			reward_amount: "200",
+			reward_amount: String(locationState?.price ?? 200),
 		});
-	}, [state.surveyId, surveyIdFromState, locationState?.source]);
+	}, [
+		state.surveyId,
+		surveyIdFromState,
+		locationState?.source,
+		locationState?.price,
+	]);
 
 	const checkIfSurveyIsFree = useCallback(
 		async (surveyId: number): Promise<boolean> => {

@@ -149,6 +149,7 @@ export interface SurveyBasicInfo {
 	isScreened: boolean;
 	isSurveyResponded: boolean;
 	isFree: boolean;
+	price?: number;
 }
 
 // 프론트엔드에서 사용하는 변환된 문항 타입

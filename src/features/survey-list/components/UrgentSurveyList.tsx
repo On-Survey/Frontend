@@ -162,7 +162,9 @@ export const UrgentSurveyList = ({
 										typography="t7"
 										fontWeight="semibold"
 									>
-										{survey.isFree ? "보상이 없어요" : "200원"}
+										{survey.isFree
+											? "보상이 없어요"
+											: `${survey.price ?? 200}원`}
 									</Text>
 								</div>
 							)}

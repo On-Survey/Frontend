@@ -299,6 +299,7 @@ export const Survey = () => {
 						isFree={isFree}
 						questionCount={sortedQuestions.length}
 						remainingTimeText={remainingTimeText}
+						price={surveyBasicInfoData?.price}
 					/>
 					<div className="px-4 mt-4">
 						<Button

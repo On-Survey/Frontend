@@ -14,13 +14,6 @@ export interface ProcessedOngoingSurveysResult {
 	totalPromotionAmount: number;
 }
 
-/**
- * 진행 중인 설문 API 결과를 홈/리스트용 데이터로 가공하는 훅.
- *
- * - 추천/임박 설문을 UI용 SurveyListItem으로 변환
- * - 마감된 설문(remainingTime === "마감됨") 제외
- * - 추천·임박 합산 고유 설문 수 × 200으로 프로모션 총액 계산
- */
 export const useProcessedOngoingSurveys = (
 	result:
 		| {
@@ -59,6 +52,7 @@ export const useProcessedOngoingSurveys = (
 				isClosed: remainingTime === "마감됨",
 				isFree: survey.isFree,
 				responseCount: survey.responseCount,
+				price: survey.price,
 			};
 		};
 
@@ -80,8 +74,17 @@ export const useProcessedOngoingSurveys = (
 			result.recommended,
 			result.impending,
 		);
-
-		const totalAmount = uniqueSurveyIds.size * 200;
+		const surveyIdToPrice = new Map<number, number>();
+		for (const s of [
+			...(result.recommended ?? []),
+			...(result.impending ?? []),
+		]) {
+			surveyIdToPrice.set(s.surveyId, s.price ?? 200);
+		}
+		const totalAmount = Array.from(uniqueSurveyIds).reduce(
+			(sum, id) => sum + (surveyIdToPrice.get(id) ?? 200),
+			0,
+		);
 
 		return {
 			recommended: rec,

@@ -17,6 +17,7 @@ export interface OngoingSurveySummary {
 	isFree?: boolean;
 	responseCount?: number;
 	isEligible?: boolean; // 세그먼트 일치 여부 (true: 일치, false: 불일치)
+	price?: number;
 }
 
 export interface OngoingSurveyResult {

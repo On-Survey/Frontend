@@ -206,9 +206,10 @@ export const useSurveyNavigation = ({
 
 				// 프로모션 지급 첫 시도
 				let promotionIssued: boolean | undefined;
+				let surveyInfo: Awaited<ReturnType<typeof getSurveyInfo>> | undefined;
 				try {
 					// 무료 설문 확인
-					const surveyInfo = await getSurveyInfo(surveyId);
+					surveyInfo = await getSurveyInfo(surveyId);
 					const isSurveyFree = surveyInfo.isFree === true;
 
 					if (!isSurveyFree) {
@@ -258,6 +259,7 @@ export const useSurveyNavigation = ({
 						isFree: locationState?.isFree,
 						source: locationState?.source,
 						promotionIssued, // 프로모션 지급 성공 여부 전달
+						price: surveyInfo?.price,
 					},
 				});
 				return;

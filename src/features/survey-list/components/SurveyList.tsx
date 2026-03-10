@@ -74,7 +74,11 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 									/>
 								}
 								middleProps={{ color: adaptive.grey800, fontWeight: "bold" }}
-								bottom={survey.isFree ? "보상이 없어요" : "3분이면 200원 획득"}
+								bottom={
+									survey.isFree
+										? "보상이 없어요"
+										: `3분이면 ${survey.price ?? 200}원 획득`
+								}
 								bottomProps={{ color: adaptive.grey600 }}
 							/>
 						}

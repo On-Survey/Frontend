@@ -241,7 +241,7 @@ export const CustomSurveyList = ({ surveys }: CustomSurveyListProps) => {
 											color: "#DD7D02",
 										}}
 									>
-										200원
+										{survey.price ?? 200}원
 									</Text>
 								</div>
 							)}
