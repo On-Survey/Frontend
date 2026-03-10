@@ -1,4 +1,6 @@
+import { useUserInfo } from "@shared/contexts/UserContext";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { adaptive } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
@@ -6,12 +8,19 @@ import formBanner from "../../../assets/formBanner.png";
 
 export const GoogleFormCreateSurveyBanner = () => {
 	const navigate = useNavigate();
+	const { userInfo } = useUserInfo();
 
 	const handleCreateSurvey = () => {
 		pushGtmEvent({
 			event: "main_banner_click",
 			pagePath: "/home",
 			source: "home_ad_main",
+		});
+
+		trackEvent("Google Form Create Banner Clicked", {
+			pagePath: "/home",
+			source: "home_ad_main",
+			userName: userInfo?.result?.name,
 		});
 		navigate("/google-form-conversion-landing", {
 			state: { source: "main_cta" },

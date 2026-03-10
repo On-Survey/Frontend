@@ -7,6 +7,7 @@ import {
 } from "@features/survey/service/surveyParticipation";
 import { queryClient } from "@shared/contexts/queryClient";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { getQuestionTypeRoute } from "@shared/lib/questionRoute";
 import type { SurveyListItem } from "@shared/types/surveyList";
 import { useToast } from "@toss/tds-mobile";
@@ -177,6 +178,12 @@ export const useSurveyNavigation = ({
 				event: "survey_progress_button_click",
 				pagePath: window.location.pathname,
 				survey_id: String(surveyId),
+				source: locationState?.source ?? "main",
+			});
+
+			trackEvent("Survey Started", {
+				pagePath: window.location.pathname,
+				surveyId: String(surveyId),
 				source: locationState?.source ?? "main",
 			});
 		}

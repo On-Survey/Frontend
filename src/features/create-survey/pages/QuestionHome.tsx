@@ -4,6 +4,7 @@ import { useSurvey } from "@shared/contexts/SurveyContext";
 import { useModal } from "@shared/hooks/UseToggle";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import {
 	formatQuestionNumber,
 	getQuestionTypeLabel,
@@ -88,6 +89,17 @@ export const QuestionHome = () => {
 	};
 
 	const handleConfirmDialogConfirm = () => {
+		const source = locationState?.source ?? "main_cta";
+		const questionCount = state.survey.question.length;
+
+		trackEvent("Create Survey Exited", {
+			pagePath: "/createForm",
+			step: "question",
+			source,
+			exitReason: "back",
+			questionCount,
+		});
+
 		handleConfirmDialogClose();
 		setSurveyStep(0);
 	};

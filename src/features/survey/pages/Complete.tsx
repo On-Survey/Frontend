@@ -5,6 +5,7 @@ import { useSurvey } from "@shared/contexts/SurveyContext";
 import { useUserInfo } from "@shared/contexts/UserContext";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { adaptive, colors } from "@toss/tds-colors";
 import { Asset, Button, ProgressBar, Text } from "@toss/tds-mobile";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -59,6 +60,13 @@ export const SurveyComplete = () => {
 			survey_id: String(surveyId),
 			source,
 			reward_amount: String(locationState?.price ?? 200),
+		});
+
+		trackEvent("Survey Completed", {
+			pagePath: "/survey/complete",
+			surveyId: String(surveyId),
+			source,
+			rewardAmount: locationState?.price ?? 200,
 		});
 	}, [
 		state.surveyId,

@@ -6,6 +6,7 @@ import { useUserInfo } from "@shared/contexts/UserContext";
 import { useModal } from "@shared/hooks/UseToggle";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { identifyUser, trackEvent } from "@shared/lib/mixpanel";
 import { useQuery } from "@tanstack/react-query";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Text } from "@toss/tds-mobile";
@@ -100,14 +101,25 @@ export const Home = () => {
 		}
 	}, [userInfo, navigate]);
 
-	// 자동 로그인 완료 시 이벤트 로깅
+	// Mixpanel 사용자 식별
+	useEffect(() => {
+		if (!userInfo?.result?.name) return;
+		identifyUser(userInfo.result.name);
+	}, [userInfo]);
+
+	// 자동 로그인 완료 시 이벤트 로깅 + 홈 진입 Mixpanel 트래킹
 	useEffect(() => {
 		pushGtmEvent({
 			event: "login",
 			pagePath: "/home",
 			method: "로그인 수단 (Toss)",
 		});
-	}, []);
+
+		trackEvent("Home Viewed", {
+			pagePath: "/home",
+			hasOnboardingCompleted: userInfo?.result?.isOnboardingCompleted,
+		});
+	}, [userInfo]);
 	// 설문 목록 (중복 제거)
 	const allSurveys = useMemo(() => {
 		// surveyId 기준으로 중복 제거

@@ -7,6 +7,7 @@ import {
 import type { ScreeningQuestion } from "@features/survey/service/surveyParticipation/types";
 import { formatRemainingTime } from "@shared/lib/FormatDate";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import type { SurveyListItem } from "@shared/types/surveyList";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -134,6 +135,12 @@ export const OxScreening = () => {
 					survey_id: String(nextSurveyId),
 					source: "quiz",
 					quiz_id: String(currentQuestion?.screeningId),
+				});
+				trackEvent("Survey Started", {
+					pagePath: "/survey",
+					surveyId: String(nextSurveyId),
+					source: "quiz",
+					quizId: String(currentQuestion?.screeningId),
 				});
 				navigate(`/survey?surveyId=${nextSurveyId}`, {
 					state: {
@@ -357,6 +364,11 @@ export const OxScreening = () => {
 							pagePath: "/screening",
 							quiz_id: String(currentQuestion.screeningId),
 							result: "fail",
+						});
+						trackEvent("Survey Screening Failed", {
+							pagePath: "/screening",
+							quizId: String(currentQuestion.screeningId),
+							targetSurveyId: nextSurveyId ? String(nextSurveyId) : undefined,
 						});
 						setIsIneligibleBottomSheetOpen(true);
 					}
