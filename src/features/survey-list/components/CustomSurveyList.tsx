@@ -2,6 +2,7 @@ import { IneligibleSurveyBottomSheet } from "@features/screening/components/Inel
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import { topics } from "@shared/constants/topics";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import type { SurveyListItem } from "@shared/types/surveyList";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -54,6 +55,13 @@ export const CustomSurveyList = ({ surveys }: CustomSurveyListProps) => {
 			pagePath: "/survey",
 			survey_id: String(survey.id),
 			source: "main",
+		});
+
+		trackEvent("Survey Started", {
+			pagePath: "/survey",
+			surveyId: String(survey.id),
+			source: "main",
+			hasScreening,
 		});
 		const searchParams = new URLSearchParams({ surveyId: survey.id });
 		navigate(

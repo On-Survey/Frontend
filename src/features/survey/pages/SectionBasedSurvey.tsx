@@ -6,6 +6,7 @@ import {
 import { queryClient } from "@shared/contexts/queryClient";
 import { formatDateToISO } from "@shared/lib/FormatDate";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { buildSectionAnswersPayload } from "@shared/lib/surveySubmission";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -275,6 +276,12 @@ export const SectionBasedSurvey = () => {
 			event: "survey_progress_button_click",
 			pagePath: "/survey",
 			survey_id: String(surveyId),
+			source: locationState?.source ?? "main",
+		});
+
+		trackEvent("Survey Started", {
+			pagePath: "/survey",
+			surveyId: String(surveyId),
 			source: locationState?.source ?? "main",
 		});
 

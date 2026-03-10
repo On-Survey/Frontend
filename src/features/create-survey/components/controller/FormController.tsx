@@ -4,6 +4,7 @@ import { queryClient } from "@shared/contexts/queryClient";
 import { useSurvey } from "@shared/contexts/SurveyContext";
 import { useModal } from "@shared/hooks/UseToggle";
 import { pushGtmEvent } from "@shared/lib/gtm";
+import { trackEvent } from "@shared/lib/mixpanel";
 import { convertQuestionsToServerFormat } from "@shared/lib/questionConverter";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, ConfirmDialog, Text, useToast } from "@toss/tds-mobile";
@@ -78,6 +79,16 @@ export const FormController = ({
 					if (result.success) {
 						handleConfirmDialogOpen();
 						queryClient.invalidateQueries({ queryKey: ["userSurveys"] });
+
+						const source = locationState?.source ?? "main_cta";
+						const questionCount = state.survey.question.length;
+
+						trackEvent("Create Survey Step Completed", {
+							pagePath: "/createForm",
+							step: "question",
+							source,
+							questionCount,
+						});
 					}
 				},
 				onError: (error) => {
