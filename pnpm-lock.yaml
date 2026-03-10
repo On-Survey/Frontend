@@ -50,6 +50,9 @@ importers:
       husky:
         specifier: ^9.1.7
         version: 9.1.7
+      mixpanel-browser:
+        specifier: ^2.75.0
+        version: 2.75.0(@mixpanel/rrweb-utils@2.0.0-alpha.18.3)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2265,6 +2268,27 @@ packages:
   '@microsoft/clarity@1.0.2':
     resolution: {integrity: sha512-9EZYROFpJxEGmQpHvUFqvD3ZJ7QQSqnibYSWmS+1xusoZfG1QQ1/Al9yVBBc11DWMbJrs1pe1hLT273it/skJg==}
 
+  '@mixpanel/rrdom@2.0.0-alpha.18.3':
+    resolution: {integrity: sha512-FpQ/WJkVgb0kF49ebqtqf5F7dsqU/o9CfzPR8BAafzVQkieaPCRBFyLh8CDCtKKY0k8DJRqcamj388MLd6QJpQ==}
+
+  '@mixpanel/rrweb-plugin-console-record@2.0.0-alpha.18.3':
+    resolution: {integrity: sha512-xau4CixCli8HepZ5snLXQAgUYluGeQg2ZHlv7bRFQTPaA02YfOiwjF295ohMtVOI1VWkFxeK5uDeFnOb/S5Uow==}
+    peerDependencies:
+      '@mixpanel/rrweb': ^2.0.0-alpha.18
+      '@mixpanel/rrweb-utils': ^2.0.0-alpha.18
+
+  '@mixpanel/rrweb-snapshot@2.0.0-alpha.18.3':
+    resolution: {integrity: sha512-s+OONdR5WGpw3DapBMUeXvNGQAZuAr/VzkG+D6f/DsK2sV2PyibmrQJUZUSGYqB3pGGWzmJPO9BvqPBzfAZ5SA==}
+
+  '@mixpanel/rrweb-types@2.0.0-alpha.18.3':
+    resolution: {integrity: sha512-K6L0AQUm5SzW/nKbb68uFWwg1S+NlVt1QOW3YMROrpI0nhnntQmEfHnecjyPYE/s5MxH+kqW8bH5bVpT/uJa3A==}
+
+  '@mixpanel/rrweb-utils@2.0.0-alpha.18.3':
+    resolution: {integrity: sha512-5hvfIhYaSlpJYKQn4nK1s3Rv63UExMq5l1FtAKFXznCqsnVIEb+yICKOiESSzIRwrCxInnUvFOGCfNWBXy9QLw==}
+
+  '@mixpanel/rrweb@2.0.0-alpha.18.3':
+    resolution: {integrity: sha512-di3QfGmRleiDN85+E6OoJHCr/vq/wX9Z8l/Jt4mqHoLcbLEa46dkZ/qSgl4pYFby1Q6BKEwfwGIav15Ay7szlg==}
+
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
 
@@ -3141,6 +3165,9 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
+  '@types/css-font-loading-module@0.0.7':
+    resolution: {integrity: sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==}
+
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
@@ -3210,6 +3237,9 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+
+  '@xstate/fsm@1.6.5':
+    resolution: {integrity: sha512-b5o1I6aLNeYlU/3CPlj/Z91ybk1gUsKT+5NAJI+2W4UjvS5KLG28K9v5UvNoFVjHV8PajVZ00RH3vnjyQO7ZAw==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -3464,6 +3494,10 @@ packages:
     peerDependenciesMeta:
       bare-abort-controller:
         optional: true
+
+  base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
+    engines: {node: '>= 0.6.0'}
 
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
@@ -4854,6 +4888,9 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
+  json-logic-js@2.0.5:
+    resolution: {integrity: sha512-rTT2+lqcuUmj4DgWfmzupZqQDA64AdmYqizzMPWj3DxGdfFNsxPpcNVSaTj4l8W2tG/+hg7/mQhxjU3aPacO6g==}
+
   json-parse-better-errors@1.0.2:
     resolution: {integrity: sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==}
 
@@ -5386,6 +5423,13 @@ packages:
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
+  mixpanel-browser@2.75.0:
+    resolution: {integrity: sha512-jii/M8lXgHHgJ922t+lvUPSuzYEnME1WlXr2Okak6XdZ1WlTv/L2EOnCWAyM750zoHA6kbJIN2XswoGLnaLPnw==}
+    engines: {node: '>=20 <26'}
 
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
@@ -10056,6 +10100,34 @@ snapshots:
 
   '@microsoft/clarity@1.0.2': {}
 
+  '@mixpanel/rrdom@2.0.0-alpha.18.3':
+    dependencies:
+      '@mixpanel/rrweb-snapshot': 2.0.0-alpha.18.3
+
+  '@mixpanel/rrweb-plugin-console-record@2.0.0-alpha.18.3(@mixpanel/rrweb-utils@2.0.0-alpha.18.3)(@mixpanel/rrweb@2.0.0-alpha.18.3)':
+    dependencies:
+      '@mixpanel/rrweb': 2.0.0-alpha.18.3
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.3
+
+  '@mixpanel/rrweb-snapshot@2.0.0-alpha.18.3':
+    dependencies:
+      postcss: 8.5.6
+
+  '@mixpanel/rrweb-types@2.0.0-alpha.18.3': {}
+
+  '@mixpanel/rrweb-utils@2.0.0-alpha.18.3': {}
+
+  '@mixpanel/rrweb@2.0.0-alpha.18.3':
+    dependencies:
+      '@mixpanel/rrdom': 2.0.0-alpha.18.3
+      '@mixpanel/rrweb-snapshot': 2.0.0-alpha.18.3
+      '@mixpanel/rrweb-types': 2.0.0-alpha.18.3
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.3
+      '@types/css-font-loading-module': 0.0.7
+      '@xstate/fsm': 1.6.5
+      base64-arraybuffer: 1.0.2
+      mitt: 3.0.1
+
   '@napi-rs/wasm-runtime@1.1.1':
     dependencies:
       '@emnapi/core': 1.8.1
@@ -11040,6 +11112,8 @@ snapshots:
     dependencies:
       '@types/node': 24.10.9
 
+  '@types/css-font-loading-module@0.0.7': {}
+
   '@types/estree@1.0.8': {}
 
   '@types/graceful-fs@4.1.9':
@@ -11117,6 +11191,8 @@ snapshots:
       vite: rolldown-vite@7.1.14(@types/node@24.10.9)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
+
+  '@xstate/fsm@1.6.5': {}
 
   abort-controller@3.0.0:
     dependencies:
@@ -11492,6 +11568,8 @@ snapshots:
   balanced-match@1.0.2: {}
 
   bare-events@2.8.2: {}
+
+  base64-arraybuffer@1.0.2: {}
 
   base64-js@1.5.1: {}
 
@@ -13204,6 +13282,8 @@ snapshots:
 
   jsesc@3.1.0: {}
 
+  json-logic-js@2.0.5: {}
+
   json-parse-better-errors@1.0.2: {}
 
   json-parse-even-better-errors@2.3.1: {}
@@ -13975,6 +14055,16 @@ snapshots:
   minimist@1.2.8: {}
 
   minipass@7.1.2: {}
+
+  mitt@3.0.1: {}
+
+  mixpanel-browser@2.75.0(@mixpanel/rrweb-utils@2.0.0-alpha.18.3):
+    dependencies:
+      '@mixpanel/rrweb': 2.0.0-alpha.18.3
+      '@mixpanel/rrweb-plugin-console-record': 2.0.0-alpha.18.3(@mixpanel/rrweb-utils@2.0.0-alpha.18.3)(@mixpanel/rrweb@2.0.0-alpha.18.3)
+      json-logic-js: 2.0.5
+    transitivePeerDependencies:
+      - '@mixpanel/rrweb-utils'
 
   mkdirp@0.5.6:
     dependencies:
