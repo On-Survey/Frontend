@@ -10,7 +10,11 @@ interface SurveyRewardInfoCardProps {
 	price?: number;
 }
 
-const getEstimatedTime = (questionCount: number): number => {
+const getEstimatedTime = (
+	questionCount: number,
+	rewardPrice: number,
+): number => {
+	if (rewardPrice === 500) return 4;
 	if (questionCount <= 10) return 2;
 	if (questionCount <= 20) return 4;
 	return 4;
@@ -22,8 +26,11 @@ export const SurveyRewardInfoCard = ({
 	remainingTimeText,
 	price,
 }: SurveyRewardInfoCardProps) => {
-	const estimatedTime = getEstimatedTime(questionCount);
-	const rewardPrice = price ?? DEFAULT_REWARD_PRICE;
+	const rewardPrice =
+		price != null && Number.isFinite(Number(price))
+			? Number(price)
+			: DEFAULT_REWARD_PRICE;
+	const estimatedTime = getEstimatedTime(questionCount, rewardPrice);
 
 	return (
 		<div className="px-4">
