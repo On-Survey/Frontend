@@ -1,3 +1,4 @@
+import { getEstimatedTimeByPrice } from "@features/survey/components/SurveyRewardInfoCard";
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import { topics } from "@shared/constants/topics";
 import { pushGtmEvent } from "@shared/lib/gtm";
@@ -77,7 +78,7 @@ export const SurveyList = ({ surveys }: SurveyListProps) => {
 								bottom={
 									survey.isFree
 										? "보상이 없어요"
-										: `3분이면 ${survey.price ?? 200}원 획득`
+										: `${getEstimatedTimeByPrice(survey.price)}분이면 ${survey.price ?? 200}원 획득`
 								}
 								bottomProps={{ color: adaptive.grey600 }}
 							/>

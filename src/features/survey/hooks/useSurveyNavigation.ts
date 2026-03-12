@@ -263,7 +263,7 @@ export const useSurveyNavigation = ({
 					replace: true,
 					state: {
 						surveyId,
-						isFree: locationState?.isFree,
+						isFree: surveyInfo?.isFree ?? locationState?.isFree,
 						source: locationState?.source,
 						promotionIssued, // 프로모션 지급 성공 여부 전달
 						price: surveyInfo?.price,
