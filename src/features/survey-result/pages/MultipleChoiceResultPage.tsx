@@ -268,6 +268,10 @@ export const MultipleChoiceResultPage = () => {
 								{options.map((option) => {
 									const isTop = option.count === maxCount && maxCount > 0;
 									const barWidth = getBarWidth(option.count, maxCount);
+									const pct =
+										totalResponses > 0
+											? Math.round((option.count / totalResponses) * 100)
+											: 0;
 									return (
 										<div key={option.label} className="space-y-2 px-6">
 											<Text
@@ -279,7 +283,7 @@ export const MultipleChoiceResultPage = () => {
 												{option.label}
 											</Text>
 											<div
-												className="h-8 rounded-[8px] shadow-sm px-4 flex items-center text-base font-semibold leading-none text-white"
+												className="h-8 rounded-[8px] px-4 flex items-center text-base font-semibold leading-none text-white"
 												style={{
 													width: barWidth,
 													background: isTop
@@ -287,7 +291,7 @@ export const MultipleChoiceResultPage = () => {
 														: "linear-gradient(90deg, #e5e7eb 0%, #9ca3af 64.61094705033995%)",
 												}}
 											>
-												{option.count}명
+												{option.count}명({pct}%)
 											</div>
 										</div>
 									);
