@@ -1,7 +1,107 @@
 import { adaptive } from "@toss/tds-colors";
-import { Text, TextArea, Top } from "@toss/tds-mobile";
+import { Asset, Menu, Text, TextArea, Top, useToast } from "@toss/tds-mobile";
+import {
+	ArcElement,
+	Chart as ChartJS,
+	type ChartOptions,
+	Legend,
+	Tooltip,
+} from "chart.js";
+import { useState } from "react";
+import { Pie } from "react-chartjs-2";
 import { SURVEY_BADGE_CONFIG, SURVEY_STATUS_LABELS } from "../constants/survey";
 import { useResultPageData } from "../hooks/useResultPageData";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const PIE_BASE_COLOR = "#15C67F";
+
+/** #15C67F 기준 투명도 단계별 색상 (0.25 ~ 1) */
+const getPieColors = (count: number) => {
+	const step = count <= 1 ? 1 : 0.75 / (count - 1);
+	return Array.from({ length: count }, (_, i) => {
+		const alpha = count <= 1 ? 1 : 0.25 + step * i;
+		const r = 0x15;
+		const g = 0xc6;
+		const b = 0x7f;
+		return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+	});
+};
+
+type GraphType = "bar" | "pie";
+
+interface MultipleChoicePieChartProps {
+	options: Array<{ label: string; count: number }>;
+}
+
+const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
+	const labels = options.map((o) => o.label);
+	const data = options.map((o) => o.count);
+	const backgroundColors = getPieColors(options.length);
+
+	const chartData = {
+		labels,
+		datasets: [
+			{
+				data,
+				backgroundColor: backgroundColors,
+				borderWidth: 0,
+			},
+		],
+	};
+
+	const chartOptions: ChartOptions<"pie"> = {
+		responsive: true,
+		maintainAspectRatio: true,
+		aspectRatio: 1.2,
+		layout: {
+			padding: { bottom: 28 },
+		},
+		plugins: {
+			legend: {
+				position: "bottom",
+				labels: {
+					usePointStyle: true,
+					pointStyle: "circle",
+					padding: 12,
+					font: { weight: "bold" },
+					generateLabels(chart) {
+						const dataset = chart.data.datasets[0];
+						if (!dataset?.data) return [];
+						const total = (dataset.data as number[]).reduce((a, b) => a + b, 0);
+						return (chart.data.labels ?? []).map((label, i) => {
+							const value = (dataset.data as number[])[i] ?? 0;
+							const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+							return {
+								text: `${label}		${pct}%`,
+								fillStyle: Array.isArray(dataset.backgroundColor)
+									? dataset.backgroundColor[i]
+									: PIE_BASE_COLOR,
+								index: i,
+								lineWidth: 0,
+							};
+						});
+					},
+				},
+			},
+			tooltip: {
+				callbacks: {
+					label(ctx) {
+						const total = (ctx.dataset.data as number[]).reduce(
+							(a, b) => a + b,
+							0,
+						);
+						const value = (ctx.raw as number) ?? 0;
+						const pct = total > 0 ? ((value / total) * 100).toFixed(1) : "0";
+						return `${ctx.label}: ${ctx.raw}명 (${pct}%)`;
+					},
+				},
+			},
+		},
+	};
+
+	return <Pie data={chartData} options={chartOptions} />;
+};
 
 const getBarWidth = (count: number, maxCount: number) => {
 	if (maxCount <= 0) {
@@ -23,6 +123,9 @@ export const MultipleChoiceResultPage = () => {
 		totalAnswerCount,
 		requiredLabel,
 	} = useResultPageData();
+	const { openToast } = useToast();
+	const [graphType, setGraphType] = useState<GraphType>("bar");
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
 
@@ -99,6 +202,59 @@ export const MultipleChoiceResultPage = () => {
 				}
 			/>
 
+			{(options.length > 0 || otherAnswers.length > 0) && (
+				<div className="px-6 pt-2 pb-4">
+					<Menu.Trigger
+						open={menuOpen}
+						onOpen={() => setMenuOpen(true)}
+						onClose={() => setMenuOpen(false)}
+						dropdown={
+							<Menu.Dropdown>
+								<Menu.DropdownItem
+									onClick={() => {
+										setGraphType("bar");
+										setMenuOpen(false);
+									}}
+								>
+									막대 그래프
+								</Menu.DropdownItem>
+								<Menu.DropdownItem
+									onClick={() => {
+										if (options.length >= 7) {
+											openToast(
+												"선택지가 7개 이상일 경우 파이 차트 가독성이 떨어질 수 있어요",
+												{ type: "bottom" },
+											);
+										}
+										setGraphType("pie");
+										setMenuOpen(false);
+									}}
+								>
+									파이 차트
+								</Menu.DropdownItem>
+							</Menu.Dropdown>
+						}
+					>
+						<div className="flex items-center gap-1">
+							<Text
+								color={adaptive.grey700}
+								typography="t5"
+								fontWeight="medium"
+							>
+								그래프
+							</Text>
+							<Asset.Icon
+								frameShape={Asset.frameShape.CleanW24}
+								backgroundColor="transparent"
+								name="icon-system-arrow-down-outlined"
+								aria-hidden={true}
+								ratio="1/1"
+							/>
+						</div>
+					</Menu.Trigger>
+				</div>
+			)}
+
 			<div className="pb-12 space-y-5">
 				{options.length === 0 && otherAnswers.length === 0 ? (
 					<div className="px-4 py-8 text-center">
@@ -106,34 +262,44 @@ export const MultipleChoiceResultPage = () => {
 					</div>
 				) : (
 					<>
-						{/* 일반 객관식 옵션들을 막대그래프로 표시 */}
-						{options.map((option) => {
-							const isTop = option.count === maxCount && maxCount > 0;
-							const barWidth = getBarWidth(option.count, maxCount);
-							return (
-								<div key={option.label} className="space-y-2 px-6">
-									<Text
-										color={adaptive.grey900}
-										typography="t5"
-										fontWeight="semibold"
-										className="mb-1!"
-									>
-										{option.label}
-									</Text>
-									<div
-										className="h-8 rounded-[8px] shadow-sm px-4 flex items-center text-base font-semibold leading-none text-white"
-										style={{
-											width: barWidth,
-											background: isTop
-												? "linear-gradient(90deg, #00c7fc 0%, #04CB98ff 64.61094705033995%)"
-												: "linear-gradient(90deg, #e5e7eb 0%, #9ca3af 64.61094705033995%)",
-										}}
-									>
-										{option.count}명
-									</div>
-								</div>
-							);
-						})}
+						{graphType === "bar" && (
+							<>
+								{/* 일반 객관식 옵션들을 막대그래프로 표시 */}
+								{options.map((option) => {
+									const isTop = option.count === maxCount && maxCount > 0;
+									const barWidth = getBarWidth(option.count, maxCount);
+									return (
+										<div key={option.label} className="space-y-2 px-6">
+											<Text
+												color={adaptive.grey900}
+												typography="t5"
+												fontWeight="semibold"
+												className="mb-1!"
+											>
+												{option.label}
+											</Text>
+											<div
+												className="h-8 rounded-[8px] shadow-sm px-4 flex items-center text-base font-semibold leading-none text-white"
+												style={{
+													width: barWidth,
+													background: isTop
+														? "linear-gradient(90deg, #00c7fc 0%, #04CB98ff 64.61094705033995%)"
+														: "linear-gradient(90deg, #e5e7eb 0%, #9ca3af 64.61094705033995%)",
+												}}
+											>
+												{option.count}명
+											</div>
+										</div>
+									);
+								})}
+							</>
+						)}
+
+						{graphType === "pie" && options.length > 0 && (
+							<div className="px-4">
+								<MultipleChoicePieChart options={options} />
+							</div>
+						)}
 
 						{/* 기타 (직접 입력) 응답들을 단답식처럼 표시 */}
 						{otherAnswers.length > 0 && (
