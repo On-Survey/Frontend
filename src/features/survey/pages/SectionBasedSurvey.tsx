@@ -318,8 +318,9 @@ export const SectionBasedSurvey = () => {
 		setSubmitting(true);
 		await completeSurveyMutation({ surveyId });
 
+		let surveyInfo: Awaited<ReturnType<typeof getSurveyInfo>> | undefined;
 		try {
-			const surveyInfo = await getSurveyInfo(surveyId);
+			surveyInfo = await getSurveyInfo(surveyId);
 			if (!surveyInfo.isFree) {
 				await issuePromotion({ surveyId });
 			}
@@ -333,6 +334,7 @@ export const SectionBasedSurvey = () => {
 			state: {
 				surveyId: String(surveyId),
 				source: locationState?.source,
+				price: surveyInfo?.price,
 			},
 		});
 	};
@@ -355,8 +357,6 @@ export const SectionBasedSurvey = () => {
 		await submitCurrentSectionAnswers();
 		await handleSubmit();
 	};
-
-	if (questions.length === 0) return null;
 
 	return (
 		<>

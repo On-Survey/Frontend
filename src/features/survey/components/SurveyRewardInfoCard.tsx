@@ -1,13 +1,23 @@
 import { colors } from "@toss/tds-colors";
 import { Text } from "@toss/tds-mobile";
 
+const DEFAULT_REWARD_PRICE = 200;
+
 interface SurveyRewardInfoCardProps {
 	isFree?: boolean;
 	questionCount: number;
 	remainingTimeText?: string | null;
+	price?: number;
 }
 
-const getEstimatedTime = (questionCount: number): number => {
+export const getEstimatedTimeByPrice = (price?: number): number =>
+	(price ?? DEFAULT_REWARD_PRICE) === 500 ? 4 : 3;
+
+const getEstimatedTime = (
+	questionCount: number,
+	rewardPrice: number,
+): number => {
+	if (rewardPrice === 500) return getEstimatedTimeByPrice(rewardPrice);
 	if (questionCount <= 10) return 2;
 	if (questionCount <= 20) return 4;
 	return 4;
@@ -17,14 +27,21 @@ export const SurveyRewardInfoCard = ({
 	isFree,
 	questionCount,
 	remainingTimeText,
+	price,
 }: SurveyRewardInfoCardProps) => {
-	const estimatedTime = getEstimatedTime(questionCount);
+	const rewardPrice =
+		price != null && Number.isFinite(Number(price))
+			? Number(price)
+			: DEFAULT_REWARD_PRICE;
+	const estimatedTime = getEstimatedTime(questionCount, rewardPrice);
 
 	return (
 		<div className="px-4">
 			<div className="w-full rounded-2xl border border-green-500 p-5 shadow-sm">
 				<Text color={colors.grey900} typography="t5" fontWeight="semibold">
-					{isFree === true ? "참여보상이 없는 설문이에요" : "참여 보상 : 200원"}
+					{isFree === true
+						? "참여보상이 없는 설문이에요"
+						: `참여 보상 : ${rewardPrice}원`}
 				</Text>
 				<div className="h-2" />
 				<Text color={colors.grey900} typography="t5" fontWeight="semibold">

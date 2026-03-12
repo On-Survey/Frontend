@@ -12,4 +12,5 @@ export interface SurveyListItem {
 	isClosed?: boolean;
 	isFree?: boolean;
 	responseCount?: number;
+	price?: number;
 }
