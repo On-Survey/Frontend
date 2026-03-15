@@ -151,7 +151,7 @@ export const GoogleFormConversionRequestPage = () => {
 				state: {
 					formLink: data.formLink,
 					email: data.email,
-					questionPackage,
+					formQuestionCount,
 					respondentCount: data.respondentCount,
 					gender: data.gender,
 					ages: data.ages,

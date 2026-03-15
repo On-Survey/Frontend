@@ -15,20 +15,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../service/api";
 
-type QuestionPackage = "light" | "standard" | "plus";
 type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
-
-const QUESTION_PACKAGE_DISPLAY: Record<QuestionPackage, string> = {
-	light: "라이트 (15문항 이내)",
-	standard: "스탠다드 (25문항 이내)",
-	plus: "플러스 (30문항 이내)",
-};
-
-const QUESTION_PACKAGE_COUNT: Record<QuestionPackage, number> = {
-	light: 15,
-	standard: 25,
-	plus: 30,
-};
 
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
@@ -43,7 +30,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 		| {
 				formLink: string;
 				email: string;
-				questionPackage: QuestionPackage;
+				formQuestionCount?: number | null;
 				respondentCount: RespondentCount;
 				deadline: string;
 				price: number;
@@ -52,10 +39,11 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 
 	const formLink = locationState?.formLink ?? "";
 	const email = locationState?.email ?? "";
-	const questionPackage = locationState?.questionPackage ?? "light";
+	const formQuestionCount = locationState?.formQuestionCount ?? null;
 	const respondentCount = locationState?.respondentCount ?? 50;
 	const deadline = locationState?.deadline ?? "";
 	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
+	const questionCount = formQuestionCount ?? 30;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
 	useEffect(() => {
@@ -132,7 +120,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 						transaction_id: String(orderId),
 						value: String(price),
 						price: String(price),
-						item_name: `${QUESTION_PACKAGE_DISPLAY[questionPackage]} (${respondentCount}명)`,
+						item_name: `구글폼 변환 (${respondentCount}명)`,
 						entry_type: "form_convert",
 					});
 
@@ -140,7 +128,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					try {
 						await createGoogleFormConversionRequest({
 							formLink,
-							questionCount: QUESTION_PACKAGE_COUNT[questionPackage],
+							questionCount,
 							targetResponseCount: respondentCount,
 							deadline,
 							requesterEmail: email,
@@ -154,7 +142,6 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					// 결제 완료 후 성공 페이지로 이동
 					navigate("/payment/google-form-conversion-success", {
 						state: {
-							questionPackage,
 							respondentCount,
 							price,
 							orderId,
@@ -174,8 +161,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				<Top
 					title={
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
-							{formatPrice(price)}원으로{" "}
-							{QUESTION_PACKAGE_DISPLAY[questionPackage]}를 구매할까요?
+							구글폼 변환 {formatPrice(price)}원 결제할까요?
 						</Top.TitleParagraph>
 					}
 					upper={
