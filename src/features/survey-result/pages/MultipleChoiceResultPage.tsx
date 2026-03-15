@@ -14,7 +14,7 @@ import { useResultPageData } from "../hooks/useResultPageData";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PIE_BASE_COLOR = "#15C67F";
+const PIE_OTHER_THRESHOLD_PCT = 5;
 
 /** #15C67F 기준 투명도 단계별 색상 (0.25 ~ 1) */
 const getPieColors = (count: number) => {
@@ -35,16 +35,33 @@ interface MultipleChoicePieChartProps {
 }
 
 const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
-	const labels = options.map((o) => o.label);
-	const data = options.map((o) => o.count);
-	const backgroundColors = getPieColors(options.length);
+	const total = options.reduce((sum, o) => sum + o.count, 0);
+
+	// 5% 미만 항목은 차트에서만 '기타'로 묶음
+	const mainOptions = options.filter(
+		(o) => total > 0 && (o.count / total) * 100 >= PIE_OTHER_THRESHOLD_PCT,
+	);
+	const otherOptions = options.filter(
+		(o) => total > 0 && (o.count / total) * 100 < PIE_OTHER_THRESHOLD_PCT,
+	);
+	const otherSum = otherOptions.reduce((s, o) => s + o.count, 0);
+
+	const chartLabels = [
+		...mainOptions.map((o) => o.label),
+		...(otherSum > 0 ? ["기타"] : []),
+	];
+	const chartDataValues = [
+		...mainOptions.map((o) => o.count),
+		...(otherSum > 0 ? [otherSum] : []),
+	];
+	const chartColors = getPieColors(chartLabels.length);
 
 	const chartData = {
-		labels,
+		labels: chartLabels,
 		datasets: [
 			{
-				data,
-				backgroundColor: backgroundColors,
+				data: chartDataValues,
+				backgroundColor: chartColors,
 				borderWidth: 0,
 			},
 		],
@@ -58,41 +75,19 @@ const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
 			padding: { bottom: 28 },
 		},
 		plugins: {
-			legend: {
-				position: "bottom",
-				labels: {
-					usePointStyle: true,
-					pointStyle: "circle",
-					padding: 12,
-					font: { weight: "bold" },
-					generateLabels(chart) {
-						const dataset = chart.data.datasets[0];
-						if (!dataset?.data) return [];
-						const total = (dataset.data as number[]).reduce((a, b) => a + b, 0);
-						return (chart.data.labels ?? []).map((label, i) => {
-							const value = (dataset.data as number[])[i] ?? 0;
-							const pct = total > 0 ? Math.round((value / total) * 100) : 0;
-							return {
-								text: `${label}		${pct}%`,
-								fillStyle: Array.isArray(dataset.backgroundColor)
-									? dataset.backgroundColor[i]
-									: PIE_BASE_COLOR,
-								index: i,
-								lineWidth: 0,
-							};
-						});
-					},
-				},
-			},
+			legend: { display: false },
 			tooltip: {
 				callbacks: {
 					label(ctx) {
-						const total = (ctx.dataset.data as number[]).reduce(
+						const datasetTotal = (ctx.dataset.data as number[]).reduce(
 							(a, b) => a + b,
 							0,
 						);
 						const value = (ctx.raw as number) ?? 0;
-						const pct = total > 0 ? ((value / total) * 100).toFixed(1) : "0";
+						const pct =
+							datasetTotal > 0
+								? ((value / datasetTotal) * 100).toFixed(1)
+								: "0";
 						return `${ctx.label}: ${ctx.raw}명 (${pct}%)`;
 					},
 				},
@@ -100,7 +95,41 @@ const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
 		},
 	};
 
-	return <Pie data={chartData} options={chartOptions} />;
+	// 범례
+	const legendColors = getPieColors(options.length);
+
+	return (
+		<div>
+			<Pie data={chartData} options={chartOptions} />
+			<div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-3">
+				{options.map((option, i) => {
+					const pct = total > 0 ? Math.round((option.count / total) * 100) : 0;
+					return (
+						<div key={option.label} className="flex items-center gap-2">
+							<span
+								className="shrink-0 rounded-full"
+								style={{
+									width: 10,
+									height: 10,
+									backgroundColor: legendColors[i],
+								}}
+								aria-hidden
+							/>
+							<Text
+								color={adaptive.grey900}
+								typography="t6"
+								fontWeight="semibold"
+							>
+								{option.label}
+								{"	"}
+								{pct}%
+							</Text>
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	);
 };
 
 const getBarWidth = (count: number, maxCount: number) => {
@@ -305,19 +334,10 @@ export const MultipleChoiceResultPage = () => {
 							</div>
 						)}
 
-						{/* 기타 (직접 입력) 응답들을 단답식처럼 표시 */}
+						{/* 기타 (직접 입력)*/}
 						{otherAnswers.length > 0 && (
-							<div className="px-4 space-y-3">
-								<Text
-									color={adaptive.grey900}
-									typography="t5"
-									fontWeight="semibold"
-									className="mb-2"
-								>
-									기타 (직접 입력)
-								</Text>
+							<div className="space-y-3">
 								{otherAnswers.map((answer, index) => {
-									// answer 값과 index를 조합하여 고유한 key 생성
 									const uniqueKey = `${answer}-${index}`;
 									return (
 										<TextArea
