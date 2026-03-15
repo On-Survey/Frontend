@@ -54,6 +54,7 @@ export const GoogleFormConversionPrecheckPage = () => {
 					deadlineText: string;
 					deadline?: string;
 					price: number;
+					discountCode?: string;
 			  }
 			| undefined;
 		navigate("/payment/google-form-conversion-payment-confirm", {

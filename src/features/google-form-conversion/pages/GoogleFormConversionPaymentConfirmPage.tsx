@@ -32,8 +32,11 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				email: string;
 				formQuestionCount?: number | null;
 				respondentCount: RespondentCount;
+				gender?: string;
+				ages?: string[];
 				deadline: string;
 				price: number;
+				discountCode?: string;
 		  }
 		| undefined;
 
@@ -41,8 +44,11 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	const email = locationState?.email ?? "";
 	const formQuestionCount = locationState?.formQuestionCount ?? null;
 	const respondentCount = locationState?.respondentCount ?? 50;
+	const gender = locationState?.gender;
+	const ages = locationState?.ages;
 	const deadline = locationState?.deadline ?? "";
 	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
+	const discountCode = locationState?.discountCode;
 	const questionCount = formQuestionCount ?? 30;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
@@ -124,7 +130,6 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 						entry_type: "form_convert",
 					});
 
-					// 구글폼 변환 신청 API 호출
 					try {
 						await createGoogleFormConversionRequest({
 							formLink,
@@ -133,6 +138,13 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 							deadline,
 							requesterEmail: email,
 							price,
+							...(gender && { gender }),
+							...(ages && ages.length > 0 && { ages }),
+							dueCount: respondentCount,
+							totalCoin: price,
+							...(discountCode?.trim() && {
+								discountCode: discountCode.trim(),
+							}),
 						});
 						console.log("구글폼 변환 신청이 완료되었습니다.");
 					} catch (error) {
