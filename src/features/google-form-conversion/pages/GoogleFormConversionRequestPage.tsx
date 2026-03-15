@@ -1,7 +1,4 @@
-import {
-	PRICE_TABLE,
-	RESPONDENT_OPTIONS,
-} from "@features/google-form-conversion/constants";
+import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/constants";
 import {
 	getGoogleFormPreview,
 	validatePromotionCode,
@@ -16,6 +13,10 @@ import {
 	formatDateToISO,
 	formatPrice,
 	getDefaultDeadline,
+	getGoogleFormConversionPrice,
+	getGoogleFormConversionPromoPrice,
+	getQuestionRange,
+	getTargetingCase,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { DateSelectBottomSheet } from "@features/payment/components/payment";
@@ -80,10 +81,15 @@ export const GoogleFormConversionRequestPage = () => {
 	const gender = watch("gender");
 	const ages = watch("ages");
 
-	const price = useMemo(
-		() => PRICE_TABLE[questionPackage][respondentCount],
-		[respondentCount],
-	);
+	const price = useMemo(() => {
+		const questionRange = getQuestionRange(formQuestionCount);
+		const targetingCase = getTargetingCase(gender, ages);
+		return getGoogleFormConversionPrice(
+			respondentCount,
+			questionRange,
+			targetingCase,
+		);
+	}, [respondentCount, formQuestionCount, gender, ages]);
 
 	// 폼 링크가 유효할 때만 서버에서 문항 수 조회 (밸리데이션만, 디바운스 없음)
 	useEffect(() => {
@@ -110,6 +116,13 @@ export const GoogleFormConversionRequestPage = () => {
 				try {
 					const { valid } = await validatePromotionCode(code);
 					if (valid) {
+						const questionRange = getQuestionRange(formQuestionCount);
+						const targetingCase = getTargetingCase(data.gender, data.ages);
+						const promoPrice = getGoogleFormConversionPromoPrice(
+							data.respondentCount,
+							questionRange,
+							targetingCase,
+						);
 						// TODO: 프로모션 전용 페이지 라우트 추가 후 해당 경로로 이동
 						navigate("/payment/google-form-conversion-promo-success", {
 							state: {
@@ -121,7 +134,7 @@ export const GoogleFormConversionRequestPage = () => {
 								ages: data.ages,
 								deadlineText: formatDate(data.deadline),
 								deadline: formatDateToISO(data.deadline),
-								price,
+								price: promoPrice,
 								promotionCode: code,
 							},
 						});
@@ -148,7 +161,7 @@ export const GoogleFormConversionRequestPage = () => {
 				},
 			});
 		},
-		[navigate, price],
+		[navigate, price, formQuestionCount],
 	);
 
 	const handleDateChange = (date: Date) => {
