@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../service/api";
 
 type QuestionPackage = "light" | "standard" | "plus";
-type RespondentCount = 50 | 100;
+type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 
 const QUESTION_PACKAGE_DISPLAY: Record<QuestionPackage, string> = {
 	light: "라이트 (15문항 이내)",

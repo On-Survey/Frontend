@@ -48,8 +48,11 @@ export const GoogleFormConversionPrecheckPage = () => {
 					formLink: string;
 					email: string;
 					questionPackage: "light" | "standard" | "plus";
-					respondentCount: 50 | 100;
+					respondentCount: 50 | 100 | 150 | 200 | 250 | 300;
+					gender?: string;
+					ages?: string[];
 					deadlineText: string;
+					deadline?: string;
 					price: number;
 			  }
 			| undefined;
