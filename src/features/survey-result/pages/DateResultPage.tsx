@@ -1,15 +1,10 @@
 import { formatDateDisplay } from "@shared/lib/FormatDate";
 import { adaptive } from "@toss/tds-colors";
-import { Text, Top } from "@toss/tds-mobile";
+import { Top } from "@toss/tds-mobile";
+import { BarChartResultView } from "../components/BarChartResultView";
 import { SURVEY_BADGE_CONFIG, SURVEY_STATUS_LABELS } from "../constants/survey";
 import { useResultPageData } from "../hooks/useResultPageData";
-
-const getBarWidth = (count: number, maxCount: number) => {
-	if (maxCount <= 0) return "0%";
-	const ratio = (count / maxCount) * 100;
-	const clamped = Math.min(Math.max(ratio, 18), 100);
-	return `${clamped}%`;
-};
+import { aggregateAnswerOptions } from "../utils/aggregateAnswerOptions";
 
 export const DateResultPage = () => {
 	const {
@@ -23,36 +18,12 @@ export const DateResultPage = () => {
 	} = useResultPageData();
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
-
-	// answer 값들을 집계
-	const countByValue: Record<string, number> = {};
-	if (Object.keys(answerMap).length > 0) {
-		Object.entries(answerMap).forEach(([key, count]) => {
-			countByValue[key] = (countByValue[key] ?? 0) + count;
-		});
-	} else {
-		answerList.forEach((value) => {
-			const key = String(value ?? "");
-			countByValue[key] = (countByValue[key] ?? 0) + 1;
-		});
-	}
-
-	const options = Object.entries(countByValue)
-		.map(([value, count]) => ({
-			label: formatDateDisplay(value),
-			count,
-			sortKey: value,
-		}))
-		.sort((a, b) => {
-			if (b.count !== a.count) return b.count - a.count;
-			const timeA = new Date(a.sortKey).getTime();
-			const timeB = new Date(b.sortKey).getTime();
-			return timeA - timeB;
-		});
-
-	const maxCount =
-		options.length > 0 ? Math.max(...options.map((o) => o.count)) : 0;
-	const totalResponses = options.reduce((sum, o) => sum + o.count, 0);
+	const { options, maxCount, totalResponses } = aggregateAnswerOptions({
+		answerMap,
+		answerList,
+		formatLabel: formatDateDisplay,
+		compareTie: (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+	});
 
 	return (
 		<div className="min-h-screen">
@@ -90,45 +61,12 @@ export const DateResultPage = () => {
 				}
 			/>
 
-			<div className="pb-12 space-y-5">
-				{options.length === 0 ? (
-					<div className="px-4 py-8 text-center">
-						<p className="text-gray-500">아직 응답이 없어요</p>
-					</div>
-				) : (
-					options.map((option) => {
-						const isTop = option.count === maxCount && maxCount > 0;
-						const barWidth = getBarWidth(option.count, maxCount);
-						const pct =
-							totalResponses > 0
-								? Math.round((option.count / totalResponses) * 100)
-								: 0;
-						return (
-							<div key={`date-${option.sortKey}`} className="space-y-2 px-6">
-								<Text
-									color={adaptive.grey900}
-									typography="t6"
-									fontWeight="semibold"
-									className="mb-1!"
-								>
-									{option.label}
-								</Text>
-								<div
-									className="h-8 rounded-[8px] px-4 flex items-center text-base font-semibold leading-none text-white"
-									style={{
-										width: barWidth,
-										background: isTop
-											? "linear-gradient(90deg, #00c7fc 0%, #04CB98ff 64.61094705033995%)"
-											: "linear-gradient(90deg, #e5e7eb 0%, #9ca3af 64.61094705033995%)",
-									}}
-								>
-									{option.count}명({pct}%)
-								</div>
-							</div>
-						);
-					})
-				)}
-			</div>
+			<BarChartResultView
+				options={options}
+				maxCount={maxCount}
+				totalResponses={totalResponses}
+				keyPrefix="date"
+			/>
 		</div>
 	);
 };
