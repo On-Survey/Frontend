@@ -1,12 +1,15 @@
-import { formatDateDisplay } from "@shared/lib/FormatDate";
+import { formatDateDisplay, parseDateLocal } from "@shared/lib/FormatDate";
 import { adaptive } from "@toss/tds-colors";
-import { TextArea, Top } from "@toss/tds-mobile";
+import { Top } from "@toss/tds-mobile";
+import { BarChartResultView } from "../components/BarChartResultView";
 import { SURVEY_BADGE_CONFIG, SURVEY_STATUS_LABELS } from "../constants/survey";
 import { useResultPageData } from "../hooks/useResultPageData";
+import { aggregateAnswerOptions } from "../utils/aggregateAnswerOptions";
 
 export const DateResultPage = () => {
 	const {
 		question,
+		answerMap,
 		answerList,
 		surveyTitle,
 		surveyStatus,
@@ -15,6 +18,13 @@ export const DateResultPage = () => {
 	} = useResultPageData();
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+	const { options, maxCount, totalResponses } = aggregateAnswerOptions({
+		answerMap,
+		answerList,
+		formatLabel: (value) => formatDateDisplay(value),
+		compareTie: (a, b) =>
+			parseDateLocal(a).getTime() - parseDateLocal(b).getTime(),
+	});
 
 	return (
 		<div className="min-h-screen">
@@ -52,25 +62,12 @@ export const DateResultPage = () => {
 				}
 			/>
 
-			<div className="pb-12">
-				{answerList.length === 0 ? (
-					<div className="px-4 py-8 text-center">
-						<p className="text-gray-500">아직 응답이 없습니다.</p>
-					</div>
-				) : (
-					answerList.map((value) => (
-						<TextArea
-							key={`date-${value}`}
-							variant="box"
-							hasError={false}
-							labelOption="sustain"
-							value={formatDateDisplay(value)}
-							placeholder=""
-							readOnly={true}
-						/>
-					))
-				)}
-			</div>
+			<BarChartResultView
+				options={options}
+				maxCount={maxCount}
+				totalResponses={totalResponses}
+				keyPrefix="date"
+			/>
 		</div>
 	);
 };

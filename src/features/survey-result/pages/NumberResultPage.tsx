@@ -1,11 +1,14 @@
 import { adaptive } from "@toss/tds-colors";
-import { TextArea, Top } from "@toss/tds-mobile";
+import { Top } from "@toss/tds-mobile";
+import { BarChartResultView } from "../components/BarChartResultView";
 import { SURVEY_BADGE_CONFIG, SURVEY_STATUS_LABELS } from "../constants/survey";
 import { useResultPageData } from "../hooks/useResultPageData";
+import { aggregateAnswerOptions } from "../utils/aggregateAnswerOptions";
 
 export const NumberResultPage = () => {
 	const {
 		question,
+		answerMap,
 		answerList,
 		surveyTitle,
 		surveyStatus,
@@ -14,6 +17,17 @@ export const NumberResultPage = () => {
 	} = useResultPageData();
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
+	const { options, maxCount, totalResponses } = aggregateAnswerOptions({
+		answerMap,
+		answerList,
+		formatLabel: (value) => value,
+		compareTie: (a, b) => {
+			const numA = Number(a);
+			const numB = Number(b);
+			if (!Number.isNaN(numA) && !Number.isNaN(numB)) return numA - numB;
+			return String(a).localeCompare(String(b));
+		},
+	});
 
 	return (
 		<div className="min-h-screen">
@@ -51,25 +65,12 @@ export const NumberResultPage = () => {
 				}
 			/>
 
-			<div className="pb-12">
-				{answerList.length === 0 ? (
-					<div className="px-4 py-8 text-center">
-						<p className="text-gray-500">아직 응답이 없습니다.</p>
-					</div>
-				) : (
-					answerList.map((value) => (
-						<TextArea
-							key={`num-${value}`}
-							variant="box"
-							hasError={false}
-							labelOption="sustain"
-							value={value}
-							placeholder=""
-							readOnly={true}
-						/>
-					))
-				)}
-			</div>
+			<BarChartResultView
+				options={options}
+				maxCount={maxCount}
+				totalResponses={totalResponses}
+				keyPrefix="num"
+			/>
 		</div>
 	);
 };
