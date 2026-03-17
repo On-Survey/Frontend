@@ -1,4 +1,4 @@
-import { formatDateDisplay } from "@shared/lib/FormatDate";
+import { formatDateDisplay, parseDateLocal } from "@shared/lib/FormatDate";
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
 import { BarChartResultView } from "../components/BarChartResultView";
@@ -21,8 +21,9 @@ export const DateResultPage = () => {
 	const { options, maxCount, totalResponses } = aggregateAnswerOptions({
 		answerMap,
 		answerList,
-		formatLabel: formatDateDisplay,
-		compareTie: (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+		formatLabel: (value) => formatDateDisplay(value),
+		compareTie: (a, b) =>
+			parseDateLocal(a).getTime() - parseDateLocal(b).getTime(),
 	});
 
 	return (

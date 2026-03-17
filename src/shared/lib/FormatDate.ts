@@ -1,5 +1,19 @@
 // 예시 ) 재사용 가능한 유틸리티 함수 또는 모듈
 
+export const parseDateLocal = (dateStr: string): Date => {
+	const [yearStr, monthStr, dayStr] = dateStr.split("-");
+
+	const year = Number(yearStr);
+	const month = Number(monthStr);
+	const day = Number(dayStr);
+
+	if (!year || !month || !day) {
+		return new Date(NaN);
+	}
+
+	return new Date(year, month - 1, day);
+};
+
 export const formatDate = (date: Date): string =>
 	date.toLocaleDateString("ko-KR", {
 		year: "numeric",
@@ -8,7 +22,16 @@ export const formatDate = (date: Date): string =>
 	});
 
 export const formatDateDisplay = (value: Date | string): string => {
-	const date = value instanceof Date ? value : new Date(value);
+	let date: Date;
+
+	if (value instanceof Date) {
+		date = value;
+	} else {
+		date = parseDateLocal(value);
+		if (Number.isNaN(date.getTime())) {
+			date = new Date(value);
+		}
+	}
 
 	if (Number.isNaN(date.getTime())) {
 		return "";
