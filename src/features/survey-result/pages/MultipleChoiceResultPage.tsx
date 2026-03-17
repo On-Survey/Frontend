@@ -56,6 +56,25 @@ const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
 	];
 	const chartColors = getPieColors(chartLabels.length);
 
+	// 범례용 색상 매핑(mainOptions, otherOptions)
+	const otherSliceColorIndex = otherSum > 0 ? chartLabels.length - 1 : -1;
+
+	const getLegendColor = (label: string) => {
+		if (otherSliceColorIndex >= 0) {
+			const isOther = otherOptions.some((o) => o.label === label);
+			if (isOther) {
+				return chartColors[otherSliceColorIndex];
+			}
+		}
+
+		const mainIndex = mainOptions.findIndex((o) => o.label === label);
+		if (mainIndex >= 0) {
+			return chartColors[mainIndex];
+		}
+
+		return chartColors[0];
+	};
+
 	const chartData = {
 		labels: chartLabels,
 		datasets: [
@@ -95,15 +114,13 @@ const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
 		},
 	};
 
-	// 범례
-	const legendColors = getPieColors(options.length);
-
 	return (
 		<div>
 			<Pie data={chartData} options={chartOptions} />
 			<div className="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-3">
-				{options.map((option, i) => {
+				{options.map((option) => {
 					const pct = total > 0 ? Math.round((option.count / total) * 100) : 0;
+					const legendColor = getLegendColor(option.label);
 					return (
 						<div key={option.label} className="flex items-center gap-2">
 							<span
@@ -111,7 +128,7 @@ const MultipleChoicePieChart = ({ options }: MultipleChoicePieChartProps) => {
 								style={{
 									width: 10,
 									height: 10,
-									backgroundColor: legendColors[i],
+									backgroundColor: legendColor,
 								}}
 								aria-hidden
 							/>
