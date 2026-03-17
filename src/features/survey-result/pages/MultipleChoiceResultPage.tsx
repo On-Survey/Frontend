@@ -106,7 +106,7 @@ export const MultipleChoiceResultPage = () => {
 				}
 			/>
 
-			{(options.length > 0 || otherAnswers.length > 0) && (
+			{options.length > 0 && (
 				<div className="px-6 pt-2 pb-4">
 					<Menu.Trigger
 						open={menuOpen}

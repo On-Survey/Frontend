@@ -1,17 +1,33 @@
-// 예시 ) 재사용 가능한 유틸리티 함수 또는 모듈
-
 export const parseDateLocal = (dateStr: string): Date => {
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+		return new Date(NaN);
+	}
+
 	const [yearStr, monthStr, dayStr] = dateStr.split("-");
 
 	const year = Number(yearStr);
 	const month = Number(monthStr);
 	const day = Number(dayStr);
 
-	if (!year || !month || !day) {
+	if (
+		!Number.isInteger(year) ||
+		!Number.isInteger(month) ||
+		!Number.isInteger(day)
+	) {
 		return new Date(NaN);
 	}
 
-	return new Date(year, month - 1, day);
+	const parsed = new Date(year, month - 1, day);
+
+	if (
+		parsed.getFullYear() !== year ||
+		parsed.getMonth() !== month - 1 ||
+		parsed.getDate() !== day
+	) {
+		return new Date(NaN);
+	}
+
+	return parsed;
 };
 
 export const formatDate = (date: Date): string =>
