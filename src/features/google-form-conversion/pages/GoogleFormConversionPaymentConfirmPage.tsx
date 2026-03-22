@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../service/api";
+import { formatDateToISO, getDefaultDeadline } from "../utils";
 
 type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 
@@ -34,7 +35,10 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				respondentCount: RespondentCount;
 				gender?: string;
 				ages?: string[];
-				deadline: string;
+				/** ISO 날짜 (YYYY-MM-DD). 없으면 기본 마감일(오늘+7일) 사용 */
+				deadline?: string;
+				residence?: string;
+				interests?: string[];
 				price: number;
 				discountCode?: string;
 		  }
@@ -46,7 +50,10 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	const respondentCount = locationState?.respondentCount ?? 50;
 	const gender = locationState?.gender;
 	const ages = locationState?.ages;
-	const deadline = locationState?.deadline ?? "";
+	const deadline =
+		locationState?.deadline ?? formatDateToISO(getDefaultDeadline());
+	const residence = locationState?.residence;
+	const interests = locationState?.interests;
 	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
 	const discountCode = locationState?.discountCode;
 	const questionCount = formQuestionCount ?? 30;
@@ -140,6 +147,8 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 							price,
 							...(gender && { gender }),
 							...(ages && ages.length > 0 && { ages }),
+							...(residence && { residence }),
+							...(interests && interests.length > 0 && { interests }),
 							dueCount: respondentCount,
 							totalCoin: price,
 							...(discountCode?.trim() && {

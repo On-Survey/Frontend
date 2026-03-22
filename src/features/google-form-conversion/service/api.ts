@@ -31,9 +31,6 @@ export const validateDiscountCode = async (
 	return { valid: eligible };
 };
 
-/** @deprecated validateDiscountCode 사용 권장. 호환용 별칭 */
-export const validatePromotionCode = validateDiscountCode;
-
 export const getGoogleFormPreview = async (
 	formLink: string,
 ): Promise<GoogleFormPreviewResponse> => {
@@ -74,6 +71,8 @@ export interface CreateGoogleFormConversionRequestParams {
 	totalCoin?: number;
 	/** 할인(프로모션) 코드 */
 	discountCode?: string;
+	/** 관심사 코드 목록 (CAREER, BUSINESS 등) */
+	interests?: string[];
 }
 
 export interface CreateGoogleFormConversionRequestResponse {

@@ -1,10 +1,23 @@
 import type { AgeCode, GenderCode } from "@features/payment/constants/payment";
+import type { InterestId } from "@shared/constants/topics";
+import { topics } from "@shared/constants/topics";
+import { validateEmail } from "@shared/lib/validators";
 import {
 	GOOGLE_FORM_CONVERSION_PRICE_TABLE,
 	GOOGLE_FORM_CONVERSION_PROMO_PRICE_TABLE,
 	TARGETING_CASE_ORDER,
 } from "./constants";
 import type { QuestionRange, RespondentCount, TargetingCase } from "./types";
+
+/** 관심사 다중 선택 값을 필드 표시용 문자열로 */
+export const formatInterestSelectionDisplay = (ids: InterestId[]): string => {
+	if (ids.length === 0) return "";
+	const names = ids.map(
+		(id) => topics.find((t) => t.id === id)?.name ?? String(id),
+	);
+	if (names.length <= 2) return names.join(", ");
+	return `${names.slice(0, 2).join(", ")} 외 ${names.length - 2}`;
+};
 
 /**
  * 구글폼 URL 여부 검사 (빈 문자열은 통과)
@@ -14,6 +27,15 @@ export const isGoogleFormLinkUrl = (v: string): boolean =>
 	v.startsWith("https://docs.google.com/forms") ||
 	v.startsWith("https://docs.google.com/forms/") ||
 	v.startsWith("https://docs.google.com/");
+
+/**
+ * 구글폼 플로우: 이메일 필수 + 형식 검사.
+ * 공용 {@link validateEmail}은 빈 문자열을 허용하므로 이 플로우에서만 사용한다.
+ */
+export const isGoogleFormConversionContactEmail = (email: string): boolean => {
+	const trimmed = email.trim();
+	return trimmed.length > 0 && validateEmail(trimmed);
+};
 
 /**
  * 가격을 한국어 천 단위 포맷 (소수 없음)

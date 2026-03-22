@@ -1,4 +1,9 @@
-import type { AgeCode, GenderCode } from "@features/payment/constants/payment";
+import type {
+	AgeCode,
+	GenderCode,
+	RegionCode,
+} from "@features/payment/constants/payment";
+import type { InterestId } from "@shared/constants/topics";
 
 export type QuestionPackage = "light" | "standard" | "plus";
 
@@ -20,13 +25,34 @@ export type TargetingCase =
 	| "all_gender_single_age"
 	| "single_gender_single_age";
 
+/** 신청(폼 링크·이메일) 단계에서 이후 화면으로 넘길 때 사용하는 라우터 state */
+export type GoogleFormConversionRequestEntryState = {
+	formLink: string;
+	email: string;
+};
+
+/** 스크리닝 질문 구성 화면에서 저장해 옵션 등으로 넘기는 초안 */
+export type GoogleFormConversionScreeningDraft = {
+	question: string;
+	answerType: "O" | "X";
+};
+
+/** 구글폼 변환 플로우 공통 라우터 state (스크리닝 초안 선택) */
+export type GoogleFormConversionFlowState =
+	GoogleFormConversionRequestEntryState & {
+		screening?: GoogleFormConversionScreeningDraft;
+	};
+
 export type FormValues = {
 	formLink: string;
 	email: string;
 	/** 선택 입력. 입력 시 API로 유효 여부 검사 후 일치하면 별도 페이지로 리다이렉트 */
 	promotionCode?: string;
 	respondentCount: RespondentCount;
-	deadline: Date;
+	/** 타깃 거주지 (결제/신청 API `residence`) */
+	residence: RegionCode;
+	/** 관심사 (다중 선택, Interest API 코드로 변환해 전달) */
+	interestIds: InterestId[];
 	gender: GenderCode;
 	ages: AgeCode[];
 };

@@ -1,6 +1,9 @@
 export { GoogleFormConversionLandingPage } from "./GoogleFormConversionLandingPage";
+export { GoogleFormConversionLoadingPage } from "./GoogleFormConversionLoadingPage";
+export { GoogleFormConversionOptionsPage } from "./GoogleFormConversionOptionsPage";
 export { GoogleFormConversionPaymentConfirmPage } from "./GoogleFormConversionPaymentConfirmPage";
 export { GoogleFormConversionPaymentSuccessPage } from "./GoogleFormConversionPaymentSuccessPage";
 export { GoogleFormConversionPrecheckPage } from "./GoogleFormConversionPrecheckPage";
 export { GoogleFormConversionPrivacyConsentPage } from "./GoogleFormConversionPrivacyConsentPage";
 export { GoogleFormConversionRequestPage } from "./GoogleFormConversionRequestPage";
+export { GoogleFormConversionScreeningPage } from "./GoogleFormConversionScreeningPage";

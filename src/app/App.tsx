@@ -28,11 +28,14 @@ import {
 } from "../features/create-survey";
 import {
 	GoogleFormConversionLandingPage,
+	GoogleFormConversionLoadingPage,
+	GoogleFormConversionOptionsPage,
 	GoogleFormConversionPaymentConfirmPage,
 	GoogleFormConversionPaymentSuccessPage,
 	GoogleFormConversionPrecheckPage,
 	GoogleFormConversionPrivacyConsentPage,
 	GoogleFormConversionRequestPage,
+	GoogleFormConversionScreeningPage,
 } from "../features/google-form-conversion/pages";
 import BusinessInfo from "../features/mypage/pages/BusinessInfo";
 import CoinDetail from "../features/mypage/pages/CoinDetail";
@@ -261,6 +264,18 @@ export const App = () => {
 										<Route
 											path="/payment/google-form-conversion"
 											element={<GoogleFormConversionRequestPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-loading"
+											element={<GoogleFormConversionLoadingPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-options"
+											element={<GoogleFormConversionOptionsPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-screening"
+											element={<GoogleFormConversionScreeningPage />}
 										/>
 										<Route
 											path="/payment/google-form-conversion-check"
