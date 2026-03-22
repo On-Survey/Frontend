@@ -42,7 +42,6 @@ const PATH_TO_SCREEN_NAME: Record<string, string> = {
 	"/estimate": "견적",
 	"/createForm": "설문 만들기",
 	"/payment/google-form-conversion": "구글폼 변환 신청",
-	"/payment/google-form-conversion-loading": "구글폼 변환 로딩",
 	"/payment/google-form-conversion-options": "구글폼 변환 설문 정보",
 	"/payment/google-form-conversion-screening": "구글폼 변환 스크리닝",
 	"/payment/google-form-conversion-check": "구글폼 변환 안내",

@@ -16,6 +16,7 @@ import {
 } from "./constants";
 import type {
 	CreateGoogleFormConversionRequestBody,
+	FormRequestValidationResponse,
 	GoogleFormSurveyFormRequest,
 } from "./service/api";
 import type {
@@ -81,6 +82,12 @@ export const getFormRequestValidationErrorMessage = (
 	if (error instanceof Error && error.message) return error.message;
 	return "검증에 실패했어요. 잠시 후 다시 시도해주세요";
 };
+
+/** POST /v1/form-requests/validation 성공 응답에서 변환 가능 문항 수 합계 */
+export const getConvertibleQuestionCountFromValidation = (
+	res: FormRequestValidationResponse,
+): number =>
+	res.result.results.reduce((sum, item) => sum + item.convertible, 0);
 
 /**
  * 가격을 한국어 천 단위 포맷 (소수 없음)

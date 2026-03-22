@@ -1,27 +1,42 @@
+import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationErrorBottomSheet";
+import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
+import type { FormRequestValidationResponse } from "@features/google-form-conversion/service/api";
 import type { FormValues } from "@features/google-form-conversion/types";
 import {
+	getConvertibleQuestionCountFromValidation,
 	getFormRequestValidationErrorMessage,
 	isGoogleFormConversionContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { adaptive } from "@toss/tds-colors";
-import { FixedBottomCTA, TextField, Top, useToast } from "@toss/tds-mobile";
-import { useCallback } from "react";
+import { FixedBottomCTA, TextField, Top, useWebToast } from "@toss/tds-mobile";
+import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-const VALIDATION_ERROR_TOAST_OPTIONS = {
+const VALIDATION_WAIT_TOAST_OPTIONS = {
 	type: "bottom" as const,
-	lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+	lottie: "https://static.toss.im/lotties-common/alarm-spot.json",
 	higherThanCTA: true,
+};
+
+type SuccessSheetPayload = {
+	formLink: string;
+	email: string;
+	validationResult: FormRequestValidationResponse;
 };
 
 export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
-	const { openToast } = useToast();
+	const { openToast, closeToast } = useWebToast();
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();
+
+	const [successSheet, setSuccessSheet] = useState<SuccessSheetPayload | null>(
+		null,
+	);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const {
 		control,
@@ -41,32 +56,57 @@ export const GoogleFormConversionRequestPage = () => {
 	const onSubmit = useCallback(
 		async (data: Pick<FormValues, "formLink" | "email">) => {
 			try {
+				openToast(
+					"폼을 확인하고 있어요. 잠시만 기다려주세요.",
+					VALIDATION_WAIT_TOAST_OPTIONS,
+				);
 				const res = await validateRequest({
 					formLink: data.formLink.trim(),
 					requesterEmail: data.email.trim(),
 				});
 				if (!res.success) {
-					openToast(
-						res.message || "검증에 실패했어요",
-						VALIDATION_ERROR_TOAST_OPTIONS,
-					);
+					closeToast();
+					setErrorMessage(res.message || "검증에 실패했어요");
 					return;
 				}
-				navigate("/payment/google-form-conversion-loading", {
-					state: {
-						formLink: data.formLink.trim(),
-						email: data.email.trim(),
-					},
+				closeToast();
+				setSuccessSheet({
+					formLink: data.formLink.trim(),
+					email: data.email.trim(),
+					validationResult: res,
 				});
 			} catch (e) {
-				openToast(
-					getFormRequestValidationErrorMessage(e),
-					VALIDATION_ERROR_TOAST_OPTIONS,
-				);
+				closeToast();
+				setErrorMessage(getFormRequestValidationErrorMessage(e));
 			}
 		},
-		[navigate, openToast, validateRequest],
+		[closeToast, openToast, validateRequest],
 	);
+
+	const handleSuccessSheetContinue = useCallback(() => {
+		if (!successSheet) return;
+		const { formLink: fl, email: em, validationResult } = successSheet;
+		setSuccessSheet(null);
+		navigate("/payment/google-form-conversion-options", {
+			state: {
+				formLink: fl,
+				email: em,
+				validationResult,
+			},
+		});
+	}, [navigate, successSheet]);
+
+	const handleSuccessSheetEdit = useCallback(() => {
+		setSuccessSheet(null);
+	}, []);
+
+	const handleErrorSheetClose = useCallback(() => {
+		setErrorMessage(null);
+	}, []);
+
+	const convertibleCount = successSheet
+		? getConvertibleQuestionCountFromValidation(successSheet.validationResult)
+		: 0;
 
 	return (
 		<>
@@ -153,6 +193,19 @@ export const GoogleFormConversionRequestPage = () => {
 			>
 				구글폼 변환
 			</FixedBottomCTA>
+
+			<GoogleFormConversionValidationSuccessBottomSheet
+				open={successSheet != null}
+				convertibleCount={convertibleCount}
+				onClose={handleSuccessSheetEdit}
+				onContinue={handleSuccessSheetContinue}
+			/>
+
+			<GoogleFormConversionValidationErrorBottomSheet
+				open={errorMessage != null}
+				message={errorMessage ?? ""}
+				onClose={handleErrorSheetClose}
+			/>
 		</>
 	);
 };
