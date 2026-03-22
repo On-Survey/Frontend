@@ -78,6 +78,10 @@ export const GoogleFormConversionOptionsPage = () => {
 		string | null
 	>(null);
 	const [isPromotionVerifying, setIsPromotionVerifying] = useState(false);
+	/** 인증하기로 검증에 성공한 코드(trim). 입력이 바뀌면 null로 리셋 */
+	const [verifiedPromotionCode, setVerifiedPromotionCode] = useState<
+		string | null
+	>(null);
 	const [isRespondentSheetOpen, setIsRespondentSheetOpen] = useState(false);
 	const [isGenderSheetOpen, setIsGenderSheetOpen] = useState(false);
 	const [isAgeSheetOpen, setIsAgeSheetOpen] = useState(false);
@@ -147,11 +151,14 @@ export const GoogleFormConversionOptionsPage = () => {
 			const { valid } = await validateDiscountCode(code);
 			if (valid) {
 				setPromotionVerifyMessage("인증되었어요");
+				setVerifiedPromotionCode(code);
 			} else {
 				setPromotionCodeError("유효하지 않은 프로모션 코드예요");
+				setVerifiedPromotionCode(null);
 			}
 		} catch {
 			setPromotionCodeError("인증에 실패했어요. 다시 시도해주세요");
+			setVerifiedPromotionCode(null);
 		} finally {
 			setIsPromotionVerifying(false);
 		}
@@ -385,9 +392,13 @@ export const GoogleFormConversionOptionsPage = () => {
 									suffix=""
 									prefix=""
 									onChange={(e) => {
-										onChange(e.target.value);
+										const next = e.target.value;
+										onChange(next);
 										setPromotionCodeError(null);
 										setPromotionVerifyMessage(null);
+										if (next.trim() !== verifiedPromotionCode) {
+											setVerifiedPromotionCode(null);
+										}
 									}}
 									onBlur={onBlur}
 								/>
@@ -397,7 +408,12 @@ export const GoogleFormConversionOptionsPage = () => {
 								size="medium"
 								variant="weak"
 								loading={isPromotionVerifying}
-								disabled={!promotionCodeInput?.trim()}
+								disabled={
+									isPromotionVerifying ||
+									!promotionCodeInput?.trim() ||
+									(verifiedPromotionCode !== null &&
+										verifiedPromotionCode === promotionCodeInput?.trim())
+								}
 								className="shrink-0"
 								onClick={() => void handleVerifyPromotion()}
 							>
