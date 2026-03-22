@@ -1,3 +1,9 @@
+import type { Interest } from "@features/create-survey/service/form/types";
+import type {
+	AgeCode,
+	GenderCode,
+	RegionCode,
+} from "@features/payment/constants/payment";
 import { api } from "@shared/api/axios";
 import { getAccessToken } from "@shared/lib/tokenManager";
 
@@ -82,39 +88,34 @@ export const validateFormRequest = async (
 	return data;
 };
 
+/** POST /v1/form-requests 의 `screening` */
+export interface FormRequestScreeningBody {
+	content: string;
+	answer: boolean;
+}
+
+/** POST /v1/form-requests 의 `surveyForm` (항목별 *Price 없음, 결제 금액은 totalCoin·dueCountPrice) */
+export interface GoogleFormSurveyFormRequest {
+	deadline: string;
+	gender: GenderCode;
+	ages: AgeCode[];
+	residence: RegionCode;
+	dueCount: number;
+	dueCountPrice: number;
+	totalCoin: number;
+	discountCode?: string;
+}
+
 /**
  * 구글폼 변환 신청 API (POST /v1/form-requests) 요청 바디
- * 설문 폼 완성 API와 동일한 바디 필드 지원 (deadline, gender, ages, residence, 할인코드 등)
  */
-export interface CreateGoogleFormConversionRequestParams {
+export interface CreateGoogleFormConversionRequestBody {
 	formLink: string;
-	questionCount: number;
-	targetResponseCount: number;
-	deadline: string;
 	requesterEmail: string;
-	price: number;
-	/** 성별 (ALL | MALE | FEMALE) */
-	gender?: string;
-	/** 성별 가격 */
-	genderPrice?: number;
-	/** 연령대 목록 (TEN, TWENTY, THIRTY 등) */
-	ages?: string[];
-	/** 연령대 가격 */
-	agePrice?: number;
-	/** 거주지 (SEOUL, GYEONGGI 등) */
-	residence?: string;
-	/** 거주지 가격 */
-	residencePrice?: number;
-	/** 희망 응답자 수 */
-	dueCount?: number;
-	/** 응답자 수 가격 */
-	dueCountPrice?: number;
-	/** 총 코인 */
-	totalCoin?: number;
-	/** 할인(프로모션) 코드 */
-	discountCode?: string;
-	/** 관심사 코드 목록 (CAREER, BUSINESS 등) */
-	interests?: string[];
+	screening?: FormRequestScreeningBody;
+	surveyForm: GoogleFormSurveyFormRequest;
+	/** 관심사 코드 (CAREER, BUSINESS 등) */
+	interests?: Interest[];
 }
 
 export interface CreateGoogleFormConversionRequestResponse {
@@ -126,13 +127,13 @@ export interface CreateGoogleFormConversionRequestResponse {
 }
 
 export const createGoogleFormConversionRequest = async (
-	params: CreateGoogleFormConversionRequestParams,
+	body: CreateGoogleFormConversionRequestBody,
 ): Promise<CreateGoogleFormConversionRequestResponse> => {
 	const token = await getAccessToken();
 	const { data } = await api.post<
 		CreateGoogleFormConversionRequestResponse,
-		CreateGoogleFormConversionRequestParams
-	>(`/v1/form-requests`, params, {
+		CreateGoogleFormConversionRequestBody
+	>(`/v1/form-requests`, body, {
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${token}`,

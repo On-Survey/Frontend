@@ -31,10 +31,10 @@ export type GoogleFormConversionRequestEntryState = {
 	email: string;
 };
 
-/** 스크리닝 질문 구성 화면에서 저장해 옵션 등으로 넘기는 초안 */
+/** 스크리닝 질문 구성 화면에서 저장해 옵션 등으로 넘기는 초안 (`answer`: 참여 허용 O=true, X=false) */
 export type GoogleFormConversionScreeningDraft = {
 	question: string;
-	answerType: "O" | "X";
+	answer: boolean;
 };
 
 /** 구글폼 변환 플로우 공통 라우터 state (스크리닝 초안 선택) */

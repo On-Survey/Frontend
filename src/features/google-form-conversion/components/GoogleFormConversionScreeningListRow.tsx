@@ -11,7 +11,10 @@ export const GoogleFormConversionScreeningListRow = ({
 	flowState,
 }: GoogleFormConversionScreeningListRowProps) => {
 	const navigate = useNavigate();
-	const hasScreening = Boolean(flowState.screening?.question?.trim());
+	const hasScreening = Boolean(
+		flowState.screening?.question?.trim() &&
+			typeof flowState.screening.answer === "boolean",
+	);
 
 	const goToScreening = () => {
 		navigate("/payment/google-form-conversion-screening", {

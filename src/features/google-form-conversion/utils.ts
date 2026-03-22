@@ -1,6 +1,12 @@
-import type { AgeCode, GenderCode } from "@features/payment/constants/payment";
+import type { Interest } from "@features/create-survey/service/form/types";
+import type {
+	AgeCode,
+	GenderCode,
+	RegionCode,
+} from "@features/payment/constants/payment";
 import type { InterestId } from "@shared/constants/topics";
 import { topics } from "@shared/constants/topics";
+import { isoDateToEndOfDayLocal } from "@shared/lib/FormatDate";
 import { validateEmail } from "@shared/lib/validators";
 import axios from "axios";
 import {
@@ -8,7 +14,16 @@ import {
 	GOOGLE_FORM_CONVERSION_PROMO_PRICE_TABLE,
 	TARGETING_CASE_ORDER,
 } from "./constants";
-import type { QuestionRange, RespondentCount, TargetingCase } from "./types";
+import type {
+	CreateGoogleFormConversionRequestBody,
+	GoogleFormSurveyFormRequest,
+} from "./service/api";
+import type {
+	GoogleFormConversionScreeningDraft,
+	QuestionRange,
+	RespondentCount,
+	TargetingCase,
+} from "./types";
 
 /** 관심사 다중 선택 값을 필드 표시용 문자열로 */
 export const formatInterestSelectionDisplay = (ids: InterestId[]): string => {
@@ -162,4 +177,61 @@ export const getGoogleFormConversionPromoPrice = (
 		GOOGLE_FORM_CONVERSION_PROMO_PRICE_TABLE[respondentCount][questionRange];
 	const index = TARGETING_CASE_ORDER.indexOf(targetingCase);
 	return index >= 0 ? (prices[index] ?? prices[0]) : prices[0];
+};
+
+export type BuildGoogleFormConversionRequestInput = {
+	formLink: string;
+	requesterEmail: string;
+	respondentCount: RespondentCount;
+	gender: GenderCode;
+	ages: AgeCode[];
+	residence: RegionCode;
+	deadlineIsoDate: string;
+	/** 실제 결제 금액 */
+	paidTotalCoin: number;
+	discountCode?: string | null;
+	interests: Interest[];
+	screening?: GoogleFormConversionScreeningDraft | null;
+};
+
+/** POST /v1/form-requests 요청 바디 조립 — 금액은 화면에서 계산한 총 결제액만 `dueCountPrice`·`totalCoin`에 동일 반영 */
+export const buildGoogleFormConversionCreateRequestBody = (
+	input: BuildGoogleFormConversionRequestInput,
+): CreateGoogleFormConversionRequestBody => {
+	const paid = input.paidTotalCoin;
+
+	const surveyForm: GoogleFormSurveyFormRequest = {
+		deadline: isoDateToEndOfDayLocal(input.deadlineIsoDate),
+		gender: input.gender,
+		ages: input.ages,
+		residence: input.residence,
+		dueCount: input.respondentCount,
+		dueCountPrice: paid,
+		totalCoin: paid,
+		...(input.discountCode?.trim() && {
+			discountCode: input.discountCode.trim(),
+		}),
+	};
+
+	const body: CreateGoogleFormConversionRequestBody = {
+		formLink: input.formLink.trim(),
+		requesterEmail: input.requesterEmail.trim(),
+		surveyForm,
+	};
+
+	if (
+		input.screening?.question?.trim() &&
+		typeof input.screening.answer === "boolean"
+	) {
+		body.screening = {
+			content: input.screening.question.trim(),
+			answer: input.screening.answer,
+		};
+	}
+
+	if (input.interests.length > 0) {
+		body.interests = input.interests;
+	}
+
+	return body;
 };

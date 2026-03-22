@@ -197,6 +197,9 @@ export const GoogleFormConversionOptionsPage = () => {
 								deadline: formatDateToISO(getDefaultDeadline()),
 								price: promoPrice,
 								promotionCode: code,
+								...(entryState?.screening && {
+									screening: entryState.screening,
+								}),
 							},
 						});
 						return;
@@ -220,10 +223,13 @@ export const GoogleFormConversionOptionsPage = () => {
 					...(interestsPayload && { interests: interestsPayload }),
 					deadline: formatDateToISO(getDefaultDeadline()),
 					price,
+					...(entryState?.screening && {
+						screening: entryState.screening,
+					}),
 				},
 			});
 		},
-		[navigate, price, formQuestionCount],
+		[navigate, price, formQuestionCount, entryState?.screening],
 	);
 
 	if (!isValidEntry) {

@@ -24,6 +24,13 @@ export const formatDateToISO = (date: Date): string => {
 	return `${year}-${month}-${day}`;
 };
 
+/** `YYYY-MM-DD` → 해당 날짜 로컬 23:59:59 (API 마감일 시각 문자열용) */
+export const isoDateToEndOfDayLocal = (isoDate: string): string => {
+	const trimmed = isoDate.trim();
+	if (!trimmed) return trimmed;
+	return `${trimmed}T23:59:59`;
+};
+
 export const formatRemainingTime = (deadline?: string): string | undefined => {
 	if (!deadline) return undefined;
 

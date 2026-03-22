@@ -1,6 +1,12 @@
 import { IAP, type IapProductListItem } from "@apps-in-toss/web-framework";
+import type { Interest } from "@features/create-survey/service/form/types";
+import type { GoogleFormConversionScreeningDraft } from "@features/google-form-conversion/types";
+import type {
+	AgeCode,
+	GenderCode,
+	RegionCode,
+} from "@features/payment/constants/payment";
 import { createGoogleFormPayment } from "@features/payment/service/payments";
-
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -14,7 +20,11 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../service/api";
-import { formatDateToISO, getDefaultDeadline } from "../utils";
+import {
+	buildGoogleFormConversionCreateRequestBody,
+	formatDateToISO,
+	getDefaultDeadline,
+} from "../utils";
 
 type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 
@@ -38,25 +48,25 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				/** ISO 날짜 (YYYY-MM-DD). 없으면 기본 마감일(오늘+7일) 사용 */
 				deadline?: string;
 				residence?: string;
-				interests?: string[];
+				interests?: Interest[];
 				price: number;
 				discountCode?: string;
+				screening?: GoogleFormConversionScreeningDraft;
 		  }
 		| undefined;
 
 	const formLink = locationState?.formLink ?? "";
 	const email = locationState?.email ?? "";
-	const formQuestionCount = locationState?.formQuestionCount ?? null;
 	const respondentCount = locationState?.respondentCount ?? 50;
 	const gender = locationState?.gender;
 	const ages = locationState?.ages;
 	const deadline =
 		locationState?.deadline ?? formatDateToISO(getDefaultDeadline());
 	const residence = locationState?.residence;
-	const interests = locationState?.interests;
+	const interests = locationState?.interests ?? [];
+	const screening = locationState?.screening;
 	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
 	const discountCode = locationState?.discountCode;
-	const questionCount = formQuestionCount ?? 30;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
 	useEffect(() => {
@@ -138,23 +148,24 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					});
 
 					try {
-						await createGoogleFormConversionRequest({
-							formLink,
-							questionCount,
-							targetResponseCount: respondentCount,
-							deadline,
-							requesterEmail: email,
-							price,
-							...(gender && { gender }),
-							...(ages && ages.length > 0 && { ages }),
-							...(residence && { residence }),
-							...(interests && interests.length > 0 && { interests }),
-							dueCount: respondentCount,
-							totalCoin: price,
-							...(discountCode?.trim() && {
-								discountCode: discountCode.trim(),
+						await createGoogleFormConversionRequest(
+							buildGoogleFormConversionCreateRequestBody({
+								formLink,
+								requesterEmail: email,
+								respondentCount,
+								gender: (gender ?? "ALL") as GenderCode,
+								ages:
+									ages && ages.length > 0
+										? (ages as AgeCode[])
+										: (["ALL"] as AgeCode[]),
+								residence: (residence ?? "ALL") as RegionCode,
+								deadlineIsoDate: deadline,
+								paidTotalCoin: price,
+								discountCode,
+								interests,
+								screening,
 							}),
-						});
+						);
 						console.log("구글폼 변환 신청이 완료되었습니다.");
 					} catch (error) {
 						console.error("구글폼 변환 신청 실패:", error);

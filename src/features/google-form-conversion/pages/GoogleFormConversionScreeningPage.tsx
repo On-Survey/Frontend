@@ -24,9 +24,11 @@ export const GoogleFormConversionScreeningPage = () => {
 	const [question, setQuestion] = useState(
 		flowState?.screening?.question ?? "",
 	);
-	const [answerType, setAnswerType] = useState<"O" | "X" | null>(
-		flowState?.screening?.answerType ?? null,
-	);
+	/** O=true, X=false, 미선택=null */
+	const [answer, setAnswer] = useState<boolean | null>(() => {
+		const a = flowState?.screening?.answer;
+		return typeof a === "boolean" ? a : null;
+	});
 
 	useEffect(() => {
 		if (!isValidEntry) {
@@ -39,14 +41,14 @@ export const GoogleFormConversionScreeningPage = () => {
 	});
 
 	const handleNext = () => {
-		if (!question.trim() || !answerType || !flowState) return;
+		if (!question.trim() || answer === null || !flowState) return;
 		navigate("/payment/google-form-conversion-options", {
 			state: {
 				formLink: flowState.formLink,
 				email: flowState.email,
 				screening: {
 					question: question.trim(),
-					answerType,
+					answer,
 				},
 			},
 		});
@@ -101,9 +103,9 @@ export const GoogleFormConversionScreeningPage = () => {
 					<button
 						type="button"
 						aria-label="O"
-						onClick={() => setAnswerType("O")}
+						onClick={() => setAnswer(true)}
 						className={`flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors ${
-							answerType === "O"
+							answer === true
 								? "bg-green-200"
 								: "bg-green-100 hover:bg-green-200"
 						}`}
@@ -120,9 +122,9 @@ export const GoogleFormConversionScreeningPage = () => {
 					<button
 						type="button"
 						aria-label="X"
-						onClick={() => setAnswerType("X")}
+						onClick={() => setAnswer(false)}
 						className={`flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors ${
-							answerType === "X" ? "bg-red-200" : "bg-red-100 hover:bg-red-200"
+							answer === false ? "bg-red-200" : "bg-red-100 hover:bg-red-200"
 						}`}
 					>
 						<Asset.Icon
@@ -139,7 +141,7 @@ export const GoogleFormConversionScreeningPage = () => {
 
 			<FixedBottomCTA
 				loading={false}
-				disabled={!question.trim() || !answerType}
+				disabled={!question.trim() || answer === null}
 				onClick={handleNext}
 				style={{ "--button-background-color": "#15c67f" } as CSSProperties}
 			>
