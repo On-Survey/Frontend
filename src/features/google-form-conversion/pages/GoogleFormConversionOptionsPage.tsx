@@ -116,15 +116,26 @@ export const GoogleFormConversionOptionsPage = () => {
 	const gender = watch("gender");
 	const ages = watch("ages");
 
+	/** 인증하기로 검증된 코드가 현재 입력과 같으면 프로모션 가격표 적용 */
+	const isPromoPriceApplied =
+		verifiedPromotionCode !== null &&
+		verifiedPromotionCode === promotionCodeInput?.trim();
+
 	const price = useMemo(() => {
 		const questionRange = getQuestionRange(formQuestionCount);
 		const targetingCase = getTargetingCase(gender, ages);
-		return getGoogleFormConversionPrice(
-			respondentCount,
-			questionRange,
-			targetingCase,
-		);
-	}, [respondentCount, formQuestionCount, gender, ages]);
+		return isPromoPriceApplied
+			? getGoogleFormConversionPromoPrice(
+					respondentCount,
+					questionRange,
+					targetingCase,
+				)
+			: getGoogleFormConversionPrice(
+					respondentCount,
+					questionRange,
+					targetingCase,
+				);
+	}, [respondentCount, formQuestionCount, gender, ages, isPromoPriceApplied]);
 
 	useEffect(() => {
 		const trimmed = formLink.trim();
@@ -265,20 +276,6 @@ export const GoogleFormConversionOptionsPage = () => {
 					}}
 				/>
 				<Border variant="height16" />
-				<TextField.Clearable
-					variant="line"
-					hasError={false}
-					label="문항 수"
-					labelOption="sustain"
-					help="선택 입력 없이 폼 링크 기준으로 자동 표시돼요"
-					value={formQuestionCount !== null ? `${formQuestionCount}개` : ""}
-					placeholder="폼 링크 입력 시 자동으로 표시돼요"
-					readOnly
-					suffix=""
-					prefix=""
-					onChange={() => {}}
-				/>
-
 				<TextField.Button
 					variant="line"
 					hasError={false}
