@@ -151,7 +151,7 @@ export const GoogleFormConversionRequestPage = () => {
 					!isGoogleFormConversionContactEmail(watch("email") ?? "")
 				}
 			>
-				다음
+				구글폼 변환
 			</FixedBottomCTA>
 		</>
 	);
