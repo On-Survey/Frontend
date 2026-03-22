@@ -9,6 +9,7 @@ import {
 import type {
 	AgeCode,
 	GenderCode,
+	QuestionCountRange,
 	RegionCode,
 } from "../../features/payment/constants/payment";
 
@@ -18,6 +19,7 @@ export type Estimate = {
 	ages: AgeCode[];
 	gender: GenderCode;
 	desiredParticipants: string;
+	questionCount: QuestionCountRange;
 };
 
 export type SelectedCoinAmount = {
@@ -53,6 +55,7 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 		ages: ["ALL"],
 		gender: "ALL",
 		desiredParticipants: "50명",
+		questionCount: "1~30",
 	});
 
 	const [selectedCoinAmount, setSelectedCoinAmount] =
@@ -86,6 +89,7 @@ export const PaymentProvider = ({ children }: PropsWithChildren) => {
 			ages: ["ALL"],
 			gender: "ALL",
 			desiredParticipants: "50명",
+			questionCount: "1~30",
 		});
 	}, []);
 
