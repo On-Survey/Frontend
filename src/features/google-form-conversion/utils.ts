@@ -2,6 +2,7 @@ import type { AgeCode, GenderCode } from "@features/payment/constants/payment";
 import type { InterestId } from "@shared/constants/topics";
 import { topics } from "@shared/constants/topics";
 import { validateEmail } from "@shared/lib/validators";
+import axios from "axios";
 import {
 	GOOGLE_FORM_CONVERSION_PRICE_TABLE,
 	GOOGLE_FORM_CONVERSION_PROMO_PRICE_TABLE,
@@ -35,6 +36,35 @@ export const isGoogleFormLinkUrl = (v: string): boolean =>
 export const isGoogleFormConversionContactEmail = (email: string): boolean => {
 	const trimmed = email.trim();
 	return trimmed.length > 0 && validateEmail(trimmed);
+};
+
+/** POST /v1/form-requests/validation 등 4xx 응답 본문 (예: FORM_REQUEST_003) */
+export type FormRequestApiErrorBody = {
+	code?: string;
+	message?: string;
+	success?: boolean;
+	result?: unknown;
+};
+
+/**
+ * 폼 요청 검증 API 실패 시 서버 `message`를 우선 사용 (400 등, 재시도 없이 토스트용)
+ */
+export const getFormRequestValidationErrorMessage = (
+	error: unknown,
+): string => {
+	if (axios.isAxiosError(error)) {
+		const data = error.response?.data as FormRequestApiErrorBody | undefined;
+		if (
+			data &&
+			typeof data === "object" &&
+			typeof data.message === "string" &&
+			data.message.trim().length > 0
+		) {
+			return data.message;
+		}
+	}
+	if (error instanceof Error && error.message) return error.message;
+	return "검증에 실패했어요. 잠시 후 다시 시도해주세요";
 };
 
 /**

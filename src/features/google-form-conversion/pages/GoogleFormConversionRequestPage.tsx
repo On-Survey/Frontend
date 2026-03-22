@@ -1,16 +1,27 @@
+import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import type { FormValues } from "@features/google-form-conversion/types";
 import {
+	getFormRequestValidationErrorMessage,
 	isGoogleFormConversionContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { adaptive } from "@toss/tds-colors";
-import { FixedBottomCTA, TextField, Top } from "@toss/tds-mobile";
+import { FixedBottomCTA, TextField, Top, useToast } from "@toss/tds-mobile";
 import { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+const VALIDATION_ERROR_TOAST_OPTIONS = {
+	type: "bottom" as const,
+	lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+	higherThanCTA: true,
+};
+
 export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
+	const { openToast } = useToast();
+	const { mutateAsync: validateRequest, isPending: isValidating } =
+		useGoogleFormRequestValidation();
 
 	const {
 		control,
@@ -28,15 +39,33 @@ export const GoogleFormConversionRequestPage = () => {
 	const formLink = watch("formLink");
 
 	const onSubmit = useCallback(
-		(data: Pick<FormValues, "formLink" | "email">) => {
-			navigate("/payment/google-form-conversion-loading", {
-				state: {
+		async (data: Pick<FormValues, "formLink" | "email">) => {
+			try {
+				const res = await validateRequest({
 					formLink: data.formLink.trim(),
-					email: data.email,
-				},
-			});
+					requesterEmail: data.email.trim(),
+				});
+				if (!res.success) {
+					openToast(
+						res.message || "검증에 실패했어요",
+						VALIDATION_ERROR_TOAST_OPTIONS,
+					);
+					return;
+				}
+				navigate("/payment/google-form-conversion-loading", {
+					state: {
+						formLink: data.formLink.trim(),
+						email: data.email.trim(),
+					},
+				});
+			} catch (e) {
+				openToast(
+					getFormRequestValidationErrorMessage(e),
+					VALIDATION_ERROR_TOAST_OPTIONS,
+				);
+			}
 		},
-		[navigate],
+		[navigate, openToast, validateRequest],
 	);
 
 	return (
@@ -111,9 +140,10 @@ export const GoogleFormConversionRequestPage = () => {
 			</div>
 
 			<FixedBottomCTA
-				loading={false}
+				loading={isValidating}
 				onClick={rhfHandleSubmit(onSubmit)}
 				disabled={
+					isValidating ||
 					!!errors.formLink ||
 					!!errors.email ||
 					!formLink.trim() ||

@@ -40,6 +40,48 @@ export const getGoogleFormPreview = async (
 	return data;
 };
 
+/** POST /v1/form-requests/validation 요청 바디 */
+export interface FormRequestValidationBody {
+	formLink: string;
+	requesterEmail: string;
+}
+
+export interface FormRequestValidationDetail {
+	title: string;
+	type: string;
+	reason: string;
+}
+
+export interface FormRequestValidationResultItem {
+	totalCount: number;
+	convertible: number;
+	unconvertible: number;
+	details: FormRequestValidationDetail[];
+}
+
+/** POST /v1/form-requests/validation 응답 바디 */
+export interface FormRequestValidationResponse {
+	code: number;
+	message: string;
+	result: {
+		results: FormRequestValidationResultItem[];
+	};
+	success: boolean;
+}
+
+/**
+ * 구글폼 변환 신청 전 폼·이메일 검증 — POST /v1/form-requests/validation
+ */
+export const validateFormRequest = async (
+	body: FormRequestValidationBody,
+): Promise<FormRequestValidationResponse> => {
+	const { data } = await api.post<
+		FormRequestValidationResponse,
+		FormRequestValidationBody
+	>(`/v1/form-requests/validation`, body);
+	return data;
+};
+
 /**
  * 구글폼 변환 신청 API (POST /v1/form-requests) 요청 바디
  * 설문 폼 완성 API와 동일한 바디 필드 지원 (deadline, gender, ages, residence, 할인코드 등)
