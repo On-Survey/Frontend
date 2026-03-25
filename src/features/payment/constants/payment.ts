@@ -1,3 +1,25 @@
+export type QuestionCountRange = "1~30" | "31~50";
+
+export const QUESTION_COUNT_OPTIONS: {
+	name: string;
+	value: QuestionCountRange;
+	hideUnCheckedCheckBox: boolean;
+	disabled: boolean;
+}[] = [
+	{
+		name: "1~30 문항",
+		value: "1~30",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "31~50 문항",
+		value: "31~50",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+];
+
 export const DESIRED_PARTICIPANTS = [
 	{ name: "50명", value: "50", hideUnCheckedCheckBox: false, disabled: false },
 	{
@@ -77,6 +99,7 @@ export enum EstimateField {
 	Age = "ages",
 	Gender = "gender",
 	DesiredParticipants = "desiredParticipants",
+	QuestionCount = "questionCount",
 }
 
 export type CoinOption = {
