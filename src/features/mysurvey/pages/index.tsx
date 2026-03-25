@@ -129,7 +129,8 @@ export const MySurvey = () => {
 				>
 					{isFabOpen ? (
 						<span
-							className={`${FAB_SIZE_CLASS} inline-flex items-center justify-center rounded-full! bg-[#191F28]`}
+							className={`${FAB_SIZE_CLASS} inline-flex items-center justify-center rounded-full!`}
+							style={{ backgroundColor: adaptive.grey900 }}
 						>
 							<img
 								src={iconClose}
