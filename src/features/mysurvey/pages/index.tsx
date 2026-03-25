@@ -1,5 +1,6 @@
 import { BottomNavigation } from "@shared/components/BottomNavigation";
 import { SurveyTabNavigation } from "@shared/components/SurveyTabNavigation";
+import { adaptive } from "@toss/tds-colors";
 import { AnimatePresence, motion } from "framer-motion";
 import { Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
