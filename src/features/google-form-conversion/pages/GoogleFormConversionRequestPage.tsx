@@ -10,7 +10,14 @@ import {
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { adaptive } from "@toss/tds-colors";
-import { FixedBottomCTA, TextField, Top, useWebToast } from "@toss/tds-mobile";
+import {
+	AgreementV4,
+	FixedBottomCTA,
+	Text,
+	TextField,
+	Top,
+	useWebToast,
+} from "@toss/tds-mobile";
 import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -38,23 +45,29 @@ export const GoogleFormConversionRequestPage = () => {
 	);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+	type RequestFormValues = Pick<FormValues, "formLink" | "email"> & {
+		emailSendAgreed: boolean;
+	};
+
 	const {
 		control,
 		watch,
 		handleSubmit: rhfHandleSubmit,
 		formState: { errors },
-	} = useForm<Pick<FormValues, "formLink" | "email">>({
+	} = useForm<RequestFormValues>({
 		mode: "onChange",
 		defaultValues: {
 			formLink: "",
 			email: "",
+			emailSendAgreed: false,
 		},
 	});
 
 	const formLink = watch("formLink");
+	const emailSendAgreed = watch("emailSendAgreed");
 
 	const onSubmit = useCallback(
-		async (data: Pick<FormValues, "formLink" | "email">) => {
+		async (data: RequestFormValues) => {
 			try {
 				openToast(
 					"폼을 확인하고 있어요. 잠시만 기다려주세요.",
@@ -177,6 +190,36 @@ export const GoogleFormConversionRequestPage = () => {
 						/>
 					)}
 				/>
+
+				<Controller
+					control={control}
+					name="emailSendAgreed"
+					rules={{
+						validate: (v) => v || "필수 동의가 필요해요",
+					}}
+					render={({ field: { onChange, value } }) => (
+						<AgreementV4
+							variant="medium"
+							left={
+								<div className="flex items-center">
+									<AgreementV4.Checkbox
+										variant="checkbox"
+										checked={value}
+										onChange={() => onChange(!value)}
+									/>
+									<Text
+										color={adaptive.blue600}
+										typography="t7"
+										fontWeight="bold"
+									>
+										필수
+									</Text>
+								</div>
+							}
+							middle={<AgreementV4.Text>이메일 발신 동의</AgreementV4.Text>}
+						/>
+					)}
+				/>
 			</div>
 
 			<FixedBottomCTA
@@ -186,6 +229,7 @@ export const GoogleFormConversionRequestPage = () => {
 					isValidating ||
 					!!errors.formLink ||
 					!!errors.email ||
+					!emailSendAgreed ||
 					!formLink.trim() ||
 					!isGoogleFormLinkUrl(formLink.trim()) ||
 					!isGoogleFormConversionContactEmail(watch("email") ?? "")
