@@ -16,31 +16,17 @@ export const EstimateDetailBottomSheet = ({
 }: EstimateDetailBottomSheetProps) => {
 	const breakdown = calculateEstimatePrice(estimate);
 
-	const items = [
+	const rows: { label: string; value: string }[] = [
 		{
 			label: "희망 응답자 수",
 			value: breakdown.desiredParticipants.label,
-			price: breakdown.desiredParticipants.price,
-			showCondition: true,
 		},
+		{ label: "문항 수", value: breakdown.questionCount.label },
 		{
-			label: "성별",
-			value: breakdown.gender.label,
-			price: breakdown.gender.price,
-			showCondition: true,
+			label: "성별 / 연령대",
+			value: breakdown.targetingSummary,
 		},
-		{
-			label: "연령대",
-			value: breakdown.age.label,
-			price: breakdown.age.price,
-			showCondition: true,
-		},
-		{
-			label: "거주지",
-			value: breakdown.location.label,
-			price: breakdown.location.price,
-			showCondition: true,
-		},
+		{ label: "거주지", value: breakdown.location.label },
 	];
 
 	return (
@@ -61,29 +47,19 @@ export const EstimateDetailBottomSheet = ({
 			}
 		>
 			<div className="p-4">
-				{items
-					.filter((item) => item.showCondition)
-					.map((item, index, filteredItems) => (
-						<div key={item.label}>
-							<div className="flex justify-between items-center">
-								<Text
-									color={adaptive.grey700}
-									typography="t5"
-									fontWeight="regular"
-								>
-									{item.label} - {item.value}
-								</Text>
-								<Text
-									color={adaptive.grey800}
-									typography="t5"
-									fontWeight="medium"
-								>
-									{item.price.toLocaleString()}원
-								</Text>
-							</div>
-							{index < filteredItems.length - 1 && <div className="h-6" />}
+				<div className="flex flex-col gap-4">
+					{rows.map((row) => (
+						<div key={row.label}>
+							<Text
+								color={adaptive.grey700}
+								typography="t5"
+								fontWeight="regular"
+							>
+								{row.label} - {row.value}
+							</Text>
 						</div>
 					))}
+				</div>
 
 				<div className="flex justify-between items-center mt-4">
 					<Text color={adaptive.grey700} typography="t5" fontWeight="regular">

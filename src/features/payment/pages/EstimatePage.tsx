@@ -17,6 +17,7 @@ import {
 	GENDER,
 	getGenderLabel,
 	getRegionLabel,
+	QUESTION_COUNT_OPTIONS,
 	type RegionCode,
 } from "../constants/payment";
 
@@ -55,6 +56,7 @@ const EstimatePageContent = () => {
 				gender: "ALL",
 				ages: ["ALL"],
 				location: "ALL",
+				questionCount: estimate.questionCount ?? "1~30",
 			});
 		}
 	}, [estimate, handleEstimateChange]);
@@ -83,6 +85,13 @@ const EstimatePageContent = () => {
 					title: "원하는 응답자 수를 선택해주세요",
 					options: DESIRED_PARTICIPANTS,
 					field: EstimateField.DesiredParticipants,
+				};
+			case EstimateField.QuestionCount:
+				return {
+					value: estimate.questionCount,
+					title: "문항 수를 선택해주세요",
+					options: QUESTION_COUNT_OPTIONS,
+					field: EstimateField.QuestionCount,
 				};
 			default:
 				return {
@@ -147,6 +156,24 @@ const EstimatePageContent = () => {
 							/>
 						}
 						onClick={() => handleTypeChange(EstimateField.DesiredParticipants)}
+					/>
+
+					<TextField.Button
+						variant="line"
+						hasError={false}
+						label="문항 수"
+						labelOption="sustain"
+						value={estimate.questionCount}
+						placeholder="문항 수를 선택해주세요"
+						right={
+							<Asset.Icon
+								frameShape={assetFrameShape.CleanW24}
+								name="icon-arrow-down-mono"
+								color={adaptive.grey400}
+								aria-hidden={true}
+							/>
+						}
+						onClick={() => handleTypeChange(EstimateField.QuestionCount)}
 					/>
 
 					<TextField.Button
