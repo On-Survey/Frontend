@@ -60,6 +60,9 @@ export const SectionBasedSurvey = () => {
 	const [answers, setAnswers] = useState<Record<number, string>>(
 		locationState?.answers ?? {},
 	);
+	const answersRef = useRef<Record<number, string>>(
+		locationState?.answers ?? {},
+	);
 
 	// 다음 섹션 계산 함수
 	const calculateNextSection = (
@@ -147,9 +150,14 @@ export const SectionBasedSurvey = () => {
 	}, [data]);
 
 	const updateAnswer = (questionId: number, value: string) => {
-		const prev = answers[questionId];
+		const prev = answersRef.current[questionId];
+		const nextAnswers = {
+			...answersRef.current,
+			[questionId]: value,
+		};
+		answersRef.current = nextAnswers;
 
-		setAnswers((p) => ({ ...p, [questionId]: value }));
+		setAnswers(nextAnswers);
 
 		if (prev && !value) {
 			setPreviousAnswers((p) => ({ ...p, [questionId]: prev }));
@@ -230,7 +238,7 @@ export const SectionBasedSurvey = () => {
 
 		const payload = buildSectionAnswersPayload({
 			questions,
-			answers,
+			answers: answersRef.current,
 			previousAnswers,
 		});
 
