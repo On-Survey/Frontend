@@ -239,7 +239,9 @@ export const GoogleFormConversionRequestPage = () => {
 			<FixedBottomCTA
 				loading={isValidating}
 				onClick={rhfHandleSubmit(onSubmit)}
-				bottomAccessory="최대 10초까지 소요 될 수 있어요"
+				bottomAccessory={
+					isValidating ? "최대 10초까지 소요 될 수 있어요" : undefined
+				}
 				disabled={
 					isValidating ||
 					!!errors.formLink ||
