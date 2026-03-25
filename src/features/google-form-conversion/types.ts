@@ -9,6 +9,19 @@ export type QuestionPackage = "light" | "standard" | "plus";
 
 export type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 
+export const RESPONDENT_OPTIONS: {
+	label: string;
+	value: RespondentCount;
+	display: string;
+}[] = [
+	{ label: "50명", value: 50, display: "50명" },
+	{ label: "100명", value: 100, display: "100명" },
+	{ label: "150명", value: 150, display: "150명" },
+	{ label: "200명", value: 200, display: "200명" },
+	{ label: "250명", value: 250, display: "250명" },
+	{ label: "300명", value: 300, display: "300명" },
+];
+
 /** 문항 구간: 1~30문항 / 31~50문항 */
 export type QuestionRange = "1_30" | "31_50";
 

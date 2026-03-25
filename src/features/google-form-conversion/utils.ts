@@ -9,11 +9,6 @@ import { topics } from "@shared/constants/topics";
 import { isoDateToEndOfDayLocal } from "@shared/lib/FormatDate";
 import { validateEmail } from "@shared/lib/validators";
 import axios from "axios";
-import {
-	GOOGLE_FORM_CONVERSION_PRICE_TABLE,
-	GOOGLE_FORM_CONVERSION_PROMO_PRICE_TABLE,
-	TARGETING_CASE_ORDER,
-} from "./constants";
 import type {
 	CreateGoogleFormConversionRequestBody,
 	FormRequestValidationResponse,
@@ -23,7 +18,6 @@ import type {
 	GoogleFormConversionScreeningDraft,
 	QuestionRange,
 	RespondentCount,
-	TargetingCase,
 } from "./types";
 
 /** 관심사 다중 선택 값을 필드 표시용 문자열로 */
@@ -134,56 +128,6 @@ export const getQuestionRange = (
 ): QuestionRange => {
 	if (questionCount == null || questionCount <= 30) return "1_30";
 	return "31_50";
-};
-
-/**
- * 성별·연령 선택 → 타게팅 케이스
- */
-export const getTargetingCase = (
-	gender: GenderCode,
-	ages: AgeCode[],
-): TargetingCase => {
-	const isAllAges =
-		ages.length === 0 || (ages.length === 1 && ages[0] === "ALL");
-	const isSingleAge = ages.length === 1 && ages[0] !== "ALL";
-	const isMultiAge = ages.length > 1;
-	const isAllGender = gender === "ALL";
-	const isSingleGender = gender === "MALE" || gender === "FEMALE";
-
-	if (isAllGender && isAllAges) return "no_targeting";
-	if (isSingleGender && isAllAges) return "single_gender_all_age";
-	if (isAllGender && isMultiAge) return "all_gender_multi_age";
-	if (isSingleGender && isMultiAge) return "single_gender_multi_age";
-	if (isAllGender && isSingleAge) return "all_gender_single_age";
-	return "single_gender_single_age";
-};
-
-/**
- * 구글폼 변환 판매가 조회 (응답자 수 · 문항 구간 · 타게팅 케이스)
- */
-export const getGoogleFormConversionPrice = (
-	respondentCount: RespondentCount,
-	questionRange: QuestionRange,
-	targetingCase: TargetingCase,
-): number => {
-	const prices =
-		GOOGLE_FORM_CONVERSION_PRICE_TABLE[respondentCount][questionRange];
-	const index = TARGETING_CASE_ORDER.indexOf(targetingCase);
-	return index >= 0 ? (prices[index] ?? prices[0]) : prices[0];
-};
-
-/**
- * 구글폼 변환 프로모션 판매가 조회 (프로모션 코드 승인 시 적용)
- */
-export const getGoogleFormConversionPromoPrice = (
-	respondentCount: RespondentCount,
-	questionRange: QuestionRange,
-	targetingCase: TargetingCase,
-): number => {
-	const prices =
-		GOOGLE_FORM_CONVERSION_PROMO_PRICE_TABLE[respondentCount][questionRange];
-	const index = TARGETING_CASE_ORDER.indexOf(targetingCase);
-	return index >= 0 ? (prices[index] ?? prices[0]) : prices[0];
 };
 
 export type BuildGoogleFormConversionRequestInput = {

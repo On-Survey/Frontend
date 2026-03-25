@@ -1,7 +1,6 @@
 import type { Interest } from "@features/create-survey/service/form/types";
 import { GoogleFormConversionScreeningListRow } from "@features/google-form-conversion/components/GoogleFormConversionScreeningListRow";
 import { InterestSelectBottomSheet } from "@features/google-form-conversion/components/InterestSelectBottomSheet";
-import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/constants";
 import {
 	getGoogleFormPreview,
 	validateDiscountCode,
@@ -12,15 +11,13 @@ import type {
 	QuestionPackage,
 	RespondentCount,
 } from "@features/google-form-conversion/types";
+import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
 	formatDateToISO,
 	formatInterestSelectionDisplay,
 	formatPrice,
 	getDefaultDeadline,
-	getGoogleFormConversionPrice,
-	getGoogleFormConversionPromoPrice,
 	getQuestionRange,
-	getTargetingCase,
 	isGoogleFormConversionContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
@@ -33,6 +30,11 @@ import {
 	getGenderLabel,
 } from "@features/payment/constants/payment";
 import { topics } from "@shared/constants/topics";
+import type { Estimate } from "@shared/contexts/PaymentContext";
+import {
+	lookupEstimatePromoTablePrice,
+	lookupEstimateTablePrice,
+} from "@shared/lib/estimatePricingTable";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -123,18 +125,20 @@ export const GoogleFormConversionOptionsPage = () => {
 
 	const price = useMemo(() => {
 		const questionRange = getQuestionRange(formQuestionCount);
-		const targetingCase = getTargetingCase(gender, ages);
+		const questionCount = questionRange === "1_30" ? "1~30" : "31~50";
+
+		const estimate: Estimate = {
+			date: null,
+			location: "ALL",
+			desiredParticipants: String(respondentCount),
+			questionCount,
+			gender,
+			ages,
+		};
+
 		return isPromoPriceApplied
-			? getGoogleFormConversionPromoPrice(
-					respondentCount,
-					questionRange,
-					targetingCase,
-				)
-			: getGoogleFormConversionPrice(
-					respondentCount,
-					questionRange,
-					targetingCase,
-				);
+			? lookupEstimatePromoTablePrice(estimate)
+			: lookupEstimateTablePrice(estimate);
 	}, [respondentCount, formQuestionCount, gender, ages, isPromoPriceApplied]);
 
 	useEffect(() => {
@@ -196,12 +200,18 @@ export const GoogleFormConversionOptionsPage = () => {
 					const { valid } = await validateDiscountCode(code);
 					if (valid) {
 						const questionRange = getQuestionRange(formQuestionCount);
-						const targetingCase = getTargetingCase(data.gender, data.ages);
-						const promoPrice = getGoogleFormConversionPromoPrice(
-							data.respondentCount,
-							questionRange,
-							targetingCase,
-						);
+						const questionCount = questionRange === "1_30" ? "1~30" : "31~50";
+
+						const promoEstimate: Estimate = {
+							date: null,
+							location: "ALL",
+							desiredParticipants: String(data.respondentCount),
+							questionCount,
+							gender: data.gender,
+							ages: data.ages,
+						};
+
+						const promoPrice = lookupEstimatePromoTablePrice(promoEstimate);
 						navigate("/payment/google-form-conversion-promo-success", {
 							state: {
 								formLink: data.formLink,
