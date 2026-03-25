@@ -1,4 +1,5 @@
 import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationErrorBottomSheet";
+import { GoogleFormConversionValidationPartialBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationPartialBottomSheet";
 import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import type { FormRequestValidationResponse } from "@features/google-form-conversion/service/api";
@@ -121,6 +122,19 @@ export const GoogleFormConversionRequestPage = () => {
 		? getConvertibleQuestionCountFromValidation(successSheet.validationResult)
 		: 0;
 
+	const unconvertibleCount = successSheet
+		? successSheet.validationResult.result.results.reduce(
+				(sum, item) => sum + item.unconvertible,
+				0,
+			)
+		: 0;
+
+	const unsupportedDetails = successSheet
+		? successSheet.validationResult.result.results.flatMap(
+				(item) => item.details,
+			)
+		: [];
+
 	return (
 		<>
 			<Top
@@ -225,6 +239,7 @@ export const GoogleFormConversionRequestPage = () => {
 			<FixedBottomCTA
 				loading={isValidating}
 				onClick={rhfHandleSubmit(onSubmit)}
+				bottomAccessory="최대 10초까지 소요 될 수 있어요"
 				disabled={
 					isValidating ||
 					!!errors.formLink ||
@@ -238,12 +253,21 @@ export const GoogleFormConversionRequestPage = () => {
 				구글폼 변환
 			</FixedBottomCTA>
 
-			<GoogleFormConversionValidationSuccessBottomSheet
-				open={successSheet != null}
-				convertibleCount={convertibleCount}
-				onClose={handleSuccessSheetEdit}
-				onContinue={handleSuccessSheetContinue}
-			/>
+			{successSheet != null && unconvertibleCount > 0 ? (
+				<GoogleFormConversionValidationPartialBottomSheet
+					open={successSheet != null}
+					unsupportedDetails={unsupportedDetails}
+					onClose={handleSuccessSheetEdit}
+					onPreview={handleSuccessSheetContinue}
+				/>
+			) : (
+				<GoogleFormConversionValidationSuccessBottomSheet
+					open={successSheet != null}
+					convertibleCount={convertibleCount}
+					onClose={handleSuccessSheetEdit}
+					onContinue={handleSuccessSheetContinue}
+				/>
+			)}
 
 			<GoogleFormConversionValidationErrorBottomSheet
 				open={errorMessage != null}

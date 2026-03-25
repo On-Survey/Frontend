@@ -1,4 +1,4 @@
-import { Asset, BottomSheet } from "@toss/tds-mobile";
+import { BottomSheet, Post } from "@toss/tds-mobile";
 
 type GoogleFormConversionValidationErrorBottomSheetProps = {
 	open: boolean;
@@ -13,9 +13,13 @@ export const GoogleFormConversionValidationErrorBottomSheet = ({
 }: GoogleFormConversionValidationErrorBottomSheetProps) => {
 	return (
 		<BottomSheet
-			header={<BottomSheet.Header>폼을 확인할 수 없어요</BottomSheet.Header>}
+			header={
+				<BottomSheet.Header>문항 변환 중 문제가 생겼어요</BottomSheet.Header>
+			}
 			headerDescription={
-				<BottomSheet.HeaderDescription>{message}</BottomSheet.HeaderDescription>
+				<BottomSheet.HeaderDescription>
+					아래 내용을 확인해 주세요.
+				</BottomSheet.HeaderDescription>
 			}
 			open={open}
 			onClose={onClose}
@@ -26,24 +30,14 @@ export const GoogleFormConversionValidationErrorBottomSheet = ({
 					disabled={false}
 					onClick={onClose}
 				>
-					확인
+					다시 입력하기
 				</BottomSheet.CTA>
 			}
 		>
 			<div style={{ height: "16px" }} />
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<Asset.Icon
-					frameShape={{ width: 100 }}
-					name="icon-error-circle-mono"
-					aria-hidden={true}
-				/>
-			</div>
+			<Post.Ul>
+				<Post.Li>{message}</Post.Li>
+			</Post.Ul>
 		</BottomSheet>
 	);
 };
