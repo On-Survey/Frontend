@@ -7,9 +7,16 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const GoogleFormConversionInquiryPage = () => {
 	const [inquiry, setInquiry] = useState("");
+	const navigate = useNavigate();
+
+	const handleNext = () => {
+		if (inquiry.trim().length === 0) return;
+		navigate("/payment/google-form-conversion-inquiry-success");
+	};
 
 	return (
 		<>
@@ -79,7 +86,11 @@ export const GoogleFormConversionInquiryPage = () => {
 				onChange={(e) => setInquiry(e.target.value)}
 			/>
 
-			<FixedBottomCTA disabled={inquiry.trim().length === 0} loading={false}>
+			<FixedBottomCTA
+				disabled={inquiry.trim().length === 0}
+				loading={false}
+				onClick={handleNext}
+			>
 				다음
 			</FixedBottomCTA>
 		</>

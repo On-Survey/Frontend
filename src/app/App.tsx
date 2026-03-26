@@ -28,6 +28,7 @@ import {
 } from "../features/create-survey";
 import {
 	GoogleFormConversionInquiryPage,
+	GoogleFormConversionInquirySuccessPage,
 	GoogleFormConversionLandingPage,
 	GoogleFormConversionOptionsPage,
 	GoogleFormConversionPaymentConfirmPage,
@@ -268,6 +269,10 @@ export const App = () => {
 										<Route
 											path="/payment/google-form-conversion-inquiry"
 											element={<GoogleFormConversionInquiryPage />}
+										/>
+										<Route
+											path="/payment/google-form-conversion-inquiry-success"
+											element={<GoogleFormConversionInquirySuccessPage />}
 										/>
 										<Route
 											path="/payment/google-form-conversion-options"

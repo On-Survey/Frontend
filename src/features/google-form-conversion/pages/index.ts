@@ -1,4 +1,5 @@
 export { GoogleFormConversionInquiryPage } from "./GoogleFormConversionInquiryPage";
+export { GoogleFormConversionInquirySuccessPage } from "./GoogleFormConversionInquirySuccessPage";
 export { GoogleFormConversionLandingPage } from "./GoogleFormConversionLandingPage";
 export { GoogleFormConversionOptionsPage } from "./GoogleFormConversionOptionsPage";
 export { GoogleFormConversionPaymentConfirmPage } from "./GoogleFormConversionPaymentConfirmPage";
