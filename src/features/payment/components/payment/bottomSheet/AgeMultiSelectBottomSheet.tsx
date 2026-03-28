@@ -60,43 +60,42 @@ export const AgeMultiSelectBottomSheet = ({
 			header={<BottomSheet.Header>{title}</BottomSheet.Header>}
 			open={isOpen}
 			onClose={handleClose}
-			cta={[]}
+			maxHeight="90vh"
+			cta={
+				<BottomSheet.CTA
+					loading={false}
+					onClick={handleConfirm}
+					style={
+						{ "--button-background-color": "#15c67f" } as React.CSSProperties
+					}
+				>
+					확인
+				</BottomSheet.CTA>
+			}
 		>
-			<div className="flex-1 overflow-y-auto">
-				<List>
-					{options.map((option) => {
-						const isSelected = selectedValues.includes(option.value);
+			<List>
+				{options.map((option) => {
+					const isSelected = selectedValues.includes(option.value);
 
-						return (
-							<ListRow
-								key={option.value}
-								role="checkbox"
-								aria-checked={isSelected}
-								onClick={() => handleToggle(option.value)}
-								contents={<ListRow.Texts type="1RowTypeA" top={option.name} />}
-								right={
-									<Checkbox.Line
-										checked={isSelected}
-										size={20}
-										aria-hidden={true}
-										style={{ pointerEvents: "none" }}
-									/>
-								}
-							/>
-						);
-					})}
-				</List>
-			</div>
-
-			<BottomSheet.CTA
-				loading={false}
-				onClick={handleConfirm}
-				style={
-					{ "--button-background-color": "#15c67f" } as React.CSSProperties
-				}
-			>
-				확인
-			</BottomSheet.CTA>
+					return (
+						<ListRow
+							key={option.value}
+							role="checkbox"
+							aria-checked={isSelected}
+							onClick={() => handleToggle(option.value)}
+							contents={<ListRow.Texts type="1RowTypeA" top={option.name} />}
+							right={
+								<Checkbox.Line
+									checked={isSelected}
+									size={20}
+									aria-hidden={true}
+									style={{ pointerEvents: "none" }}
+								/>
+							}
+						/>
+					);
+				})}
+			</List>
 		</BottomSheet>
 	);
 };

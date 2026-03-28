@@ -49,64 +49,63 @@ export const InterestSelectBottomSheet = ({
 			}
 			open={open}
 			onClose={onClose}
-			cta={[]}
+			maxHeight="90vh"
+			cta={
+				<BottomSheet.CTA
+					loading={false}
+					disabled={selectedIds.length === 0}
+					onClick={handleConfirm}
+					style={{ "--button-background-color": "#15c67f" } as CSSProperties}
+				>
+					확인
+				</BottomSheet.CTA>
+			}
 		>
-			<div className="pb-4">
-				<List>
-					{topics.map((topic) => {
-						const isSelected = selectedIds.includes(topic.id);
-						return (
-							<ListRow
-								key={topic.id}
-								role="checkbox"
-								aria-checked={isSelected}
-								onClick={() => toggle(topic.id)}
-								left={
-									topic.icon.type === "image" ? (
-										<ListRow.AssetImage
-											src={topic.icon.src || ""}
-											shape="original"
-											className="w-5.5 ml-1"
-										/>
-									) : (
-										<ListRow.AssetIcon name={topic.icon.name || ""} />
-									)
-								}
-								contents={
-									<ListRow.Texts
-										type="2RowTypeA"
-										top={topic.name}
-										topProps={{
-											color: colors.grey800,
-											fontWeight: "semibold",
-										}}
-										bottom={topic.description}
-										bottomProps={{ color: colors.grey500 }}
+			<List>
+				{topics.map((topic) => {
+					const isSelected = selectedIds.includes(topic.id);
+					return (
+						<ListRow
+							key={topic.id}
+							role="checkbox"
+							aria-checked={isSelected}
+							onClick={() => toggle(topic.id)}
+							left={
+								topic.icon.type === "image" ? (
+									<ListRow.AssetImage
+										src={topic.icon.src || ""}
+										shape="original"
+										className="w-5.5 ml-1"
 									/>
-								}
-								right={
-									<Checkbox.Line
-										checked={isSelected}
-										size={20}
-										aria-hidden={true}
-										style={{ pointerEvents: "none" }}
-									/>
-								}
-								verticalPadding="large"
-							/>
-						);
-					})}
-				</List>
-			</div>
-
-			<BottomSheet.CTA
-				loading={false}
-				disabled={selectedIds.length === 0}
-				onClick={handleConfirm}
-				style={{ "--button-background-color": "#15c67f" } as CSSProperties}
-			>
-				확인
-			</BottomSheet.CTA>
+								) : (
+									<ListRow.AssetIcon name={topic.icon.name || ""} />
+								)
+							}
+							contents={
+								<ListRow.Texts
+									type="2RowTypeA"
+									top={topic.name}
+									topProps={{
+										color: colors.grey800,
+										fontWeight: "semibold",
+									}}
+									bottom={topic.description}
+									bottomProps={{ color: colors.grey500 }}
+								/>
+							}
+							right={
+								<Checkbox.Line
+									checked={isSelected}
+									size={20}
+									aria-hidden={true}
+									style={{ pointerEvents: "none" }}
+								/>
+							}
+							verticalPadding="large"
+						/>
+					);
+				})}
+			</List>
 		</BottomSheet>
 	);
 };
