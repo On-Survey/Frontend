@@ -53,22 +53,23 @@ export interface FormRequestValidationBody {
 }
 
 export interface FormRequestValidationDetail {
-	title: string | null;
+	title: string;
 	type: string;
 	reason: string;
+	/** 폼 상 문항 순번(백엔드 제공 시). 없으면 목록 순서로 표시 */
+	questionOrder?: number;
 }
-
-/** 객관식 보기 (검증 API `convertibleDetails.info`) */
 export interface FormRequestValidationChoiceOption {
-	optionId: number | null;
-	questionId?: number | null;
+	optionId: number;
+	questionId: number;
 	content: string;
-	nextSection?: number | null;
-	imageUrl?: string | null;
+	nextSection: number;
+	imageUrl: string;
 }
 
-/** 변환 가능 문항(섹션 내 info 항목) */
 export interface FormRequestValidationConvertibleQuestionInfo {
+	questionId: number;
+	surveyId: number;
 	questionType: string;
 	title: string | null;
 	description: string | null;
@@ -76,17 +77,16 @@ export interface FormRequestValidationConvertibleQuestionInfo {
 	questionOrder: number;
 	section: number;
 	imageUrl: string | null;
-	questionId?: number | null;
-	surveyId?: number | null;
-	minValue?: string;
-	maxValue?: string;
-	rate?: number;
 	/** CHOICE */
 	maxChoice?: number;
 	hasNoneOption?: boolean;
 	hasCustomInput?: boolean;
 	isSectionDecidable?: boolean;
 	options?: FormRequestValidationChoiceOption[];
+	date?: string;
+	minValue?: string;
+	maxValue?: string;
+	rate?: number;
 }
 
 export interface FormRequestValidationConvertibleSection {

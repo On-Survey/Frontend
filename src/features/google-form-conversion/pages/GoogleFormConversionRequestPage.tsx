@@ -3,7 +3,10 @@ import { GoogleFormConversionValidationPartialBottomSheet } from "@features/goog
 import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
-import { isFormRequestValidationSuccessResultItem } from "@features/google-form-conversion/service/api";
+import {
+	type FormRequestValidationDetail,
+	isFormRequestValidationSuccessResultItem,
+} from "@features/google-form-conversion/service/api";
 import type { FormValues } from "@features/google-form-conversion/types";
 import {
 	getConvertibleQuestionCountFromValidation,
@@ -18,23 +21,16 @@ import {
 	Text,
 	TextField,
 	Top,
-	useWebToast,
 } from "@toss/tds-mobile";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-const VALIDATION_WAIT_TOAST_OPTIONS = {
-	type: "bottom" as const,
-	lottie: "https://static.toss.im/lotties-common/alarm-spot.json",
-	higherThanCTA: true,
-};
-
 export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
-	const { openToast, closeToast } = useWebToast();
 
 	const { validationResult, setAfterValidation } = useGoogleFormConversion();
+
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();
 
@@ -65,20 +61,14 @@ export const GoogleFormConversionRequestPage = () => {
 	const onSubmit = useCallback(
 		async (data: RequestFormValues) => {
 			try {
-				openToast(
-					"폼을 확인하고 있어요. 잠시만 기다려주세요.",
-					VALIDATION_WAIT_TOAST_OPTIONS,
-				);
 				const res = await validateRequest({
 					formLink: data.formLink.trim(),
 					requesterEmail: data.email.trim(),
 				});
 				if (!res.success) {
-					closeToast();
 					setErrorMessage(res.message || "검증에 실패했어요");
 					return;
 				}
-				closeToast();
 				setAfterValidation({
 					formLink: data.formLink.trim(),
 					email: data.email.trim(),
@@ -86,21 +76,15 @@ export const GoogleFormConversionRequestPage = () => {
 				});
 				setSuccessSheetOpen(true);
 			} catch (e) {
-				closeToast();
 				setErrorMessage(getFormRequestValidationErrorMessage(e));
 			}
 		},
-		[closeToast, openToast, validateRequest, setAfterValidation],
+		[validateRequest, setAfterValidation],
 	);
 
 	const handleSuccessSheetContinue = useCallback(() => {
 		setSuccessSheetOpen(false);
 		navigate("/payment/google-form-conversion-options");
-	}, [navigate]);
-
-	const handleNavigateToPreview = useCallback(() => {
-		setSuccessSheetOpen(false);
-		navigate("/payment/google-form-conversion-preview");
 	}, [navigate]);
 
 	const handleSuccessSheetEdit = useCallback(() => {
@@ -115,24 +99,19 @@ export const GoogleFormConversionRequestPage = () => {
 		? getConvertibleQuestionCountFromValidation(validationResult)
 		: 0;
 
-	const unconvertibleCount = validationResult
-		? validationResult.result.results.reduce(
-				(sum, item) =>
-					sum +
-					(isFormRequestValidationSuccessResultItem(item)
-						? item.inconvertible
-						: 0),
-				0,
-			)
-		: 0;
+	const unsupportedDetails = useMemo(() => {
+		if (!validationResult) {
+			return [] as FormRequestValidationDetail[];
+		}
+		const details: FormRequestValidationDetail[] = [];
+		for (const item of validationResult.result.results) {
+			if (!isFormRequestValidationSuccessResultItem(item)) continue;
+			details.push(...item.inconvertibleDetails);
+		}
+		return details;
+	}, [validationResult]);
 
-	const unsupportedDetails = validationResult
-		? validationResult.result.results.flatMap((item) =>
-				isFormRequestValidationSuccessResultItem(item)
-					? item.inconvertibleDetails
-					: [],
-			)
-		: [];
+	const hasUnsupportedQuestions = unsupportedDetails.length > 0;
 
 	return (
 		<>
@@ -254,12 +233,11 @@ export const GoogleFormConversionRequestPage = () => {
 				구글폼 변환
 			</FixedBottomCTA>
 
-			{successSheetOpen && unconvertibleCount > 0 ? (
+			{successSheetOpen && hasUnsupportedQuestions ? (
 				<GoogleFormConversionValidationPartialBottomSheet
 					open={successSheetOpen}
 					unsupportedDetails={unsupportedDetails}
 					onClose={handleSuccessSheetEdit}
-					onPreview={handleNavigateToPreview}
 				/>
 			) : (
 				<GoogleFormConversionValidationSuccessBottomSheet
