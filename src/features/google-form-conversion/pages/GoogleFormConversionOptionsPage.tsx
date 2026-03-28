@@ -1,13 +1,14 @@
 import type { Interest } from "@features/create-survey/service/form/types";
+import { GenderSelectBottomSheet } from "@features/google-form-conversion/components/GenderSelectBottomSheet";
 import { GoogleFormConversionScreeningListRow } from "@features/google-form-conversion/components/GoogleFormConversionScreeningListRow";
 import { InterestSelectBottomSheet } from "@features/google-form-conversion/components/InterestSelectBottomSheet";
+import { RespondentCountSelectBottomSheet } from "@features/google-form-conversion/components/RespondentCountSelectBottomSheet";
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
 import type {
 	FormValues,
 	QuestionPackage,
-	RespondentCount,
 } from "@features/google-form-conversion/types";
 import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
@@ -24,8 +25,6 @@ import { AgeMultiSelectBottomSheet } from "@features/payment/components/payment/
 import {
 	AGE,
 	formatAgeDisplay,
-	GENDER,
-	type GenderCode,
 	getGenderLabel,
 } from "@features/payment/constants/payment";
 import { topics } from "@shared/constants/topics";
@@ -39,7 +38,6 @@ import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
 	Border,
-	BottomSheet,
 	Button,
 	FixedBottomCTA,
 	TextField,
@@ -443,54 +441,19 @@ export const GoogleFormConversionOptionsPage = () => {
 				/>
 			</div>
 
-			<BottomSheet
-				header={
-					<BottomSheet.Header>희망 응답자 수를 선택해주세요</BottomSheet.Header>
-				}
+			<RespondentCountSelectBottomSheet
 				open={isRespondentSheetOpen}
 				onClose={() => setIsRespondentSheetOpen(false)}
-				cta={[]}
-			>
-				<div>
-					<BottomSheet.Select
-						value={String(respondentCount)}
-						options={RESPONDENT_OPTIONS.map((option) => ({
-							name: option.label,
-							value: String(option.value),
-							hideUnCheckedCheckBox: option.value !== respondentCount,
-						}))}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							setValue(
-								"respondentCount",
-								Number(e.target.value) as RespondentCount,
-							);
-						}}
-					/>
-				</div>
-			</BottomSheet>
+				value={respondentCount}
+				onConfirm={(v) => setValue("respondentCount", v)}
+			/>
 
-			<BottomSheet
-				header={
-					<BottomSheet.Header>대상 성별을 설정해주세요</BottomSheet.Header>
-				}
+			<GenderSelectBottomSheet
 				open={isGenderSheetOpen}
 				onClose={() => setIsGenderSheetOpen(false)}
-				cta={[]}
-			>
-				<div className="mb-4">
-					<BottomSheet.Select
-						value={gender}
-						options={GENDER.map((option) => ({
-							name: option.name,
-							value: option.value,
-							hideUnCheckedCheckBox: option.value !== gender,
-						}))}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							setValue("gender", e.target.value as GenderCode);
-						}}
-					/>
-				</div>
-			</BottomSheet>
+				value={gender}
+				onConfirm={(v) => setValue("gender", v)}
+			/>
 
 			<AgeMultiSelectBottomSheet
 				isOpen={isAgeSheetOpen}
