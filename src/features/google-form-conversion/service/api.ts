@@ -58,12 +58,53 @@ export interface FormRequestValidationDetail {
 	reason: string;
 }
 
-export interface FormRequestValidationResultItem {
+/** 변환 가능 문항(섹션 내 info 항목) */
+export interface FormRequestValidationConvertibleQuestionInfo {
+	questionType: string;
+	title: string;
+	description: string | null;
+	isRequired: boolean;
+	questionOrder: number;
+	section: number;
+	imageUrl: string | null;
+	minValue?: string;
+	maxValue?: string;
+	rate?: number;
+}
+
+export interface FormRequestValidationConvertibleSection {
+	sectionTitle: string;
+	sectionDescription: string;
+	currSection: number;
+	nextSection: number;
+	info: FormRequestValidationConvertibleQuestionInfo[];
+}
+
+/** 검증 성공한 폼 URL별 결과 (`message`는 null) */
+export interface FormRequestValidationSuccessResultItem {
+	url: string;
+	message: null;
 	totalCount: number;
 	convertible: number;
-	unconvertible: number;
-	details: FormRequestValidationDetail[];
+	inconvertible: number;
+	inconvertibleDetails: FormRequestValidationDetail[];
+	convertibleDetails: FormRequestValidationConvertibleSection[];
 }
+
+/** 검증 실패한 URL (`message`에 사유) */
+export interface FormRequestValidationErrorResultItem {
+	url: string;
+	message: string;
+}
+
+export type FormRequestValidationResultItem =
+	| FormRequestValidationSuccessResultItem
+	| FormRequestValidationErrorResultItem;
+
+export const isFormRequestValidationSuccessResultItem = (
+	item: FormRequestValidationResultItem,
+): item is FormRequestValidationSuccessResultItem =>
+	item.message === null && "convertible" in item;
 
 /** POST /v1/form-requests/validation 응답 바디 */
 export interface FormRequestValidationResponse {

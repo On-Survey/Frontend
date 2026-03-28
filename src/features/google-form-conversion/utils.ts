@@ -9,10 +9,11 @@ import { topics } from "@shared/constants/topics";
 import { isoDateToEndOfDayLocal } from "@shared/lib/FormatDate";
 import { validateEmail } from "@shared/lib/validators";
 import axios from "axios";
-import type {
-	CreateGoogleFormConversionRequestBody,
-	FormRequestValidationResponse,
-	GoogleFormSurveyFormRequest,
+import {
+	type CreateGoogleFormConversionRequestBody,
+	type FormRequestValidationResponse,
+	type GoogleFormSurveyFormRequest,
+	isFormRequestValidationSuccessResultItem,
 } from "./service/api";
 import type {
 	GoogleFormConversionScreeningDraft,
@@ -81,7 +82,12 @@ export const getFormRequestValidationErrorMessage = (
 export const getConvertibleQuestionCountFromValidation = (
 	res: FormRequestValidationResponse,
 ): number =>
-	res.result.results.reduce((sum, item) => sum + item.convertible, 0);
+	res.result.results.reduce(
+		(sum, item) =>
+			sum +
+			(isFormRequestValidationSuccessResultItem(item) ? item.convertible : 0),
+		0,
+	);
 
 /**
  * 가격을 한국어 천 단위 포맷 (소수 없음)

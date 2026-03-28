@@ -2,7 +2,10 @@ import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google
 import { GoogleFormConversionValidationPartialBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationPartialBottomSheet";
 import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
-import type { FormRequestValidationResponse } from "@features/google-form-conversion/service/api";
+import {
+	type FormRequestValidationResponse,
+	isFormRequestValidationSuccessResultItem,
+} from "@features/google-form-conversion/service/api";
 import type { FormValues } from "@features/google-form-conversion/types";
 import {
 	getConvertibleQuestionCountFromValidation,
@@ -124,14 +127,20 @@ export const GoogleFormConversionRequestPage = () => {
 
 	const unconvertibleCount = successSheet
 		? successSheet.validationResult.result.results.reduce(
-				(sum, item) => sum + item.unconvertible,
+				(sum, item) =>
+					sum +
+					(isFormRequestValidationSuccessResultItem(item)
+						? item.inconvertible
+						: 0),
 				0,
 			)
 		: 0;
 
 	const unsupportedDetails = successSheet
-		? successSheet.validationResult.result.results.flatMap(
-				(item) => item.details,
+		? successSheet.validationResult.result.results.flatMap((item) =>
+				isFormRequestValidationSuccessResultItem(item)
+					? item.inconvertibleDetails
+					: [],
 			)
 		: [];
 
