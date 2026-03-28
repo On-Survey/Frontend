@@ -6,8 +6,6 @@ import type {
 import type { InterestId } from "@shared/constants/topics";
 import type { FormRequestValidationResponse } from "./service/api";
 
-export type QuestionPackage = "light" | "standard" | "plus";
-
 export type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 
 export const RESPONDENT_OPTIONS: {

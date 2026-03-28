@@ -6,10 +6,7 @@ import { RespondentCountSelectBottomSheet } from "@features/google-form-conversi
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
-import type {
-	FormValues,
-	QuestionPackage,
-} from "@features/google-form-conversion/types";
+import type { FormValues } from "@features/google-form-conversion/types";
 import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
 	formatDateToISO,
@@ -84,8 +81,6 @@ export const GoogleFormConversionOptionsPage = () => {
 	const [isGenderSheetOpen, setIsGenderSheetOpen] = useState(false);
 	const [isAgeSheetOpen, setIsAgeSheetOpen] = useState(false);
 	const [isInterestSheetOpen, setIsInterestSheetOpen] = useState(false);
-
-	const questionPackage: QuestionPackage = "light";
 
 	const {
 		control,
@@ -216,7 +211,6 @@ export const GoogleFormConversionOptionsPage = () => {
 							state: {
 								formLink: data.formLink,
 								email: data.email,
-								questionPackage,
 								respondentCount: data.respondentCount,
 								gender: data.gender,
 								ages: data.ages,
