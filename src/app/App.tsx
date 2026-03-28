@@ -26,6 +26,7 @@ import {
 	SurveyMain,
 	SurveyStart,
 } from "../features/create-survey";
+import { GoogleFormConversionProviderLayout } from "../features/google-form-conversion/GoogleFormConversionProviderLayout";
 import {
 	GoogleFormConversionInquiryPage,
 	GoogleFormConversionInquirySuccessPage,
@@ -34,6 +35,7 @@ import {
 	GoogleFormConversionPaymentConfirmPage,
 	GoogleFormConversionPaymentSuccessPage,
 	GoogleFormConversionPrecheckPage,
+	GoogleFormConversionPreviewPage,
 	GoogleFormConversionPrivacyConsentPage,
 	GoogleFormConversionRequestPage,
 	GoogleFormConversionScreeningPage,
@@ -262,42 +264,48 @@ export const App = () => {
 								<Route element={<MultiStepProviderWrapper />}>
 									<Route element={<PaymentProviderLayout />}>
 										<Route path="/createForm" element={<SurveyMain />} />
-										<Route
-											path="/payment/google-form-conversion"
-											element={<GoogleFormConversionRequestPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-inquiry"
-											element={<GoogleFormConversionInquiryPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-inquiry-success"
-											element={<GoogleFormConversionInquirySuccessPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-options"
-											element={<GoogleFormConversionOptionsPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-screening"
-											element={<GoogleFormConversionScreeningPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-check"
-											element={<GoogleFormConversionPrecheckPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-payment-confirm"
-											element={<GoogleFormConversionPaymentConfirmPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-success"
-											element={<GoogleFormConversionPaymentSuccessPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-privacy-consent"
-											element={<GoogleFormConversionPrivacyConsentPage />}
-										/>
+										<Route element={<GoogleFormConversionProviderLayout />}>
+											<Route
+												path="/payment/google-form-conversion"
+												element={<GoogleFormConversionRequestPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-inquiry"
+												element={<GoogleFormConversionInquiryPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-inquiry-success"
+												element={<GoogleFormConversionInquirySuccessPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-preview"
+												element={<GoogleFormConversionPreviewPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-options"
+												element={<GoogleFormConversionOptionsPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-screening"
+												element={<GoogleFormConversionScreeningPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-check"
+												element={<GoogleFormConversionPrecheckPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-payment-confirm"
+												element={<GoogleFormConversionPaymentConfirmPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-success"
+												element={<GoogleFormConversionPaymentSuccessPage />}
+											/>
+											<Route
+												path="/payment/google-form-conversion-privacy-consent"
+												element={<GoogleFormConversionPrivacyConsentPage />}
+											/>
+										</Route>
 										<Route
 											path="/payment/location"
 											element={<LocationSelectPage />}

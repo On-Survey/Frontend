@@ -12,6 +12,7 @@ import axios from "axios";
 import {
 	type CreateGoogleFormConversionRequestBody,
 	type FormRequestValidationResponse,
+	type FormRequestValidationSuccessResultItem,
 	type GoogleFormSurveyFormRequest,
 	isFormRequestValidationSuccessResultItem,
 } from "./service/api";
@@ -88,6 +89,21 @@ export const getConvertibleQuestionCountFromValidation = (
 			(isFormRequestValidationSuccessResultItem(item) ? item.convertible : 0),
 		0,
 	);
+
+/**
+ * 가격표 문항 구간용 총 문항 수.
+ * `totalCount`가 0으로 오는 경우가 있어 `convertible`·미변환 목록 길이로 보정한다.
+ */
+export const getTotalQuestionCountForPricing = (
+	success: FormRequestValidationSuccessResultItem,
+): number => {
+	if (success.totalCount > 0) return success.totalCount;
+	const inconvertibleN =
+		success.inconvertible > 0
+			? success.inconvertible
+			: (success.inconvertibleDetails?.length ?? 0);
+	return success.convertible + inconvertibleN;
+};
 
 /**
  * 가격을 한국어 천 단위 포맷 (소수 없음)

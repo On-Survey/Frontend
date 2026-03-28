@@ -1,4 +1,4 @@
-import type { GoogleFormConversionFlowState } from "@features/google-form-conversion/types";
+import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
 import {
 	isGoogleFormConversionContactEmail,
 	isGoogleFormLinkUrl,
@@ -7,26 +7,28 @@ import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text, TextField, Top } from "@toss/tds-mobile";
 import { type CSSProperties, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const GoogleFormConversionScreeningPage = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const flowState = location.state as GoogleFormConversionFlowState | undefined;
+	const {
+		formLink: fl,
+		email: em,
+		screening,
+		setScreening,
+	} = useGoogleFormConversion();
 
-	const formLink = flowState?.formLink?.trim() ?? "";
-	const email = flowState?.email ?? "";
+	const formLink = fl?.trim() ?? "";
+	const email = em ?? "";
 	const isValidEntry =
 		!!formLink &&
 		isGoogleFormLinkUrl(formLink) &&
 		isGoogleFormConversionContactEmail(email);
 
-	const [question, setQuestion] = useState(
-		flowState?.screening?.question ?? "",
-	);
+	const [question, setQuestion] = useState(screening?.question ?? "");
 	/** O=true, X=false, 미선택=null */
 	const [answer, setAnswer] = useState<boolean | null>(() => {
-		const a = flowState?.screening?.answer;
+		const a = screening?.answer;
 		return typeof a === "boolean" ? a : null;
 	});
 
@@ -41,17 +43,12 @@ export const GoogleFormConversionScreeningPage = () => {
 	});
 
 	const handleNext = () => {
-		if (!question.trim() || answer === null || !flowState) return;
-		navigate("/payment/google-form-conversion-options", {
-			state: {
-				formLink: flowState.formLink,
-				email: flowState.email,
-				screening: {
-					question: question.trim(),
-					answer,
-				},
-			},
+		if (!question.trim() || answer === null) return;
+		setScreening({
+			question: question.trim(),
+			answer,
 		});
+		navigate("/payment/google-form-conversion-options");
 	};
 
 	if (!isValidEntry) {

@@ -53,23 +53,40 @@ export interface FormRequestValidationBody {
 }
 
 export interface FormRequestValidationDetail {
-	title: string;
+	title: string | null;
 	type: string;
 	reason: string;
+}
+
+/** 객관식 보기 (검증 API `convertibleDetails.info`) */
+export interface FormRequestValidationChoiceOption {
+	optionId: number | null;
+	questionId?: number | null;
+	content: string;
+	nextSection?: number | null;
+	imageUrl?: string | null;
 }
 
 /** 변환 가능 문항(섹션 내 info 항목) */
 export interface FormRequestValidationConvertibleQuestionInfo {
 	questionType: string;
-	title: string;
+	title: string | null;
 	description: string | null;
 	isRequired: boolean;
 	questionOrder: number;
 	section: number;
 	imageUrl: string | null;
+	questionId?: number | null;
+	surveyId?: number | null;
 	minValue?: string;
 	maxValue?: string;
 	rate?: number;
+	/** CHOICE */
+	maxChoice?: number;
+	hasNoneOption?: boolean;
+	hasCustomInput?: boolean;
+	isSectionDecidable?: boolean;
+	options?: FormRequestValidationChoiceOption[];
 }
 
 export interface FormRequestValidationConvertibleSection {
@@ -80,10 +97,11 @@ export interface FormRequestValidationConvertibleSection {
 	info: FormRequestValidationConvertibleQuestionInfo[];
 }
 
-/** 검증 성공한 폼 URL별 결과 (`message`는 null) */
+/** 검증 성공한 폼 URL별 결과 (에러 행과 구분: `convertible` 등 포함) */
 export interface FormRequestValidationSuccessResultItem {
 	url: string;
-	message: null;
+	/** 성공 시 null·생략 가능 (백엔드에 따라 undefined일 수 있음) */
+	message?: null;
 	totalCount: number;
 	convertible: number;
 	inconvertible: number;
@@ -103,8 +121,13 @@ export type FormRequestValidationResultItem =
 
 export const isFormRequestValidationSuccessResultItem = (
 	item: FormRequestValidationResultItem,
-): item is FormRequestValidationSuccessResultItem =>
-	item.message === null && "convertible" in item;
+): item is FormRequestValidationSuccessResultItem => {
+	if (typeof item !== "object" || item === null) return false;
+	if (!("convertible" in item)) return false;
+	const convertible = (item as FormRequestValidationSuccessResultItem)
+		.convertible;
+	return typeof convertible === "number";
+};
 
 /** POST /v1/form-requests/validation 응답 바디 */
 export interface FormRequestValidationResponse {

@@ -5,6 +5,7 @@ export { GoogleFormConversionOptionsPage } from "./GoogleFormConversionOptionsPa
 export { GoogleFormConversionPaymentConfirmPage } from "./GoogleFormConversionPaymentConfirmPage";
 export { GoogleFormConversionPaymentSuccessPage } from "./GoogleFormConversionPaymentSuccessPage";
 export { GoogleFormConversionPrecheckPage } from "./GoogleFormConversionPrecheckPage";
+export { GoogleFormConversionPreviewPage } from "./GoogleFormConversionPreviewPage";
 export { GoogleFormConversionPrivacyConsentPage } from "./GoogleFormConversionPrivacyConsentPage";
 export { GoogleFormConversionRequestPage } from "./GoogleFormConversionRequestPage";
 export { GoogleFormConversionScreeningPage } from "./GoogleFormConversionScreeningPage";

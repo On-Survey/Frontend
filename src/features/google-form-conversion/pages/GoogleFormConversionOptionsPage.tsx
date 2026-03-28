@@ -1,13 +1,11 @@
 import type { Interest } from "@features/create-survey/service/form/types";
 import { GoogleFormConversionScreeningListRow } from "@features/google-form-conversion/components/GoogleFormConversionScreeningListRow";
 import { InterestSelectBottomSheet } from "@features/google-form-conversion/components/InterestSelectBottomSheet";
-import {
-	getGoogleFormPreview,
-	validateDiscountCode,
-} from "@features/google-form-conversion/service/api";
+import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
+import { validateDiscountCode } from "@features/google-form-conversion/service/api";
 import type {
 	FormValues,
-	GoogleFormConversionFlowState,
 	QuestionPackage,
 	RespondentCount,
 } from "@features/google-form-conversion/types";
@@ -18,6 +16,7 @@ import {
 	formatPrice,
 	getDefaultDeadline,
 	getQuestionRange,
+	getTotalQuestionCountForPricing,
 	isGoogleFormConversionContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
@@ -48,17 +47,19 @@ import {
 } from "@toss/tds-mobile";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const GoogleFormConversionOptionsPage = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const entryState = location.state as
-		| GoogleFormConversionFlowState
-		| undefined;
+	const {
+		formLink: formLinkFromContext,
+		email: emailFromContext,
+		validationResult,
+		screening,
+	} = useGoogleFormConversion();
 
-	const formLinkFromState = entryState?.formLink?.trim() ?? "";
-	const emailFromState = entryState?.email ?? "";
+	const formLinkFromState = formLinkFromContext?.trim() ?? "";
+	const emailFromState = emailFromContext ?? "";
 	const isValidEntry =
 		!!formLinkFromState &&
 		isGoogleFormLinkUrl(formLinkFromState) &&
@@ -70,9 +71,6 @@ export const GoogleFormConversionOptionsPage = () => {
 		}
 	}, [isValidEntry, navigate]);
 
-	const [formQuestionCount, setFormQuestionCount] = useState<number | null>(
-		null,
-	);
 	const [promotionCodeError, setPromotionCodeError] = useState<string | null>(
 		null,
 	);
@@ -112,6 +110,16 @@ export const GoogleFormConversionOptionsPage = () => {
 	});
 
 	const formLink = watch("formLink");
+	/** 가격 구간용 문항 수 — 검증 API 성공 행 (`totalCount`·`convertible` 등 보정, preview API 없음) */
+	const formQuestionCount = useMemo(() => {
+		if (!validationResult) return null;
+		const trimmed = formLink.trim();
+		if (!trimmed) return null;
+		const success = pickValidationSuccessForFormLink(validationResult, trimmed);
+		if (!success) return null;
+		return getTotalQuestionCountForPricing(success);
+	}, [validationResult, formLink]);
+
 	const respondentCount = watch("respondentCount");
 	const interestIds = watch("interestIds");
 	const promotionCodeInput = watch("promotionCode");
@@ -141,17 +149,6 @@ export const GoogleFormConversionOptionsPage = () => {
 			: lookupEstimateTablePrice(estimate);
 	}, [respondentCount, formQuestionCount, gender, ages, isPromoPriceApplied]);
 
-	useEffect(() => {
-		const trimmed = formLink.trim();
-		if (!trimmed || !isGoogleFormLinkUrl(trimmed)) {
-			setFormQuestionCount(null);
-			return;
-		}
-		getGoogleFormPreview(trimmed)
-			.then((res) => setFormQuestionCount(res.questionCount))
-			.catch(() => setFormQuestionCount(null));
-	}, [formLink]);
-
 	const handleVerifyPromotion = useCallback(async () => {
 		const code = getValues("promotionCode")?.trim() ?? "";
 		if (!code) {
@@ -178,6 +175,11 @@ export const GoogleFormConversionOptionsPage = () => {
 			setIsPromotionVerifying(false);
 		}
 	}, [getValues]);
+
+	const handleNavigateToPreview = useCallback(() => {
+		if (!validationResult) return;
+		navigate("/payment/google-form-conversion-preview");
+	}, [navigate, validationResult]);
 
 	const onSubmit = useCallback(
 		async (data: FormValues) => {
@@ -225,9 +227,7 @@ export const GoogleFormConversionOptionsPage = () => {
 								deadline: formatDateToISO(getDefaultDeadline()),
 								price: promoPrice,
 								promotionCode: code,
-								...(entryState?.screening && {
-									screening: entryState.screening,
-								}),
+								...(screening && { screening }),
 							},
 						});
 						return;
@@ -251,13 +251,11 @@ export const GoogleFormConversionOptionsPage = () => {
 					...(interestsPayload && { interests: interestsPayload }),
 					deadline: formatDateToISO(getDefaultDeadline()),
 					price,
-					...(entryState?.screening && {
-						screening: entryState.screening,
-					}),
+					...(screening && { screening }),
 				},
 			});
 		},
-		[navigate, price, formQuestionCount, entryState?.screening],
+		[navigate, price, formQuestionCount, screening],
 	);
 
 	if (!isValidEntry) {
@@ -274,6 +272,20 @@ export const GoogleFormConversionOptionsPage = () => {
 						선택해주세요
 					</Top.TitleParagraph>
 				}
+				subtitleBottom={<Top.SubtitleParagraph size={15} />}
+				lower={
+					validationResult ? (
+						<Top.LowerButton
+							color="dark"
+							size="small"
+							variant="weak"
+							display="inline"
+							onClick={handleNavigateToPreview}
+						>
+							설문 미리보기
+						</Top.LowerButton>
+					) : undefined
+				}
 				lowerGap={0}
 			/>
 
@@ -282,7 +294,7 @@ export const GoogleFormConversionOptionsPage = () => {
 					flowState={{
 						formLink: formLinkFromState,
 						email: emailFromState,
-						screening: entryState?.screening,
+						screening: screening ?? undefined,
 					}}
 				/>
 				<Border variant="height16" />

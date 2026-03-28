@@ -17,9 +17,7 @@ export const GoogleFormConversionScreeningListRow = ({
 	);
 
 	const goToScreening = () => {
-		navigate("/payment/google-form-conversion-screening", {
-			state: flowState,
-		});
+		navigate("/payment/google-form-conversion-screening");
 	};
 
 	return hasScreening ? (

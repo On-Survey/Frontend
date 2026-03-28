@@ -1,11 +1,9 @@
 import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationErrorBottomSheet";
 import { GoogleFormConversionValidationPartialBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationPartialBottomSheet";
 import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
+import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
-import {
-	type FormRequestValidationResponse,
-	isFormRequestValidationSuccessResultItem,
-} from "@features/google-form-conversion/service/api";
+import { isFormRequestValidationSuccessResultItem } from "@features/google-form-conversion/service/api";
 import type { FormValues } from "@features/google-form-conversion/types";
 import {
 	getConvertibleQuestionCountFromValidation,
@@ -32,21 +30,15 @@ const VALIDATION_WAIT_TOAST_OPTIONS = {
 	higherThanCTA: true,
 };
 
-type SuccessSheetPayload = {
-	formLink: string;
-	email: string;
-	validationResult: FormRequestValidationResponse;
-};
-
 export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
 	const { openToast, closeToast } = useWebToast();
+
+	const { validationResult, setAfterValidation } = useGoogleFormConversion();
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();
 
-	const [successSheet, setSuccessSheet] = useState<SuccessSheetPayload | null>(
-		null,
-	);
+	const [successSheetOpen, setSuccessSheetOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	type RequestFormValues = Pick<FormValues, "formLink" | "email"> & {
@@ -87,46 +79,44 @@ export const GoogleFormConversionRequestPage = () => {
 					return;
 				}
 				closeToast();
-				setSuccessSheet({
+				setAfterValidation({
 					formLink: data.formLink.trim(),
 					email: data.email.trim(),
 					validationResult: res,
 				});
+				setSuccessSheetOpen(true);
 			} catch (e) {
 				closeToast();
 				setErrorMessage(getFormRequestValidationErrorMessage(e));
 			}
 		},
-		[closeToast, openToast, validateRequest],
+		[closeToast, openToast, validateRequest, setAfterValidation],
 	);
 
 	const handleSuccessSheetContinue = useCallback(() => {
-		if (!successSheet) return;
-		const { formLink: fl, email: em, validationResult } = successSheet;
-		setSuccessSheet(null);
-		navigate("/payment/google-form-conversion-options", {
-			state: {
-				formLink: fl,
-				email: em,
-				validationResult,
-			},
-		});
-	}, [navigate, successSheet]);
+		setSuccessSheetOpen(false);
+		navigate("/payment/google-form-conversion-options");
+	}, [navigate]);
+
+	const handleNavigateToPreview = useCallback(() => {
+		setSuccessSheetOpen(false);
+		navigate("/payment/google-form-conversion-preview");
+	}, [navigate]);
 
 	const handleSuccessSheetEdit = useCallback(() => {
-		setSuccessSheet(null);
+		setSuccessSheetOpen(false);
 	}, []);
 
 	const handleErrorSheetClose = useCallback(() => {
 		setErrorMessage(null);
 	}, []);
 
-	const convertibleCount = successSheet
-		? getConvertibleQuestionCountFromValidation(successSheet.validationResult)
+	const convertibleCount = validationResult
+		? getConvertibleQuestionCountFromValidation(validationResult)
 		: 0;
 
-	const unconvertibleCount = successSheet
-		? successSheet.validationResult.result.results.reduce(
+	const unconvertibleCount = validationResult
+		? validationResult.result.results.reduce(
 				(sum, item) =>
 					sum +
 					(isFormRequestValidationSuccessResultItem(item)
@@ -136,8 +126,8 @@ export const GoogleFormConversionRequestPage = () => {
 			)
 		: 0;
 
-	const unsupportedDetails = successSheet
-		? successSheet.validationResult.result.results.flatMap((item) =>
+	const unsupportedDetails = validationResult
+		? validationResult.result.results.flatMap((item) =>
 				isFormRequestValidationSuccessResultItem(item)
 					? item.inconvertibleDetails
 					: [],
@@ -264,16 +254,16 @@ export const GoogleFormConversionRequestPage = () => {
 				구글폼 변환
 			</FixedBottomCTA>
 
-			{successSheet != null && unconvertibleCount > 0 ? (
+			{successSheetOpen && unconvertibleCount > 0 ? (
 				<GoogleFormConversionValidationPartialBottomSheet
-					open={successSheet != null}
+					open={successSheetOpen}
 					unsupportedDetails={unsupportedDetails}
 					onClose={handleSuccessSheetEdit}
-					onPreview={handleSuccessSheetContinue}
+					onPreview={handleNavigateToPreview}
 				/>
 			) : (
 				<GoogleFormConversionValidationSuccessBottomSheet
-					open={successSheet != null}
+					open={successSheetOpen}
 					convertibleCount={convertibleCount}
 					onClose={handleSuccessSheetEdit}
 					onContinue={handleSuccessSheetContinue}

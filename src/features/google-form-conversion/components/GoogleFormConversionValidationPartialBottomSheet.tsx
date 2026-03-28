@@ -39,12 +39,12 @@ export const GoogleFormConversionValidationPartialBottomSheet = ({
 		>
 			<Post.Ul>
 				{unsupportedDetails.length > 0 ? (
-					unsupportedDetails.flatMap((detail) => [
+					unsupportedDetails.flatMap((detail, index) => [
 						<Post.Li
-							key={`t-${detail.title}-${detail.type}-${detail.reason}`}
-						>{`미지원 문항 제목 : ${detail.title}`}</Post.Li>,
+							key={`t-${index}-${detail.type}-${detail.reason}`}
+						>{`미지원 문항 제목 : ${detail.title ?? "(제목 없음)"}`}</Post.Li>,
 						<Post.Li
-							key={`r-${detail.title}-${detail.type}-${detail.reason}`}
+							key={`r-${index}-${detail.type}-${detail.reason}`}
 						>{`미지원 사유 : ${detail.reason}`}</Post.Li>,
 					])
 				) : (

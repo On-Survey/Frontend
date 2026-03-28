@@ -4,6 +4,7 @@ import type {
 	RegionCode,
 } from "@features/payment/constants/payment";
 import type { InterestId } from "@shared/constants/topics";
+import type { FormRequestValidationResponse } from "./service/api";
 
 export type QuestionPackage = "light" | "standard" | "plus";
 
@@ -54,6 +55,7 @@ export type GoogleFormConversionScreeningDraft = {
 export type GoogleFormConversionFlowState =
 	GoogleFormConversionRequestEntryState & {
 		screening?: GoogleFormConversionScreeningDraft;
+		validationResult?: FormRequestValidationResponse;
 	};
 
 export type FormValues = {

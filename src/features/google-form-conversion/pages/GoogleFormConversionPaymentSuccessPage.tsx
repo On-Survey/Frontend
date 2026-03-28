@@ -1,11 +1,14 @@
+import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Spacing, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
 export const GoogleFormConversionPaymentSuccessPage = () => {
 	const navigate = useNavigate();
+	const { resetFlow } = useGoogleFormConversion();
 
 	const handleConfirm = () => {
+		resetFlow();
 		navigate("/home");
 	};
 
