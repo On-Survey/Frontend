@@ -42,17 +42,8 @@ export const GoogleFormConversionPrecheckPage = () => {
 			pagePath: "/payment/google-form-conversion-check",
 		});
 		handleConsentBottomSheetClose();
-		// 결제 확인 페이지로 이동 (선택한 정보는 location.state로 전달)
-		const locationState = location.state as
-			| {
-					formLink: string;
-					email: string;
-					questionPackage: "light" | "standard" | "plus";
-					respondentCount: 50 | 100;
-					deadlineText: string;
-					price: number;
-			  }
-			| undefined;
+
+		const locationState = location.state;
 		navigate("/payment/google-form-conversion-payment-confirm", {
 			state: locationState,
 		});

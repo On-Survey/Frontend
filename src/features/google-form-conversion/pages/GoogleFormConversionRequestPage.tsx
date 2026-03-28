@@ -1,143 +1,117 @@
-import { DateSelectBottomSheet } from "@features/payment/components/payment";
-import { pushGtmEvent } from "@shared/lib/gtm";
-import { validateEmail } from "@shared/lib/validators";
+import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationErrorBottomSheet";
+import { GoogleFormConversionValidationPartialBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationPartialBottomSheet";
+import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
+import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
+import {
+	type FormRequestValidationDetail,
+	isFormRequestValidationSuccessResultItem,
+} from "@features/google-form-conversion/service/api";
+import type { FormValues } from "@features/google-form-conversion/types";
+import {
+	getConvertibleQuestionCountFromValidation,
+	getFormRequestValidationErrorMessage,
+	isGoogleFormConversionContactEmail,
+	isGoogleFormLinkUrl,
+} from "@features/google-form-conversion/utils";
 import { adaptive } from "@toss/tds-colors";
 import {
-	Asset,
-	BottomSheet,
+	AgreementV4,
 	FixedBottomCTA,
+	Text,
 	TextField,
 	Top,
 } from "@toss/tds-mobile";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-
-type QuestionPackage = "light" | "standard" | "plus";
-type RespondentCount = 50 | 100;
-
-const QUESTION_PACKAGE_OPTIONS: {
-	label: string;
-	value: QuestionPackage;
-	display: string;
-}[] = [
-	{
-		label: "라이트 (15문항 이내)",
-		value: "light",
-		display: "라이트 (15문항 이내)",
-	},
-	{
-		label: "스탠다드 (25문항 이내)",
-		value: "standard",
-		display: "스탠다드 (25문항 이내)",
-	},
-	{
-		label: "플러스 (30문항 이내)",
-		value: "plus",
-		display: "플러스 (30문항 이내)",
-	},
-];
-
-const RESPONDENT_OPTIONS: {
-	label: string;
-	value: RespondentCount;
-	display: string;
-}[] = [
-	{ label: "50명", value: 50, display: "50명" },
-	{ label: "100명", value: 100, display: "100명" },
-];
-
-const PRICE_TABLE: Record<QuestionPackage, Record<RespondentCount, number>> = {
-	light: {
-		50: 10890,
-		100: 19690,
-	},
-	standard: {
-		50: 16390,
-		100: 29590,
-	},
-	plus: {
-		50: 21890,
-		100: 39490,
-	},
-};
-
-const formatPrice = (price: number) =>
-	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
-
-const formatDate = (date: Date): string => {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-	return `${year}.${month}.${day}`;
-};
-
-const formatDateToISO = (date: Date): string => {
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
-	return `${year}-${month}-${day}`;
-};
-
-const getDefaultDeadline = (): Date => {
-	const today = new Date();
-	const sevenDaysLater = new Date(today);
-	sevenDaysLater.setDate(today.getDate() + 7);
-	return sevenDaysLater;
-};
 
 export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
 
-	const [formLink, setFormLink] = useState("");
-	const [isFormLinkTouched, setIsFormLinkTouched] = useState(false);
-	const [email, setEmail] = useState("");
-	const [isEmailTouched, setIsEmailTouched] = useState(false);
-	const [questionPackage, setQuestionPackage] =
-		useState<QuestionPackage>("light");
-	const [respondentCount, setRespondentCount] = useState<RespondentCount>(50);
-	const [deadline, setDeadline] = useState<Date>(getDefaultDeadline());
+	const { validationResult, setAfterValidation } = useGoogleFormConversion();
 
-	const [isQuestionPackageSheetOpen, setIsQuestionPackageSheetOpen] =
-		useState(false);
-	const [isRespondentSheetOpen, setIsRespondentSheetOpen] = useState(false);
+	const { mutateAsync: validateRequest, isPending: isValidating } =
+		useGoogleFormRequestValidation();
 
-	const isGoogleFormLink = useMemo(
-		() =>
-			formLink === "" ||
-			formLink.startsWith("https://docs.google.com/forms") ||
-			formLink.startsWith("https://docs.google.com/forms/") ||
-			formLink.startsWith("https://docs.google.com/"),
-		[formLink],
-	);
+	const [successSheetOpen, setSuccessSheetOpen] = useState(false);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	const isValidEmail = useMemo(() => validateEmail(email), [email]);
-
-	const price = useMemo(
-		() => PRICE_TABLE[questionPackage][respondentCount],
-		[questionPackage, respondentCount],
-	);
-
-	const handleSubmit = () => {
-		pushGtmEvent({
-			event: "form_payment_button_click",
-			pagePath: "/payment/google-form-conversion",
-		});
-		navigate("/payment/google-form-conversion-check", {
-			state: {
-				formLink,
-				email,
-				questionPackage,
-				respondentCount,
-				deadlineText: formatDate(deadline),
-				deadline: formatDateToISO(deadline),
-				price,
-			},
-		});
+	type RequestFormValues = Pick<FormValues, "formLink" | "email"> & {
+		emailSendAgreed: boolean;
 	};
 
-	const handleDateChange = (date: Date) => {
-		setDeadline(date);
-	};
+	const {
+		control,
+		watch,
+		handleSubmit: rhfHandleSubmit,
+		formState: { errors },
+	} = useForm<RequestFormValues>({
+		mode: "onChange",
+		defaultValues: {
+			formLink: "",
+			email: "",
+			emailSendAgreed: false,
+		},
+	});
+
+	const formLink = watch("formLink");
+	const emailSendAgreed = watch("emailSendAgreed");
+
+	const onSubmit = useCallback(
+		async (data: RequestFormValues) => {
+			try {
+				const res = await validateRequest({
+					formLink: data.formLink.trim(),
+					requesterEmail: data.email.trim(),
+				});
+				if (!res.success) {
+					setErrorMessage(res.message || "검증에 실패했어요");
+					return;
+				}
+				setAfterValidation({
+					formLink: data.formLink.trim(),
+					email: data.email.trim(),
+					validationResult: res,
+				});
+				setSuccessSheetOpen(true);
+			} catch (e) {
+				setErrorMessage(getFormRequestValidationErrorMessage(e));
+			}
+		},
+		[validateRequest, setAfterValidation],
+	);
+
+	const handleSuccessSheetContinue = useCallback(() => {
+		setSuccessSheetOpen(false);
+		navigate("/payment/google-form-conversion-options");
+	}, [navigate]);
+
+	const handleSuccessSheetEdit = useCallback(() => {
+		setSuccessSheetOpen(false);
+	}, []);
+
+	const handleErrorSheetClose = useCallback(() => {
+		setErrorMessage(null);
+	}, []);
+
+	const convertibleCount = validationResult
+		? getConvertibleQuestionCountFromValidation(validationResult)
+		: 0;
+
+	const unsupportedDetails = useMemo(() => {
+		if (!validationResult) {
+			return [] as FormRequestValidationDetail[];
+		}
+		const details: FormRequestValidationDetail[] = [];
+		for (const item of validationResult.result.results) {
+			if (!isFormRequestValidationSuccessResultItem(item)) continue;
+			details.push(...item.inconvertibleDetails);
+		}
+		return details;
+	}, [validationResult]);
+
+	const hasUnsupportedQuestions = unsupportedDetails.length > 0;
 
 	return (
 		<>
@@ -151,151 +125,134 @@ export const GoogleFormConversionRequestPage = () => {
 			/>
 
 			<div className="flex flex-col gap-4 px-2 pt-4">
-				<TextField.Clearable
-					variant="line"
-					hasError={isFormLinkTouched && !isGoogleFormLink}
-					label="폼 링크"
-					labelOption="sustain"
-					help={
-						isFormLinkTouched && !isGoogleFormLink
-							? "구글폼 링크가 아니에요"
-							: "구글 폼 링크를 등록해주세요"
-					}
-					value={formLink}
-					placeholder="https://docs.google.com/..."
-					suffix=""
-					prefix=""
-					onChange={(e) => {
-						if (!isFormLinkTouched) {
-							setIsFormLinkTouched(true);
-						}
-						setFormLink(e.target.value);
+				<Controller
+					control={control}
+					name="formLink"
+					rules={{
+						required: "폼 링크를 입력해주세요",
+						validate: (v) =>
+							isGoogleFormLinkUrl(v?.trim() ?? "") ||
+							"링크를 다시 한번 확인해 주세요!",
 					}}
+					render={({ field: { onChange, value, onBlur } }) => (
+						<TextField.Clearable
+							variant="line"
+							hasError={!!errors.formLink}
+							label="폼 링크"
+							labelOption="sustain"
+							help={
+								errors.formLink?.message ??
+								'공유 > 편집자 보기 "링크가 있는 모든 사용자로 변경" 해주세요'
+							}
+							value={value}
+							placeholder="https://docs.google.com/..."
+							suffix=""
+							prefix=""
+							onChange={(e) => onChange(e.target.value)}
+							onBlur={onBlur}
+						/>
+					)}
 				/>
 
-				<TextField.Clearable
-					variant="line"
-					hasError={isEmailTouched && !isValidEmail}
-					label="이메일"
-					labelOption="sustain"
-					help={
-						isEmailTouched && !isValidEmail
-							? "올바른 이메일 형식을 입력해주세요"
-							: "설문 등록 과정을 안내받으실 이메일을 입력해주세요"
-					}
-					value={email}
-					placeholder="example@toss.im"
-					suffix=""
-					prefix=""
-					onChange={(e) => {
-						if (!isEmailTouched) {
-							setIsEmailTouched(true);
-						}
-						setEmail(e.target.value);
+				<Controller
+					control={control}
+					name="email"
+					rules={{
+						validate: (v) => {
+							if (isGoogleFormConversionContactEmail(v ?? "")) return true;
+							const trimmed = (v ?? "").trim();
+							return trimmed.length > 0
+								? "올바른 이메일 형식을 입력해주세요"
+								: "이메일을 입력해주세요";
+						},
 					}}
-				/>
-
-				<TextField.Button
-					variant="line"
-					hasError={false}
-					label="설문 문항 수"
-					value={
-						QUESTION_PACKAGE_OPTIONS.find(
-							(option) => option.value === questionPackage,
-						)?.display ?? ""
-					}
-					placeholder="설문 문항 수"
-					help="표시된 금액은 VAT 포함 금액이에요"
-					right={
-						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW24}
-							name="icon-arrow-down-mono"
-							color={adaptive.grey400}
-							aria-hidden={true}
+					render={({ field: { onChange, value, onBlur } }) => (
+						<TextField.Clearable
+							variant="line"
+							hasError={!!errors.email}
+							label="이메일"
+							labelOption="sustain"
+							help={errors.email?.message ?? "안내 받을 이메일을 입력해 주세요"}
+							value={value}
+							placeholder="example@toss.im"
+							suffix=""
+							prefix=""
+							onChange={(e) => onChange(e.target.value)}
+							onBlur={onBlur}
 						/>
-					}
-					onClick={() => setIsQuestionPackageSheetOpen(true)}
+					)}
 				/>
 
-				<TextField.Button
-					variant="line"
-					hasError={false}
-					label="희망 응답자 수"
-					value={
-						RESPONDENT_OPTIONS.find(
-							(option) => option.value === respondentCount,
-						)?.display ?? ""
-					}
-					placeholder="희망 응답자 수"
-					right={
-						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW24}
-							name="icon-arrow-down-mono"
-							color={adaptive.grey400}
-							aria-hidden={true}
+				<Controller
+					control={control}
+					name="emailSendAgreed"
+					rules={{
+						validate: (v) => v || "필수 동의가 필요해요",
+					}}
+					render={({ field: { onChange, value } }) => (
+						<AgreementV4
+							variant="medium"
+							left={
+								<div className="flex items-center">
+									<AgreementV4.Checkbox
+										variant="checkbox"
+										checked={value}
+										onChange={() => onChange(!value)}
+									/>
+									<Text
+										color={adaptive.blue600}
+										typography="t7"
+										fontWeight="bold"
+									>
+										필수
+									</Text>
+								</div>
+							}
+							middle={<AgreementV4.Text>이메일 발신 동의</AgreementV4.Text>}
 						/>
-					}
-					onClick={() => setIsRespondentSheetOpen(true)}
+					)}
 				/>
-
-				<DateSelectBottomSheet value={deadline} onChange={handleDateChange} />
 			</div>
 
-			<BottomSheet
-				header={
-					<BottomSheet.Header>설문 문항 수를 선택해주세요</BottomSheet.Header>
-				}
-				open={isQuestionPackageSheetOpen}
-				onClose={() => setIsQuestionPackageSheetOpen(false)}
-				cta={[]}
-			>
-				<div className="mb-4">
-					<BottomSheet.Select
-						value={questionPackage}
-						options={QUESTION_PACKAGE_OPTIONS.map((option) => ({
-							name: option.label,
-							value: option.value,
-							hideUnCheckedCheckBox: option.value !== questionPackage,
-						}))}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							const value = e.target.value as QuestionPackage;
-							setQuestionPackage(value);
-						}}
-					/>
-				</div>
-			</BottomSheet>
-
-			<BottomSheet
-				header={
-					<BottomSheet.Header>희망 응답자 수를 선택해주세요</BottomSheet.Header>
-				}
-				open={isRespondentSheetOpen}
-				onClose={() => setIsRespondentSheetOpen(false)}
-				cta={[]}
-			>
-				<div>
-					<BottomSheet.Select
-						value={String(respondentCount)}
-						options={RESPONDENT_OPTIONS.map((option) => ({
-							name: option.label,
-							value: String(option.value),
-							hideUnCheckedCheckBox: option.value !== respondentCount,
-						}))}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							const value = Number(e.target.value) as RespondentCount;
-							setRespondentCount(value);
-						}}
-					/>
-				</div>
-			</BottomSheet>
-
 			<FixedBottomCTA
-				loading={false}
-				onClick={handleSubmit}
-				disabled={!formLink || !isGoogleFormLink || !email || !isValidEmail}
+				loading={isValidating}
+				onClick={rhfHandleSubmit(onSubmit)}
+				bottomAccessory={
+					isValidating ? "최대 10초까지 소요 될 수 있어요" : undefined
+				}
+				disabled={
+					isValidating ||
+					!!errors.formLink ||
+					!!errors.email ||
+					!emailSendAgreed ||
+					!formLink.trim() ||
+					!isGoogleFormLinkUrl(formLink.trim()) ||
+					!isGoogleFormConversionContactEmail(watch("email") ?? "")
+				}
 			>
-				{formatPrice(price)}원 결제하기
+				구글폼 변환
 			</FixedBottomCTA>
+
+			{successSheetOpen && hasUnsupportedQuestions ? (
+				<GoogleFormConversionValidationPartialBottomSheet
+					open={successSheetOpen}
+					unsupportedDetails={unsupportedDetails}
+					onClose={handleSuccessSheetEdit}
+				/>
+			) : (
+				<GoogleFormConversionValidationSuccessBottomSheet
+					open={successSheetOpen}
+					convertibleCount={convertibleCount}
+					onClose={handleSuccessSheetEdit}
+					onContinue={handleSuccessSheetContinue}
+				/>
+			)}
+
+			<GoogleFormConversionValidationErrorBottomSheet
+				open={errorMessage != null}
+				message={errorMessage ?? ""}
+				onClose={handleErrorSheetClose}
+			/>
 		</>
 	);
 };

@@ -20,19 +20,22 @@ export function trimTrailingPunctuation(url: string): string {
 }
 
 /** <a> 링크와 일반 텍스트 세그먼트 나눔 */
-export function parseSegments(html: string): SegmentWithId[] {
+export function parseSegments(
+	html: string | null | undefined,
+): SegmentWithId[] {
+	const safe = html ?? "";
 	const segments: SegmentWithId[] = [];
 	let lastIndex = 0;
 	let segId = 0;
 
 	ANCHOR_REGEX.lastIndex = 0;
-	let match = ANCHOR_REGEX.exec(html);
+	let match = ANCHOR_REGEX.exec(safe);
 	while (match !== null) {
 		if (match.index > lastIndex) {
 			segments.push({
 				id: `t-${segId++}`,
 				type: "text",
-				content: html.slice(lastIndex, match.index),
+				content: safe.slice(lastIndex, match.index),
 			});
 		}
 		const href = match[1].trim();
@@ -52,18 +55,18 @@ export function parseSegments(html: string): SegmentWithId[] {
 			});
 		}
 		lastIndex = match.index + match[0].length;
-		match = ANCHOR_REGEX.exec(html);
+		match = ANCHOR_REGEX.exec(safe);
 	}
-	if (lastIndex < html.length) {
+	if (lastIndex < safe.length) {
 		segments.push({
 			id: `t-${segId}`,
 			type: "text",
-			content: html.slice(lastIndex),
+			content: safe.slice(lastIndex),
 		});
 	}
 	return segments.length > 0
 		? segments
-		: [{ id: "t-0", type: "text", content: html }];
+		: [{ id: "t-0", type: "text", content: safe }];
 }
 
 export { URL_REGEX };

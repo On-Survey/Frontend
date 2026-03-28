@@ -1,6 +1,12 @@
 import { IAP, type IapProductListItem } from "@apps-in-toss/web-framework";
+import type { Interest } from "@features/create-survey/service/form/types";
+import type { GoogleFormConversionScreeningDraft } from "@features/google-form-conversion/types";
+import type {
+	AgeCode,
+	GenderCode,
+	RegionCode,
+} from "@features/payment/constants/payment";
 import { createGoogleFormPayment } from "@features/payment/service/payments";
-
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -14,21 +20,13 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createGoogleFormConversionRequest } from "../service/api";
+import {
+	buildGoogleFormConversionCreateRequestBody,
+	formatDateToISO,
+	getDefaultDeadline,
+} from "../utils";
 
-type QuestionPackage = "light" | "standard" | "plus";
-type RespondentCount = 50 | 100;
-
-const QUESTION_PACKAGE_DISPLAY: Record<QuestionPackage, string> = {
-	light: "라이트 (15문항 이내)",
-	standard: "스탠다드 (25문항 이내)",
-	plus: "플러스 (30문항 이내)",
-};
-
-const QUESTION_PACKAGE_COUNT: Record<QuestionPackage, number> = {
-	light: 15,
-	standard: 25,
-	plus: 30,
-};
+type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
@@ -43,19 +41,32 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 		| {
 				formLink: string;
 				email: string;
-				questionPackage: QuestionPackage;
+				formQuestionCount?: number | null;
 				respondentCount: RespondentCount;
-				deadline: string;
+				gender?: string;
+				ages?: string[];
+				/** ISO 날짜 (YYYY-MM-DD). 없으면 기본 마감일(오늘+7일) 사용 */
+				deadline?: string;
+				residence?: string;
+				interests?: Interest[];
 				price: number;
+				discountCode?: string;
+				screening?: GoogleFormConversionScreeningDraft;
 		  }
 		| undefined;
 
 	const formLink = locationState?.formLink ?? "";
 	const email = locationState?.email ?? "";
-	const questionPackage = locationState?.questionPackage ?? "light";
 	const respondentCount = locationState?.respondentCount ?? 50;
-	const deadline = locationState?.deadline ?? "";
+	const gender = locationState?.gender;
+	const ages = locationState?.ages;
+	const deadline =
+		locationState?.deadline ?? formatDateToISO(getDefaultDeadline());
+	const residence = locationState?.residence;
+	const interests = locationState?.interests ?? [];
+	const screening = locationState?.screening;
 	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
+	const discountCode = locationState?.discountCode;
 
 	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
 	useEffect(() => {
@@ -132,20 +143,29 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 						transaction_id: String(orderId),
 						value: String(price),
 						price: String(price),
-						item_name: `${QUESTION_PACKAGE_DISPLAY[questionPackage]} (${respondentCount}명)`,
+						item_name: `구글폼 변환 (${respondentCount}명)`,
 						entry_type: "form_convert",
 					});
 
-					// 구글폼 변환 신청 API 호출
 					try {
-						await createGoogleFormConversionRequest({
-							formLink,
-							questionCount: QUESTION_PACKAGE_COUNT[questionPackage],
-							targetResponseCount: respondentCount,
-							deadline,
-							requesterEmail: email,
-							price,
-						});
+						await createGoogleFormConversionRequest(
+							buildGoogleFormConversionCreateRequestBody({
+								formLink,
+								requesterEmail: email,
+								respondentCount,
+								gender: (gender ?? "ALL") as GenderCode,
+								ages:
+									ages && ages.length > 0
+										? (ages as AgeCode[])
+										: (["ALL"] as AgeCode[]),
+								residence: (residence ?? "ALL") as RegionCode,
+								deadlineIsoDate: deadline,
+								paidTotalCoin: price,
+								discountCode,
+								interests,
+								screening,
+							}),
+						);
 						console.log("구글폼 변환 신청이 완료되었습니다.");
 					} catch (error) {
 						console.error("구글폼 변환 신청 실패:", error);
@@ -154,7 +174,6 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					// 결제 완료 후 성공 페이지로 이동
 					navigate("/payment/google-form-conversion-success", {
 						state: {
-							questionPackage,
 							respondentCount,
 							price,
 							orderId,
@@ -174,8 +193,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				<Top
 					title={
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
-							{formatPrice(price)}원으로{" "}
-							{QUESTION_PACKAGE_DISPLAY[questionPackage]}를 구매할까요?
+							구글폼 변환 {formatPrice(price)}원 결제할까요?
 						</Top.TitleParagraph>
 					}
 					upper={

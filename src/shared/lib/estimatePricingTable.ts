@@ -13,9 +13,6 @@ export type EstimateTargetingPreset =
 	| "all_gender_single_age"
 	| "single_gender_single_age";
 
-const PARTICIPANT_TIERS = [50, 100, 150, 200] as const;
-export type ParticipantTier = (typeof PARTICIPANT_TIERS)[number];
-
 export const ESTIMATE_TARGETING_LABEL: Record<EstimateTargetingPreset, string> =
 	{
 		all_all: "전체 / 전체",
@@ -27,10 +24,7 @@ export const ESTIMATE_TARGETING_LABEL: Record<EstimateTargetingPreset, string> =
 	};
 
 // 응답자 수 · 문항 구간 · 타게팅 프리셋별 견적 금액 (원)
-export const ESTIMATE_PRICE_TABLE: Record<
-	ParticipantTier,
-	Record<QuestionCountRange, Record<EstimateTargetingPreset, number>>
-> = {
+export const ESTIMATE_PRICE_TABLE = {
 	50: {
 		"1~30": {
 			all_all: 18_500,
@@ -103,16 +97,170 @@ export const ESTIMATE_PRICE_TABLE: Record<
 			single_gender_single_age: 170_000,
 		},
 	},
-};
+	250: {
+		"1~30": {
+			all_all: 92_500,
+			single_gender_all_age: 97_500,
+			all_gender_multi_age: 97_500,
+			single_gender_multi_age: 102_500,
+			all_gender_single_age: 107_500,
+			single_gender_single_age: 107_500,
+		},
+		"31~50": {
+			all_all: 193_000,
+			single_gender_all_age: 198_000,
+			all_gender_multi_age: 198_000,
+			single_gender_multi_age: 203_000,
+			all_gender_single_age: 208_000,
+			single_gender_single_age: 208_000,
+		},
+	},
+	300: {
+		"1~30": {
+			all_all: 111_000,
+			single_gender_all_age: 116_000,
+			all_gender_multi_age: 116_000,
+			single_gender_multi_age: 121_000,
+			all_gender_single_age: 126_000,
+			single_gender_single_age: 126_000,
+		},
+		"31~50": {
+			all_all: 230_000,
+			single_gender_all_age: 235_000,
+			all_gender_multi_age: 235_000,
+			single_gender_multi_age: 240_000,
+			all_gender_single_age: 245_000,
+			single_gender_single_age: 245_000,
+		},
+	},
+} as const satisfies Record<
+	number,
+	Record<QuestionCountRange, Record<EstimateTargetingPreset, number>>
+>;
+
+export type ParticipantTier = keyof typeof ESTIMATE_PRICE_TABLE;
+
+// 프로모션 가격(원) — 구글폼 변환 프로모션 코드 승인 시 적용
+export const ESTIMATE_PROMO_PRICE_TABLE = {
+	50: {
+		"1~30": {
+			all_all: 14_800,
+			single_gender_all_age: 19_800,
+			all_gender_multi_age: 19_800,
+			single_gender_multi_age: 24_800,
+			all_gender_single_age: 29_800,
+			single_gender_single_age: 29_800,
+		},
+		"31~50": {
+			all_all: 36_000,
+			single_gender_all_age: 41_000,
+			all_gender_multi_age: 41_000,
+			single_gender_multi_age: 46_000,
+			all_gender_single_age: 51_000,
+			single_gender_single_age: 51_000,
+		},
+	},
+	100: {
+		"1~30": {
+			all_all: 29_600,
+			single_gender_all_age: 34_600,
+			all_gender_multi_age: 34_600,
+			single_gender_multi_age: 39_600,
+			all_gender_single_age: 44_600,
+			single_gender_single_age: 44_600,
+		},
+		"31~50": {
+			all_all: 70_200,
+			single_gender_all_age: 75_200,
+			all_gender_multi_age: 75_200,
+			single_gender_multi_age: 80_200,
+			all_gender_single_age: 85_200,
+			single_gender_single_age: 85_200,
+		},
+	},
+	150: {
+		"1~30": {
+			all_all: 44_400,
+			single_gender_all_age: 49_400,
+			all_gender_multi_age: 49_400,
+			single_gender_multi_age: 54_400,
+			all_gender_single_age: 59_400,
+			single_gender_single_age: 59_400,
+		},
+		"31~50": {
+			all_all: 105_300,
+			single_gender_all_age: 110_300,
+			all_gender_multi_age: 110_300,
+			single_gender_multi_age: 115_300,
+			all_gender_single_age: 120_300,
+			single_gender_single_age: 120_300,
+		},
+	},
+	200: {
+		"1~30": {
+			all_all: 59_200,
+			single_gender_all_age: 64_200,
+			all_gender_multi_age: 64_200,
+			single_gender_multi_age: 69_200,
+			all_gender_single_age: 74_200,
+			single_gender_single_age: 74_200,
+		},
+		"31~50": {
+			all_all: 139_500,
+			single_gender_all_age: 144_500,
+			all_gender_multi_age: 144_500,
+			single_gender_multi_age: 149_500,
+			all_gender_single_age: 154_500,
+			single_gender_single_age: 154_500,
+		},
+	},
+	250: {
+		"1~30": {
+			all_all: 74_000,
+			single_gender_all_age: 79_000,
+			all_gender_multi_age: 79_000,
+			single_gender_multi_age: 84_000,
+			all_gender_single_age: 89_000,
+			single_gender_single_age: 89_000,
+		},
+		"31~50": {
+			all_all: 173_700,
+			single_gender_all_age: 178_700,
+			all_gender_multi_age: 178_700,
+			single_gender_multi_age: 183_700,
+			all_gender_single_age: 188_700,
+			single_gender_single_age: 188_700,
+		},
+	},
+	300: {
+		"1~30": {
+			all_all: 88_800,
+			single_gender_all_age: 93_800,
+			all_gender_multi_age: 93_800,
+			single_gender_multi_age: 98_800,
+			all_gender_single_age: 103_800,
+			single_gender_single_age: 103_800,
+		},
+		"31~50": {
+			all_all: 207_000,
+			single_gender_all_age: 212_000,
+			all_gender_multi_age: 212_000,
+			single_gender_multi_age: 217_000,
+			all_gender_single_age: 222_000,
+			single_gender_single_age: 222_000,
+		},
+	},
+} as const satisfies Record<
+	number,
+	Record<QuestionCountRange, Record<EstimateTargetingPreset, number>>
+>;
 
 export const parseParticipantTier = (
 	participants: string,
 ): ParticipantTier | null => {
 	const digitsOnly = participants.replace(/[^\d]/g, "");
 	const n = digitsOnly ? parseInt(digitsOnly, 10) : 0;
-	return PARTICIPANT_TIERS.includes(n as ParticipantTier)
-		? (n as ParticipantTier)
-		: null;
+	return Object.hasOwn(ESTIMATE_PRICE_TABLE, n) ? (n as ParticipantTier) : null;
 };
 
 const isAgeTargetingAll = (ages: AgeCode[]): boolean => {
@@ -158,4 +306,15 @@ export const lookupEstimateTablePrice = (estimate: Estimate): number => {
 	const preset = getEstimateTargetingPreset(estimate);
 
 	return ESTIMATE_PRICE_TABLE[tier][q][preset] ?? 0;
+};
+
+// 프로모션 승인 시 적용할 견적서 표 기준 총액(원). 조합이 표에 없으면 0.
+export const lookupEstimatePromoTablePrice = (estimate: Estimate): number => {
+	const tier = parseParticipantTier(estimate.desiredParticipants);
+	if (!tier) return 0;
+
+	const q = estimate.questionCount;
+	const preset = getEstimateTargetingPreset(estimate);
+
+	return ESTIMATE_PROMO_PRICE_TABLE[tier][q][preset] ?? 0;
 };
