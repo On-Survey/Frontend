@@ -1,11 +1,5 @@
 import { adaptive } from "@toss/tds-colors";
-import {
-	Asset,
-	FixedBottomCTA,
-	Spacing,
-	TextArea,
-	Top,
-} from "@toss/tds-mobile";
+import { Asset, FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,37 +14,6 @@ export const GoogleFormConversionInquiryPage = () => {
 
 	return (
 		<>
-			<div className="flex items-center justify-between px-4 pt-4 pb-2">
-				<div className="flex items-center gap-2">
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW20}
-						backgroundColor="transparent"
-						name="icon-heart-mono"
-						color={adaptive.greyOpacity600}
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW20}
-						backgroundColor="transparent"
-						name="icon-dots-mono"
-						color={adaptive.greyOpacity600}
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW20}
-						backgroundColor="transparent"
-						name="icon-x-mono"
-						color={adaptive.greyOpacity600}
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-				</div>
-			</div>
-
-			<Spacing size={12} />
-
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>

@@ -10,8 +10,10 @@ import { QuestionRenderer } from "@features/survey/pages/components/QuestionRend
 import { formatDateToISO } from "@shared/lib/FormatDate";
 import { adaptive } from "@toss/tds-colors";
 import {
+	Asset,
 	Border,
 	FixedBottomCTA,
+	ListHeader,
 	Text,
 	Top,
 	WheelDatePicker,
@@ -26,8 +28,6 @@ export const GoogleFormConversionPreviewPage = () => {
 		email,
 		validationResult,
 	} = useGoogleFormConversion();
-
-	console.log("validationResult", validationResult);
 
 	const formLink = formLinkCtx?.trim() ?? "";
 
@@ -128,6 +128,37 @@ export const GoogleFormConversionPreviewPage = () => {
 	if (previewSections.length === 0) {
 		return (
 			<>
+				<button
+					type="button"
+					onClick={() => navigate("/payment/google-form-conversion-inquiry")}
+					aria-label="온서베이 운영팀에게 문의하기"
+					className="flex w-full items-center gap-2 border-0 bg-transparent px-4 py-3 text-left active:opacity-70"
+				>
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW24}
+						backgroundColor="transparent"
+						name="icon-headphone-grey-fill"
+						aria-hidden={true}
+						ratio="1/1"
+					/>
+					<Text
+						display="block"
+						color={adaptive.grey800}
+						typography="t5"
+						fontWeight="semibold"
+						className="min-w-0 flex-1"
+					>
+						온서베이 운영팀에게 문의하기
+					</Text>
+					<Asset.Icon
+						frameShape={Asset.frameShape.CleanW24}
+						backgroundColor="transparent"
+						name="icon-tech-arrow"
+						aria-hidden={true}
+						ratio="1/1"
+					/>
+				</button>
+				<Border variant="height16" />
 				<Top
 					title={
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
@@ -151,6 +182,37 @@ export const GoogleFormConversionPreviewPage = () => {
 
 	return (
 		<>
+			<button
+				type="button"
+				onClick={() => navigate("/payment/google-form-conversion-inquiry")}
+				aria-label="온서베이 운영팀에게 문의하기"
+				className="flex w-full items-center gap-2 border-0 bg-transparent px-4 py-3 text-left active:opacity-70"
+			>
+				<Asset.Icon
+					frameShape={Asset.frameShape.CleanW24}
+					backgroundColor="transparent"
+					name="icon-headphone-grey-fill"
+					aria-hidden={true}
+					ratio="1/1"
+				/>
+				<Text
+					display="block"
+					color={adaptive.grey800}
+					typography="t5"
+					fontWeight="semibold"
+					className="min-w-0 flex-1"
+				>
+					온서베이 운영팀에게 문의하기
+				</Text>
+				<Asset.Icon
+					frameShape={Asset.frameShape.CleanW24}
+					backgroundColor="transparent"
+					name="icon-tech-arrow"
+					aria-hidden={true}
+					ratio="1/1"
+				/>
+			</button>
+
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
@@ -166,45 +228,62 @@ export const GoogleFormConversionPreviewPage = () => {
 			<Border variant="height16" />
 
 			<div className="pb-24">
-				{previewSections.map((section, sectionIdx) => (
-					<div key={`${section.currSection}-${section.sectionTitle}`}>
-						{sectionIdx > 0 ? <Border variant="height16" /> : null}
-						<Top
-							title={
-								<Top.TitleParagraph size={22} color={adaptive.grey900}>
-									<TextWithLinks
-										text={section.sectionTitle}
-										variant="inline"
-										inheritLinkSize
-									/>
-								</Top.TitleParagraph>
-							}
-							subtitleBottom={
-								section.sectionDescription ? (
-									<Top.SubtitleParagraph size={15}>
+				{previewSections.map((section, sectionIdx) => {
+					const sectionNumber =
+						section.currSection >= 1 ? section.currSection : sectionIdx + 1;
+					const titleText = section.sectionTitle?.trim()
+						? `섹션 ${sectionNumber} : ${section.sectionTitle}`
+						: `섹션 ${sectionNumber}`;
+
+					return (
+						<div
+							key={`${section.currSection}-${section.sectionTitle}-${sectionIdx}`}
+						>
+							{sectionIdx > 0 ? <Border variant="height16" /> : null}
+							<ListHeader
+								title={
+									<ListHeader.TitleParagraph
+										color={adaptive.grey800}
+										fontWeight="bold"
+										typography="t5"
+									>
 										<TextWithLinks
-											text={section.sectionDescription}
+											text={titleText}
 											variant="inline"
+											inheritLinkSize
 										/>
-									</Top.SubtitleParagraph>
-								) : undefined
-							}
-						/>
-						<Border variant="height16" />
-						{section.questions.map((q) => (
-							<div key={q.questionId} data-question-id={q.questionId}>
-								<QuestionRenderer
-									question={q}
-									answer={answers[q.questionId]}
-									onAnswerChange={updateAnswer}
-									isExpanded={expandedQuestions[q.questionId] ?? true}
-									onToggleExpand={() => handleToggleExpand(q.questionId)}
-									onDatePickerOpen={() => handleDatePickerOpen(q.questionId)}
-								/>
-							</div>
-						))}
-					</div>
-				))}
+									</ListHeader.TitleParagraph>
+								}
+								titleWidthRatio={0.5}
+								description={
+									section.sectionDescription?.trim() ? (
+										<ListHeader.DescriptionParagraph>
+											<TextWithLinks
+												text={section.sectionDescription}
+												variant="inline"
+											/>
+										</ListHeader.DescriptionParagraph>
+									) : undefined
+								}
+								descriptionPosition="bottom"
+								rightAlignment="bottom"
+							/>
+
+							{section.questions.map((q) => (
+								<div key={q.questionId} data-question-id={q.questionId}>
+									<QuestionRenderer
+										question={q}
+										answer={answers[q.questionId]}
+										onAnswerChange={updateAnswer}
+										isExpanded={expandedQuestions[q.questionId] ?? true}
+										onToggleExpand={() => handleToggleExpand(q.questionId)}
+										onDatePickerOpen={() => handleDatePickerOpen(q.questionId)}
+									/>
+								</div>
+							))}
+						</div>
+					);
+				})}
 			</div>
 
 			<div
