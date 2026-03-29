@@ -106,6 +106,16 @@ export function useRequestFormContext(): RequestFormValues {
 		DEFAULT_GOOGLE_FORM_CONVERSION_REQUEST_FORM) as RequestFormValues;
 }
 
+export type RequestFormState = Pick<
+	RequestFormValues,
+	"formLink" | "email" | "emailSendAgreed"
+>;
+
+export function useRequestFormState(): RequestFormState {
+	const { formLink, email, emailSendAgreed } = useRequestFormContext();
+	return { formLink, email, emailSendAgreed };
+}
+
 export function useRequestForm(): UseFormReturn<
 	RequestFormValues,
 	unknown,

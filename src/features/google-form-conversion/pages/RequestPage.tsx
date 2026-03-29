@@ -5,15 +5,15 @@ import { useOptionsFormReset } from "@features/google-form-conversion/context/Op
 import {
 	useRequestEntryContext,
 	useRequestForm,
+	useRequestFormState,
 } from "@features/google-form-conversion/context/RequestEntryContext";
-import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import {
-	type FormRequestValidationDetail,
-	isFormRequestValidationSuccessResultItem,
-} from "@features/google-form-conversion/service/api";
+	useGoogleFormRequestValidation,
+	type ValidateRequestResult,
+} from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
+import type { FormRequestValidationDetail } from "@features/google-form-conversion/service/api";
 import type { RequestFormValues } from "@features/google-form-conversion/types";
 import {
-	getConvertibleQuestionCountFromValidation,
 	getFormRequestValidationErrorMessage,
 	isContactEmail,
 	isGoogleFormLinkUrl,
@@ -26,87 +26,87 @@ import {
 	TextField,
 	Top,
 } from "@toss/tds-mobile";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export const RequestPage = () => {
 	const navigate = useNavigate();
 
-	const { validationResult, setAfterValidation } = useRequestEntryContext();
+	const { setAfterValidation } = useRequestEntryContext();
 	const resetOptionsForm = useOptionsFormReset();
 
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();
 
-	const [successSheetOpen, setSuccessSheetOpen] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const [sheetTrigger, setSheetTrigger] = useState<
+		ValidateRequestResult["type"] | null
+	>(null);
+	const [errorMessage, setErrorMessage] = useState("");
+	const [convertibleCount, setConvertibleCount] = useState(0);
+	const [unsupportedDetails, setUnsupportedDetails] = useState<
+		FormRequestValidationDetail[]
+	>([]);
 
 	const {
 		control,
-		watch,
 		handleSubmit: rhfHandleSubmit,
 		formState: { errors },
 	} = useRequestForm();
 
-	const formLink = watch("formLink");
-	const emailSendAgreed = watch("emailSendAgreed");
+	const { formLink, email, emailSendAgreed } = useRequestFormState();
 
 	const onSubmit = useCallback(
 		async (data: RequestFormValues) => {
 			try {
-				const res = await validateRequest({
+				setUnsupportedDetails([]);
+				setConvertibleCount(0);
+				setErrorMessage("");
+				setSheetTrigger(null);
+
+				const validation = await validateRequest({
 					formLink: data.formLink.trim(),
 					requesterEmail: data.email.trim(),
 				});
-				if (!res.success) {
-					setErrorMessage(res.message || "검증에 실패했어요");
+
+				if (validation.type === "error") {
+					setErrorMessage(validation.message);
+					setSheetTrigger("error");
 					return;
 				}
+
 				setAfterValidation({
 					formLink: data.formLink.trim(),
 					email: data.email.trim(),
-					validationResult: res,
+					validationResult: validation.response,
 				});
+				setConvertibleCount(validation.convertibleCount);
+				if (validation.type === "partial_success") {
+					setUnsupportedDetails(validation.unsupportedDetails);
+				}
 				resetOptionsForm();
-				setSuccessSheetOpen(true);
+				setSheetTrigger(validation.type);
 			} catch (e) {
 				setErrorMessage(getFormRequestValidationErrorMessage(e));
+				setSheetTrigger("error");
 			}
 		},
 		[validateRequest, setAfterValidation, resetOptionsForm],
 	);
 
 	const handleSuccessSheetContinue = useCallback(() => {
-		setSuccessSheetOpen(false);
+		setSheetTrigger(null);
 		navigate("/payment/google-form-conversion-options");
 	}, [navigate]);
 
 	const handleSuccessSheetEdit = useCallback(() => {
-		setSuccessSheetOpen(false);
+		setSheetTrigger(null);
 	}, []);
 
 	const handleErrorSheetClose = useCallback(() => {
-		setErrorMessage(null);
+		setErrorMessage("");
+		setSheetTrigger(null);
 	}, []);
-
-	const convertibleCount = validationResult
-		? getConvertibleQuestionCountFromValidation(validationResult)
-		: 0;
-
-	const unsupportedDetails = useMemo(() => {
-		if (!validationResult) {
-			return [] as FormRequestValidationDetail[];
-		}
-		const details: FormRequestValidationDetail[] = [];
-		for (const item of validationResult.result.results) {
-			if (!isFormRequestValidationSuccessResultItem(item)) continue;
-			details.push(...item.inconvertibleDetails);
-		}
-		return details;
-	}, [validationResult]);
-
-	const hasUnsupportedQuestions = unsupportedDetails.length > 0;
 
 	return (
 		<>
@@ -222,32 +222,36 @@ export const RequestPage = () => {
 					!emailSendAgreed ||
 					!formLink.trim() ||
 					!isGoogleFormLinkUrl(formLink.trim()) ||
-					!isContactEmail(watch("email") ?? "")
+					!isContactEmail(email ?? "")
 				}
 			>
 				구글폼 변환
 			</FixedBottomCTA>
 
-			{successSheetOpen && hasUnsupportedQuestions ? (
+			{sheetTrigger === "partial_success" && (
 				<ValidationPartialBottomSheet
-					open={successSheetOpen}
+					open={true}
 					unsupportedDetails={unsupportedDetails}
 					onClose={handleSuccessSheetEdit}
 				/>
-			) : (
+			)}
+
+			{sheetTrigger === "success" && (
 				<ValidationSuccessBottomSheet
-					open={successSheetOpen}
+					open={true}
 					convertibleCount={convertibleCount}
 					onClose={handleSuccessSheetEdit}
 					onContinue={handleSuccessSheetContinue}
 				/>
 			)}
 
-			<ValidationErrorBottomSheet
-				open={errorMessage != null}
-				message={errorMessage ?? ""}
-				onClose={handleErrorSheetClose}
-			/>
+			{sheetTrigger === "error" && (
+				<ValidationErrorBottomSheet
+					open={true}
+					message={errorMessage}
+					onClose={handleErrorSheetClose}
+				/>
+			)}
 		</>
 	);
 };
