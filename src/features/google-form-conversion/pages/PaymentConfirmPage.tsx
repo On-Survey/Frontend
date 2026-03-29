@@ -45,7 +45,6 @@ export const PaymentConfirmPage = () => {
 				respondentCount: RespondentCount;
 				gender?: string;
 				ages?: string[];
-				/** ISO 날짜 (YYYY-MM-DD). 없으면 기본 마감일(오늘+7일) 사용 */
 				deadline?: string;
 				residence?: string;
 				interests?: Interest[];
@@ -103,7 +102,6 @@ export const PaymentConfirmPage = () => {
 		}
 
 		fetchProducts();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [price]);
 
 	const handlePayment = () => {
@@ -135,7 +133,6 @@ export const PaymentConfirmPage = () => {
 			onEvent: async (event) => {
 				if (event.type === "success") {
 					const { orderId } = event.data;
-					console.log("인앱결제에 성공했어요. 주문 번호:", orderId);
 
 					pushGtmEvent({
 						event: "purchase",

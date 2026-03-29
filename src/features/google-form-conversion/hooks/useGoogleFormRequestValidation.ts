@@ -35,6 +35,8 @@ export type ValidateRequestResult =
 const buildValidationSummary = (
 	response: FormRequestValidationResponse,
 ): {
+	totalCount: number;
+	errorMessages: string[];
 	convertibleCount: number;
 	unsupportedDetails: FormRequestValidationDetail[];
 } => {
@@ -44,17 +46,27 @@ const buildValidationSummary = (
 	}
 
 	const unsupportedDetails: FormRequestValidationDetail[] = [];
+	const errorMessages: string[] = [];
+	let totalCount = 0;
 	let convertibleCount = 0;
 
 	for (const item of results) {
-		if (!isFormRequestValidationSuccessResultItem(item)) continue;
-		convertibleCount += item.convertible;
-		if (Array.isArray(item.inconvertibleDetails)) {
-			unsupportedDetails.push(...item.inconvertibleDetails);
+		if (typeof item.message === "string" && item.message.trim().length > 0) {
+			errorMessages.push(item.message.trim());
+		}
+
+		if (isFormRequestValidationSuccessResultItem(item)) {
+			totalCount += item.totalCount;
+			convertibleCount += item.convertible;
+			if (Array.isArray(item.inconvertibleDetails)) {
+				unsupportedDetails.push(...item.inconvertibleDetails);
+			}
 		}
 	}
 
 	return {
+		totalCount,
+		errorMessages,
 		convertibleCount,
 		unsupportedDetails,
 	};
@@ -75,8 +87,23 @@ export const useGoogleFormRequestValidation = () => {
 				};
 			}
 
-			const { convertibleCount, unsupportedDetails } =
-				buildValidationSummary(response);
+			const {
+				totalCount,
+				errorMessages,
+				convertibleCount,
+				unsupportedDetails,
+			} = buildValidationSummary(response);
+
+			if (totalCount === 0) {
+				return {
+					type: "error",
+					response,
+					message:
+						errorMessages.length > 0
+							? errorMessages.join(" / ")
+							: response.message || "검증 가능한 문항을 찾지 못했어요",
+				};
+			}
 
 			const hasUnsupportedQuestions = unsupportedDetails.length > 0;
 
