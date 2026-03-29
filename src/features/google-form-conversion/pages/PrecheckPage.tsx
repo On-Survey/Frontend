@@ -1,3 +1,4 @@
+import { useIapProductByPrice } from "@features/google-form-conversion/hooks/useIapProductByPrice";
 import { useModal } from "@shared/hooks/UseToggle";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
@@ -17,6 +18,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 export const PrecheckPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const locationState = (location.state ?? {}) as {
+		price?: number | string;
+		[key: string]: unknown;
+	};
+	const price = Number(String(locationState.price ?? 0).replace(/[^\d]/g, ""));
+	const {
+		selectedProduct,
+		isLoading: isProductLoading,
+		error: productError,
+	} = useIapProductByPrice(price);
 	const [isAgreed, setIsAgreed] = useState(false);
 	const {
 		isOpen: isConsentBottomSheetOpen,
@@ -25,6 +36,7 @@ export const PrecheckPage = () => {
 	} = useModal(false);
 
 	const handleNext = () => {
+		if (isProductLoading || !selectedProduct) return;
 		pushGtmEvent({
 			event: "form_notice_button_click",
 			pagePath: "/payment/google-form-conversion-check",
@@ -37,15 +49,18 @@ export const PrecheckPage = () => {
 	};
 
 	const handleConsentConfirm = () => {
+		if (!selectedProduct) return;
 		pushGtmEvent({
 			event: "form_agreement_click",
 			pagePath: "/payment/google-form-conversion-check",
 		});
 		handleConsentBottomSheetClose();
 
-		const locationState = location.state;
 		navigate("/payment/google-form-conversion-payment-confirm", {
-			state: locationState,
+			state: {
+				...locationState,
+				selectedProduct,
+			},
 		});
 	};
 
@@ -94,7 +109,17 @@ export const PrecheckPage = () => {
 				/>
 			</Stepper>
 
-			<FixedBottomCTA loading={false} onClick={handleNext}>
+			<FixedBottomCTA
+				loading={isProductLoading}
+				disabled={isProductLoading || !selectedProduct}
+				onClick={handleNext}
+				bottomAccessory={
+					productError ??
+					(!selectedProduct && !isProductLoading
+						? "결제 가능한 상품을 준비 중이에요"
+						: undefined)
+				}
+			>
 				다음
 			</FixedBottomCTA>
 
@@ -123,7 +148,10 @@ export const PrecheckPage = () => {
 							</Button>
 						}
 						rightButton={
-							<Button disabled={!isAgreed} onClick={handleConsentConfirm}>
+							<Button
+								disabled={!isAgreed || isProductLoading || !selectedProduct}
+								onClick={handleConsentConfirm}
+							>
 								다음
 							</Button>
 						}

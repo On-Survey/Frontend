@@ -17,7 +17,6 @@ import {
 	Post,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createRequest } from "../service/api";
 import {
@@ -34,8 +33,6 @@ const formatPrice = (price: number) =>
 export const PaymentConfirmPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const [selectedProduct, setSelectedProduct] =
-		useState<IapProductListItem | null>(null);
 
 	const locationState = location.state as
 		| {
@@ -51,6 +48,7 @@ export const PaymentConfirmPage = () => {
 				price: number;
 				discountCode?: string;
 				screening?: ScreeningDraft;
+				selectedProduct?: IapProductListItem;
 		  }
 		| undefined;
 
@@ -66,43 +64,7 @@ export const PaymentConfirmPage = () => {
 	const screening = locationState?.screening;
 	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
 	const discountCode = locationState?.discountCode;
-
-	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
-	useEffect(() => {
-		async function fetchProducts() {
-			try {
-				const response = await IAP.getProductItemList();
-				const products = response?.products ?? [];
-
-				const matchingProduct = products.find((product) => {
-					const productPrice = parseInt(
-						product.displayAmount.replace(/[^\d]/g, ""),
-						10,
-					);
-					return productPrice === price;
-				});
-
-				if (matchingProduct) {
-					setSelectedProduct(matchingProduct);
-				} else {
-					const sortedProducts = [...products].sort((a, b) => {
-						const priceA = parseInt(a.displayAmount.replace(/[^\d]/g, ""), 10);
-						const priceB = parseInt(b.displayAmount.replace(/[^\d]/g, ""), 10);
-						const diffA = Math.abs(priceA - price);
-						const diffB = Math.abs(priceB - price);
-						return diffA - diffB;
-					});
-					if (sortedProducts.length > 0) {
-						setSelectedProduct(sortedProducts[0]);
-					}
-				}
-			} catch (error) {
-				console.error("상품 목록을 가져오는 데 실패했어요:", error);
-			}
-		}
-
-		fetchProducts();
-	}, [price]);
+	const selectedProduct = locationState?.selectedProduct ?? null;
 
 	const handlePayment = () => {
 		pushGtmEvent({
@@ -229,7 +191,16 @@ export const PaymentConfirmPage = () => {
 					<Paragraph.Text></Paragraph.Text>
 				</Post.Paragraph>
 			</BottomInfo>
-			<FixedBottomCTA loading={false} onClick={handlePayment}>
+			<FixedBottomCTA
+				loading={false}
+				disabled={!selectedProduct}
+				onClick={handlePayment}
+				bottomAccessory={
+					!selectedProduct
+						? "결제 가능한 상품 정보가 없어요. 다시 시도해주세요"
+						: undefined
+				}
+			>
 				결제하기
 			</FixedBottomCTA>
 		</>
