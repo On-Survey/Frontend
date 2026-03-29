@@ -112,7 +112,7 @@ export const SectionBasedSurvey = () => {
 	// 현재 상태에서 다음 섹션 계산
 	const actualNextSection = calculateNextSection(
 		questions,
-		answers,
+		answersRef.current,
 		currentSection,
 		nextSectionFromApi,
 	);
@@ -135,6 +135,7 @@ export const SectionBasedSurvey = () => {
 	>(null);
 	const [datePickerValue, setDatePickerValue] = useState<Date | null>(null);
 	const datePickerContainerRef = useRef<HTMLDivElement | null>(null);
+	const sectionActionInFlightRef = useRef(false);
 
 	// WheelDatePicker 트리거 자동 클릭
 	useEffect(() => {
@@ -150,6 +151,7 @@ export const SectionBasedSurvey = () => {
 	}, [selectedDateQuestionId]);
 
 	const [submitting, setSubmitting] = useState(false);
+	const [nextLoading, setNextLoading] = useState(false);
 
 	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
 
@@ -223,7 +225,7 @@ export const SectionBasedSurvey = () => {
 	};
 
 	const validateSection = (): Record<number, string> => {
-		const errors = validateSectionAnswers(questions, answers);
+		const errors = validateSectionAnswers(questions, answersRef.current);
 		setQuestionErrors(errors);
 		setExpandedQuestions((p) => {
 			const next = { ...p };
@@ -294,6 +296,7 @@ export const SectionBasedSurvey = () => {
 
 	const handleNext = async () => {
 		if (!surveyId) return;
+		if (sectionActionInFlightRef.current) return;
 
 		pushGtmEvent({
 			event: "survey_progress_button_click",
@@ -314,8 +317,28 @@ export const SectionBasedSurvey = () => {
 			return;
 		}
 
+		sectionActionInFlightRef.current = true;
+		setNextLoading(true);
 		try {
 			await submitCurrentSectionAnswers();
+
+			const nextSection = calculateNextSection(
+				questions,
+				answersRef.current,
+				currentSection,
+				nextSectionFromApi,
+			);
+
+			// 섹션 이동 경로에 다음 섹션 추가
+			setSectionHistory((prev) => {
+				if (prev.length === 0 || prev[prev.length - 1] !== currentSection) {
+					return [...prev, currentSection, nextSection];
+				}
+				return [...prev, nextSection];
+			});
+
+			setCurrentSection(nextSection);
+			window.scrollTo({ top: 0, behavior: "smooth" });
 		} catch (error) {
 			console.error("설문 응답 저장 실패:", error);
 			openToast("설문 제출을 실패했어요 다시 시도해주세요", {
@@ -323,26 +346,10 @@ export const SectionBasedSurvey = () => {
 				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
 				higherThanCTA: true,
 			});
-			return;
+		} finally {
+			sectionActionInFlightRef.current = false;
+			setNextLoading(false);
 		}
-
-		const nextSection = calculateNextSection(
-			questions,
-			answers,
-			currentSection,
-			nextSectionFromApi,
-		);
-
-		// 섹션 이동 경로에 다음 섹션 추가
-		setSectionHistory((prev) => {
-			if (prev.length === 0 || prev[prev.length - 1] !== currentSection) {
-				return [...prev, currentSection, nextSection];
-			}
-			return [...prev, nextSection];
-		});
-
-		setCurrentSection(nextSection);
-		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
 	const handleSubmit = async () => {
@@ -371,6 +378,8 @@ export const SectionBasedSurvey = () => {
 		});
 	};
 	const handleSubmitClick = async () => {
+		if (sectionActionInFlightRef.current) return;
+
 		if (surveyId) {
 			pushGtmEvent({
 				event: "survey_progress_button_click",
@@ -386,8 +395,9 @@ export const SectionBasedSurvey = () => {
 			return;
 		}
 
+		sectionActionInFlightRef.current = true;
+		setSubmitting(true);
 		try {
-			setSubmitting(true);
 			await submitCurrentSectionAnswers();
 			await handleSubmit();
 		} catch (error) {
@@ -398,6 +408,7 @@ export const SectionBasedSurvey = () => {
 				higherThanCTA: true,
 			});
 		} finally {
+			sectionActionInFlightRef.current = false;
 			setSubmitting(false);
 		}
 	};
@@ -469,11 +480,21 @@ export const SectionBasedSurvey = () => {
 				}
 				rightButton={
 					isLastSection ? (
-						<CTAButton loading={submitting} onClick={handleSubmitClick}>
+						<CTAButton
+							disabled={submitting}
+							loading={submitting}
+							onClick={handleSubmitClick}
+						>
 							제출
 						</CTAButton>
 					) : (
-						<CTAButton onClick={handleNext}>다음</CTAButton>
+						<CTAButton
+							disabled={nextLoading}
+							loading={nextLoading}
+							onClick={handleNext}
+						>
+							다음
+						</CTAButton>
 					)
 				}
 			/>
