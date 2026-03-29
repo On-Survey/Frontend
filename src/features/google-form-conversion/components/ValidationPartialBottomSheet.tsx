@@ -31,8 +31,8 @@ export const ValidationPartialBottomSheet = ({
 			header={
 				<BottomSheet.Header>
 					{unsupportedCount > 0
-						? `변환이 안된 문항이 ${unsupportedCount}개 있어요`
-						: "변환이 안된 문항이 있어요"}
+						? `변환이 안 된 문항이 ${unsupportedCount}개 있어요`
+						: "변환이 안 된 문항이 있어요"}
 				</BottomSheet.Header>
 			}
 			headerDescription={

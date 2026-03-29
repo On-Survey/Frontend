@@ -228,7 +228,7 @@ export const RequestPage = () => {
 				loading={isValidating}
 				onClick={rhfHandleSubmit(onSubmit)}
 				bottomAccessory={
-					isValidating ? "최대 10초까지 소요 될 수 있어요" : undefined
+					isValidating ? "최대 10초까지 소요될 수 있어요" : undefined
 				}
 				disabled={
 					isValidating ||
