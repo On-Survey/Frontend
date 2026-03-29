@@ -13,7 +13,7 @@ export type EstimateTargetingPreset =
 	| "all_gender_single_age"
 	| "single_gender_single_age";
 
-const PARTICIPANT_TIERS = [50, 100, 150, 200] as const;
+export const PARTICIPANT_TIERS = [50, 100, 150, 200] as const;
 export type ParticipantTier = (typeof PARTICIPANT_TIERS)[number];
 
 export const ESTIMATE_TARGETING_LABEL: Record<EstimateTargetingPreset, string> =
@@ -105,6 +105,20 @@ export const ESTIMATE_PRICE_TABLE: Record<
 	},
 };
 
+/** 구글폼 변환(all_all) 견적 공급가(원) — 앱·견적 안내와 동일 */
+export const GOOGLE_FORM_CONVERSION_IAP_EXPECTED_PRICES: readonly number[] =
+	PARTICIPANT_TIERS.flatMap((tier) =>
+		(["1~30", "31~50"] as const).map(
+			(q) => ESTIMATE_PRICE_TABLE[tier][q].all_all,
+		),
+	);
+
+/** 인앱 스토어 표시용 판매가(원, 공급가×1.1 반올림) — `displayAmount`와 맞출 것 */
+export const GOOGLE_FORM_CONVERSION_IAP_RETAIL_PRICES: readonly number[] =
+	GOOGLE_FORM_CONVERSION_IAP_EXPECTED_PRICES.map((won) =>
+		Math.round(won * 1.1),
+	);
+
 export const parseParticipantTier = (
 	participants: string,
 ): ParticipantTier | null => {
@@ -158,4 +172,20 @@ export const lookupEstimateTablePrice = (estimate: Estimate): number => {
 	const preset = getEstimateTargetingPreset(estimate);
 
 	return ESTIMATE_PRICE_TABLE[tier][q][preset] ?? 0;
+};
+
+/** 구글폼 변환 신청: 견적표와 동일 금액(성별·연령 전체 / all_all) */
+export const getGoogleFormConversionTablePrice = (
+	participantTier: ParticipantTier,
+	questionRange: QuestionCountRange,
+): number => {
+	const estimate: Estimate = {
+		date: null,
+		location: "ALL",
+		ages: ["ALL"],
+		gender: "ALL",
+		desiredParticipants: String(participantTier),
+		questionCount: questionRange,
+	};
+	return lookupEstimateTablePrice(estimate);
 };

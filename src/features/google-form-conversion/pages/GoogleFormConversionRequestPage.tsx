@@ -1,4 +1,13 @@
 import { DateSelectBottomSheet } from "@features/payment/components/payment";
+import {
+	DESIRED_PARTICIPANTS,
+	QUESTION_COUNT_OPTIONS,
+	type QuestionCountRange,
+} from "@features/payment/constants/payment";
+import {
+	getGoogleFormConversionTablePrice,
+	type ParticipantTier,
+} from "@shared/lib/estimatePricingTable";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { validateEmail } from "@shared/lib/validators";
 import { adaptive } from "@toss/tds-colors";
@@ -12,54 +21,25 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-type QuestionPackage = "light" | "standard" | "plus";
-type RespondentCount = 50 | 100;
-
-const QUESTION_PACKAGE_OPTIONS: {
+const QUESTION_RANGE_OPTIONS: {
 	label: string;
-	value: QuestionPackage;
+	value: QuestionCountRange;
 	display: string;
-}[] = [
-	{
-		label: "라이트 (15문항 이내)",
-		value: "light",
-		display: "라이트 (15문항 이내)",
-	},
-	{
-		label: "스탠다드 (25문항 이내)",
-		value: "standard",
-		display: "스탠다드 (25문항 이내)",
-	},
-	{
-		label: "플러스 (30문항 이내)",
-		value: "plus",
-		display: "플러스 (30문항 이내)",
-	},
-];
+}[] = QUESTION_COUNT_OPTIONS.filter((o) => !o.disabled).map((o) => ({
+	label: o.name,
+	value: o.value,
+	display: o.name,
+}));
 
 const RESPONDENT_OPTIONS: {
 	label: string;
-	value: RespondentCount;
+	value: ParticipantTier;
 	display: string;
-}[] = [
-	{ label: "50명", value: 50, display: "50명" },
-	{ label: "100명", value: 100, display: "100명" },
-];
-
-const PRICE_TABLE: Record<QuestionPackage, Record<RespondentCount, number>> = {
-	light: {
-		50: 10890,
-		100: 19690,
-	},
-	standard: {
-		50: 16390,
-		100: 29590,
-	},
-	plus: {
-		50: 21890,
-		100: 39490,
-	},
-};
+}[] = DESIRED_PARTICIPANTS.filter((o) => !o.disabled).map((o) => ({
+	label: o.name,
+	value: Number(o.value) as ParticipantTier,
+	display: o.name,
+}));
 
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
@@ -92,12 +72,12 @@ export const GoogleFormConversionRequestPage = () => {
 	const [isFormLinkTouched, setIsFormLinkTouched] = useState(false);
 	const [email, setEmail] = useState("");
 	const [isEmailTouched, setIsEmailTouched] = useState(false);
-	const [questionPackage, setQuestionPackage] =
-		useState<QuestionPackage>("light");
-	const [respondentCount, setRespondentCount] = useState<RespondentCount>(50);
+	const [questionCountRange, setQuestionCountRange] =
+		useState<QuestionCountRange>("1~30");
+	const [respondentCount, setRespondentCount] = useState<ParticipantTier>(50);
 	const [deadline, setDeadline] = useState<Date>(getDefaultDeadline());
 
-	const [isQuestionPackageSheetOpen, setIsQuestionPackageSheetOpen] =
+	const [isQuestionRangeSheetOpen, setIsQuestionRangeSheetOpen] =
 		useState(false);
 	const [isRespondentSheetOpen, setIsRespondentSheetOpen] = useState(false);
 
@@ -113,8 +93,9 @@ export const GoogleFormConversionRequestPage = () => {
 	const isValidEmail = useMemo(() => validateEmail(email), [email]);
 
 	const price = useMemo(
-		() => PRICE_TABLE[questionPackage][respondentCount],
-		[questionPackage, respondentCount],
+		() =>
+			getGoogleFormConversionTablePrice(respondentCount, questionCountRange),
+		[respondentCount, questionCountRange],
 	);
 
 	const handleSubmit = () => {
@@ -126,7 +107,7 @@ export const GoogleFormConversionRequestPage = () => {
 			state: {
 				formLink,
 				email,
-				questionPackage,
+				questionCountRange,
 				respondentCount,
 				deadlineText: formatDate(deadline),
 				deadline: formatDateToISO(deadline),
@@ -200,8 +181,8 @@ export const GoogleFormConversionRequestPage = () => {
 					hasError={false}
 					label="설문 문항 수"
 					value={
-						QUESTION_PACKAGE_OPTIONS.find(
-							(option) => option.value === questionPackage,
+						QUESTION_RANGE_OPTIONS.find(
+							(option) => option.value === questionCountRange,
 						)?.display ?? ""
 					}
 					placeholder="설문 문항 수"
@@ -214,7 +195,7 @@ export const GoogleFormConversionRequestPage = () => {
 							aria-hidden={true}
 						/>
 					}
-					onClick={() => setIsQuestionPackageSheetOpen(true)}
+					onClick={() => setIsQuestionRangeSheetOpen(true)}
 				/>
 
 				<TextField.Button
@@ -245,21 +226,21 @@ export const GoogleFormConversionRequestPage = () => {
 				header={
 					<BottomSheet.Header>설문 문항 수를 선택해주세요</BottomSheet.Header>
 				}
-				open={isQuestionPackageSheetOpen}
-				onClose={() => setIsQuestionPackageSheetOpen(false)}
+				open={isQuestionRangeSheetOpen}
+				onClose={() => setIsQuestionRangeSheetOpen(false)}
 				cta={[]}
 			>
 				<div className="mb-4">
 					<BottomSheet.Select
-						value={questionPackage}
-						options={QUESTION_PACKAGE_OPTIONS.map((option) => ({
+						value={questionCountRange}
+						options={QUESTION_RANGE_OPTIONS.map((option) => ({
 							name: option.label,
 							value: option.value,
-							hideUnCheckedCheckBox: option.value !== questionPackage,
+							hideUnCheckedCheckBox: option.value !== questionCountRange,
 						}))}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							const value = e.target.value as QuestionPackage;
-							setQuestionPackage(value);
+							const value = e.target.value as QuestionCountRange;
+							setQuestionCountRange(value);
 						}}
 					/>
 				</div>
@@ -282,7 +263,7 @@ export const GoogleFormConversionRequestPage = () => {
 							hideUnCheckedCheckBox: option.value !== respondentCount,
 						}))}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							const value = Number(e.target.value) as RespondentCount;
+							const value = Number(e.target.value) as ParticipantTier;
 							setRespondentCount(value);
 						}}
 					/>
