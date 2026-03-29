@@ -24,7 +24,9 @@ export const InquiryPage = () => {
 	const helpRequest = useSurveyHelpRequestMutation();
 
 	const email = emailFromFlow?.trim() ?? "";
-	const name = userInfo?.result?.name?.trim() ?? "";
+	const profileName = userInfo?.result?.name?.trim() ?? "";
+	const fallbackNameFromEmail = email.split("@")[0]?.trim() ?? "";
+	const name = profileName || fallbackNameFromEmail || "사용자";
 	const formLink = formLinkFromFlow?.trim() ?? "";
 
 	const rejectionReasons = useMemo(() => {
