@@ -203,8 +203,7 @@ export const OptionsPage = () => {
 						const promoPrice = lookupEstimatePromoTablePrice(promoEstimate);
 						const selectedProduct = await findProductByPrice(promoPrice);
 						if (!selectedProduct?.sku) return;
-						setValue("selectedProductSku", selectedProduct.sku);
-						setValue("checkoutPrice", promoPrice);
+						setValue("selectedProduct", selectedProduct);
 						navigate("/payment/google-form-conversion-check");
 						return;
 					}
@@ -217,8 +216,7 @@ export const OptionsPage = () => {
 
 			const selectedProduct = await findProductByPrice(price);
 			if (!selectedProduct?.sku) return;
-			setValue("selectedProductSku", selectedProduct.sku);
-			setValue("checkoutPrice", price);
+			setValue("selectedProduct", selectedProduct);
 			navigate("/payment/google-form-conversion-check");
 		},
 		[

@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 export const PrecheckPage = () => {
 	const navigate = useNavigate();
-	const { selectedProductSku } = useOptionsFormContext();
+	const { selectedProduct } = useOptionsFormContext();
 	const [isAgreed, setIsAgreed] = useState(false);
 	const {
 		isOpen: isConsentBottomSheetOpen,
@@ -26,7 +26,7 @@ export const PrecheckPage = () => {
 	} = useModal(false);
 
 	const handleNext = () => {
-		if (!selectedProductSku) return;
+		if (!selectedProduct) return;
 		pushGtmEvent({
 			event: "form_notice_button_click",
 			pagePath: "/payment/google-form-conversion-check",
@@ -39,7 +39,7 @@ export const PrecheckPage = () => {
 	};
 
 	const handleConsentConfirm = () => {
-		if (!selectedProductSku) return;
+		if (!selectedProduct) return;
 		pushGtmEvent({
 			event: "form_agreement_click",
 			pagePath: "/payment/google-form-conversion-check",
@@ -96,10 +96,10 @@ export const PrecheckPage = () => {
 
 			<FixedBottomCTA
 				loading={false}
-				disabled={!selectedProductSku}
+				disabled={!selectedProduct}
 				onClick={handleNext}
 				bottomAccessory={
-					!selectedProductSku
+					!selectedProduct
 						? "옵션 페이지에서 결제하기를 눌러 상품 정보를 먼저 준비해주세요"
 						: undefined
 				}
@@ -133,7 +133,7 @@ export const PrecheckPage = () => {
 						}
 						rightButton={
 							<Button
-								disabled={!isAgreed || !selectedProductSku}
+								disabled={!isAgreed || !selectedProduct}
 								onClick={handleConsentConfirm}
 							>
 								다음

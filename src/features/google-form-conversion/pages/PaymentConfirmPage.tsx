@@ -32,8 +32,8 @@ const formatPrice = (price: number) =>
 
 export const PaymentConfirmPage = () => {
 	const navigate = useNavigate();
-	const { selectedProductSku } = useOptionsFormContext();
 	const {
+		selectedProduct,
 		respondentCount,
 		gender,
 		ages,
@@ -42,11 +42,12 @@ export const PaymentConfirmPage = () => {
 		screening,
 		promotionCode,
 		verifiedPromotionCode,
-		checkoutPrice,
 	} = useOptionsFormContext();
 	const { formLink, email } = useRequestFormContext();
 	const deadline = formatDateToISO(getDefaultDeadline());
-	const price = checkoutPrice ?? 0;
+	const price = selectedProduct
+		? Number(selectedProduct.displayAmount.replace(/[^\d]/g, ""))
+		: 0;
 	const discountCode =
 		verifiedPromotionCode !== null &&
 		verifiedPromotionCode === (promotionCode ?? "").trim()
@@ -61,18 +62,18 @@ export const PaymentConfirmPage = () => {
 			event: "form_coin_charge",
 			pagePath: "/payment/google-form-conversion-payment-confirm",
 		});
-		if (!selectedProductSku) {
+		if (!selectedProduct?.sku) {
 			console.error("상품 정보가 없습니다");
 			return;
 		}
-		if (!checkoutPrice || checkoutPrice <= 0) {
+		if (price <= 0) {
 			console.error("결제 금액 정보가 없습니다");
 			return;
 		}
 
 		IAP.createOneTimePurchaseOrder({
 			options: {
-				sku: selectedProductSku,
+				sku: selectedProduct.sku,
 				processProductGrant: async ({ orderId }) => {
 					try {
 						await createGoogleFormPayment({
@@ -187,12 +188,12 @@ export const PaymentConfirmPage = () => {
 			</BottomInfo>
 			<FixedBottomCTA
 				loading={false}
-				disabled={!selectedProductSku || !checkoutPrice || checkoutPrice <= 0}
+				disabled={!selectedProduct || price <= 0}
 				onClick={handlePayment}
 				bottomAccessory={
-					!selectedProductSku
+					!selectedProduct
 						? "결제 가능한 상품 정보가 없어요. 옵션 페이지에서 다시 시도해주세요"
-						: !checkoutPrice || checkoutPrice <= 0
+						: price <= 0
 							? "결제 금액 정보가 없어요. 옵션 페이지에서 다시 시도해주세요"
 							: undefined
 				}

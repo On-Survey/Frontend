@@ -1,3 +1,4 @@
+import type { IapProductListItem } from "@apps-in-toss/web-framework";
 import type {
 	AgeCode,
 	GenderCode,
@@ -100,16 +101,13 @@ export type OptionsFormValues = OptionsDraft & {
 	screening: ScreeningDraft | null;
 	/** 프로모션 코드 인증 성공 상태 (옵션/스크리닝 페이지 왕복 시 유지) */
 	verifiedPromotionCode: string | null;
-	/** 결제 가능한 IAP 상품 SKU (옵션 페이지 결제 버튼 클릭 시점에 확정) */
-	selectedProductSku: string | null;
-	/** 결제 확인 단계에서 사용할 최종 결제 금액 */
-	checkoutPrice: number | null;
+	/** 결제 가능한 IAP 상품 (옵션 페이지 결제 버튼 클릭 시점에 확정) */
+	selectedProduct: IapProductListItem | null;
 };
 
 export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_FORM: OptionsFormValues = {
 	...DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT,
 	screening: null,
 	verifiedPromotionCode: null,
-	selectedProductSku: null,
-	checkoutPrice: null,
+	selectedProduct: null,
 };
