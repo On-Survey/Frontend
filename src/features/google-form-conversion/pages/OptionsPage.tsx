@@ -206,10 +206,11 @@ export const OptionsPage = () => {
 						};
 
 						const promoPrice = lookupEstimatePromoTablePrice(promoEstimate);
-						navigate("/payment/google-form-conversion-promo-success", {
+						navigate("/payment/google-form-conversion-check", {
 							state: {
 								formLink: data.formLink,
 								email: data.email,
+								formQuestionCount,
 								respondentCount: data.respondentCount,
 								gender: data.gender,
 								ages: data.ages,
@@ -217,7 +218,7 @@ export const OptionsPage = () => {
 								...(interestsPayload && { interests: interestsPayload }),
 								deadline: formatDateToISO(getDefaultDeadline()),
 								price: promoPrice,
-								promotionCode: code,
+								discountCode: code,
 								...(screeningFromForm && { screening: screeningFromForm }),
 							},
 						});
