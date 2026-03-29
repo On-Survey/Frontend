@@ -1,5 +1,4 @@
 import type { FormRequestValidationResponse } from "@features/google-form-conversion/service/api";
-import type { GoogleFormConversionScreeningDraft } from "@features/google-form-conversion/types";
 import {
 	createContext,
 	type ReactNode,
@@ -13,14 +12,12 @@ export type GoogleFormConversionContextValue = {
 	formLink: string | null;
 	email: string | null;
 	validationResult: FormRequestValidationResponse | null;
-	screening: GoogleFormConversionScreeningDraft | null;
-	/** 검증 API 성공 직후 폼 링크·이메일·검증 결과 저장 (스크리닝 초기화) */
+	/** 검증 API 성공 직후 폼 링크·이메일·검증 결과 저장 */
 	setAfterValidation: (payload: {
 		formLink: string;
 		email: string;
 		validationResult: FormRequestValidationResponse;
 	}) => void;
-	setScreening: (screening: GoogleFormConversionScreeningDraft | null) => void;
 	/** 플로우 진입 시 또는 완료 후 초기화 */
 	resetFlow: () => void;
 };
@@ -37,8 +34,6 @@ export function GoogleFormConversionProvider({
 	const [email, setEmail] = useState<string | null>(null);
 	const [validationResult, setValidationResult] =
 		useState<FormRequestValidationResponse | null>(null);
-	const [screening, setScreeningState] =
-		useState<GoogleFormConversionScreeningDraft | null>(null);
 
 	const setAfterValidation = useCallback(
 		(payload: {
@@ -49,14 +44,6 @@ export function GoogleFormConversionProvider({
 			setFormLink(payload.formLink.trim());
 			setEmail(payload.email.trim());
 			setValidationResult(payload.validationResult);
-			setScreeningState(null);
-		},
-		[],
-	);
-
-	const setScreening = useCallback(
-		(next: GoogleFormConversionScreeningDraft | null) => {
-			setScreeningState(next);
 		},
 		[],
 	);
@@ -65,7 +52,6 @@ export function GoogleFormConversionProvider({
 		setFormLink(null);
 		setEmail(null);
 		setValidationResult(null);
-		setScreeningState(null);
 	}, []);
 
 	const value = useMemo(
@@ -73,20 +59,10 @@ export function GoogleFormConversionProvider({
 			formLink,
 			email,
 			validationResult,
-			screening,
 			setAfterValidation,
-			setScreening,
 			resetFlow,
 		}),
-		[
-			formLink,
-			email,
-			validationResult,
-			screening,
-			setAfterValidation,
-			setScreening,
-			resetFlow,
-		],
+		[formLink, email, validationResult, setAfterValidation, resetFlow],
 	);
 
 	return (

@@ -69,3 +69,34 @@ export type FormValues = {
 	gender: GenderCode;
 	ages: AgeCode[];
 };
+
+/**
+ * 옵션(세그먼트·프로모션) 단계 입력 — `formLink`·`email`은 컨텍스트 최상위와 중복되지 않게 분리
+ * (`GoogleFormConversionContext.optionsDraft`)
+ */
+export type GoogleFormConversionOptionsDraft = Omit<
+	FormValues,
+	"formLink" | "email"
+>;
+
+export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT: GoogleFormConversionOptionsDraft =
+	{
+		promotionCode: "",
+		respondentCount: 50,
+		residence: "ALL",
+		interestIds: [],
+		gender: "ALL",
+		ages: ["ALL"],
+	};
+
+/** 옵션 폼(rhf) 전체 값 — 스크리닝 초안 포함 */
+export type GoogleFormConversionOptionsFormValues =
+	GoogleFormConversionOptionsDraft & {
+		screening: GoogleFormConversionScreeningDraft | null;
+	};
+
+export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_FORM: GoogleFormConversionOptionsFormValues =
+	{
+		...DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT,
+		screening: null,
+	};

@@ -2,6 +2,7 @@ import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google
 import { GoogleFormConversionValidationPartialBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationPartialBottomSheet";
 import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { useGoogleFormConversionOptionsFormReset } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import {
 	type FormRequestValidationDetail,
@@ -30,6 +31,7 @@ export const GoogleFormConversionRequestPage = () => {
 	const navigate = useNavigate();
 
 	const { validationResult, setAfterValidation } = useGoogleFormConversion();
+	const resetOptionsForm = useGoogleFormConversionOptionsFormReset();
 
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();
@@ -74,12 +76,13 @@ export const GoogleFormConversionRequestPage = () => {
 					email: data.email.trim(),
 					validationResult: res,
 				});
+				resetOptionsForm();
 				setSuccessSheetOpen(true);
 			} catch (e) {
 				setErrorMessage(getFormRequestValidationErrorMessage(e));
 			}
 		},
-		[validateRequest, setAfterValidation],
+		[validateRequest, setAfterValidation, resetOptionsForm],
 	);
 
 	const handleSuccessSheetContinue = useCallback(() => {

@@ -1,4 +1,5 @@
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { useGoogleFormConversionOptionsFormReset } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Spacing, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +7,10 @@ import { useNavigate } from "react-router-dom";
 export const GoogleFormConversionPaymentSuccessPage = () => {
 	const navigate = useNavigate();
 	const { resetFlow } = useGoogleFormConversion();
+	const resetOptionsForm = useGoogleFormConversionOptionsFormReset();
 
 	const handleConfirm = () => {
+		resetOptionsForm();
 		resetFlow();
 		navigate("/home");
 	};

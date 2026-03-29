@@ -4,9 +4,13 @@ import { GoogleFormConversionScreeningListRow } from "@features/google-form-conv
 import { InterestSelectBottomSheet } from "@features/google-form-conversion/components/InterestSelectBottomSheet";
 import { RespondentCountSelectBottomSheet } from "@features/google-form-conversion/components/RespondentCountSelectBottomSheet";
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { useGoogleFormConversionOptionsForm } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
-import type { FormValues } from "@features/google-form-conversion/types";
+import type {
+	FormValues,
+	GoogleFormConversionOptionsFormValues,
+} from "@features/google-form-conversion/types";
 import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
 	formatDateToISO,
@@ -41,7 +45,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export const GoogleFormConversionOptionsPage = () => {
@@ -50,8 +54,16 @@ export const GoogleFormConversionOptionsPage = () => {
 		formLink: formLinkFromContext,
 		email: emailFromContext,
 		validationResult,
-		screening,
 	} = useGoogleFormConversion();
+	const {
+		control,
+		watch,
+		setValue,
+		getValues,
+		handleSubmit: rhfHandleSubmit,
+	} = useGoogleFormConversionOptionsForm();
+
+	const screening = watch("screening");
 
 	const formLinkFromState = formLinkFromContext?.trim() ?? "";
 	const emailFromState = emailFromContext ?? "";
@@ -82,27 +94,7 @@ export const GoogleFormConversionOptionsPage = () => {
 	const [isAgeSheetOpen, setIsAgeSheetOpen] = useState(false);
 	const [isInterestSheetOpen, setIsInterestSheetOpen] = useState(false);
 
-	const {
-		control,
-		watch,
-		getValues,
-		setValue,
-		handleSubmit: rhfHandleSubmit,
-	} = useForm<FormValues>({
-		mode: "onChange",
-		defaultValues: {
-			formLink: formLinkFromState,
-			email: emailFromState,
-			promotionCode: "",
-			respondentCount: 50,
-			residence: "ALL",
-			interestIds: [],
-			gender: "ALL",
-			ages: ["ALL"],
-		},
-	});
-
-	const formLink = watch("formLink");
+	const formLink = formLinkFromState;
 	/** 가격 구간용 문항 수 — 검증 API 성공 행 (`totalCount`·`convertible` 등 보정, preview API 없음) */
 	const validationSuccess = useMemo(() => {
 		if (!validationResult) return null;
@@ -118,14 +110,14 @@ export const GoogleFormConversionOptionsPage = () => {
 
 	const respondentCount = watch("respondentCount");
 	const interestIds = watch("interestIds");
-	const promotionCodeInput = watch("promotionCode");
+	const promotionCodeInput = watch("promotionCode") ?? "";
 	const gender = watch("gender");
 	const ages = watch("ages");
 
 	/** 인증하기로 검증된 코드가 현재 입력과 같으면 프로모션 가격표 적용 */
 	const isPromoPriceApplied =
 		verifiedPromotionCode !== null &&
-		verifiedPromotionCode === promotionCodeInput?.trim();
+		verifiedPromotionCode === promotionCodeInput.trim();
 
 	const price = useMemo(() => {
 		const questionRange = getQuestionRange(formQuestionCount);
@@ -178,7 +170,13 @@ export const GoogleFormConversionOptionsPage = () => {
 	}, [navigate, validationResult]);
 
 	const onSubmit = useCallback(
-		async (data: FormValues) => {
+		async (optionsForm: GoogleFormConversionOptionsFormValues) => {
+			const { screening: screeningFromForm, ...optionsData } = optionsForm;
+			const data: FormValues = {
+				formLink: formLinkFromState,
+				email: emailFromState,
+				...optionsData,
+			};
 			pushGtmEvent({
 				event: "form_payment_button_click",
 				pagePath: "/payment/google-form-conversion-options",
@@ -222,7 +220,7 @@ export const GoogleFormConversionOptionsPage = () => {
 								deadline: formatDateToISO(getDefaultDeadline()),
 								price: promoPrice,
 								promotionCode: code,
-								...(screening && { screening }),
+								...(screeningFromForm && { screening: screeningFromForm }),
 							},
 						});
 						return;
@@ -246,11 +244,11 @@ export const GoogleFormConversionOptionsPage = () => {
 					...(interestsPayload && { interests: interestsPayload }),
 					deadline: formatDateToISO(getDefaultDeadline()),
 					price,
-					...(screening && { screening }),
+					...(screeningFromForm && { screening: screeningFromForm }),
 				},
 			});
 		},
-		[navigate, price, formQuestionCount, screening],
+		[navigate, price, formQuestionCount, formLinkFromState, emailFromState],
 	);
 
 	if (!isValidEntry) {
@@ -424,9 +422,9 @@ export const GoogleFormConversionOptionsPage = () => {
 								loading={isPromotionVerifying}
 								disabled={
 									isPromotionVerifying ||
-									!promotionCodeInput?.trim() ||
+									!promotionCodeInput.trim() ||
 									(verifiedPromotionCode !== null &&
-										verifiedPromotionCode === promotionCodeInput?.trim())
+										verifiedPromotionCode === promotionCodeInput.trim())
 								}
 								className="shrink-0"
 								onClick={() => void handleVerifyPromotion()}

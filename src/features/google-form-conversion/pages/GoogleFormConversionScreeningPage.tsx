@@ -1,4 +1,5 @@
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { useGoogleFormConversionOptionsForm } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
 import {
 	isGoogleFormConversionContactEmail,
 	isGoogleFormLinkUrl,
@@ -11,12 +12,9 @@ import { useNavigate } from "react-router-dom";
 
 export const GoogleFormConversionScreeningPage = () => {
 	const navigate = useNavigate();
-	const {
-		formLink: fl,
-		email: em,
-		screening,
-		setScreening,
-	} = useGoogleFormConversion();
+	const { formLink: fl, email: em } = useGoogleFormConversion();
+	const { watch, setValue } = useGoogleFormConversionOptionsForm();
+	const screening = watch("screening");
 
 	const formLink = fl?.trim() ?? "";
 	const email = em ?? "";
@@ -44,7 +42,7 @@ export const GoogleFormConversionScreeningPage = () => {
 
 	const handleNext = () => {
 		if (!question.trim() || answer === null) return;
-		setScreening({
+		setValue("screening", {
 			question: question.trim(),
 			answer,
 		});
