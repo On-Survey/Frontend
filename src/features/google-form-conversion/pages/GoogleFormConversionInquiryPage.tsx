@@ -1,16 +1,66 @@
+import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { getInconvertibleReasonStringsForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
+import { useSurveyHelpRequestMutation } from "@features/survey/hooks/useSurveyHelpRequestMutation";
+import { useUserInfo } from "@shared/contexts/UserContext";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, FixedBottomCTA, TextArea, Top } from "@toss/tds-mobile";
-import { useState } from "react";
+import { Asset, FixedBottomCTA, Text, TextArea, Top } from "@toss/tds-mobile";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+/** 반려 문항이 없거나(검증 전부 성공)·사유를 뽑을 수 없을 때 — 서버는 빈 배열 불가 */
+const DEFAULT_REJECTION_REASONS = ["기타"] as const;
 
 export const GoogleFormConversionInquiryPage = () => {
 	const [inquiry, setInquiry] = useState("");
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const navigate = useNavigate();
+	const {
+		email: emailFromFlow,
+		validationResult,
+		formLink: formLinkFromFlow,
+	} = useGoogleFormConversion();
+	const { userInfo } = useUserInfo();
+	const helpRequest = useSurveyHelpRequestMutation();
 
-	const handleNext = () => {
-		if (inquiry.trim().length === 0) return;
-		navigate("/payment/google-form-conversion-inquiry-success");
-	};
+	const email = emailFromFlow?.trim() ?? "";
+	const name = userInfo?.result?.name?.trim() ?? "";
+	const formLink = formLinkFromFlow?.trim() ?? "";
+
+	const rejectionReasons = useMemo(() => {
+		if (!validationResult || !formLink) return [...DEFAULT_REJECTION_REASONS];
+		const fromValidation = getInconvertibleReasonStringsForFormLink(
+			validationResult,
+			formLink,
+		);
+		return fromValidation.length > 0
+			? fromValidation
+			: [...DEFAULT_REJECTION_REASONS];
+	}, [validationResult, formLink]);
+
+	const handleNext = useCallback(async () => {
+		const content = inquiry.trim();
+		if (content.length === 0) return;
+		if (!email) {
+			navigate("/payment/google-form-conversion", { replace: true });
+			return;
+		}
+		setErrorMessage(null);
+		try {
+			await helpRequest.mutateAsync({
+				email,
+				name,
+				rejectionReasons,
+				content,
+			});
+			navigate("/payment/google-form-conversion-inquiry-success");
+		} catch (e) {
+			const message =
+				e instanceof Error
+					? e.message
+					: "요청을 보내지 못했어요. 잠시 후 다시 시도해주세요";
+			setErrorMessage(message);
+		}
+	}, [email, inquiry, name, helpRequest, navigate, rejectionReasons]);
 
 	return (
 		<>
@@ -40,19 +90,35 @@ export const GoogleFormConversionInquiryPage = () => {
 
 			<TextArea
 				variant="box"
-				hasError={false}
+				hasError={!!errorMessage}
 				label=""
 				labelOption="sustain"
 				value={inquiry}
 				placeholder="50자 이내로 작성해주세요"
 				maxLength={50}
-				onChange={(e) => setInquiry(e.target.value)}
+				onChange={(e) => {
+					setInquiry(e.target.value);
+					if (errorMessage) setErrorMessage(null);
+				}}
 			/>
+			{errorMessage ? (
+				<div className="px-2">
+					<Text
+						display="block"
+						color={adaptive.red500}
+						typography="t6"
+						fontWeight="medium"
+						className="mt-2 px-2"
+					>
+						{errorMessage}
+					</Text>
+				</div>
+			) : null}
 
 			<FixedBottomCTA
-				disabled={inquiry.trim().length === 0}
-				loading={false}
-				onClick={handleNext}
+				disabled={inquiry.trim().length === 0 || helpRequest.isPending}
+				loading={helpRequest.isPending}
+				onClick={() => void handleNext()}
 			>
 				다음
 			</FixedBottomCTA>

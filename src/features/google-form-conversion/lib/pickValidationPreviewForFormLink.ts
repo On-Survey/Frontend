@@ -33,3 +33,22 @@ export const pickValidationSuccessForFormLink = (
 
 	return successItems[0] ?? null;
 };
+
+/**
+ * 검증 API 성공 행의 `inconvertibleDetails`에서 반려 사유 문자열 목록을 뽑는다.
+ * (도움 요청 API `rejectionReasons` 등에 사용)
+ */
+export const getInconvertibleReasonStringsForFormLink = (
+	validationResult: FormRequestValidationResponse,
+	formLink: string,
+): string[] => {
+	const success = pickValidationSuccessForFormLink(
+		validationResult,
+		formLink.trim(),
+	);
+	const details = success?.inconvertibleDetails ?? [];
+	const reasons = details
+		.map((d) => d.reason.trim())
+		.filter((r) => r.length > 0);
+	return [...new Set(reasons)];
+};

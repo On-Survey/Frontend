@@ -12,7 +12,7 @@ export const GoogleFormConversionInquirySuccessPage = () => {
 	const navigate = useNavigate();
 
 	const handleContinue = () => {
-		navigate("/payment/google-form-conversion");
+		navigate("/payment/google-form-conversion-preview");
 	};
 
 	const handleGoHome = () => {
@@ -20,7 +20,7 @@ export const GoogleFormConversionInquirySuccessPage = () => {
 	};
 
 	return (
-		<>
+		<div className="flex w-full flex-col items-center justify-center p-4">
 			<Spacing size={160} />
 			<Asset.Image
 				frameShape={Asset.frameShape.CleanW100}
@@ -36,6 +36,7 @@ export const GoogleFormConversionInquirySuccessPage = () => {
 				typography="t2"
 				fontWeight="bold"
 				textAlign="center"
+				className="w-full max-w-[320px]"
 			>
 				문의 사항이 잘 접수되었어요
 			</Text>
@@ -45,6 +46,7 @@ export const GoogleFormConversionInquirySuccessPage = () => {
 				typography="t5"
 				fontWeight="medium"
 				textAlign="center"
+				className="mt-1 w-full max-w-[320px]"
 			>
 				등록해주신 문의 사항은 24시간 이내로 빠르게 검토해 이메일로 안내해
 				드릴게요.
@@ -66,6 +68,6 @@ export const GoogleFormConversionInquirySuccessPage = () => {
 					</CTAButton>
 				}
 			/>
-		</>
+		</div>
 	);
 };
