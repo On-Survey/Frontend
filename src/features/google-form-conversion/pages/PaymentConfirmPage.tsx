@@ -1,12 +1,14 @@
-import { IAP, type IapProductListItem } from "@apps-in-toss/web-framework";
+import { IAP } from "@apps-in-toss/web-framework";
 import type { Interest } from "@features/create-survey/service/form/types";
-import type { ScreeningDraft } from "@features/google-form-conversion/types";
+import { useOptionsFormContext } from "@features/google-form-conversion/context/OptionsFormContext";
+import { useRequestFormContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import type {
 	AgeCode,
 	GenderCode,
 	RegionCode,
 } from "@features/payment/constants/payment";
 import { createGoogleFormPayment } from "@features/payment/service/payments";
+import { topics } from "@shared/constants/topics";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -17,7 +19,7 @@ import {
 	Post,
 	Top,
 } from "@toss/tds-mobile";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createRequest } from "../service/api";
 import {
 	buildCreateRequestBody,
@@ -25,60 +27,52 @@ import {
 	getDefaultDeadline,
 } from "../utils";
 
-type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
-
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
 
 export const PaymentConfirmPage = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-
-	const locationState = location.state as
-		| {
-				formLink: string;
-				email: string;
-				formQuestionCount?: number | null;
-				respondentCount: RespondentCount;
-				gender?: string;
-				ages?: string[];
-				deadline?: string;
-				residence?: string;
-				interests?: Interest[];
-				price: number;
-				discountCode?: string;
-				screening?: ScreeningDraft;
-				selectedProduct?: IapProductListItem;
-		  }
-		| undefined;
-
-	const formLink = locationState?.formLink ?? "";
-	const email = locationState?.email ?? "";
-	const respondentCount = locationState?.respondentCount ?? 50;
-	const gender = locationState?.gender;
-	const ages = locationState?.ages;
-	const deadline =
-		locationState?.deadline ?? formatDateToISO(getDefaultDeadline());
-	const residence = locationState?.residence;
-	const interests = locationState?.interests ?? [];
-	const screening = locationState?.screening;
-	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
-	const discountCode = locationState?.discountCode;
-	const selectedProduct = locationState?.selectedProduct ?? null;
+	const { selectedProductSku } = useOptionsFormContext();
+	const {
+		respondentCount,
+		gender,
+		ages,
+		residence,
+		interestIds,
+		screening,
+		promotionCode,
+		verifiedPromotionCode,
+		checkoutPrice,
+	} = useOptionsFormContext();
+	const { formLink, email } = useRequestFormContext();
+	const deadline = formatDateToISO(getDefaultDeadline());
+	const price = checkoutPrice ?? 0;
+	const discountCode =
+		verifiedPromotionCode !== null &&
+		verifiedPromotionCode === (promotionCode ?? "").trim()
+			? verifiedPromotionCode
+			: undefined;
+	const interests: Interest[] = interestIds
+		.map((id) => topics.find((t) => t.id === id)?.value)
+		.filter((v): v is Interest => v != null);
 
 	const handlePayment = () => {
 		pushGtmEvent({
 			event: "form_coin_charge",
 			pagePath: "/payment/google-form-conversion-payment-confirm",
 		});
-		if (!selectedProduct?.sku) {
+		if (!selectedProductSku) {
 			console.error("상품 정보가 없습니다");
+			return;
+		}
+		if (!checkoutPrice || checkoutPrice <= 0) {
+			console.error("결제 금액 정보가 없습니다");
 			return;
 		}
 
 		IAP.createOneTimePurchaseOrder({
 			options: {
-				sku: selectedProduct.sku,
+				sku: selectedProductSku,
 				processProductGrant: async ({ orderId }) => {
 					try {
 						await createGoogleFormPayment({
@@ -193,12 +187,14 @@ export const PaymentConfirmPage = () => {
 			</BottomInfo>
 			<FixedBottomCTA
 				loading={false}
-				disabled={!selectedProduct}
+				disabled={!selectedProductSku || !checkoutPrice || checkoutPrice <= 0}
 				onClick={handlePayment}
 				bottomAccessory={
-					!selectedProduct
-						? "결제 가능한 상품 정보가 없어요. 다시 시도해주세요"
-						: undefined
+					!selectedProductSku
+						? "결제 가능한 상품 정보가 없어요. 옵션 페이지에서 다시 시도해주세요"
+						: !checkoutPrice || checkoutPrice <= 0
+							? "결제 금액 정보가 없어요. 옵션 페이지에서 다시 시도해주세요"
+							: undefined
 				}
 			>
 				결제하기

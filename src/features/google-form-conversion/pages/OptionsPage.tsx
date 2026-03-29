@@ -1,4 +1,3 @@
-import type { Interest } from "@features/create-survey/service/form/types";
 import { GenderSelectBottomSheet } from "@features/google-form-conversion/components/GenderSelectBottomSheet";
 import { InterestSelectBottomSheet } from "@features/google-form-conversion/components/InterestSelectBottomSheet";
 import { RespondentCountSelectBottomSheet } from "@features/google-form-conversion/components/RespondentCountSelectBottomSheet";
@@ -8,6 +7,7 @@ import {
 	useRequestEntryContext,
 	useRequestFormContext,
 } from "@features/google-form-conversion/context/RequestEntryContext";
+import { useIapProductByPrice } from "@features/google-form-conversion/hooks/useIapProductByPrice";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
 import type {
@@ -16,10 +16,8 @@ import type {
 } from "@features/google-form-conversion/types";
 import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
-	formatDateToISO,
 	formatInterestSelectionDisplay,
 	formatPrice,
-	getDefaultDeadline,
 	getQuestionRange,
 	getTotalQuestionCountForPricing,
 	isContactEmail,
@@ -31,7 +29,6 @@ import {
 	formatAgeDisplay,
 	getGenderLabel,
 } from "@features/payment/constants/payment";
-import { topics } from "@shared/constants/topics";
 import type { Estimate } from "@shared/contexts/PaymentContext";
 import {
 	lookupEstimatePromoTablePrice,
@@ -63,6 +60,11 @@ export const OptionsPage = () => {
 		getValues,
 		handleSubmit: rhfHandleSubmit,
 	} = useOptionsForm();
+	const {
+		findProductByPrice,
+		isLoading: isProductResolving,
+		error: productResolveError,
+	} = useIapProductByPrice();
 
 	const screening = watch("screening");
 
@@ -164,7 +166,7 @@ export const OptionsPage = () => {
 
 	const onSubmit = useCallback(
 		async (optionsForm: OptionsFormValues) => {
-			const { screening: screeningFromForm, ...optionsData } = optionsForm;
+			const { ...optionsData } = optionsForm;
 			const data: FormValues = {
 				formLink: formLinkFromState,
 				email: emailFromState,
@@ -180,13 +182,6 @@ export const OptionsPage = () => {
 				pagePath: "/payment/google-form-conversion-options",
 			});
 			setPromotionCodeError(null);
-
-			const interestsPayload =
-				data.interestIds.length > 0
-					? data.interestIds
-							.map((id) => topics.find((t) => t.id === id)?.value)
-							.filter((v): v is Interest => v != null)
-					: undefined;
 
 			const code = data.promotionCode?.trim();
 			if (code) {
@@ -206,22 +201,11 @@ export const OptionsPage = () => {
 						};
 
 						const promoPrice = lookupEstimatePromoTablePrice(promoEstimate);
-						navigate("/payment/google-form-conversion-check", {
-							state: {
-								formLink: data.formLink,
-								email: data.email,
-								formQuestionCount,
-								respondentCount: data.respondentCount,
-								gender: data.gender,
-								ages: data.ages,
-								residence: data.residence,
-								...(interestsPayload && { interests: interestsPayload }),
-								deadline: formatDateToISO(getDefaultDeadline()),
-								price: promoPrice,
-								discountCode: code,
-								...(screeningFromForm && { screening: screeningFromForm }),
-							},
-						});
+						const selectedProduct = await findProductByPrice(promoPrice);
+						if (!selectedProduct?.sku) return;
+						setValue("selectedProductSku", selectedProduct.sku);
+						setValue("checkoutPrice", promoPrice);
+						navigate("/payment/google-form-conversion-check");
 						return;
 					}
 				} catch {
@@ -231,23 +215,21 @@ export const OptionsPage = () => {
 				return;
 			}
 
-			navigate("/payment/google-form-conversion-check", {
-				state: {
-					formLink: data.formLink,
-					email: data.email,
-					formQuestionCount,
-					respondentCount: data.respondentCount,
-					gender: data.gender,
-					ages: data.ages,
-					residence: data.residence,
-					...(interestsPayload && { interests: interestsPayload }),
-					deadline: formatDateToISO(getDefaultDeadline()),
-					price,
-					...(screeningFromForm && { screening: screeningFromForm }),
-				},
-			});
+			const selectedProduct = await findProductByPrice(price);
+			if (!selectedProduct?.sku) return;
+			setValue("selectedProductSku", selectedProduct.sku);
+			setValue("checkoutPrice", price);
+			navigate("/payment/google-form-conversion-check");
 		},
-		[navigate, price, formQuestionCount, formLinkFromState, emailFromState],
+		[
+			navigate,
+			price,
+			formQuestionCount,
+			formLinkFromState,
+			emailFromState,
+			findProductByPrice,
+			setValue,
+		],
 	);
 
 	if (!isValidEntry) {
@@ -476,8 +458,9 @@ export const OptionsPage = () => {
 			/>
 
 			<FixedBottomCTA
-				loading={false}
+				loading={isProductResolving}
 				onClick={rhfHandleSubmit(onSubmit)}
+				bottomAccessory={productResolveError ?? undefined}
 				disabled={interestIds.length === 0}
 			>
 				{formatPrice(price)}원 결제하기
