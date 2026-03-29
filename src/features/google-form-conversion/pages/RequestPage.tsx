@@ -15,6 +15,7 @@ import type { FormRequestValidationDetail } from "@features/google-form-conversi
 import type { RequestFormValues } from "@features/google-form-conversion/types";
 import {
 	getFormRequestValidationErrorMessage,
+	getGoogleFormLinkValidationMessage,
 	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
@@ -51,6 +52,7 @@ export const RequestPage = () => {
 	const {
 		control,
 		handleSubmit: rhfHandleSubmit,
+		trigger,
 		formState: { errors },
 	} = useRequestForm();
 
@@ -124,10 +126,12 @@ export const RequestPage = () => {
 					control={control}
 					name="formLink"
 					rules={{
-						required: "폼 링크를 입력해주세요",
-						validate: (v) =>
-							isGoogleFormLinkUrl(v?.trim() ?? "") ||
-							"링크를 다시 한번 확인해 주세요!",
+						validate: (v) => {
+							const value = v?.trim() ?? "";
+							if (!value) return "폼 링크를 입력해주세요";
+							const message = getGoogleFormLinkValidationMessage(value);
+							return message ?? true;
+						},
 					}}
 					render={({ field: { onChange, value, onBlur } }) => (
 						<TextField.Clearable
@@ -144,6 +148,12 @@ export const RequestPage = () => {
 							suffix=""
 							prefix=""
 							onChange={(e) => onChange(e.target.value)}
+							onPaste={() => {
+								// 붙여넣기 직후 값 반영 다음 틱에서 즉시 유효성 재검증
+								setTimeout(() => {
+									void trigger("formLink");
+								}, 0);
+							}}
 							onBlur={onBlur}
 						/>
 					)}

@@ -28,14 +28,33 @@ export const formatInterestSelectionDisplay = (ids: InterestId[]): string => {
 	return `${names.slice(0, 2).join(", ")} 외 ${names.length - 2}`;
 };
 
-/**
- * 구글폼 URL 여부 검사 (빈 문자열은 통과)
- */
+const GOOGLE_FORM_EDIT_LINK_REGEX =
+	/^https:\/\/docs\.google\.com\/forms\/d\/[A-Za-z0-9_-]+\/edit(?:\?.*)?$/;
+const GOOGLE_FORM_RESPONDENT_LINK_REGEX =
+	/^https:\/\/docs\.google\.com\/forms\/d\/e\/[A-Za-z0-9_-]+\/viewform(?:\?.*)?$/;
+
+/** 제출 가능한 구글폼 편집 링크(`.../forms/d/{id}/edit`) 여부 */
 export const isGoogleFormLinkUrl = (v: string): boolean =>
-	!v ||
-	v.startsWith("https://docs.google.com/forms") ||
-	v.startsWith("https://docs.google.com/forms/") ||
-	v.startsWith("https://docs.google.com/");
+	GOOGLE_FORM_EDIT_LINK_REGEX.test(v.trim());
+
+/** 응답자용 링크(`.../forms/d/e/{id}/viewform`) 여부 */
+export const isGoogleFormRespondentLinkUrl = (v: string): boolean =>
+	GOOGLE_FORM_RESPONDENT_LINK_REGEX.test(v.trim());
+
+/** 구글폼 링크 입력 유효성 메시지 (통과 시 null) */
+export const getGoogleFormLinkValidationMessage = (
+	v: string,
+): string | null => {
+	const trimmed = v.trim();
+	if (!trimmed) return null;
+	if (isGoogleFormRespondentLinkUrl(trimmed)) {
+		return "응답자용 링크(viewform) 말고 편집 링크(edit)를 입력해주세요";
+	}
+	if (!isGoogleFormLinkUrl(trimmed)) {
+		return "편집 가능한 구글폼 링크(.*/edit)만 입력할 수 있어요";
+	}
+	return null;
+};
 
 /**
  * 구글폼 플로우: 이메일 필수 + 형식 검사.
