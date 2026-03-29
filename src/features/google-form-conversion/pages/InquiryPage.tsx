@@ -1,4 +1,4 @@
-import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import { getInconvertibleReasonStringsForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { useSurveyHelpRequestMutation } from "@features/survey/hooks/useSurveyHelpRequestMutation";
 import { useUserInfo } from "@shared/contexts/UserContext";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 /** 반려 문항이 없거나(검증 전부 성공)·사유를 뽑을 수 없을 때 — 서버는 빈 배열 불가 */
 const DEFAULT_REJECTION_REASONS = ["기타"] as const;
 
-export const GoogleFormConversionInquiryPage = () => {
+export const InquiryPage = () => {
 	const [inquiry, setInquiry] = useState("");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const navigate = useNavigate();
@@ -18,7 +18,7 @@ export const GoogleFormConversionInquiryPage = () => {
 		email: emailFromFlow,
 		validationResult,
 		formLink: formLinkFromFlow,
-	} = useGoogleFormConversion();
+	} = useRequestEntryContext();
 	const { userInfo } = useUserInfo();
 	const helpRequest = useSurveyHelpRequestMutation();
 

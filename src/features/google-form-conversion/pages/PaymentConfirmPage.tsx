@@ -1,6 +1,6 @@
 import { IAP, type IapProductListItem } from "@apps-in-toss/web-framework";
 import type { Interest } from "@features/create-survey/service/form/types";
-import type { GoogleFormConversionScreeningDraft } from "@features/google-form-conversion/types";
+import type { ScreeningDraft } from "@features/google-form-conversion/types";
 import type {
 	AgeCode,
 	GenderCode,
@@ -19,9 +19,9 @@ import {
 } from "@toss/tds-mobile";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createGoogleFormConversionRequest } from "../service/api";
+import { createRequest } from "../service/api";
 import {
-	buildGoogleFormConversionCreateRequestBody,
+	buildCreateRequestBody,
 	formatDateToISO,
 	getDefaultDeadline,
 } from "../utils";
@@ -31,7 +31,7 @@ type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
 const formatPrice = (price: number) =>
 	price.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
 
-export const GoogleFormConversionPaymentConfirmPage = () => {
+export const PaymentConfirmPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [selectedProduct, setSelectedProduct] =
@@ -51,7 +51,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				interests?: Interest[];
 				price: number;
 				discountCode?: string;
-				screening?: GoogleFormConversionScreeningDraft;
+				screening?: ScreeningDraft;
 		  }
 		| undefined;
 
@@ -148,8 +148,8 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					});
 
 					try {
-						await createGoogleFormConversionRequest(
-							buildGoogleFormConversionCreateRequestBody({
+						await createRequest(
+							buildCreateRequestBody({
 								formLink,
 								requesterEmail: email,
 								respondentCount,

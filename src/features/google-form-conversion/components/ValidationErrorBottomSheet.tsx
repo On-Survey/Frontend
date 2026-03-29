@@ -1,16 +1,16 @@
 import { BottomSheet, Post } from "@toss/tds-mobile";
 
-type GoogleFormConversionValidationErrorBottomSheetProps = {
+type ValidationErrorBottomSheetProps = {
 	open: boolean;
 	message: string;
 	onClose: () => void;
 };
 
-export const GoogleFormConversionValidationErrorBottomSheet = ({
+export const ValidationErrorBottomSheet = ({
 	open,
 	message,
 	onClose,
-}: GoogleFormConversionValidationErrorBottomSheetProps) => {
+}: ValidationErrorBottomSheetProps) => {
 	return (
 		<BottomSheet
 			header={

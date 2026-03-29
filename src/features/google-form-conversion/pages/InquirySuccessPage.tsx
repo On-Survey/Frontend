@@ -8,7 +8,7 @@ import {
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionInquirySuccessPage = () => {
+export const InquirySuccessPage = () => {
 	const navigate = useNavigate();
 
 	const handleContinue = () => {

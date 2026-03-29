@@ -42,7 +42,7 @@ export const MySurvey = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
 	const [isFabOpen, setIsFabOpen] = useState(false);
 
-	const goToGoogleFormConversion = () => {
+	const goTo = () => {
 		setIsFabOpen(false);
 		navigate("/google-form-conversion-landing", {
 			state: { source: "mysurvey_fab" },
@@ -94,7 +94,7 @@ export const MySurvey = () => {
 								animate="visible"
 								exit="exit"
 								className={`${FAB_SIZE_CLASS} flex shrink-0 items-center justify-center rounded-full! bg-white`}
-								onClick={goToGoogleFormConversion}
+								onClick={goTo}
 								aria-label="구글폼으로 설문 등록하기"
 							>
 								<img

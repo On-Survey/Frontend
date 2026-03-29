@@ -1,19 +1,19 @@
 import { Asset, BottomSheet, Button } from "@toss/tds-mobile";
 import type { CSSProperties } from "react";
 
-type GoogleFormConversionValidationSuccessBottomSheetProps = {
+type ValidationSuccessBottomSheetProps = {
 	open: boolean;
 	convertibleCount: number;
 	onClose: () => void;
 	onContinue: () => void;
 };
 
-export const GoogleFormConversionValidationSuccessBottomSheet = ({
+export const ValidationSuccessBottomSheet = ({
 	open,
 	convertibleCount,
 	onClose,
 	onContinue,
-}: GoogleFormConversionValidationSuccessBottomSheetProps) => {
+}: ValidationSuccessBottomSheetProps) => {
 	return (
 		<BottomSheet
 			header={

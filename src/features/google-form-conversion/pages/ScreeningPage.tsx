@@ -1,7 +1,7 @@
-import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
-import { useGoogleFormConversionOptionsForm } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
+import { useOptionsForm } from "@features/google-form-conversion/context/OptionsFormContext";
+import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import {
-	isGoogleFormConversionContactEmail,
+	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
@@ -10,18 +10,16 @@ import { Asset, FixedBottomCTA, Text, TextField, Top } from "@toss/tds-mobile";
 import { type CSSProperties, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionScreeningPage = () => {
+export const ScreeningPage = () => {
 	const navigate = useNavigate();
-	const { formLink: fl, email: em } = useGoogleFormConversion();
-	const { watch, setValue } = useGoogleFormConversionOptionsForm();
+	const { formLink: fl, email: em } = useRequestEntryContext();
+	const { watch, setValue } = useOptionsForm();
 	const screening = watch("screening");
 
 	const formLink = fl?.trim() ?? "";
 	const email = em ?? "";
 	const isValidEntry =
-		!!formLink &&
-		isGoogleFormLinkUrl(formLink) &&
-		isGoogleFormConversionContactEmail(email);
+		!!formLink && isGoogleFormLinkUrl(formLink) && isContactEmail(email);
 
 	const [question, setQuestion] = useState(screening?.question ?? "");
 	/** O=true, X=false, 미선택=null */

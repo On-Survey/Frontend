@@ -1,8 +1,8 @@
-import { GoogleFormConversionValidationErrorBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationErrorBottomSheet";
-import { GoogleFormConversionValidationPartialBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationPartialBottomSheet";
-import { GoogleFormConversionValidationSuccessBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionValidationSuccessBottomSheet";
-import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
-import { useGoogleFormConversionOptionsFormReset } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
+import { ValidationErrorBottomSheet } from "@features/google-form-conversion/components/ValidationErrorBottomSheet";
+import { ValidationPartialBottomSheet } from "@features/google-form-conversion/components/ValidationPartialBottomSheet";
+import { ValidationSuccessBottomSheet } from "@features/google-form-conversion/components/ValidationSuccessBottomSheet";
+import { useOptionsFormReset } from "@features/google-form-conversion/context/OptionsFormContext";
+import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import {
 	type FormRequestValidationDetail,
@@ -12,7 +12,7 @@ import type { FormValues } from "@features/google-form-conversion/types";
 import {
 	getConvertibleQuestionCountFromValidation,
 	getFormRequestValidationErrorMessage,
-	isGoogleFormConversionContactEmail,
+	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { adaptive } from "@toss/tds-colors";
@@ -27,11 +27,11 @@ import { useCallback, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionRequestPage = () => {
+export const RequestPage = () => {
 	const navigate = useNavigate();
 
-	const { validationResult, setAfterValidation } = useGoogleFormConversion();
-	const resetOptionsForm = useGoogleFormConversionOptionsFormReset();
+	const { validationResult, setAfterValidation } = useRequestEntryContext();
+	const resetOptionsForm = useOptionsFormReset();
 
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();
@@ -162,7 +162,7 @@ export const GoogleFormConversionRequestPage = () => {
 					name="email"
 					rules={{
 						validate: (v) => {
-							if (isGoogleFormConversionContactEmail(v ?? "")) return true;
+							if (isContactEmail(v ?? "")) return true;
 							const trimmed = (v ?? "").trim();
 							return trimmed.length > 0
 								? "올바른 이메일 형식을 입력해주세요"
@@ -230,20 +230,20 @@ export const GoogleFormConversionRequestPage = () => {
 					!emailSendAgreed ||
 					!formLink.trim() ||
 					!isGoogleFormLinkUrl(formLink.trim()) ||
-					!isGoogleFormConversionContactEmail(watch("email") ?? "")
+					!isContactEmail(watch("email") ?? "")
 				}
 			>
 				구글폼 변환
 			</FixedBottomCTA>
 
 			{successSheetOpen && hasUnsupportedQuestions ? (
-				<GoogleFormConversionValidationPartialBottomSheet
+				<ValidationPartialBottomSheet
 					open={successSheetOpen}
 					unsupportedDetails={unsupportedDetails}
 					onClose={handleSuccessSheetEdit}
 				/>
 			) : (
-				<GoogleFormConversionValidationSuccessBottomSheet
+				<ValidationSuccessBottomSheet
 					open={successSheetOpen}
 					convertibleCount={convertibleCount}
 					onClose={handleSuccessSheetEdit}
@@ -251,7 +251,7 @@ export const GoogleFormConversionRequestPage = () => {
 				/>
 			)}
 
-			<GoogleFormConversionValidationErrorBottomSheet
+			<ValidationErrorBottomSheet
 				open={errorMessage != null}
 				message={errorMessage ?? ""}
 				onClose={handleErrorSheetClose}

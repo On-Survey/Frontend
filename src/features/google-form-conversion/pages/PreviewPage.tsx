@@ -1,11 +1,11 @@
-import { GoogleFormConversionUnsupportedRegisterConfirmBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionUnsupportedRegisterConfirmBottomSheet";
-import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { UnsupportedRegisterConfirmBottomSheet } from "@features/google-form-conversion/components/UnsupportedRegisterConfirmBottomSheet";
+import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import { getQuestionNumberLabelForValidationDetail } from "@features/google-form-conversion/lib/getQuestionNumberLabelForValidationDetail";
 import { hasInconvertibleFromValidationSuccess } from "@features/google-form-conversion/lib/hasInconvertibleFromValidationSuccess";
 import { mapConvertibleDetailsToPreviewSections } from "@features/google-form-conversion/lib/mapConvertibleDetailsToTransformedQuestions";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import {
-	isGoogleFormConversionContactEmail,
+	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
@@ -28,13 +28,13 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionPreviewPage = () => {
+export const PreviewPage = () => {
 	const navigate = useNavigate();
 	const {
 		formLink: formLinkCtx,
 		email,
 		validationResult,
-	} = useGoogleFormConversion();
+	} = useRequestEntryContext();
 
 	const formLink = formLinkCtx?.trim() ?? "";
 
@@ -42,7 +42,7 @@ export const GoogleFormConversionPreviewPage = () => {
 		!!validationResult &&
 		!!formLink &&
 		isGoogleFormLinkUrl(formLink) &&
-		isGoogleFormConversionContactEmail(email ?? "");
+		isContactEmail(email ?? "");
 
 	const validationSuccess = useMemo(() => {
 		if (!validationResult || !formLink) return null;
@@ -451,7 +451,7 @@ export const GoogleFormConversionPreviewPage = () => {
 				}
 			/>
 
-			<GoogleFormConversionUnsupportedRegisterConfirmBottomSheet
+			<UnsupportedRegisterConfirmBottomSheet
 				open={isUnsupportedRegisterSheetOpen}
 				onClose={handleUnsupportedRegisterSheetClose}
 				onContinue={handleUnsupportedRegisterContinue}

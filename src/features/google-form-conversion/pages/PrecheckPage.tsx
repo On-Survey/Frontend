@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionPrecheckPage = () => {
+export const PrecheckPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [isAgreed, setIsAgreed] = useState(false);

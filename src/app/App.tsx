@@ -26,20 +26,20 @@ import {
 	SurveyMain,
 	SurveyStart,
 } from "../features/create-survey";
-import { GoogleFormConversionProvider } from "../features/google-form-conversion/context/GoogleFormConversionContext";
-import { GoogleFormConversionOptionsFormProvider } from "../features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
+import { OptionsFormProvider } from "../features/google-form-conversion/context/OptionsFormContext";
+import { RequestEntryProvider } from "../features/google-form-conversion/context/RequestEntryContext";
 import {
-	GoogleFormConversionInquiryPage,
-	GoogleFormConversionInquirySuccessPage,
-	GoogleFormConversionLandingPage,
-	GoogleFormConversionOptionsPage,
-	GoogleFormConversionPaymentConfirmPage,
-	GoogleFormConversionPaymentSuccessPage,
-	GoogleFormConversionPrecheckPage,
-	GoogleFormConversionPreviewPage,
-	GoogleFormConversionPrivacyConsentPage,
-	GoogleFormConversionRequestPage,
-	GoogleFormConversionScreeningPage,
+	PaymentSuccessPage as ConversionPaymentSuccessPage,
+	InquiryPage,
+	InquirySuccessPage,
+	LandingPage,
+	OptionsPage,
+	PaymentConfirmPage,
+	PrecheckPage,
+	PreviewPage,
+	PrivacyConsentPage,
+	RequestPage,
+	ScreeningPage,
 } from "../features/google-form-conversion/pages";
 import BusinessInfo from "../features/mypage/pages/BusinessInfo";
 import CoinDetail from "../features/mypage/pages/CoinDetail";
@@ -173,8 +173,8 @@ export const App = () => {
 			<Router>
 				<DeepLinkHandler />
 				<AnalyticsTracker />
-				<GoogleFormConversionProvider>
-					<GoogleFormConversionOptionsFormProvider>
+				<RequestEntryProvider>
+					<OptionsFormProvider>
 						<UserProvider>
 							<GlobalNavigationLayout>
 								<Routes>
@@ -183,7 +183,7 @@ export const App = () => {
 									<Route path="/home" element={<Home />} />
 									<Route
 										path="/google-form-conversion-landing"
-										element={<GoogleFormConversionLandingPage />}
+										element={<LandingPage />}
 									/>
 									<Route path="/onboarding" element={<Onboarding />} />
 									<Route path="/createFormStart" element={<SurveyStart />} />
@@ -284,43 +284,43 @@ export const App = () => {
 												<Route path="/createForm" element={<SurveyMain />} />
 												<Route
 													path="/payment/google-form-conversion"
-													element={<GoogleFormConversionRequestPage />}
+													element={<RequestPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-inquiry"
-													element={<GoogleFormConversionInquiryPage />}
+													element={<InquiryPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-inquiry-success"
-													element={<GoogleFormConversionInquirySuccessPage />}
+													element={<InquirySuccessPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-preview"
-													element={<GoogleFormConversionPreviewPage />}
+													element={<PreviewPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-options"
-													element={<GoogleFormConversionOptionsPage />}
+													element={<OptionsPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-screening"
-													element={<GoogleFormConversionScreeningPage />}
+													element={<ScreeningPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-check"
-													element={<GoogleFormConversionPrecheckPage />}
+													element={<PrecheckPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-payment-confirm"
-													element={<GoogleFormConversionPaymentConfirmPage />}
+													element={<PaymentConfirmPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-success"
-													element={<GoogleFormConversionPaymentSuccessPage />}
+													element={<ConversionPaymentSuccessPage />}
 												/>
 												<Route
 													path="/payment/google-form-conversion-privacy-consent"
-													element={<GoogleFormConversionPrivacyConsentPage />}
+													element={<PrivacyConsentPage />}
 												/>
 												<Route
 													path="/payment/location"
@@ -392,8 +392,8 @@ export const App = () => {
 								</Routes>
 							</GlobalNavigationLayout>
 						</UserProvider>
-					</GoogleFormConversionOptionsFormProvider>
-				</GoogleFormConversionProvider>
+					</OptionsFormProvider>
+				</RequestEntryProvider>
 			</Router>
 		</QueryClientProvider>
 	);

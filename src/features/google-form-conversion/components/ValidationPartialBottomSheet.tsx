@@ -7,17 +7,17 @@ import { useNavigate } from "react-router-dom";
 const GOOGLE_FORM_CONVERSION_PREVIEW_PATH =
 	"/payment/google-form-conversion-preview";
 
-type GoogleFormConversionValidationPartialBottomSheetProps = {
+type ValidationPartialBottomSheetProps = {
 	open: boolean;
 	unsupportedDetails: FormRequestValidationDetail[];
 	onClose: () => void;
 };
 
-export const GoogleFormConversionValidationPartialBottomSheet = ({
+export const ValidationPartialBottomSheet = ({
 	open,
 	unsupportedDetails,
 	onClose,
-}: GoogleFormConversionValidationPartialBottomSheetProps) => {
+}: ValidationPartialBottomSheetProps) => {
 	const navigate = useNavigate();
 	const unsupportedCount = unsupportedDetails.length;
 

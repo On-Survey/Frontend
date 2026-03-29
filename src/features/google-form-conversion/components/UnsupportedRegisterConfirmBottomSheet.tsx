@@ -1,17 +1,17 @@
 import { Asset, BottomSheet, Button } from "@toss/tds-mobile";
 import type { CSSProperties } from "react";
 
-type GoogleFormConversionUnsupportedRegisterConfirmBottomSheetProps = {
+type UnsupportedRegisterConfirmBottomSheetProps = {
 	open: boolean;
 	onClose: () => void;
 	onContinue: () => void;
 };
 
-export const GoogleFormConversionUnsupportedRegisterConfirmBottomSheet = ({
+export const UnsupportedRegisterConfirmBottomSheet = ({
 	open,
 	onClose,
 	onContinue,
-}: GoogleFormConversionUnsupportedRegisterConfirmBottomSheetProps) => {
+}: UnsupportedRegisterConfirmBottomSheetProps) => {
 	return (
 		<BottomSheet
 			header={

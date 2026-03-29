@@ -7,7 +7,7 @@ import landing3 from "../../../assets/landingPage/landing3.svg";
 import landing4 from "../../../assets/landingPage/landing4.svg";
 import landing5 from "../../../assets/landingPage/landing5.svg";
 
-export const GoogleFormConversionLandingPage = () => {
+export const LandingPage = () => {
 	const navigate = useNavigate();
 
 	const handleRegister = () => {

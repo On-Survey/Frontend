@@ -38,23 +38,22 @@ export type TargetingCase =
 	| "single_gender_single_age";
 
 /** 신청(폼 링크·이메일) 단계에서 이후 화면으로 넘길 때 사용하는 라우터 state */
-export type GoogleFormConversionRequestEntryState = {
+export type RequestEntryState = {
 	formLink: string;
 	email: string;
 };
 
 /** 스크리닝 질문 구성 화면에서 저장해 옵션 등으로 넘기는 초안 (`answer`: 참여 허용 O=true, X=false) */
-export type GoogleFormConversionScreeningDraft = {
+export type ScreeningDraft = {
 	question: string;
 	answer: boolean;
 };
 
 /** 구글폼 변환 플로우 공통 라우터 state (스크리닝 초안 선택) */
-export type GoogleFormConversionFlowState =
-	GoogleFormConversionRequestEntryState & {
-		screening?: GoogleFormConversionScreeningDraft;
-		validationResult?: FormRequestValidationResponse;
-	};
+export type FlowState = RequestEntryState & {
+	screening?: ScreeningDraft;
+	validationResult?: FormRequestValidationResponse;
+};
 
 export type FormValues = {
 	formLink: string;
@@ -72,31 +71,25 @@ export type FormValues = {
 
 /**
  * 옵션(세그먼트·프로모션) 단계 입력 — `formLink`·`email`은 컨텍스트 최상위와 중복되지 않게 분리
- * (`GoogleFormConversionContext.optionsDraft`)
+ * (`Context.optionsDraft`)
  */
-export type GoogleFormConversionOptionsDraft = Omit<
-	FormValues,
-	"formLink" | "email"
->;
+export type OptionsDraft = Omit<FormValues, "formLink" | "email">;
 
-export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT: GoogleFormConversionOptionsDraft =
-	{
-		promotionCode: "",
-		respondentCount: 50,
-		residence: "ALL",
-		interestIds: [],
-		gender: "ALL",
-		ages: ["ALL"],
-	};
+export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT: OptionsDraft = {
+	promotionCode: "",
+	respondentCount: 50,
+	residence: "ALL",
+	interestIds: [],
+	gender: "ALL",
+	ages: ["ALL"],
+};
 
 /** 옵션 폼(rhf) 전체 값 — 스크리닝 초안 포함 */
-export type GoogleFormConversionOptionsFormValues =
-	GoogleFormConversionOptionsDraft & {
-		screening: GoogleFormConversionScreeningDraft | null;
-	};
+export type OptionsFormValues = OptionsDraft & {
+	screening: ScreeningDraft | null;
+};
 
-export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_FORM: GoogleFormConversionOptionsFormValues =
-	{
-		...DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT,
-		screening: null,
-	};
+export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_FORM: OptionsFormValues = {
+	...DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT,
+	screening: null,
+};

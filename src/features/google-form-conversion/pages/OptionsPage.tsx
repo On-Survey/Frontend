@@ -1,15 +1,15 @@
 import type { Interest } from "@features/create-survey/service/form/types";
 import { GenderSelectBottomSheet } from "@features/google-form-conversion/components/GenderSelectBottomSheet";
-import { GoogleFormConversionScreeningListRow } from "@features/google-form-conversion/components/GoogleFormConversionScreeningListRow";
 import { InterestSelectBottomSheet } from "@features/google-form-conversion/components/InterestSelectBottomSheet";
 import { RespondentCountSelectBottomSheet } from "@features/google-form-conversion/components/RespondentCountSelectBottomSheet";
-import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
-import { useGoogleFormConversionOptionsForm } from "@features/google-form-conversion/context/GoogleFormConversionOptionsFormContext";
+import { ScreeningListRow } from "@features/google-form-conversion/components/ScreeningListRow";
+import { useOptionsForm } from "@features/google-form-conversion/context/OptionsFormContext";
+import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
 import type {
 	FormValues,
-	GoogleFormConversionOptionsFormValues,
+	OptionsFormValues,
 } from "@features/google-form-conversion/types";
 import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
@@ -19,7 +19,7 @@ import {
 	getDefaultDeadline,
 	getQuestionRange,
 	getTotalQuestionCountForPricing,
-	isGoogleFormConversionContactEmail,
+	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
 import { AgeMultiSelectBottomSheet } from "@features/payment/components/payment/bottomSheet/AgeMultiSelectBottomSheet";
@@ -48,20 +48,20 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionOptionsPage = () => {
+export const OptionsPage = () => {
 	const navigate = useNavigate();
 	const {
 		formLink: formLinkFromContext,
 		email: emailFromContext,
 		validationResult,
-	} = useGoogleFormConversion();
+	} = useRequestEntryContext();
 	const {
 		control,
 		watch,
 		setValue,
 		getValues,
 		handleSubmit: rhfHandleSubmit,
-	} = useGoogleFormConversionOptionsForm();
+	} = useOptionsForm();
 
 	const screening = watch("screening");
 
@@ -70,7 +70,7 @@ export const GoogleFormConversionOptionsPage = () => {
 	const isValidEntry =
 		!!formLinkFromState &&
 		isGoogleFormLinkUrl(formLinkFromState) &&
-		isGoogleFormConversionContactEmail(emailFromState);
+		isContactEmail(emailFromState);
 
 	useEffect(() => {
 		if (!isValidEntry) {
@@ -170,7 +170,7 @@ export const GoogleFormConversionOptionsPage = () => {
 	}, [navigate, validationResult]);
 
 	const onSubmit = useCallback(
-		async (optionsForm: GoogleFormConversionOptionsFormValues) => {
+		async (optionsForm: OptionsFormValues) => {
 			const { screening: screeningFromForm, ...optionsData } = optionsForm;
 			const data: FormValues = {
 				formLink: formLinkFromState,
@@ -283,7 +283,7 @@ export const GoogleFormConversionOptionsPage = () => {
 			/>
 
 			<div className="flex flex-col gap-4 px-2 pt-4">
-				<GoogleFormConversionScreeningListRow
+				<ScreeningListRow
 					flowState={{
 						formLink: formLinkFromState,
 						email: emailFromState,

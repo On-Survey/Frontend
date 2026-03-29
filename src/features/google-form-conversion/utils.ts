@@ -10,17 +10,13 @@ import { isoDateToEndOfDayLocal } from "@shared/lib/FormatDate";
 import { validateEmail } from "@shared/lib/validators";
 import axios from "axios";
 import {
-	type CreateGoogleFormConversionRequestBody,
+	type CreateRequestBody,
 	type FormRequestValidationResponse,
 	type FormRequestValidationSuccessResultItem,
 	type GoogleFormSurveyFormRequest,
 	isFormRequestValidationSuccessResultItem,
 } from "./service/api";
-import type {
-	GoogleFormConversionScreeningDraft,
-	QuestionRange,
-	RespondentCount,
-} from "./types";
+import type { QuestionRange, RespondentCount, ScreeningDraft } from "./types";
 
 /** 관심사 다중 선택 값을 필드 표시용 문자열로 */
 export const formatInterestSelectionDisplay = (ids: InterestId[]): string => {
@@ -45,7 +41,7 @@ export const isGoogleFormLinkUrl = (v: string): boolean =>
  * 구글폼 플로우: 이메일 필수 + 형식 검사.
  * 공용 {@link validateEmail}은 빈 문자열을 허용하므로 이 플로우에서만 사용한다.
  */
-export const isGoogleFormConversionContactEmail = (email: string): boolean => {
+export const isContactEmail = (email: string): boolean => {
 	const trimmed = email.trim();
 	return trimmed.length > 0 && validateEmail(trimmed);
 };
@@ -152,7 +148,7 @@ export const getQuestionRange = (
 	return "31_50";
 };
 
-export type BuildGoogleFormConversionRequestInput = {
+export type BuildRequestInput = {
 	formLink: string;
 	requesterEmail: string;
 	respondentCount: RespondentCount;
@@ -164,13 +160,13 @@ export type BuildGoogleFormConversionRequestInput = {
 	paidTotalCoin: number;
 	discountCode?: string | null;
 	interests: Interest[];
-	screening?: GoogleFormConversionScreeningDraft | null;
+	screening?: ScreeningDraft | null;
 };
 
 /** POST /v1/form-requests 요청 바디 조립 — 금액은 화면에서 계산한 총 결제액만 `dueCountPrice`·`totalCoin`에 동일 반영 */
-export const buildGoogleFormConversionCreateRequestBody = (
-	input: BuildGoogleFormConversionRequestInput,
-): CreateGoogleFormConversionRequestBody => {
+export const buildCreateRequestBody = (
+	input: BuildRequestInput,
+): CreateRequestBody => {
 	const paid = input.paidTotalCoin;
 
 	const surveyForm: GoogleFormSurveyFormRequest = {
@@ -186,7 +182,7 @@ export const buildGoogleFormConversionCreateRequestBody = (
 		}),
 	};
 
-	const body: CreateGoogleFormConversionRequestBody = {
+	const body: CreateRequestBody = {
 		formLink: input.formLink.trim(),
 		requesterEmail: input.requesterEmail.trim(),
 		surveyForm,

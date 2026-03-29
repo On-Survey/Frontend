@@ -1,6 +1,6 @@
 import { Paragraph, Post } from "@toss/tds-mobile";
 
-export const GoogleFormConversionPrivacyConsentPage = () => {
+export const PrivacyConsentPage = () => {
 	return (
 		<div className="px-2 py-6">
 			<Post.Paragraph paddingBottom={8}>

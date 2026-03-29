@@ -8,7 +8,12 @@ import {
 	useState,
 } from "react";
 
-export type GoogleFormConversionContextValue = {
+/**
+ * 관심사: 구글폼 전환 플로우의 "요청 진입 정보" 상태만 관리한다.
+ * - 폼 링크/연락 이메일
+ * - 폼 검증 API 응답
+ */
+export type RequestEntryContextValue = {
 	formLink: string | null;
 	email: string | null;
 	validationResult: FormRequestValidationResponse | null;
@@ -22,14 +27,11 @@ export type GoogleFormConversionContextValue = {
 	resetFlow: () => void;
 };
 
-const GoogleFormConversionContext =
-	createContext<GoogleFormConversionContextValue | null>(null);
+const RequestEntryContext = createContext<RequestEntryContextValue | null>(
+	null,
+);
 
-export function GoogleFormConversionProvider({
-	children,
-}: {
-	children: ReactNode;
-}) {
+export function RequestEntryProvider({ children }: { children: ReactNode }) {
 	const [formLink, setFormLink] = useState<string | null>(null);
 	const [email, setEmail] = useState<string | null>(null);
 	const [validationResult, setValidationResult] =
@@ -55,7 +57,7 @@ export function GoogleFormConversionProvider({
 	}, []);
 
 	const value = useMemo(
-		(): GoogleFormConversionContextValue => ({
+		(): RequestEntryContextValue => ({
 			formLink,
 			email,
 			validationResult,
@@ -66,17 +68,17 @@ export function GoogleFormConversionProvider({
 	);
 
 	return (
-		<GoogleFormConversionContext.Provider value={value}>
+		<RequestEntryContext.Provider value={value}>
 			{children}
-		</GoogleFormConversionContext.Provider>
+		</RequestEntryContext.Provider>
 	);
 }
 
-export function useGoogleFormConversion(): GoogleFormConversionContextValue {
-	const ctx = useContext(GoogleFormConversionContext);
+export function useRequestEntryContext(): RequestEntryContextValue {
+	const ctx = useContext(RequestEntryContext);
 	if (!ctx) {
 		throw new Error(
-			"useGoogleFormConversion는 GoogleFormConversionProvider 안에서만 사용할 수 있어요",
+			"useRequestEntryContext는 RequestEntryProvider 안에서만 사용할 수 있어요",
 		);
 	}
 	return ctx;

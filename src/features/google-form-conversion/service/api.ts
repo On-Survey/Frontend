@@ -175,7 +175,7 @@ export interface GoogleFormSurveyFormRequest {
 /**
  * 구글폼 변환 신청 API (POST /v1/form-requests) 요청 바디
  */
-export interface CreateGoogleFormConversionRequestBody {
+export interface CreateRequestBody {
 	formLink: string;
 	requesterEmail: string;
 	screening?: FormRequestScreeningBody;
@@ -184,7 +184,7 @@ export interface CreateGoogleFormConversionRequestBody {
 	interests?: Interest[];
 }
 
-export interface CreateGoogleFormConversionRequestResponse {
+export interface CreateRequestResponse {
 	success: boolean;
 	data?: {
 		requestId?: string;
@@ -192,19 +192,20 @@ export interface CreateGoogleFormConversionRequestResponse {
 	message?: string;
 }
 
-export const createGoogleFormConversionRequest = async (
-	body: CreateGoogleFormConversionRequestBody,
-): Promise<CreateGoogleFormConversionRequestResponse> => {
+export const createRequest = async (
+	body: CreateRequestBody,
+): Promise<CreateRequestResponse> => {
 	const token = await getAccessToken();
-	const { data } = await api.post<
-		CreateGoogleFormConversionRequestResponse,
-		CreateGoogleFormConversionRequestBody
-	>(`/v1/form-requests`, body, {
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`,
+	const { data } = await api.post<CreateRequestResponse, CreateRequestBody>(
+		`/v1/form-requests`,
+		body,
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
 		},
-	});
+	);
 
 	return data;
 };

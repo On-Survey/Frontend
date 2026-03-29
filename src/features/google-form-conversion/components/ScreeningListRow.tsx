@@ -1,15 +1,13 @@
-import type { GoogleFormConversionFlowState } from "@features/google-form-conversion/types";
+import type { FlowState } from "@features/google-form-conversion/types";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, ListRow } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
-type GoogleFormConversionScreeningListRowProps = {
-	flowState: GoogleFormConversionFlowState;
+type ScreeningListRowProps = {
+	flowState: FlowState;
 };
 
-export const GoogleFormConversionScreeningListRow = ({
-	flowState,
-}: GoogleFormConversionScreeningListRowProps) => {
+export const ScreeningListRow = ({ flowState }: ScreeningListRowProps) => {
 	const navigate = useNavigate();
 	const hasScreening = Boolean(
 		flowState.screening?.question?.trim() &&
