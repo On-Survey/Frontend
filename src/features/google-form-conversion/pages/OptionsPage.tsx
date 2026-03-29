@@ -107,6 +107,7 @@ export const OptionsPage = () => {
 		if (!validationSuccess) return null;
 		return getTotalQuestionCountForPricing(validationSuccess);
 	}, [validationSuccess]);
+	const convertibleQuestionCount = validationSuccess?.convertible ?? 0;
 
 	const respondentCount = watch("respondentCount");
 	const interestIds = watch("interestIds");
@@ -291,6 +292,17 @@ export const OptionsPage = () => {
 					}}
 				/>
 				<Border variant="height16" />
+				<TextField.Button
+					variant="line"
+					hasError={false}
+					disabled={true}
+					label="변환 가능 문항 수"
+					labelOption="sustain"
+					help="검증 결과 기준이에요"
+					value={`${convertibleQuestionCount}개`}
+					placeholder="0개"
+					right={undefined}
+				/>
 				<TextField.Button
 					variant="line"
 					hasError={false}
