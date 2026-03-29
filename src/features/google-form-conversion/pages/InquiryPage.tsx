@@ -1,4 +1,7 @@
-import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
+import {
+	useRequestEntryContext,
+	useRequestFormContext,
+} from "@features/google-form-conversion/context/RequestEntryContext";
 import { getInconvertibleReasonStringsForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { useSurveyHelpRequestMutation } from "@features/survey/hooks/useSurveyHelpRequestMutation";
 import { useUserInfo } from "@shared/contexts/UserContext";
@@ -14,11 +17,9 @@ export const InquiryPage = () => {
 	const [inquiry, setInquiry] = useState("");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const navigate = useNavigate();
-	const {
-		email: emailFromFlow,
-		validationResult,
-		formLink: formLinkFromFlow,
-	} = useRequestEntryContext();
+	const { validationResult } = useRequestEntryContext();
+	const { email: emailFromFlow, formLink: formLinkFromFlow } =
+		useRequestFormContext();
 	const { userInfo } = useUserInfo();
 	const helpRequest = useSurveyHelpRequestMutation();
 

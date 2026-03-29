@@ -1,5 +1,5 @@
 import { useOptionsForm } from "@features/google-form-conversion/context/OptionsFormContext";
-import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
+import { useRequestFormContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import {
 	isContactEmail,
 	isGoogleFormLinkUrl,
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 export const ScreeningPage = () => {
 	const navigate = useNavigate();
-	const { formLink: fl, email: em } = useRequestEntryContext();
+	const { formLink: fl, email: em } = useRequestFormContext();
 	const { watch, setValue } = useOptionsForm();
 	const screening = watch("screening");
 

@@ -2,13 +2,16 @@ import { ValidationErrorBottomSheet } from "@features/google-form-conversion/com
 import { ValidationPartialBottomSheet } from "@features/google-form-conversion/components/ValidationPartialBottomSheet";
 import { ValidationSuccessBottomSheet } from "@features/google-form-conversion/components/ValidationSuccessBottomSheet";
 import { useOptionsFormReset } from "@features/google-form-conversion/context/OptionsFormContext";
-import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
+import {
+	useRequestEntryContext,
+	useRequestForm,
+} from "@features/google-form-conversion/context/RequestEntryContext";
 import { useGoogleFormRequestValidation } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import {
 	type FormRequestValidationDetail,
 	isFormRequestValidationSuccessResultItem,
 } from "@features/google-form-conversion/service/api";
-import type { FormValues } from "@features/google-form-conversion/types";
+import type { RequestFormValues } from "@features/google-form-conversion/types";
 import {
 	getConvertibleQuestionCountFromValidation,
 	getFormRequestValidationErrorMessage,
@@ -24,7 +27,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useCallback, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export const RequestPage = () => {
@@ -39,23 +42,12 @@ export const RequestPage = () => {
 	const [successSheetOpen, setSuccessSheetOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-	type RequestFormValues = Pick<FormValues, "formLink" | "email"> & {
-		emailSendAgreed: boolean;
-	};
-
 	const {
 		control,
 		watch,
 		handleSubmit: rhfHandleSubmit,
 		formState: { errors },
-	} = useForm<RequestFormValues>({
-		mode: "onChange",
-		defaultValues: {
-			formLink: "",
-			email: "",
-			emailSendAgreed: false,
-		},
-	});
+	} = useRequestForm();
 
 	const formLink = watch("formLink");
 	const emailSendAgreed = watch("emailSendAgreed");

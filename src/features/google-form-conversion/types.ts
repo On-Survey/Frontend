@@ -69,6 +69,17 @@ export type FormValues = {
 	ages: AgeCode[];
 };
 
+/** 요청 진입 화면 RHF (`RequestEntryProvider`) */
+export type RequestFormValues = Pick<FormValues, "formLink" | "email"> & {
+	emailSendAgreed: boolean;
+};
+
+export const DEFAULT_GOOGLE_FORM_CONVERSION_REQUEST_FORM: RequestFormValues = {
+	formLink: "",
+	email: "",
+	emailSendAgreed: false,
+};
+
 /**
  * 옵션(세그먼트·프로모션) 단계 입력 — `formLink`·`email`은 컨텍스트 최상위와 중복되지 않게 분리
  * (`Context.optionsDraft`)

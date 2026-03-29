@@ -1,5 +1,8 @@
 import { UnsupportedRegisterConfirmBottomSheet } from "@features/google-form-conversion/components/UnsupportedRegisterConfirmBottomSheet";
-import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
+import {
+	useRequestEntryContext,
+	useRequestFormContext,
+} from "@features/google-form-conversion/context/RequestEntryContext";
 import { getQuestionNumberLabelForValidationDetail } from "@features/google-form-conversion/lib/getQuestionNumberLabelForValidationDetail";
 import { hasInconvertibleFromValidationSuccess } from "@features/google-form-conversion/lib/hasInconvertibleFromValidationSuccess";
 import { mapConvertibleDetailsToPreviewSections } from "@features/google-form-conversion/lib/mapConvertibleDetailsToTransformedQuestions";
@@ -30,13 +33,10 @@ import { useNavigate } from "react-router-dom";
 
 export const PreviewPage = () => {
 	const navigate = useNavigate();
-	const {
-		formLink: formLinkCtx,
-		email,
-		validationResult,
-	} = useRequestEntryContext();
+	const { validationResult } = useRequestEntryContext();
+	const { formLink: formLinkCtx, email } = useRequestFormContext();
 
-	const formLink = formLinkCtx?.trim() ?? "";
+	const formLink = formLinkCtx.trim() ?? "";
 
 	const isValidEntry =
 		!!validationResult &&

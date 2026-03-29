@@ -4,7 +4,10 @@ import { InterestSelectBottomSheet } from "@features/google-form-conversion/comp
 import { RespondentCountSelectBottomSheet } from "@features/google-form-conversion/components/RespondentCountSelectBottomSheet";
 import { ScreeningListRow } from "@features/google-form-conversion/components/ScreeningListRow";
 import { useOptionsForm } from "@features/google-form-conversion/context/OptionsFormContext";
-import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
+import {
+	useRequestEntryContext,
+	useRequestFormContext,
+} from "@features/google-form-conversion/context/RequestEntryContext";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
 import type {
@@ -50,11 +53,9 @@ import { useNavigate } from "react-router-dom";
 
 export const OptionsPage = () => {
 	const navigate = useNavigate();
-	const {
-		formLink: formLinkFromContext,
-		email: emailFromContext,
-		validationResult,
-	} = useRequestEntryContext();
+	const { validationResult } = useRequestEntryContext();
+	const { formLink: formLinkRaw, email: emailFromState } =
+		useRequestFormContext();
 	const {
 		control,
 		watch,
@@ -65,8 +66,7 @@ export const OptionsPage = () => {
 
 	const screening = watch("screening");
 
-	const formLinkFromState = formLinkFromContext?.trim() ?? "";
-	const emailFromState = emailFromContext ?? "";
+	const formLinkFromState = formLinkRaw.trim() ?? "";
 	const isValidEntry =
 		!!formLinkFromState &&
 		isGoogleFormLinkUrl(formLinkFromState) &&
