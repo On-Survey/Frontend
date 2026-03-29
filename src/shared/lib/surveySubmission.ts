@@ -9,6 +9,11 @@ interface BuildSectionAnswersPayloadParams {
 	previousAnswers: Record<number, string>;
 }
 
+/** 참여 화면에서 사용자 입력 필드가 없어 응답을 제출하지 않는 문항 */
+export const isNonAnswerableParticipationQuestion = (
+	question: Pick<TransformedSurveyQuestion, "type">,
+): boolean => question.type === "image";
+
 /**
  * 현재 섹션의 답변을 제출 형식으로 변환
  * - 객관식: 선택한 보기들을 각각 별도 항목으로 추가
@@ -23,7 +28,7 @@ export const buildSectionAnswersPayload = ({
 	const payload: SubmitSurveyParticipationAnswer[] = [];
 
 	questions.forEach((question) => {
-		if (question.type === "image") {
+		if (isNonAnswerableParticipationQuestion(question)) {
 			return; // 이미지 전용 문항은 제출 항목 없음
 		}
 		const answer = answers[question.questionId];

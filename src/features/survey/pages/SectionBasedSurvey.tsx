@@ -14,6 +14,7 @@ import {
 	CTAButton,
 	FixedBottomCTA,
 	Top,
+	useToast,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
 import { useEffect, useRef, useState } from "react";
@@ -39,6 +40,7 @@ interface SectionBasedSurveyState {
 
 export const SectionBasedSurvey = () => {
 	const navigate = useNavigate();
+	const { openToast } = useToast();
 	const { numericSurveyId, locationState: routeState } = useSurveyRouteParams();
 	const locationState = routeState as SectionBasedSurveyState | undefined;
 	const surveyId = numericSurveyId ?? locationState?.surveyId ?? null;
@@ -299,7 +301,17 @@ export const SectionBasedSurvey = () => {
 			return;
 		}
 
-		await submitCurrentSectionAnswers();
+		try {
+			await submitCurrentSectionAnswers();
+		} catch (error) {
+			console.error("설문 응답 저장 실패:", error);
+			openToast("설문 제출을 실패했어요 다시 시도해주세요", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
+			return;
+		}
 
 		const nextSection = calculateNextSection(
 			questions,
@@ -323,7 +335,6 @@ export const SectionBasedSurvey = () => {
 	const handleSubmit = async () => {
 		if (!surveyId) return;
 
-		setSubmitting(true);
 		await completeSurveyMutation({ surveyId });
 
 		let surveyInfo: Awaited<ReturnType<typeof getSurveyInfo>> | undefined;
@@ -362,8 +373,20 @@ export const SectionBasedSurvey = () => {
 			return;
 		}
 
-		await submitCurrentSectionAnswers();
-		await handleSubmit();
+		try {
+			setSubmitting(true);
+			await submitCurrentSectionAnswers();
+			await handleSubmit();
+		} catch (error) {
+			console.error("설문 제출 실패:", error);
+			openToast("설문 제출을 실패했어요. 다시 시도해주세요.", {
+				type: "bottom",
+				lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+				higherThanCTA: true,
+			});
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	return (
