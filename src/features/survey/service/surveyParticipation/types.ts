@@ -92,7 +92,11 @@ export const mapBackendQuestionType = (
 		NUMBER: "number",
 		IMAGE: "image",
 	};
-	return mapping[backendType] ?? "shortAnswer";
+	const key = String(backendType ?? "")
+		.trim()
+		.toUpperCase()
+		.replace(/-/g, "_");
+	return mapping[key] ?? "shortAnswer";
 };
 
 export interface SurveyParticipationInfo {
