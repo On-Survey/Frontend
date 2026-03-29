@@ -110,6 +110,10 @@ export const RequestPage = () => {
 		setSheetTrigger(null);
 	}, []);
 
+	const handleEmailAgreementClick = useCallback(() => {
+		navigate("/payment/google-form-conversion-privacy-consent");
+	}, [navigate]);
+
 	return (
 		<>
 			<Top
@@ -218,7 +222,17 @@ export const RequestPage = () => {
 									</Text>
 								</div>
 							}
-							middle={<AgreementV4.Text>이메일 발신 동의</AgreementV4.Text>}
+							middle={
+								<AgreementV4.Text
+									onClick={(e) => {
+										e.stopPropagation();
+										handleEmailAgreementClick();
+									}}
+									style={{ textDecoration: "underline" }}
+								>
+									이메일 발신 동의
+								</AgreementV4.Text>
+							}
 						/>
 					)}
 				/>

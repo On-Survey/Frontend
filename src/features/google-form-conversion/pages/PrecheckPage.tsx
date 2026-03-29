@@ -162,6 +162,7 @@ export const PrecheckPage = () => {
 								e.stopPropagation();
 								handleAgreementClick();
 							}}
+							style={{ textDecoration: "underline" }}
 						>
 							개인정보 수집·이용 동의
 						</AgreementV4.Text>
