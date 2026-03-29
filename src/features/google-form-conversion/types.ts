@@ -98,9 +98,12 @@ export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT: OptionsDraft = {
 /** 옵션 폼(rhf) 전체 값 — 스크리닝 초안 포함 */
 export type OptionsFormValues = OptionsDraft & {
 	screening: ScreeningDraft | null;
+	/** 프로모션 코드 인증 성공 상태 (옵션/스크리닝 페이지 왕복 시 유지) */
+	verifiedPromotionCode: string | null;
 };
 
 export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_FORM: OptionsFormValues = {
 	...DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT,
 	screening: null,
+	verifiedPromotionCode: null,
 };

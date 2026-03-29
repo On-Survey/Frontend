@@ -81,14 +81,7 @@ export const OptionsPage = () => {
 	const [promotionCodeError, setPromotionCodeError] = useState<string | null>(
 		null,
 	);
-	const [promotionVerifyMessage, setPromotionVerifyMessage] = useState<
-		string | null
-	>(null);
 	const [isPromotionVerifying, setIsPromotionVerifying] = useState(false);
-	/** 인증하기로 검증에 성공한 코드(trim). 입력이 바뀌면 null로 리셋 */
-	const [verifiedPromotionCode, setVerifiedPromotionCode] = useState<
-		string | null
-	>(null);
 	const [isRespondentSheetOpen, setIsRespondentSheetOpen] = useState(false);
 	const [isGenderSheetOpen, setIsGenderSheetOpen] = useState(false);
 	const [isAgeSheetOpen, setIsAgeSheetOpen] = useState(false);
@@ -112,6 +105,7 @@ export const OptionsPage = () => {
 	const respondentCount = watch("respondentCount");
 	const interestIds = watch("interestIds");
 	const promotionCodeInput = watch("promotionCode") ?? "";
+	const verifiedPromotionCode = watch("verifiedPromotionCode");
 	const gender = watch("gender");
 	const ages = watch("ages");
 
@@ -119,6 +113,7 @@ export const OptionsPage = () => {
 	const isPromoPriceApplied =
 		verifiedPromotionCode !== null &&
 		verifiedPromotionCode === promotionCodeInput.trim();
+	const promotionVerifyMessage = isPromoPriceApplied ? "인증되었어요" : null;
 
 	const price = useMemo(() => {
 		const questionRange = getQuestionRange(formQuestionCount);
@@ -141,29 +136,26 @@ export const OptionsPage = () => {
 	const handleVerifyPromotion = useCallback(async () => {
 		const code = getValues("promotionCode")?.trim() ?? "";
 		if (!code) {
-			setPromotionVerifyMessage(null);
 			setPromotionCodeError("프로모션 코드를 입력해주세요");
 			return;
 		}
 		setIsPromotionVerifying(true);
 		setPromotionCodeError(null);
-		setPromotionVerifyMessage(null);
 		try {
 			const { valid } = await validateDiscountCode(code);
 			if (valid) {
-				setPromotionVerifyMessage("인증되었어요");
-				setVerifiedPromotionCode(code);
+				setValue("verifiedPromotionCode", code);
 			} else {
 				setPromotionCodeError("유효하지 않은 프로모션 코드예요");
-				setVerifiedPromotionCode(null);
+				setValue("verifiedPromotionCode", null);
 			}
 		} catch {
 			setPromotionCodeError("인증에 실패했어요. 다시 시도해주세요");
-			setVerifiedPromotionCode(null);
+			setValue("verifiedPromotionCode", null);
 		} finally {
 			setIsPromotionVerifying(false);
 		}
-	}, [getValues]);
+	}, [getValues, setValue]);
 
 	const handleNavigateToPreview = useCallback(() => {
 		if (!validationResult) return;
@@ -176,7 +168,12 @@ export const OptionsPage = () => {
 			const data: FormValues = {
 				formLink: formLinkFromState,
 				email: emailFromState,
-				...optionsData,
+				promotionCode: optionsData.promotionCode,
+				respondentCount: optionsData.respondentCount,
+				residence: optionsData.residence,
+				interestIds: optionsData.interestIds,
+				gender: optionsData.gender,
+				ages: optionsData.ages,
 			};
 			pushGtmEvent({
 				event: "form_payment_button_click",
@@ -419,9 +416,8 @@ export const OptionsPage = () => {
 										const next = e.target.value;
 										onChange(next);
 										setPromotionCodeError(null);
-										setPromotionVerifyMessage(null);
 										if (next.trim() !== verifiedPromotionCode) {
-											setVerifiedPromotionCode(null);
+											setValue("verifiedPromotionCode", null);
 										}
 									}}
 									onBlur={onBlur}
