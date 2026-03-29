@@ -54,9 +54,18 @@ export const SectionBasedSurvey = () => {
 		locationState?.sectionHistory ?? [locationState?.currentSection ?? 1],
 	);
 
-	const { data } = useSurveySectionQuestions(surveyId, currentSection);
+	const { data, isError } = useSurveySectionQuestions(surveyId, currentSection);
 
 	const questions = data?.info ?? [];
+
+	// 섹션 API 응답 전에는 설문 타이틀/설명(locationState) 표시 x
+	const sectionHeaderReady = surveyId === null || data !== undefined || isError;
+	const headerTitleText = sectionHeaderReady
+		? data?.sectionTitle?.trim() || locationState?.surveyTitle
+		: undefined;
+	const headerSubtitleText = sectionHeaderReady
+		? data?.sectionDescription?.trim() || locationState?.surveyDescription
+		: undefined;
 	const nextSectionFromApi = data?.nextSection;
 
 	const [answers, setAnswers] = useState<Record<number, string>>(
@@ -393,10 +402,10 @@ export const SectionBasedSurvey = () => {
 		<>
 			<Top
 				title={
-					(data?.sectionTitle ?? locationState?.surveyTitle) ? (
+					headerTitleText ? (
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
 							<TextWithLinks
-								text={data?.sectionTitle ?? locationState?.surveyTitle ?? ""}
+								text={headerTitleText}
 								variant="inline"
 								inheritLinkSize
 							/>
@@ -404,16 +413,9 @@ export const SectionBasedSurvey = () => {
 					) : undefined
 				}
 				subtitleBottom={
-					(data?.sectionDescription ?? locationState?.surveyDescription) ? (
+					headerSubtitleText ? (
 						<Top.SubtitleParagraph size={15}>
-							<TextWithLinks
-								text={
-									data?.sectionDescription ??
-									locationState?.surveyDescription ??
-									""
-								}
-								variant="inline"
-							/>
+							<TextWithLinks text={headerSubtitleText} variant="inline" />
 						</Top.SubtitleParagraph>
 					) : undefined
 				}
