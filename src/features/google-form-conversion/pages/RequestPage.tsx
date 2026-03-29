@@ -180,6 +180,11 @@ export const RequestPage = () => {
 							help={errors.email?.message ?? "안내 받을 이메일을 입력해 주세요"}
 							value={value}
 							placeholder="example@toss.im"
+							type="email"
+							inputMode="email"
+							autoCapitalize="none"
+							autoCorrect="off"
+							spellCheck={false}
 							suffix=""
 							prefix=""
 							onChange={(e) => onChange(e.target.value)}
