@@ -64,7 +64,9 @@ export const SectionBasedSurvey = () => {
 		? data?.sectionTitle?.trim() || locationState?.surveyTitle
 		: undefined;
 	const headerSubtitleText = sectionHeaderReady
-		? data?.sectionDescription?.trim() || locationState?.surveyDescription
+		? data !== undefined
+			? data.sectionDescription?.trim() || undefined
+			: locationState?.surveyDescription
 		: undefined;
 	const nextSectionFromApi = data?.nextSection;
 
@@ -153,9 +155,11 @@ export const SectionBasedSurvey = () => {
 
 	useEffect(() => {
 		if (!data?.info.length) return;
+		const list = data.info;
 		const expanded: Record<number, boolean> = {};
-		data.info.forEach((q, idx) => {
-			expanded[q.questionId] = idx === 0;
+		list.forEach((q, idx) => {
+			const prevIsImage = idx > 0 && list[idx - 1].type === "image";
+			expanded[q.questionId] = idx === 0 || prevIsImage;
 		});
 		setExpandedQuestions(expanded);
 	}, [data]);
