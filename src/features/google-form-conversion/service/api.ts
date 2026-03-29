@@ -58,6 +58,8 @@ export interface FormRequestValidationDetail {
 	reason: string;
 	/** 폼 상 문항 순번(백엔드 제공 시). 없으면 목록 순서로 표시 */
 	questionOrder?: number;
+	/** 백엔드 제공 시 — 미지원 문항 미리보기에서 필수/선택 표시 */
+	isRequired?: boolean;
 }
 export interface FormRequestValidationChoiceOption {
 	optionId: number;

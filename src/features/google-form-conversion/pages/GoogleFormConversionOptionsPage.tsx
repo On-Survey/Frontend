@@ -104,14 +104,17 @@ export const GoogleFormConversionOptionsPage = () => {
 
 	const formLink = watch("formLink");
 	/** 가격 구간용 문항 수 — 검증 API 성공 행 (`totalCount`·`convertible` 등 보정, preview API 없음) */
-	const formQuestionCount = useMemo(() => {
+	const validationSuccess = useMemo(() => {
 		if (!validationResult) return null;
 		const trimmed = formLink.trim();
 		if (!trimmed) return null;
-		const success = pickValidationSuccessForFormLink(validationResult, trimmed);
-		if (!success) return null;
-		return getTotalQuestionCountForPricing(success);
+		return pickValidationSuccessForFormLink(validationResult, trimmed);
 	}, [validationResult, formLink]);
+
+	const formQuestionCount = useMemo(() => {
+		if (!validationSuccess) return null;
+		return getTotalQuestionCountForPricing(validationSuccess);
+	}, [validationSuccess]);
 
 	const respondentCount = watch("respondentCount");
 	const interestIds = watch("interestIds");

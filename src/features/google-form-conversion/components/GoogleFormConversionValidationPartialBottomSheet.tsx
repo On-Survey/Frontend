@@ -1,3 +1,4 @@
+import { getQuestionNumberLabelForValidationDetail } from "@features/google-form-conversion/lib/getQuestionNumberLabelForValidationDetail";
 import type { FormRequestValidationDetail } from "@features/google-form-conversion/service/api";
 import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, Text } from "@toss/tds-mobile";
@@ -10,14 +11,6 @@ type GoogleFormConversionValidationPartialBottomSheetProps = {
 	open: boolean;
 	unsupportedDetails: FormRequestValidationDetail[];
 	onClose: () => void;
-};
-
-const getQuestionNumberLabel = (
-	detail: FormRequestValidationDetail,
-	listIndex: number,
-): string => {
-	const order = detail.questionOrder ?? listIndex + 1;
-	return `${order}번 문항`;
 };
 
 export const GoogleFormConversionValidationPartialBottomSheet = ({
@@ -74,7 +67,7 @@ export const GoogleFormConversionValidationPartialBottomSheet = ({
 									typography="t7"
 									fontWeight="medium"
 								>
-									{getQuestionNumberLabel(detail, index)}
+									{getQuestionNumberLabelForValidationDetail(detail, index)}
 								</Text>
 								<div className="h-1.5" />
 								<Text

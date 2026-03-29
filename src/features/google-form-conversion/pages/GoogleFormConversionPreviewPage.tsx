@@ -1,4 +1,7 @@
+import { GoogleFormConversionUnsupportedRegisterConfirmBottomSheet } from "@features/google-form-conversion/components/GoogleFormConversionUnsupportedRegisterConfirmBottomSheet";
 import { useGoogleFormConversion } from "@features/google-form-conversion/context/GoogleFormConversionContext";
+import { getQuestionNumberLabelForValidationDetail } from "@features/google-form-conversion/lib/getQuestionNumberLabelForValidationDetail";
+import { hasInconvertibleFromValidationSuccess } from "@features/google-form-conversion/lib/hasInconvertibleFromValidationSuccess";
 import { mapConvertibleDetailsToPreviewSections } from "@features/google-form-conversion/lib/mapConvertibleDetailsToTransformedQuestions";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import {
@@ -12,8 +15,12 @@ import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
 	Border,
+	BottomCTA,
+	CTAButton,
 	FixedBottomCTA,
+	List,
 	ListHeader,
+	ListRow,
 	Text,
 	Top,
 	WheelDatePicker,
@@ -37,15 +44,57 @@ export const GoogleFormConversionPreviewPage = () => {
 		isGoogleFormLinkUrl(formLink) &&
 		isGoogleFormConversionContactEmail(email ?? "");
 
-	const previewSections = useMemo(() => {
-		if (!validationResult) return [];
-		const success = pickValidationSuccessForFormLink(
-			validationResult,
-			formLink,
-		);
-		if (!success?.convertibleDetails?.length) return [];
-		return mapConvertibleDetailsToPreviewSections(success.convertibleDetails);
+	const validationSuccess = useMemo(() => {
+		if (!validationResult || !formLink) return null;
+		return pickValidationSuccessForFormLink(validationResult, formLink);
 	}, [validationResult, formLink]);
+
+	const previewSections = useMemo(() => {
+		if (!validationSuccess?.convertibleDetails?.length) return [];
+		return mapConvertibleDetailsToPreviewSections(
+			validationSuccess.convertibleDetails,
+		);
+	}, [validationSuccess]);
+
+	const inconvertibleDetails = useMemo(() => {
+		const raw = validationSuccess?.inconvertibleDetails ?? [];
+		return [...raw]
+			.map((item, originalIndex) => ({ item, originalIndex }))
+			.sort((a, b) => {
+				const ao = a.item.questionOrder ?? Number.POSITIVE_INFINITY;
+				const bo = b.item.questionOrder ?? Number.POSITIVE_INFINITY;
+				if (ao !== bo) return ao - bo;
+				return a.originalIndex - b.originalIndex;
+			})
+			.map(({ item }) => item);
+	}, [validationSuccess]);
+
+	const inconvertibleTotalCount = useMemo(() => {
+		const detailsLen = inconvertibleDetails.length;
+		const fromApi = validationSuccess?.inconvertible ?? 0;
+		return Math.max(detailsLen, fromApi);
+	}, [inconvertibleDetails.length, validationSuccess]);
+
+	const hasInconvertible = useMemo(
+		() => hasInconvertibleFromValidationSuccess(validationSuccess),
+		[validationSuccess],
+	);
+
+	const [isUnsupportedRegisterSheetOpen, setIsUnsupportedRegisterSheetOpen] =
+		useState(false);
+	const pendingAfterUnsupportedConfirmRef = useRef<(() => void) | null>(null);
+
+	const handleUnsupportedRegisterSheetClose = useCallback(() => {
+		pendingAfterUnsupportedConfirmRef.current = null;
+		setIsUnsupportedRegisterSheetOpen(false);
+	}, []);
+
+	const handleUnsupportedRegisterContinue = useCallback(() => {
+		const run = pendingAfterUnsupportedConfirmRef.current;
+		pendingAfterUnsupportedConfirmRef.current = null;
+		setIsUnsupportedRegisterSheetOpen(false);
+		run?.();
+	}, []);
 
 	useEffect(() => {
 		if (!isValidEntry) {
@@ -117,47 +166,62 @@ export const GoogleFormConversionPreviewPage = () => {
 		[selectedDateQuestionId, updateAnswer],
 	);
 
-	const handleContinue = useCallback(() => {
-		navigate("/payment/google-form-conversion-options");
+	const handleContinueToOptions = useCallback(() => {
+		const go = () => {
+			navigate("/payment/google-form-conversion-options");
+		};
+		if (hasInconvertible) {
+			pendingAfterUnsupportedConfirmRef.current = go;
+			setIsUnsupportedRegisterSheetOpen(true);
+			return;
+		}
+		go();
+	}, [navigate, hasInconvertible]);
+
+	const goToInquiry = useCallback(() => {
+		navigate("/payment/google-form-conversion-inquiry");
 	}, [navigate]);
+
+	const inquiryListRow = (
+		<div
+			className="mx-4 overflow-hidden rounded-full"
+			style={{ backgroundColor: adaptive.grey50 }}
+		>
+			<List>
+				<ListRow
+					aria-label="온서베이 운영팀에게 문의하기"
+					onClick={goToInquiry}
+					left={
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							backgroundColor="transparent"
+							name="icon-headphone-grey-fill"
+							aria-hidden={true}
+							ratio="1/1"
+						/>
+					}
+					contents={
+						<ListRow.Texts
+							type="1RowTypeA"
+							top="온서베이 운영팀에게 문의하기"
+							topProps={{ color: adaptive.grey800, fontWeight: "semibold" }}
+						/>
+					}
+					verticalPadding="large"
+					arrowType="right"
+				/>
+			</List>
+		</div>
+	);
 
 	if (!isValidEntry) {
 		return null;
 	}
 
-	if (previewSections.length === 0) {
+	if (previewSections.length === 0 && !hasInconvertible) {
 		return (
 			<>
-				<button
-					type="button"
-					onClick={() => navigate("/payment/google-form-conversion-inquiry")}
-					aria-label="온서베이 운영팀에게 문의하기"
-					className="flex w-full items-center gap-2 border-0 bg-transparent px-4 py-3 text-left active:opacity-70"
-				>
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						backgroundColor="transparent"
-						name="icon-headphone-grey-fill"
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-					<Text
-						display="block"
-						color={adaptive.grey800}
-						typography="t5"
-						fontWeight="semibold"
-						className="min-w-0 flex-1"
-					>
-						온서베이 운영팀에게 문의하기
-					</Text>
-					<Asset.Icon
-						frameShape={Asset.frameShape.CleanW24}
-						backgroundColor="transparent"
-						name="icon-tech-arrow"
-						aria-hidden={true}
-						ratio="1/1"
-					/>
-				</button>
+				{inquiryListRow}
 				<Border variant="height16" />
 				<Top
 					title={
@@ -182,36 +246,7 @@ export const GoogleFormConversionPreviewPage = () => {
 
 	return (
 		<>
-			<button
-				type="button"
-				onClick={() => navigate("/payment/google-form-conversion-inquiry")}
-				aria-label="온서베이 운영팀에게 문의하기"
-				className="flex w-full items-center gap-2 border-0 bg-transparent px-4 py-3 text-left active:opacity-70"
-			>
-				<Asset.Icon
-					frameShape={Asset.frameShape.CleanW24}
-					backgroundColor="transparent"
-					name="icon-headphone-grey-fill"
-					aria-hidden={true}
-					ratio="1/1"
-				/>
-				<Text
-					display="block"
-					color={adaptive.grey800}
-					typography="t5"
-					fontWeight="semibold"
-					className="min-w-0 flex-1"
-				>
-					온서베이 운영팀에게 문의하기
-				</Text>
-				<Asset.Icon
-					frameShape={Asset.frameShape.CleanW24}
-					backgroundColor="transparent"
-					name="icon-tech-arrow"
-					aria-hidden={true}
-					ratio="1/1"
-				/>
-			</button>
+			{inquiryListRow}
 
 			<Top
 				title={
@@ -225,9 +260,110 @@ export const GoogleFormConversionPreviewPage = () => {
 					</Top.SubtitleParagraph>
 				}
 			/>
-			<Border variant="height16" />
 
-			<div className="pb-24">
+			<div className="pb-28">
+				{hasInconvertible ? (
+					<section className="mx-4 mb-6" aria-label="변환되지 않은 문항">
+						<div className="mb-3 flex items-baseline justify-between gap-3 px-0.5">
+							<Text
+								display="block"
+								color={adaptive.grey900}
+								typography="t5"
+								fontWeight="bold"
+							>
+								미지원 문항
+							</Text>
+							<Text
+								display="block"
+								color={adaptive.grey600}
+								typography="t7"
+								fontWeight="medium"
+								className="shrink-0"
+							>
+								총 {inconvertibleTotalCount}개
+							</Text>
+						</div>
+
+						<div className="flex flex-col gap-3">
+							<ul className="m-0 flex list-none flex-col gap-3 p-0">
+								{inconvertibleDetails.map((d, i) => (
+									<li
+										key={`${d.type}-${d.title}-${i}-${d.reason}`}
+										className="overflow-hidden rounded-2xl border border-[#E5E8EB] bg-[#F9FAFB]"
+									>
+										<div className="border-b border-[#E5E8EB] bg-white px-4 py-2.5">
+											<Text
+												display="block"
+												color={adaptive.grey600}
+												typography="t7"
+												fontWeight="medium"
+											>
+												{getQuestionNumberLabelForValidationDetail(d, i)}
+											</Text>
+											<div className="h-1.5" />
+											<Text
+												display="block"
+												color={adaptive.grey900}
+												typography="t5"
+												fontWeight="bold"
+											>
+												{d.title?.trim() ? d.title : "(제목 없음)"}
+											</Text>
+										</div>
+										<div className="flex flex-col gap-2 px-4 py-3">
+											<div className="flex items-start gap-2">
+												<Text
+													as="span"
+													display="inline"
+													color={adaptive.grey600}
+													typography="t7"
+													fontWeight="semibold"
+													className="shrink-0 pt-0.5"
+												>
+													유형
+												</Text>
+												<span className="inline-flex rounded-md bg-[#EEF2F6] px-2 py-0.5">
+													<Text
+														as="span"
+														color={adaptive.grey800}
+														typography="t7"
+														fontWeight="semibold"
+													>
+														{d.type}
+													</Text>
+												</span>
+											</div>
+											<div className="flex items-start gap-2">
+												<Text
+													as="span"
+													display="inline"
+													color={adaptive.grey600}
+													typography="t7"
+													fontWeight="semibold"
+													className="shrink-0 pt-0.5"
+												>
+													사유
+												</Text>
+												<Text
+													display="block"
+													color={adaptive.red500}
+													typography="t6"
+													fontWeight="regular"
+													className="min-w-0 flex-1"
+												>
+													{d.reason}
+												</Text>
+											</div>
+										</div>
+									</li>
+								))}
+							</ul>
+						</div>
+					</section>
+				) : null}
+				{hasInconvertible && previewSections.length > 0 ? (
+					<Border variant="height16" />
+				) : null}
 				{previewSections.map((section, sectionIdx) => {
 					const sectionNumber =
 						section.currSection >= 1 ? section.currSection : sectionIdx + 1;
@@ -304,7 +440,22 @@ export const GoogleFormConversionPreviewPage = () => {
 				/>
 			</div>
 
-			<FixedBottomCTA onClick={handleContinue}>다음 단계로</FixedBottomCTA>
+			<BottomCTA.Double
+				leftButton={
+					<CTAButton color="dark" variant="weak" onClick={() => navigate(-1)}>
+						뒤로가기
+					</CTAButton>
+				}
+				rightButton={
+					<CTAButton onClick={handleContinueToOptions}>다음</CTAButton>
+				}
+			/>
+
+			<GoogleFormConversionUnsupportedRegisterConfirmBottomSheet
+				open={isUnsupportedRegisterSheetOpen}
+				onClose={handleUnsupportedRegisterSheetClose}
+				onContinue={handleUnsupportedRegisterContinue}
+			/>
 		</>
 	);
 };
