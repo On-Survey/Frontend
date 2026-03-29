@@ -1,6 +1,13 @@
 import { IAP, type IapProductListItem } from "@apps-in-toss/web-framework";
+import {
+	QUESTION_COUNT_OPTIONS,
+	type QuestionCountRange,
+} from "@features/payment/constants/payment";
 import { createGoogleFormPayment } from "@features/payment/service/payments";
-
+import {
+	getGoogleFormConversionTablePrice,
+	type ParticipantTier,
+} from "@shared/lib/estimatePricingTable";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { adaptive } from "@toss/tds-colors";
 import {
@@ -9,25 +16,22 @@ import {
 	FixedBottomCTA,
 	Paragraph,
 	Post,
+	Text,
 	Top,
 } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getGoogleFormIapRetailPriceWon } from "../lib/googleFormIapRetailPrice";
+import { pickGoogleFormIapProduct } from "../lib/pickGoogleFormIapProduct";
 import { createGoogleFormConversionRequest } from "../service/api";
 
-type QuestionPackage = "light" | "standard" | "plus";
-type RespondentCount = 50 | 100;
+const questionRangeLabel = (range: QuestionCountRange): string =>
+	QUESTION_COUNT_OPTIONS.find((o) => o.value === range)?.name ?? range;
 
-const QUESTION_PACKAGE_DISPLAY: Record<QuestionPackage, string> = {
-	light: "라이트 (15문항 이내)",
-	standard: "스탠다드 (25문항 이내)",
-	plus: "플러스 (30문항 이내)",
-};
-
-const QUESTION_PACKAGE_COUNT: Record<QuestionPackage, number> = {
-	light: 15,
-	standard: 25,
-	plus: 30,
+/** API·내부 처리용 구간 상한 문항 수 */
+const QUESTION_RANGE_MAX_QUESTIONS: Record<QuestionCountRange, number> = {
+	"1~30": 30,
+	"31~50": 50,
 };
 
 const formatPrice = (price: number) =>
@@ -38,13 +42,15 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 	const location = useLocation();
 	const [selectedProduct, setSelectedProduct] =
 		useState<IapProductListItem | null>(null);
+	const [isLoadingIapProducts, setIsLoadingIapProducts] = useState(true);
+	const [iapResolveError, setIapResolveError] = useState<string | null>(null);
 
 	const locationState = location.state as
 		| {
 				formLink: string;
 				email: string;
-				questionPackage: QuestionPackage;
-				respondentCount: RespondentCount;
+				questionCountRange: QuestionCountRange;
+				respondentCount: ParticipantTier;
 				deadline: string;
 				price: number;
 		  }
@@ -52,48 +58,63 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 
 	const formLink = locationState?.formLink ?? "";
 	const email = locationState?.email ?? "";
-	const questionPackage = locationState?.questionPackage ?? "light";
+	const questionCountRange = locationState?.questionCountRange ?? "1~30";
 	const respondentCount = locationState?.respondentCount ?? 50;
 	const deadline = locationState?.deadline ?? "";
-	const price = Number(String(locationState?.price ?? 0).replace(/[^\d]/g, ""));
 
-	// 상품 목록 가져오기 및 가격에 맞는 상품 찾기
+	/** 견적표 공급가(앱 안내·form-requests API) */
+	const supplyPrice = useMemo(
+		() =>
+			getGoogleFormConversionTablePrice(respondentCount, questionCountRange),
+		[respondentCount, questionCountRange],
+	);
+
+	/** 인앱·스토어 표시 금액(판매가, VAT 포함 등) — `displayAmount` 매칭용 */
+	const retailPrice = useMemo(
+		() => getGoogleFormIapRetailPriceWon(supplyPrice),
+		[supplyPrice],
+	);
+
+	// 인앱 displayAmount(판매가)와 일치하는 상품만 사용 (공급가로는 스토어와 안 맞음)
 	useEffect(() => {
+		let cancelled = false;
+
 		async function fetchProducts() {
+			setIsLoadingIapProducts(true);
+			setIapResolveError(null);
+			setSelectedProduct(null);
 			try {
 				const response = await IAP.getProductItemList();
 				const products = response?.products ?? [];
-
-				const matchingProduct = products.find((product) => {
-					const productPrice = parseInt(
-						product.displayAmount.replace(/[^\d]/g, ""),
-						10,
+				const picked = pickGoogleFormIapProduct(
+					products,
+					retailPrice,
+					supplyPrice,
+				);
+				if (cancelled) return;
+				setSelectedProduct(picked);
+				if (!picked) {
+					setIapResolveError(
+						`인앱 상품 표시 금액이 ${formatPrice(retailPrice)}원인 상품이 없어요. 스토어에 판매가를 이 금액으로 맞춰 주세요. (견적 공급가 ${formatPrice(supplyPrice)}원)`,
 					);
-					return productPrice === price;
-				});
-
-				if (matchingProduct) {
-					setSelectedProduct(matchingProduct);
-				} else {
-					const sortedProducts = [...products].sort((a, b) => {
-						const priceA = parseInt(a.displayAmount.replace(/[^\d]/g, ""), 10);
-						const priceB = parseInt(b.displayAmount.replace(/[^\d]/g, ""), 10);
-						const diffA = Math.abs(priceA - price);
-						const diffB = Math.abs(priceB - price);
-						return diffA - diffB;
-					});
-					if (sortedProducts.length > 0) {
-						setSelectedProduct(sortedProducts[0]);
-					}
 				}
 			} catch (error) {
 				console.error("상품 목록을 가져오는 데 실패했어요:", error);
+				if (!cancelled) {
+					setIapResolveError("결제 상품 목록을 불러오지 못했어요.");
+				}
+			} finally {
+				if (!cancelled) {
+					setIsLoadingIapProducts(false);
+				}
 			}
 		}
 
 		fetchProducts();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [price]);
+		return () => {
+			cancelled = true;
+		};
+	}, [retailPrice, supplyPrice]);
 
 	const handlePayment = () => {
 		pushGtmEvent({
@@ -112,7 +133,7 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					try {
 						await createGoogleFormPayment({
 							orderId,
-							price,
+							price: retailPrice,
 						});
 						return true;
 					} catch (error) {
@@ -130,9 +151,9 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 						event: "purchase",
 						pagePath: "/payment/google-form-conversion-payment-confirm",
 						transaction_id: String(orderId),
-						value: String(price),
-						price: String(price),
-						item_name: `${QUESTION_PACKAGE_DISPLAY[questionPackage]} (${respondentCount}명)`,
+						value: String(retailPrice),
+						price: String(retailPrice),
+						item_name: `${questionRangeLabel(questionCountRange)} (${respondentCount}명)`,
 						entry_type: "form_convert",
 					});
 
@@ -140,11 +161,11 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					try {
 						await createGoogleFormConversionRequest({
 							formLink,
-							questionCount: QUESTION_PACKAGE_COUNT[questionPackage],
+							questionCount: QUESTION_RANGE_MAX_QUESTIONS[questionCountRange],
 							targetResponseCount: respondentCount,
 							deadline,
 							requesterEmail: email,
-							price,
+							price: supplyPrice,
 						});
 						console.log("구글폼 변환 신청이 완료되었습니다.");
 					} catch (error) {
@@ -154,9 +175,11 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					// 결제 완료 후 성공 페이지로 이동
 					navigate("/payment/google-form-conversion-success", {
 						state: {
-							questionPackage,
+							questionCountRange,
 							respondentCount,
-							price,
+							price: retailPrice,
+							supplyPrice,
+							retailPrice,
 							orderId,
 						},
 					});
@@ -174,8 +197,8 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 				<Top
 					title={
 						<Top.TitleParagraph size={22} color={adaptive.grey900}>
-							{formatPrice(price)}원으로{" "}
-							{QUESTION_PACKAGE_DISPLAY[questionPackage]}를 구매할까요?
+							{formatPrice(retailPrice)}원으로{" "}
+							{questionRangeLabel(questionCountRange)}를 구매할까요?
 						</Top.TitleParagraph>
 					}
 					upper={
@@ -214,7 +237,18 @@ export const GoogleFormConversionPaymentConfirmPage = () => {
 					<Paragraph.Text></Paragraph.Text>
 				</Post.Paragraph>
 			</BottomInfo>
-			<FixedBottomCTA loading={false} onClick={handlePayment}>
+			{iapResolveError ? (
+				<div className="px-4 pb-3">
+					<Text color={adaptive.red500} typography="t7">
+						{iapResolveError}
+					</Text>
+				</div>
+			) : null}
+			<FixedBottomCTA
+				loading={isLoadingIapProducts}
+				disabled={!selectedProduct?.sku || !!iapResolveError}
+				onClick={handlePayment}
+			>
 				결제하기
 			</FixedBottomCTA>
 		</>

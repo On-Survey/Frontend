@@ -1,9 +1,12 @@
+import type { TransformedSurveyQuestion } from "@features/survey/service/surveyParticipation";
+import { isNonAnswerableParticipationQuestion } from "@shared/lib/surveySubmission";
+
 const REQUIRED_ERROR_MESSAGE = "해당 문항을 완료해주세요";
 
 export interface QuestionForValidation {
 	questionId: number;
 	isRequired?: boolean;
-	type?: string;
+	type?: TransformedSurveyQuestion["type"];
 }
 
 /**
@@ -18,7 +21,10 @@ export function validateSectionAnswers(
 	const errors: Record<number, string> = {};
 
 	for (const q of questions) {
-		if (q.type === "image") {
+		if (
+			q.type !== undefined &&
+			isNonAnswerableParticipationQuestion({ type: q.type })
+		) {
 			continue; // 이미지 전용 문항은 답변 불필요
 		}
 		const a = answers[q.questionId];
