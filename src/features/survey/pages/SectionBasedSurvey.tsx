@@ -54,7 +54,10 @@ export const SectionBasedSurvey = () => {
 		locationState?.sectionHistory ?? [locationState?.currentSection ?? 1],
 	);
 
-	const { data, isError } = useSurveySectionQuestions(surveyId, currentSection);
+	const { data, isError, isPending } = useSurveySectionQuestions(
+		surveyId,
+		currentSection,
+	);
 
 	const questions = data?.info ?? [];
 
@@ -297,6 +300,7 @@ export const SectionBasedSurvey = () => {
 	const handleNext = async () => {
 		if (!surveyId) return;
 		if (sectionActionInFlightRef.current) return;
+		if (isPending || questions.length === 0) return;
 
 		pushGtmEvent({
 			event: "survey_progress_button_click",
@@ -379,6 +383,7 @@ export const SectionBasedSurvey = () => {
 	};
 	const handleSubmitClick = async () => {
 		if (sectionActionInFlightRef.current) return;
+		if (isPending || questions.length === 0) return;
 
 		if (surveyId) {
 			pushGtmEvent({
@@ -481,7 +486,7 @@ export const SectionBasedSurvey = () => {
 				rightButton={
 					isLastSection ? (
 						<CTAButton
-							disabled={submitting}
+							disabled={submitting || isPending || questions.length === 0}
 							loading={submitting}
 							onClick={handleSubmitClick}
 						>
@@ -489,7 +494,7 @@ export const SectionBasedSurvey = () => {
 						</CTAButton>
 					) : (
 						<CTAButton
-							disabled={nextLoading}
+							disabled={nextLoading || isPending || questions.length === 0}
 							loading={nextLoading}
 							onClick={handleNext}
 						>
