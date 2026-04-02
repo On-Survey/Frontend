@@ -6,6 +6,7 @@ import type {
 } from "@features/payment/constants/payment";
 import { api } from "@shared/api/axios";
 import { getAccessToken } from "@shared/lib/tokenManager";
+import { buildCreateRequestBody } from "../utils";
 
 export interface GoogleFormPreviewResponse {
 	questionCount: number;
@@ -208,4 +209,46 @@ export const createRequest = async (
 	);
 
 	return data;
+};
+
+export type CreateGoogleFormConversionRequestInput = {
+	formLink: string;
+	questionCount: number;
+	targetResponseCount: number;
+	deadline: string; // `YYYY-MM-DD`
+	requesterEmail: string;
+	/** 화면에서 계산한 공급가 */
+	price: number;
+	/** 선택 입력(기본값은 ALL) */
+	gender?: GenderCode;
+	ages?: AgeCode[];
+	residence?: RegionCode;
+	discountCode?: string | null;
+	screening?: { question: string; answer: boolean } | null;
+	interests?: Interest[];
+};
+
+/**
+ * 구글폼 변환 신청 API 호출용 래퍼.
+ * confirm 페이지는 confirm/request 화면 계산값만 가지고 있으므로,
+ * gender/ages/residence는 기본값(`ALL`)으로 처리한다.
+ */
+export const createGoogleFormConversionRequest = async (
+	input: CreateGoogleFormConversionRequestInput,
+): Promise<CreateRequestResponse> => {
+	const body = buildCreateRequestBody({
+		formLink: input.formLink,
+		requesterEmail: input.requesterEmail,
+		respondentCount: input.targetResponseCount as never,
+		gender: input.gender ?? ("ALL" as GenderCode),
+		ages: input.ages ?? (["ALL"] as AgeCode[]),
+		residence: input.residence ?? ("ALL" as RegionCode),
+		deadlineIsoDate: input.deadline,
+		paidTotalCoin: input.price,
+		discountCode: input.discountCode ?? null,
+		interests: input.interests ?? [],
+		screening: input.screening ?? null,
+	});
+
+	return createRequest(body);
 };

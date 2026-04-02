@@ -140,6 +140,11 @@ export const ESTIMATE_PRICE_TABLE = {
 
 export type ParticipantTier = keyof typeof ESTIMATE_PRICE_TABLE;
 
+/** 응답자 수 티어 목록 (견적 테이블의 키를 그대로 사용) */
+const PARTICIPANT_TIERS: readonly ParticipantTier[] = Object.keys(
+	ESTIMATE_PRICE_TABLE,
+).map((key) => Number(key)) as ParticipantTier[];
+
 // 프로모션 가격(원) — 구글폼 변환 프로모션 코드 승인 시 적용
 export const ESTIMATE_PROMO_PRICE_TABLE = {
 	50: {
@@ -321,6 +326,11 @@ export const lookupEstimateTablePrice = (estimate: Estimate): number => {
 
 	return ESTIMATE_PRICE_TABLE[tier][q][preset] ?? 0;
 };
+
+export const getGoogleFormConversionTablePrice = (
+	participants: ParticipantTier,
+	questionCountRange: QuestionCountRange,
+): number => ESTIMATE_PRICE_TABLE[participants][questionCountRange].all_all;
 
 // 프로모션 승인 시 적용할 견적서 표 기준 총액(원). 조합이 표에 없으면 0.
 export const lookupEstimatePromoTablePrice = (estimate: Estimate): number => {
