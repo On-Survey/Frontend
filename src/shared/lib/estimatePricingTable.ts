@@ -255,6 +255,20 @@ export const ESTIMATE_PROMO_PRICE_TABLE = {
 	Record<QuestionCountRange, Record<EstimateTargetingPreset, number>>
 >;
 
+/** 구글폼 변환(all_all) 견적 공급가(원) — 앱·견적 안내와 동일 */
+export const GOOGLE_FORM_CONVERSION_IAP_EXPECTED_PRICES: readonly number[] =
+	PARTICIPANT_TIERS.flatMap((tier) =>
+		(["1~30", "31~50"] as const).map(
+			(q) => ESTIMATE_PRICE_TABLE[tier][q].all_all,
+		),
+	);
+
+/** 인앱 스토어 표시용 판매가(원, 공급가×1.1 반올림) — `displayAmount`와 맞출 것 */
+export const GOOGLE_FORM_CONVERSION_IAP_RETAIL_PRICES: readonly number[] =
+	GOOGLE_FORM_CONVERSION_IAP_EXPECTED_PRICES.map((won) =>
+		Math.round(won * 1.1),
+	);
+
 export const parseParticipantTier = (
 	participants: string,
 ): ParticipantTier | null => {
