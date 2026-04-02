@@ -85,38 +85,56 @@ export const MySurvey = () => {
 				<AnimatePresence>
 					{isFabOpen && (
 						<>
-							<motion.button
-								type="button"
+							<motion.div
 								key="fab-google-form"
 								custom={0}
 								variants={fabActionVariants}
 								initial="hidden"
 								animate="visible"
 								exit="exit"
-								className={`${FAB_SIZE_CLASS} flex shrink-0 items-center justify-center rounded-full! bg-white`}
-								onClick={goToGoogleFormConversion}
-								aria-label="구글폼으로 설문 등록하기"
+								className="flex items-center gap-3"
 							>
-								<img
-									src={iconClip}
-									alt=""
-									className="h-[26px] w-6 object-contain"
-								/>
-							</motion.button>
-							<motion.button
-								type="button"
+								<span className="text-medium font-medium text-white">
+									구글폼으로 등록하기
+								</span>
+								<button
+									type="button"
+									className={`${FAB_SIZE_CLASS} flex shrink-0 items-center justify-center rounded-full! bg-white`}
+									onClick={goToGoogleFormConversion}
+									aria-label="구글폼으로 설문 등록하기"
+								>
+									<img
+										src={iconClip}
+										alt=""
+										className="h-[26px] w-6 object-contain"
+									/>
+								</button>
+							</motion.div>
+							<motion.div
 								key="fab-new-survey"
 								custom={1}
 								variants={fabActionVariants}
 								initial="hidden"
 								animate="visible"
 								exit="exit"
-								className={`${FAB_SIZE_CLASS} flex shrink-0 items-center justify-center rounded-full! bg-white`}
-								onClick={goToCreateSurvey}
-								aria-label="새 설문 만들기"
+								className="flex items-center gap-3"
 							>
-								<img src={iconDocs} alt="" className="h-6 w-6 object-contain" />
-							</motion.button>
+								<span className="text-medium font-medium text-white">
+									직접 제작하기
+								</span>
+								<button
+									type="button"
+									className={`${FAB_SIZE_CLASS} flex shrink-0 items-center justify-center rounded-full! bg-white`}
+									onClick={goToCreateSurvey}
+									aria-label="새 설문 만들기"
+								>
+									<img
+										src={iconDocs}
+										alt=""
+										className="h-6 w-6 object-contain"
+									/>
+								</button>
+							</motion.div>
 						</>
 					)}
 				</AnimatePresence>
