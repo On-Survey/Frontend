@@ -13,6 +13,7 @@ export const ScreeningListRow = ({ flowState }: ScreeningListRowProps) => {
 		flowState.screening?.question?.trim() &&
 			typeof flowState.screening.answer === "boolean",
 	);
+	const screeningQuestion = flowState.screening?.question?.trim() ?? "";
 
 	const goToScreening = () => {
 		navigate("/payment/google-form-conversion-screening");
@@ -39,7 +40,7 @@ export const ScreeningListRow = ({ flowState }: ScreeningListRowProps) => {
 					type="2RowTypeA"
 					top="스크리닝 질문"
 					topProps={{ color: adaptive.grey700, fontWeight: "bold" }}
-					bottom="적합한 응답자를 선별하는 질문"
+					bottom={screeningQuestion}
 					bottomProps={{ color: adaptive.grey600 }}
 				/>
 			}
