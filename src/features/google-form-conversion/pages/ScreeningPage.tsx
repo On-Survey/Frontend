@@ -6,8 +6,15 @@ import {
 } from "@features/google-form-conversion/utils";
 import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { adaptive } from "@toss/tds-colors";
-import { Asset, FixedBottomCTA, Text, TextField, Top } from "@toss/tds-mobile";
-import { type CSSProperties, useEffect, useState } from "react";
+import {
+	Asset,
+	CTAButton,
+	FixedBottomCTA,
+	Text,
+	TextField,
+	Top,
+} from "@toss/tds-mobile";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ScreeningPage = () => {
@@ -27,6 +34,7 @@ export const ScreeningPage = () => {
 		const a = screening?.answer;
 		return typeof a === "boolean" ? a : null;
 	});
+	const isScreeningComplete = question.trim().length > 0 && answer !== null;
 
 	useEffect(() => {
 		if (!isValidEntry) {
@@ -44,6 +52,13 @@ export const ScreeningPage = () => {
 			question: question.trim(),
 			answer,
 		});
+		navigate("/payment/google-form-conversion-options");
+	};
+
+	const handleDelete = () => {
+		setQuestion("");
+		setAnswer(null);
+		setValue("screening", null);
 		navigate("/payment/google-form-conversion-options");
 	};
 
@@ -132,14 +147,18 @@ export const ScreeningPage = () => {
 				</div>
 			</div>
 
-			<FixedBottomCTA
-				loading={false}
-				disabled={!question.trim() || answer === null}
-				onClick={handleNext}
-				style={{ "--button-background-color": "#15c67f" } as CSSProperties}
-			>
-				다음
-			</FixedBottomCTA>
+			<FixedBottomCTA.Double
+				leftButton={
+					<CTAButton color="dark" variant="weak" onClick={handleDelete}>
+						삭제
+					</CTAButton>
+				}
+				rightButton={
+					<CTAButton disabled={!isScreeningComplete} onClick={handleNext}>
+						다음
+					</CTAButton>
+				}
+			/>
 		</>
 	);
 };
