@@ -116,6 +116,15 @@ export const OptionsPage = () => {
 	}, [validationSuccess]);
 	const isFullConversionSuccess = inconvertibleQuestionCount === 0;
 
+	const ageMultiSelectOptions = useMemo(
+		() =>
+			AGE.map((o) => ({
+				...o,
+				name: o.name.replace(/\([^)]*\)/g, "").trim(),
+			})),
+		[],
+	);
+
 	const respondentCount = watch("respondentCount");
 	const deadlineIsoDate = watch("deadlineIsoDate");
 	const interestIds = watch("interestIds");
@@ -487,7 +496,7 @@ export const OptionsPage = () => {
 			<AgeMultiSelectBottomSheet
 				isOpen={isAgeSheetOpen}
 				handleClose={() => setIsAgeSheetOpen(false)}
-				options={AGE}
+				options={ageMultiSelectOptions}
 				value={ages}
 				onConfirm={(value) => setValue("ages", value)}
 				title="대상 연령대를 선택해주세요"

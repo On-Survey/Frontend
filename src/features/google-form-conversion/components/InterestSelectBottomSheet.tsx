@@ -1,6 +1,6 @@
 import type { InterestId } from "@shared/constants/topics";
 import { topics } from "@shared/constants/topics";
-import { colors } from "@toss/tds-colors";
+import { adaptive } from "@toss/tds-colors";
 import { BottomSheet, Checkbox, List, ListRow } from "@toss/tds-mobile";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
@@ -42,11 +42,6 @@ export const InterestSelectBottomSheet = ({
 			header={
 				<BottomSheet.Header>관련 관심사를 선택해 주세요</BottomSheet.Header>
 			}
-			headerDescription={
-				<BottomSheet.HeaderDescription>
-					더욱 맞는 대상을 찾기 위한 질문이에요
-				</BottomSheet.HeaderDescription>
-			}
 			open={open}
 			onClose={onClose}
 			maxHeight="90vh"
@@ -70,27 +65,14 @@ export const InterestSelectBottomSheet = ({
 							role="checkbox"
 							aria-checked={isSelected}
 							onClick={() => toggle(topic.id)}
-							left={
-								topic.icon.type === "image" ? (
-									<ListRow.AssetImage
-										src={topic.icon.src || ""}
-										shape="original"
-										className="w-5.5 ml-1"
-									/>
-								) : (
-									<ListRow.AssetIcon name={topic.icon.name || ""} />
-								)
-							}
 							contents={
 								<ListRow.Texts
-									type="2RowTypeA"
+									type="1RowTypeA"
 									top={topic.name}
 									topProps={{
-										color: colors.grey800,
+										color: adaptive.grey800,
 										fontWeight: "semibold",
 									}}
-									bottom={topic.description}
-									bottomProps={{ color: colors.grey500 }}
 								/>
 							}
 							right={
