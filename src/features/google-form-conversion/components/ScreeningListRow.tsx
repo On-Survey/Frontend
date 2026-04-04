@@ -14,50 +14,50 @@ export const ScreeningListRow = ({ flowState }: ScreeningListRowProps) => {
 			typeof flowState.screening.answer === "boolean",
 	);
 	const screeningQuestion = flowState.screening?.question?.trim() ?? "";
-	const screeningAnswer =
-		typeof flowState.screening?.answer === "boolean"
-			? `${flowState.screening.answer ? "O" : "X"}를 선택한 사용자`
-			: "";
+	const entryHint =
+		flowState.screening?.answer === true
+			? "○ 선택 시 설문 진입"
+			: "X 선택 시 설문 진입";
 
 	const goToScreening = () => {
 		navigate("/payment/google-form-conversion-screening");
 	};
 
 	return hasScreening ? (
-		<>
-			<ListHeader
-				descriptionPosition="bottom"
-				titleWidthRatio={0.8}
-				title={
-					<ListHeader.TitleParagraph
-						color={adaptive.grey800}
-						fontWeight="bold"
-						typography="t4"
-					>
-						스크리닝 질문
-					</ListHeader.TitleParagraph>
-				}
-				style={{ marginBottom: "-24px" }}
-			/>
+		<div className="flex flex-col gap-2">
 			<ListRow
 				contents={
 					<ListRow.Texts
 						type="2RowTypeA"
-						top={screeningQuestion}
-						topProps={{ color: adaptive.grey700, fontWeight: "bold" }}
-						bottom={screeningAnswer}
+						top="스크리닝 질문이 등록됐어요"
+						topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+						bottom="수정 및 삭제 필요 시 편집을 눌러주세요"
 						bottomProps={{ color: adaptive.grey600 }}
 					/>
 				}
 				right={
 					<Button size="medium" variant="weak" onClick={goToScreening}>
-						수정
+						편집
 					</Button>
 				}
 				verticalPadding="large"
 				leftAlignment="top"
 			/>
-		</>
+			<div className="overflow-hidden rounded-2xl bg-[#F2F4F6] mx-4">
+				<ListRow
+					contents={
+						<ListRow.Texts
+							type="2RowTypeA"
+							top={screeningQuestion}
+							topProps={{ color: adaptive.grey800, fontWeight: "bold" }}
+							bottom={entryHint}
+							bottomProps={{ color: adaptive.grey600 }}
+						/>
+					}
+					verticalPadding="large"
+				/>
+			</div>
+		</div>
 	) : (
 		<>
 			<ListHeader
