@@ -1,3 +1,5 @@
+import { PreviewInconvertibleQuestionBanner } from "@features/google-form-conversion/components/PreviewInconvertibleQuestionBanner";
+import { PreviewSectionNavBar } from "@features/google-form-conversion/components/PreviewSectionNavBar";
 import { UnsupportedRegisterConfirmBottomSheet } from "@features/google-form-conversion/components/UnsupportedRegisterConfirmBottomSheet";
 import {
 	useRequestEntryContext,
@@ -18,7 +20,6 @@ import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
 	Border,
-	BottomCTA,
 	CTAButton,
 	FixedBottomCTA,
 	List,
@@ -79,6 +80,69 @@ export const PreviewPage = () => {
 		() => hasInconvertibleFromValidationSuccess(validationSuccess),
 		[validationSuccess],
 	);
+
+	const firstInconvertibleHighlightLine = useMemo(() => {
+		const d = inconvertibleDetails[0];
+		if (!d) return null;
+		const label = getQuestionNumberLabelForValidationDetail(d, 0);
+		const title = d.title?.trim() ? d.title : "(제목 없음)";
+		return `${label} ${title}`;
+	}, [inconvertibleDetails]);
+
+	const previewSectionRefMap = useRef(new Map<number, HTMLDivElement>());
+	const [activePreviewSectionIndex, setActivePreviewSectionIndex] = useState(0);
+
+	const getPreviewSectionDisplayNumber = useCallback(
+		(sectionIdx: number) => {
+			const s = previewSections[sectionIdx];
+			if (!s) return sectionIdx + 1;
+			return s.currSection >= 1 ? s.currSection : sectionIdx + 1;
+		},
+		[previewSections],
+	);
+
+	const scrollToPreviewSection = useCallback((index: number) => {
+		const el = previewSectionRefMap.current.get(index);
+		el?.scrollIntoView({ behavior: "smooth", block: "start" });
+		setActivePreviewSectionIndex(index);
+	}, []);
+
+	const setPreviewSectionEl = useCallback(
+		(index: number) => (el: HTMLDivElement | null) => {
+			if (el) previewSectionRefMap.current.set(index, el);
+			else previewSectionRefMap.current.delete(index);
+		},
+		[],
+	);
+
+	const updateActivePreviewSectionFromScroll = useCallback(() => {
+		if (previewSections.length <= 1) return;
+		const anchorY = 200;
+		let next = 0;
+		previewSections.forEach((_, i) => {
+			const el = previewSectionRefMap.current.get(i);
+			if (!el) return;
+			const top = el.getBoundingClientRect().top;
+			if (top <= anchorY) next = i;
+		});
+		setActivePreviewSectionIndex((prev) => (prev === next ? prev : next));
+	}, [previewSections]);
+
+	useEffect(() => {
+		setActivePreviewSectionIndex((i) =>
+			previewSections.length === 0
+				? 0
+				: Math.min(i, Math.max(0, previewSections.length - 1)),
+		);
+	}, [previewSections.length]);
+
+	useEffect(() => {
+		if (previewSections.length <= 1) return;
+		updateActivePreviewSectionFromScroll();
+		const onScroll = () => updateActivePreviewSectionFromScroll();
+		window.addEventListener("scroll", onScroll, { passive: true });
+		return () => window.removeEventListener("scroll", onScroll);
+	}, [previewSections.length, updateActivePreviewSectionFromScroll]);
 
 	const [isUnsupportedRegisterSheetOpen, setIsUnsupportedRegisterSheetOpen] =
 		useState(false);
@@ -261,7 +325,17 @@ export const PreviewPage = () => {
 				}
 			/>
 
-			<div className="pb-28">
+			<div
+				className={
+					previewSections.length > 1 && hasInconvertible
+						? "pb-64"
+						: previewSections.length > 1
+							? "pb-40"
+							: hasInconvertible
+								? "pb-52"
+								: "pb-28"
+				}
+			>
 				{hasInconvertible ? (
 					<section className="mx-4 mb-6" aria-label="변환되지 않은 문항">
 						<div className="mb-3 flex items-baseline justify-between gap-3 px-0.5">
@@ -374,6 +448,8 @@ export const PreviewPage = () => {
 					return (
 						<div
 							key={`${section.currSection}-${section.sectionTitle}-${sectionIdx}`}
+							ref={setPreviewSectionEl(sectionIdx)}
+							data-preview-section-index={sectionIdx}
 						>
 							{sectionIdx > 0 ? <Border variant="height16" /> : null}
 							<ListHeader
@@ -440,7 +516,26 @@ export const PreviewPage = () => {
 				/>
 			</div>
 
-			<BottomCTA.Double
+			<FixedBottomCTA.Double
+				topAccessory={
+					previewSections.length > 1 || hasInconvertible ? (
+						<div className="w-full">
+							<PreviewSectionNavBar
+								sectionCount={previewSections.length}
+								activeSectionIndex={activePreviewSectionIndex}
+								getSectionDisplayNumber={getPreviewSectionDisplayNumber}
+								onNavigateToSection={scrollToPreviewSection}
+							/>
+							{hasInconvertible ? (
+								<PreviewInconvertibleQuestionBanner
+									totalFailedCount={inconvertibleTotalCount}
+									highlightLine={firstInconvertibleHighlightLine}
+									compactTop={previewSections.length > 1}
+								/>
+							) : null}
+						</div>
+					) : undefined
+				}
 				leftButton={
 					<CTAButton color="dark" variant="weak" onClick={() => navigate(-1)}>
 						뒤로가기
