@@ -28,7 +28,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useCallback, useState } from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useFormState } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export const RequestPage = () => {
@@ -49,14 +49,16 @@ export const RequestPage = () => {
 		FormRequestValidationDetail[]
 	>([]);
 
-	const {
-		control,
-		handleSubmit: rhfHandleSubmit,
-		trigger,
-		formState: { errors },
-	} = useRequestForm();
+	const { control, handleSubmit: rhfHandleSubmit, trigger } = useRequestForm();
+	const { errors } = useFormState({ control });
 
 	const { formLink, email, emailSendAgreed } = useRequestFormState();
+
+	const scheduleFormLinkValidation = useCallback(() => {
+		queueMicrotask(() => {
+			trigger("formLink");
+		});
+	}, [trigger]);
 
 	const onSubmit = useCallback(
 		async (data: RequestFormValues) => {
@@ -132,7 +134,7 @@ export const RequestPage = () => {
 					rules={{
 						validate: (v) => {
 							const value = v?.trim() ?? "";
-							if (!value) return "폼 링크를 입력해주세요";
+							if (!value) return "링크를 다시 한번 확인해 주세요";
 							const message = getGoogleFormLinkValidationMessage(value);
 							return message ?? true;
 						},
@@ -144,8 +146,9 @@ export const RequestPage = () => {
 							label="폼 링크"
 							labelOption="sustain"
 							help={
-								errors.formLink?.message ??
-								'공유 > 편집자 보기 "링크가 있는 모든 사용자로 변경" 해주세요'
+								errors.formLink
+									? "링크를 다시 한번 확인해 주세요"
+									: '공유 > 편집자 보기 "링크가 있는 모든 사용자로 변경" 해주세요'
 							}
 							value={value}
 							placeholder="https://docs.google.com/..."
@@ -153,10 +156,7 @@ export const RequestPage = () => {
 							prefix=""
 							onChange={(e) => onChange(e.target.value)}
 							onPaste={() => {
-								// 붙여넣기 직후 값 반영 다음 틱에서 즉시 유효성 재검증
-								setTimeout(() => {
-									void trigger("formLink");
-								}, 0);
+								scheduleFormLinkValidation();
 							}}
 							onBlur={onBlur}
 						/>
