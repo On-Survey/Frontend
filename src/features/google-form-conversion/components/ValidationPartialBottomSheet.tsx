@@ -54,76 +54,39 @@ export const ValidationPartialBottomSheet = ({
 			}
 		>
 			<div className="flex flex-col gap-3">
-				<ul className="flex list-none flex-col gap-3 p-0 m-0 px-4">
+				<ul className="m-0 flex list-none flex-col gap-3 p-0 px-4">
 					{unsupportedDetails.map((detail, index) => (
 						<li
 							key={`${detail.type}-${index}-${detail.title}-${detail.reason}`}
-							className="overflow-hidden rounded-2xl border border-[#E5E8EB] bg-[#F9FAFB]"
+							className="overflow-hidden rounded-2xl border border-[#E5E8EB] bg-white px-4 py-3"
 						>
-							<div className="border-b border-[#E5E8EB] bg-white px-4 py-2.5">
-								<Text
-									display="block"
-									color={adaptive.grey600}
-									typography="t7"
-									fontWeight="medium"
-								>
-									{getQuestionNumberLabelForValidationDetail(detail, index)}
-								</Text>
-								<div className="h-1.5" />
-								<Text
-									display="block"
-									color={adaptive.grey900}
-									typography="t5"
-									fontWeight="bold"
-								>
-									{detail.title?.trim() ? detail.title : "(제목 없음)"}
-								</Text>
-							</div>
-							<div className="flex flex-col gap-2 px-4 py-3">
-								<div className="flex items-start gap-2">
-									<Text
-										as="span"
-										display="inline"
-										color={adaptive.grey600}
-										typography="t7"
-										fontWeight="semibold"
-										className="shrink-0 pt-0.5"
-									>
-										유형
-									</Text>
-									<span className="inline-flex rounded-md bg-[#EEF2F6] px-2 py-0.5">
-										<Text
-											as="span"
-											color={adaptive.grey800}
-											typography="t7"
-											fontWeight="semibold"
-										>
-											{detail.type}
-										</Text>
-									</span>
-								</div>
-								<div className="flex items-start gap-2">
-									<Text
-										as="span"
-										display="inline"
-										color={adaptive.grey600}
-										typography="t7"
-										fontWeight="semibold"
-										className="shrink-0 pt-0.5"
-									>
-										사유
-									</Text>
-									<Text
-										display="block"
-										color={adaptive.red500}
-										typography="t6"
-										fontWeight="regular"
-										className="min-w-0 flex-1"
-									>
-										{detail.reason}
-									</Text>
-								</div>
-							</div>
+							<Text
+								display="block"
+								color={adaptive.grey600}
+								typography="t7"
+								fontWeight="medium"
+							>
+								{getQuestionNumberLabelForValidationDetail(detail, index)}
+							</Text>
+							<div className="h-1.5" />
+							<Text
+								display="block"
+								color={adaptive.grey900}
+								typography="t5"
+								fontWeight="bold"
+							>
+								{detail.title?.trim() ? detail.title : "(제목 없음)"}
+							</Text>
+							<div className="h-2" />
+							<Text
+								display="block"
+								color={adaptive.red500}
+								typography="t6"
+								fontWeight="regular"
+								className="min-w-0"
+							>
+								{detail.reason}
+							</Text>
 						</li>
 					))}
 				</ul>
