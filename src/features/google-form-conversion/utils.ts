@@ -147,13 +147,11 @@ export const formatDateToISO = (date: Date): string => {
 };
 
 /**
- * 기본 마감일: 오늘 기준 7일 후
+ * 기본 마감일 선택값: 오늘(로컬 자정 기준 Date)
  */
 export const getDefaultDeadline = (): Date => {
-	const today = new Date();
-	const sevenDaysLater = new Date(today);
-	sevenDaysLater.setDate(today.getDate() + 7);
-	return sevenDaysLater;
+	const d = new Date();
+	return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 };
 
 /**

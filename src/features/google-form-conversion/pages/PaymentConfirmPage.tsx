@@ -42,9 +42,13 @@ export const PaymentConfirmPage = () => {
 		screening,
 		promotionCode,
 		verifiedPromotionCode,
+		deadlineIsoDate,
 	} = useOptionsFormContext();
 	const { formLink, email } = useRequestFormContext();
-	const deadline = formatDateToISO(getDefaultDeadline());
+	const deadline =
+		deadlineIsoDate && /^\d{4}-\d{2}-\d{2}$/.test(deadlineIsoDate)
+			? deadlineIsoDate
+			: formatDateToISO(getDefaultDeadline());
 	const price = selectedProduct
 		? Number(selectedProduct.displayAmount.replace(/[^\d]/g, ""))
 		: 0;

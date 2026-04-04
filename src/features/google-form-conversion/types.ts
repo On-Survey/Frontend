@@ -56,12 +56,23 @@ export type FlowState = RequestEntryState & {
 	validationResult?: FormRequestValidationResponse;
 };
 
+/** 옵션 폼 기본 마감일: 오늘 (로컬, YYYY-MM-DD) */
+const defaultDeadlineIsoDate = (): string => {
+	const d = new Date();
+	const y = d.getFullYear();
+	const m = String(d.getMonth() + 1).padStart(2, "0");
+	const day = String(d.getDate()).padStart(2, "0");
+	return `${y}-${m}-${day}`;
+};
+
 export type FormValues = {
 	formLink: string;
 	email: string;
 	/** 선택 입력. 입력 시 API로 유효 여부 검사 후 일치하면 별도 페이지로 리다이렉트 */
 	promotionCode?: string;
 	respondentCount: RespondentCount;
+	/** 설문 마감일 (YYYY-MM-DD) */
+	deadlineIsoDate: string;
 	/** 타깃 거주지 (결제/신청 API `residence`) */
 	residence: RegionCode;
 	/** 관심사 (다중 선택, Interest API 코드로 변환해 전달) */
@@ -90,6 +101,7 @@ export type OptionsDraft = Omit<FormValues, "formLink" | "email">;
 export const DEFAULT_GOOGLE_FORM_CONVERSION_OPTIONS_DRAFT: OptionsDraft = {
 	promotionCode: "",
 	respondentCount: 50,
+	deadlineIsoDate: defaultDeadlineIsoDate(),
 	residence: "ALL",
 	interestIds: [],
 	gender: "ALL",

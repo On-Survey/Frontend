@@ -16,13 +16,16 @@ import type {
 } from "@features/google-form-conversion/types";
 import { RESPONDENT_OPTIONS } from "@features/google-form-conversion/types";
 import {
+	formatDateToISO,
 	formatInterestSelectionDisplay,
 	formatPrice,
+	getDefaultDeadline,
 	getQuestionRange,
 	getTotalQuestionCountForPricing,
 	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
+import { DateSelectBottomSheet } from "@features/payment/components/payment";
 import { AgeMultiSelectBottomSheet } from "@features/payment/components/payment/bottomSheet/AgeMultiSelectBottomSheet";
 import {
 	AGE,
@@ -41,6 +44,7 @@ import {
 	Border,
 	Button,
 	FixedBottomCTA,
+	Text,
 	TextField,
 	Top,
 } from "@toss/tds-mobile";
@@ -103,8 +107,17 @@ export const OptionsPage = () => {
 		return getTotalQuestionCountForPricing(validationSuccess);
 	}, [validationSuccess]);
 	const convertibleQuestionCount = validationSuccess?.convertible ?? 0;
+	const inconvertibleQuestionCount = useMemo(() => {
+		if (!validationSuccess) return 0;
+		if (validationSuccess.inconvertible > 0) {
+			return validationSuccess.inconvertible;
+		}
+		return validationSuccess.inconvertibleDetails?.length ?? 0;
+	}, [validationSuccess]);
+	const isFullConversionSuccess = inconvertibleQuestionCount === 0;
 
 	const respondentCount = watch("respondentCount");
+	const deadlineIsoDate = watch("deadlineIsoDate");
 	const interestIds = watch("interestIds");
 	const promotionCodeInput = watch("promotionCode") ?? "";
 	const verifiedPromotionCode = watch("verifiedPromotionCode");
@@ -116,6 +129,14 @@ export const OptionsPage = () => {
 		verifiedPromotionCode !== null &&
 		verifiedPromotionCode === promotionCodeInput.trim();
 	const promotionVerifyMessage = isPromoPriceApplied ? "인증되었어요" : null;
+
+	const deadlineDate = useMemo(() => {
+		if (!deadlineIsoDate || !/^\d{4}-\d{2}-\d{2}$/.test(deadlineIsoDate)) {
+			return getDefaultDeadline();
+		}
+		const [y, m, d] = deadlineIsoDate.split("-").map(Number);
+		return new Date(y, m - 1, d);
+	}, [deadlineIsoDate]);
 
 	const price = useMemo(() => {
 		const questionRange = getQuestionRange(formQuestionCount);
@@ -172,6 +193,7 @@ export const OptionsPage = () => {
 				email: emailFromState,
 				promotionCode: optionsData.promotionCode,
 				respondentCount: optionsData.respondentCount,
+				deadlineIsoDate: optionsData.deadlineIsoDate,
 				residence: optionsData.residence,
 				interestIds: optionsData.interestIds,
 				gender: optionsData.gender,
@@ -239,29 +261,64 @@ export const OptionsPage = () => {
 			<Top
 				title={
 					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						설문 세그먼트와 마감일을
+						다 왔어요
 						<br />
-						선택해주세요
+						원하는 응답자 조건을 설정해주세요
 					</Top.TitleParagraph>
 				}
 				subtitleBottom={<Top.SubtitleParagraph size={15} />}
 				lower={
-					validationResult ? (
-						<Top.LowerButton
-							color="dark"
-							size="small"
-							variant="weak"
-							display="inline"
-							onClick={handleNavigateToPreview}
+					validationSuccess ? (
+						<div
+							className={`mx-6 mb-4 flex items-center justify-between gap-3 rounded-2xl p-3 ${
+								isFullConversionSuccess ? "bg-[#e9f5f0]" : "bg-[#fcefef]"
+							}`}
 						>
-							설문 미리보기
-						</Top.LowerButton>
+							<div className="flex min-w-0 flex-1 items-center gap-2">
+								{isFullConversionSuccess ? (
+									<Asset.Icon
+										frameShape={Asset.frameShape.CleanW24}
+										backgroundColor="transparent"
+										name="icon-check-circle-green"
+										aria-hidden={true}
+										ratio="1/1"
+									/>
+								) : (
+									<Asset.Icon
+										frameShape={Asset.frameShape.CleanW24}
+										backgroundColor="transparent"
+										name="icon-siren"
+										aria-hidden={true}
+										ratio="1/1"
+									/>
+								)}
+								<Text
+									display="block"
+									color={adaptive.grey800}
+									typography="t5"
+									fontWeight="semibold"
+									className="min-w-0"
+								>
+									{isFullConversionSuccess
+										? `${convertibleQuestionCount}개의 문항이 변환됐어요`
+										: `${inconvertibleQuestionCount}개의 문항이 변환에 실패했어요`}
+								</Text>
+							</div>
+							<Button
+								size="small"
+								variant="weak"
+								color={isFullConversionSuccess ? undefined : "danger"}
+								onClick={handleNavigateToPreview}
+							>
+								설문 보기
+							</Button>
+						</div>
 					) : undefined
 				}
 				lowerGap={0}
 			/>
-
-			<div className="flex flex-col gap-4 px-2 pt-4">
+			<Border variant="height16" />
+			<div className="flex flex-col gap-4 px-2">
 				<ScreeningListRow
 					flowState={{
 						formLink: formLinkFromState,
@@ -270,23 +327,12 @@ export const OptionsPage = () => {
 					}}
 				/>
 				<Border variant="height16" />
+
 				<TextField.Button
 					variant="line"
 					hasError={false}
-					disabled={true}
-					label="변환 가능 문항 수"
+					label="희망 응답자 수"
 					labelOption="sustain"
-					help="검증 결과 기준이에요"
-					value={`${convertibleQuestionCount}개`}
-					placeholder="0개"
-					right={undefined}
-				/>
-				<TextField.Button
-					variant="line"
-					hasError={false}
-					label="희망 응답자 수 (필수)"
-					labelOption="sustain"
-					help="반드시 선택해주세요"
 					value={
 						RESPONDENT_OPTIONS.find(
 							(option) => option.value === respondentCount,
@@ -304,12 +350,17 @@ export const OptionsPage = () => {
 					onClick={() => setIsRespondentSheetOpen(true)}
 				/>
 
+				<DateSelectBottomSheet
+					value={deadlineDate}
+					onChange={(d) => setValue("deadlineIsoDate", formatDateToISO(d))}
+					triggerLabel="설문조사 마감일"
+				/>
+
 				<TextField.Button
 					variant="line"
 					hasError={false}
-					label="관심사 (필수)"
+					label="관심사"
 					labelOption="sustain"
-					help="반드시 한 개 이상 선택해주세요"
 					value={formatInterestSelectionDisplay(interestIds)}
 					placeholder="관심사를 선택해주세요"
 					right={
@@ -326,28 +377,8 @@ export const OptionsPage = () => {
 				<TextField.Button
 					variant="line"
 					hasError={false}
-					label="연령대 (선택)"
+					label="성별"
 					labelOption="sustain"
-					help="선택 입력이에요. 복수 선택 시 추가 요금이 부과되고, 전체 선택 시는 제외돼요."
-					value={formatAgeDisplay(ages)}
-					placeholder="연령대를 선택해주세요"
-					right={
-						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW24}
-							name="icon-arrow-down-mono"
-							color={adaptive.grey400}
-							aria-hidden={true}
-						/>
-					}
-					onClick={() => setIsAgeSheetOpen(true)}
-				/>
-
-				<TextField.Button
-					variant="line"
-					hasError={false}
-					label="성별 (선택)"
-					labelOption="sustain"
-					help="선택 입력이에요. 특정 성별만 선택하면 추가 비용이 발생해요"
 					value={getGenderLabel(gender)}
 					placeholder="성별을 선택해주세요"
 					right={
@@ -364,8 +395,26 @@ export const OptionsPage = () => {
 				<TextField.Button
 					variant="line"
 					hasError={false}
+					label="연령대"
+					labelOption="sustain"
+					value={formatAgeDisplay(ages)}
+					placeholder="연령대를 선택해주세요"
+					right={
+						<Asset.Icon
+							frameShape={Asset.frameShape.CleanW24}
+							name="icon-arrow-down-mono"
+							color={adaptive.grey400}
+							aria-hidden={true}
+						/>
+					}
+					onClick={() => setIsAgeSheetOpen(true)}
+				/>
+
+				<TextField.Button
+					variant="line"
+					hasError={false}
 					disabled={true}
-					label="거주지 (선택)"
+					label="거주지"
 					labelOption="sustain"
 					help="준비 중이에요. 지금은 전체 지역 기준으로 안내돼요."
 					value="준비 중"
@@ -377,18 +426,14 @@ export const OptionsPage = () => {
 					control={control}
 					name="promotionCode"
 					render={({ field: { onChange, value, onBlur } }) => (
-						<div className="flex gap-2 items-center">
+						<div className="flex gap-2 items-center mr-6">
 							<div className="min-w-0 flex-1">
 								<TextField.Clearable
 									variant="line"
 									hasError={!!promotionCodeError}
 									label="프로모션 코드"
 									labelOption="sustain"
-									help={
-										promotionCodeError ??
-										promotionVerifyMessage ??
-										"선택 입력이에요. 있으시면 입력해주세요"
-									}
+									help={promotionCodeError ?? promotionVerifyMessage ?? ""}
 									value={value ?? ""}
 									placeholder="프로모션 코드 입력"
 									suffix=""
@@ -406,7 +451,7 @@ export const OptionsPage = () => {
 							</div>
 							<Button
 								type="button"
-								size="medium"
+								size="small"
 								variant="weak"
 								loading={isPromotionVerifying}
 								disabled={
