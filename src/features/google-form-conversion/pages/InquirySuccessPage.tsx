@@ -48,8 +48,7 @@ export const InquirySuccessPage = () => {
 				textAlign="center"
 				className="mt-1 w-full max-w-[320px]"
 			>
-				등록해주신 문의 사항은 24시간 이내로 빠르게 검토해 이메일로 안내해
-				드릴게요.
+				24시간 이내로 빠르게 검토해 이메일로 안내해 드릴게요.
 			</Text>
 			<FixedBottomCTA.Double
 				leftButton={
@@ -64,7 +63,7 @@ export const InquirySuccessPage = () => {
 				}
 				rightButton={
 					<CTAButton display="block" onClick={handleGoHome}>
-						홈 화면으로 돌아가기
+						홈으로 돌아가기
 					</CTAButton>
 				}
 			/>

@@ -97,8 +97,8 @@ export const InquiryPage = () => {
 				label=""
 				labelOption="sustain"
 				value={inquiry}
-				placeholder="50자 이내로 작성해주세요"
-				maxLength={50}
+				placeholder="100자 이내로 작성해주세요"
+				maxLength={100}
 				onChange={(e) => {
 					setInquiry(e.target.value);
 					if (errorMessage) setErrorMessage(null);
@@ -121,7 +121,7 @@ export const InquiryPage = () => {
 			<FixedBottomCTA
 				disabled={inquiry.trim().length === 0 || helpRequest.isPending}
 				loading={helpRequest.isPending}
-				onClick={() => void handleNext()}
+				onClick={() => handleNext()}
 			>
 				다음
 			</FixedBottomCTA>
