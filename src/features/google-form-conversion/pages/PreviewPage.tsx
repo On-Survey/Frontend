@@ -232,7 +232,7 @@ export const PreviewPage = () => {
 				/>
 				<div className="px-6 pt-6">
 					<Text color={adaptive.grey700} typography="t6">
-						변환된 문항을 불러올 수 없어요. 구글폼 검증을 다시 진행해 주세요.
+						변환된 문항을 불러올 수 없어요, 구글폼 검증을 다시 진행해 주세요
 					</Text>
 				</div>
 				<FixedBottomCTA

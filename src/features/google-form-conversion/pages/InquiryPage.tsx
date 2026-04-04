@@ -60,7 +60,7 @@ export const InquiryPage = () => {
 			const message =
 				e instanceof Error
 					? e.message
-					: "요청을 보내지 못했어요. 잠시 후 다시 시도해주세요";
+					: "요청을 보내지 못했어요, 잠시 후 다시 시도해주세요";
 			setErrorMessage(message);
 		}
 	}, [email, inquiry, name, helpRequest, navigate, rejectionReasons]);

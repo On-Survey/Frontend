@@ -19,7 +19,7 @@ export const ValidationSuccessBottomSheet = ({
 			}
 			headerDescription={
 				<BottomSheet.HeaderDescription>
-					모든 문항이 성공적으로 변환됐어요.
+					모든 문항이 성공적으로 변환됐어요
 				</BottomSheet.HeaderDescription>
 			}
 			open={open}

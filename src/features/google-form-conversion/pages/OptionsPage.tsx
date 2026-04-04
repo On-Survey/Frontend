@@ -173,7 +173,7 @@ export const OptionsPage = () => {
 				setValue("verifiedPromotionCode", null);
 			}
 		} catch {
-			setPromotionCodeError("인증에 실패했어요. 다시 시도해주세요");
+			setPromotionCodeError("인증에 실패했어요, 다시 시도해주세요");
 			setValue("verifiedPromotionCode", null);
 		} finally {
 			setIsPromotionVerifying(false);
@@ -416,7 +416,7 @@ export const OptionsPage = () => {
 					disabled={true}
 					label="거주지"
 					labelOption="sustain"
-					help="준비 중이에요. 지금은 전체 지역 기준으로 안내돼요."
+					help="준비 중이에요, 지금은 전체 지역 기준으로 안내돼요"
 					value="준비 중"
 					placeholder="준비 중"
 					right={undefined}

@@ -42,7 +42,7 @@ export const PaymentSuccessPage = () => {
 				fontWeight="medium"
 				textAlign="center"
 			>
-				등록해주신 폼은 빠르게 검토해 이메일로 안내해 드릴게요.
+				등록해주신 폼은 빠르게 검토해 이메일로 안내해 드릴게요
 			</Text>
 			<FixedBottomCTA loading={false} onClick={handleConfirm}>
 				확인했어요

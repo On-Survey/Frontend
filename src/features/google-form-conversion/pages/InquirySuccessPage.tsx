@@ -48,7 +48,7 @@ export const InquirySuccessPage = () => {
 				textAlign="center"
 				className="mt-1 w-full max-w-[320px]"
 			>
-				24시간 이내로 빠르게 검토해 이메일로 안내해 드릴게요.
+				24시간 이내로 빠르게 검토해 이메일로 안내해 드릴게요
 			</Text>
 			<FixedBottomCTA.Double
 				leftButton={

@@ -16,7 +16,7 @@ export const ValidationErrorBottomSheet = ({
 			header={<BottomSheet.Header>설문을 불러올 수 없어요</BottomSheet.Header>}
 			headerDescription={
 				<BottomSheet.HeaderDescription>
-					자세한 내용은 이메일을 확인해주세요.
+					자세한 내용은 이메일을 확인해주세요
 				</BottomSheet.HeaderDescription>
 			}
 			open={open}

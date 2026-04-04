@@ -44,7 +44,7 @@ export const InterestSelectBottomSheet = ({
 			}
 			headerDescription={
 				<BottomSheet.HeaderDescription>
-					더욱 맞는 대상을 찾기 위한 질문이에요.
+					더욱 맞는 대상을 찾기 위한 질문이에요
 				</BottomSheet.HeaderDescription>
 			}
 			open={open}

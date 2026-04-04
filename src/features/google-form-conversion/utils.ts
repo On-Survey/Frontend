@@ -91,7 +91,7 @@ export const getFormRequestValidationErrorMessage = (
 		}
 	}
 	if (error instanceof Error && error.message) return error.message;
-	return "검증에 실패했어요. 잠시 후 다시 시도해주세요";
+	return "검증에 실패했어요, 잠시 후 다시 시도해주세요";
 };
 
 /** POST /v1/form-requests/validation 성공 응답에서 변환 가능 문항 수 합계 */

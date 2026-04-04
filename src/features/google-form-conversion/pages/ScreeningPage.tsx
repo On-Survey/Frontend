@@ -76,7 +76,7 @@ export const ScreeningPage = () => {
 				}
 				subtitleBottom={
 					<Top.SubtitleParagraph size={15} color={adaptive.grey600}>
-						적합한 응답자를 매칭하기 위해 OX 질문을 구성해요.
+						적합한 응답자를 매칭하기 위해 OX 질문을 구성해요
 					</Top.SubtitleParagraph>
 				}
 				lowerGap={0}
@@ -103,7 +103,7 @@ export const ScreeningPage = () => {
 						참여 조건 설정
 					</Text>
 					<Text display="block" color={adaptive.grey600} typography="t6">
-						설문에 참여 가능한 답변(O/X)을 선택해주세요.
+						설문에 참여 가능한 답변(O/X)을 선택해주세요
 					</Text>
 				</div>
 

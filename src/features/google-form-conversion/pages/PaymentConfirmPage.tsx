@@ -177,13 +177,13 @@ export const PaymentConfirmPage = () => {
 				<Post.Paragraph paddingBottom={8} typography="t7">
 					<Paragraph.Text>
 						토스는 해당 서비스 제휴사이며, 결제는 애플 앱스토어를 통해서
-						진행돼요.
+						진행돼요
 					</Paragraph.Text>
 				</Post.Paragraph>
 				<Post.Paragraph paddingBottom={8} typography="t7">
 					<Paragraph.Text>
-						환불 신청은 애플 앱스토어에서만 가능해요. 토스를 통한 환불 신청은
-						불가해요.
+						환불 신청은 애플 앱스토어에서만 가능해요, 토스를 통한 환불 신청은
+						불가해요
 					</Paragraph.Text>
 				</Post.Paragraph>
 				<Post.Paragraph paddingBottom={24} typography="t7">
@@ -196,9 +196,9 @@ export const PaymentConfirmPage = () => {
 				onClick={handlePayment}
 				bottomAccessory={
 					!selectedProduct
-						? "결제 가능한 상품 정보가 없어요. 옵션 페이지에서 다시 시도해주세요"
+						? "결제 가능한 상품 정보가 없어요, 옵션 페이지에서 다시 시도해주세요"
 						: price <= 0
-							? "결제 금액 정보가 없어요. 옵션 페이지에서 다시 시도해주세요"
+							? "결제 금액 정보가 없어요, 옵션 페이지에서 다시 시도해주세요"
 							: undefined
 				}
 			>
