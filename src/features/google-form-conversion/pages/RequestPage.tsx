@@ -44,7 +44,7 @@ export const RequestPage = () => {
 		ValidateRequestResult["type"] | null
 	>(null);
 	const [errorMessage, setErrorMessage] = useState("");
-	const [convertibleCount, setConvertibleCount] = useState(0);
+	const [_convertibleCount, setConvertibleCount] = useState(0);
 	const [unsupportedDetails, setUnsupportedDetails] = useState<
 		FormRequestValidationDetail[]
 	>([]);
@@ -268,7 +268,6 @@ export const RequestPage = () => {
 			{sheetTrigger === "success" && (
 				<ValidationSuccessBottomSheet
 					open={true}
-					convertibleCount={convertibleCount}
 					onClose={handleSuccessSheetEdit}
 					onContinue={handleSuccessSheetContinue}
 				/>

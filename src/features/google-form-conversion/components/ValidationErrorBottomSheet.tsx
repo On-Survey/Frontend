@@ -13,12 +13,10 @@ export const ValidationErrorBottomSheet = ({
 }: ValidationErrorBottomSheetProps) => {
 	return (
 		<BottomSheet
-			header={
-				<BottomSheet.Header>문항 변환 중 문제가 생겼어요</BottomSheet.Header>
-			}
+			header={<BottomSheet.Header>설문을 불러올 수 없어요</BottomSheet.Header>}
 			headerDescription={
 				<BottomSheet.HeaderDescription>
-					아래 내용을 확인해 주세요.
+					자세한 내용은 이메일을 확인해주세요.
 				</BottomSheet.HeaderDescription>
 			}
 			open={open}
@@ -30,7 +28,7 @@ export const ValidationErrorBottomSheet = ({
 					disabled={false}
 					onClick={onClose}
 				>
-					다시 입력하기
+					다시 등록하기
 				</BottomSheet.CTA>
 			}
 		>

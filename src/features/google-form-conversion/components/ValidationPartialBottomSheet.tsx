@@ -49,7 +49,7 @@ export const ValidationPartialBottomSheet = ({
 					disabled={false}
 					onClick={handleGoPreview}
 				>
-					미리보기
+					설문 확인하기
 				</BottomSheet.CTA>
 			}
 		>
