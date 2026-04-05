@@ -23,6 +23,7 @@ import {
 	isContactEmail,
 	isGoogleFormLinkUrl,
 } from "@features/google-form-conversion/utils";
+import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { adaptive } from "@toss/tds-colors";
 import {
 	AgreementV4,
@@ -56,6 +57,12 @@ export const RequestPage = () => {
 		resetFlow,
 		resetOptionsForm,
 	]);
+
+	const handleBackToLanding = useCallback(() => {
+		navigate("/google-form-conversion-landing");
+	}, [navigate]);
+
+	useBackEventListener(handleBackToLanding);
 
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();

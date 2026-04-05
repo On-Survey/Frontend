@@ -1,6 +1,8 @@
 import type { GoogleFormConversionRequestLocationState } from "@features/google-form-conversion/types";
+import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { FixedBottomCTA } from "@toss/tds-mobile";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import landing1 from "../../../assets/landingPage/landing1.svg";
 import landing2 from "../../../assets/landingPage/landing2.svg";
@@ -10,6 +12,12 @@ import landing5 from "../../../assets/landingPage/landing5.svg";
 
 export const LandingPage = () => {
 	const navigate = useNavigate();
+
+	const handleBackToHome = useCallback(() => {
+		navigate("/home");
+	}, [navigate]);
+
+	useBackEventListener(handleBackToHome);
 
 	const handleRegister = () => {
 		pushGtmEvent({
