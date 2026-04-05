@@ -1,3 +1,4 @@
+import type { GoogleFormConversionPreviewLocationState } from "@features/google-form-conversion/lib/previewPageLocationState";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -6,14 +7,18 @@ import {
 	Spacing,
 	Text,
 } from "@toss/tds-mobile";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const InquirySuccessPage = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const handleContinue = () => {
+		const previewFrom =
+			(location.state as GoogleFormConversionPreviewLocationState | null)
+				?.previewFrom ?? "flow";
 		navigate("/payment/google-form-conversion-preview", {
-			state: { previewFrom: "flow" },
+			state: { previewFrom },
 		});
 	};
 

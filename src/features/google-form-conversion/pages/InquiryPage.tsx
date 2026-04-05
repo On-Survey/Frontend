@@ -8,7 +8,7 @@ import { useUserInfo } from "@shared/contexts/UserContext";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Text, TextArea, Top } from "@toss/tds-mobile";
 import { useCallback, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 /** 반려 문항이 없거나(검증 전부 성공)·사유를 뽑을 수 없을 때 — 서버는 빈 배열 불가 */
 const DEFAULT_REJECTION_REASONS = ["기타"] as const;
@@ -17,6 +17,7 @@ export const InquiryPage = () => {
 	const [inquiry, setInquiry] = useState("");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { validationResult } = useRequestEntryContext();
 	const { email: emailFromFlow, formLink: formLinkFromFlow } =
 		useRequestFormContext();
@@ -55,7 +56,9 @@ export const InquiryPage = () => {
 				rejectionReasons,
 				content,
 			});
-			navigate("/payment/google-form-conversion-inquiry-success");
+			navigate("/payment/google-form-conversion-inquiry-success", {
+				state: location.state,
+			});
 		} catch (e) {
 			const message =
 				e instanceof Error
@@ -63,7 +66,15 @@ export const InquiryPage = () => {
 					: "요청을 보내지 못했어요, 잠시 후 다시 시도해주세요";
 			setErrorMessage(message);
 		}
-	}, [email, inquiry, name, helpRequest, navigate, rejectionReasons]);
+	}, [
+		email,
+		inquiry,
+		name,
+		helpRequest,
+		navigate,
+		location.state,
+		rejectionReasons,
+	]);
 
 	return (
 		<>

@@ -1,3 +1,4 @@
+import type { GoogleFormConversionPreviewLocationState } from "@features/google-form-conversion/lib/previewPageLocationState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -39,6 +40,14 @@ export const useGoogleFormPreviewPageActions = ({
 		}
 	}, [isValidEntry, navigate]);
 
+	const navigateBackFromPreview = useCallback(() => {
+		if (isPreviewFromOptions) {
+			navigate("/payment/google-form-conversion-options");
+			return;
+		}
+		navigate("/payment/google-form-conversion");
+	}, [isPreviewFromOptions, navigate]);
+
 	const handleContinueToOptions = useCallback(() => {
 		const go = () => {
 			navigate("/payment/google-form-conversion-options");
@@ -53,23 +62,28 @@ export const useGoogleFormPreviewPageActions = ({
 
 	const handlePreviewPrimaryCta = useCallback(() => {
 		if (isPreviewFromOptions) {
-			navigate(-1);
+			navigateBackFromPreview();
 			return;
 		}
 		handleContinueToOptions();
-	}, [isPreviewFromOptions, navigate, handleContinueToOptions]);
+	}, [isPreviewFromOptions, navigateBackFromPreview, handleContinueToOptions]);
 
 	const previewPrimaryCtaLabel = isPreviewFromOptions
 		? "나가기"
 		: "다음 단계로";
 
 	const goToInquiry = useCallback(() => {
-		navigate("/payment/google-form-conversion-inquiry");
-	}, [navigate]);
+		const state: GoogleFormConversionPreviewLocationState = {
+			previewFrom: isPreviewFromOptions ? "options" : "flow",
+		};
+		navigate("/payment/google-form-conversion-inquiry", { state });
+	}, [navigate, isPreviewFromOptions]);
 
 	return {
 		handlePreviewPrimaryCta,
 		previewPrimaryCtaLabel,
+		/** 옵션에서 들어온 경우 → 옵션, 그 외 → 구글폼 입력 */
+		navigateBackFromPreview,
 		goToInquiry,
 		isUnsupportedRegisterSheetOpen,
 		handleUnsupportedRegisterSheetClose,

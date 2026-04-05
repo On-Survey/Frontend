@@ -37,6 +37,7 @@ import {
 	getGenderLabel,
 } from "@features/payment/constants/payment";
 import type { Estimate } from "@shared/contexts/PaymentContext";
+import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import {
 	lookupEstimatePromoTablePrice,
 	lookupEstimateTablePrice,
@@ -121,6 +122,18 @@ export const OptionsPage = () => {
 		return validationSuccess.inconvertibleDetails?.length ?? 0;
 	}, [validationSuccess]);
 	const isFullConversionSuccess = inconvertibleQuestionCount === 0;
+
+	const handleHeaderBack = useCallback(() => {
+		if (validationSuccess && !isFullConversionSuccess) {
+			navigate("/payment/google-form-conversion-preview", {
+				state: { previewFrom: "options" },
+			});
+			return;
+		}
+		navigate("/payment/google-form-conversion");
+	}, [validationSuccess, isFullConversionSuccess, navigate]);
+
+	useBackEventListener(handleHeaderBack);
 
 	const ageMultiSelectOptions = useMemo(
 		() =>

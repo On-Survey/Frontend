@@ -13,6 +13,7 @@ import { useGoogleFormPreviewQuestions } from "@features/google-form-conversion/
 import { useGoogleFormPreviewSectionNav } from "@features/google-form-conversion/hooks/useGoogleFormPreviewSectionNav";
 import { TextWithLinks } from "@features/survey/components/TextWithLinks";
 import { QuestionRenderer } from "@features/survey/pages/components/QuestionRenderer";
+import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
@@ -77,6 +78,7 @@ export const PreviewPage = () => {
 	const {
 		handlePreviewPrimaryCta,
 		previewPrimaryCtaLabel,
+		navigateBackFromPreview,
 		goToInquiry,
 		isUnsupportedRegisterSheetOpen,
 		handleUnsupportedRegisterSheetClose,
@@ -86,6 +88,8 @@ export const PreviewPage = () => {
 		hasInconvertible,
 		isPreviewFromOptions,
 	});
+
+	useBackEventListener(navigateBackFromPreview);
 
 	const inquiryListRow = (
 		<div
