@@ -56,14 +56,25 @@ export const getGoogleFormLinkValidationMessage = (
 	return null;
 };
 
+/** 한글·이모지 등 ASCII 범위를 넘는 문자 포함 여부 */
+const hasNonAsciiCodePoint = (s: string): boolean =>
+	[...s].some((ch) => (ch.codePointAt(0) ?? 0) > 0x7f);
+
 /**
  * 구글폼 플로우: 이메일 필수 + 형식 검사.
  * 공용 {@link validateEmail}은 빈 문자열을 허용하므로 이 플로우에서만 사용한다.
+ * 비ASCII(한글 등)는 입력 불가로 본다.
  */
 export const isContactEmail = (email: string): boolean => {
 	const trimmed = email.trim();
-	return trimmed.length > 0 && validateEmail(trimmed);
+	if (trimmed.length === 0) return false;
+	if (hasNonAsciiCodePoint(trimmed)) return false;
+	return validateEmail(trimmed);
 };
+
+/** 요청 폼 에러 문구 분기용 */
+export const emailHasNonAsciiCharacters = (email: string): boolean =>
+	hasNonAsciiCodePoint(email.trim());
 
 /** POST /v1/form-requests/validation 등 4xx 응답 본문 (예: FORM_REQUEST_003) */
 export type FormRequestApiErrorBody = {

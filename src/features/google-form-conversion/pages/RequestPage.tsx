@@ -14,6 +14,7 @@ import {
 import type { FormRequestValidationDetail } from "@features/google-form-conversion/service/api";
 import type { RequestFormValues } from "@features/google-form-conversion/types";
 import {
+	emailHasNonAsciiCharacters,
 	getFormRequestValidationErrorMessage,
 	getGoogleFormLinkValidationMessage,
 	isContactEmail,
@@ -168,11 +169,13 @@ export const RequestPage = () => {
 					name="email"
 					rules={{
 						validate: (v) => {
-							if (isContactEmail(v ?? "")) return true;
 							const trimmed = (v ?? "").trim();
-							return trimmed.length > 0
-								? "올바른 이메일 형식을 입력해주세요"
-								: "이메일을 입력해주세요";
+							if (trimmed.length === 0) return "이메일을 입력해주세요";
+							if (emailHasNonAsciiCharacters(trimmed)) {
+								return "이메일은 영문·숫자·기호만 입력할 수 있어요";
+							}
+							if (isContactEmail(trimmed)) return true;
+							return "올바른 이메일 형식을 입력해주세요";
 						},
 					}}
 					render={({ field: { onChange, value, onBlur } }) => (
