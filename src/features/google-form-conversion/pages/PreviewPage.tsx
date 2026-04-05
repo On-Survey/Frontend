@@ -16,6 +16,7 @@ import { QuestionRenderer } from "@features/survey/pages/components/QuestionRend
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
+	Badge,
 	Border,
 	FixedBottomCTA,
 	List,
@@ -153,43 +154,58 @@ export const PreviewPage = () => {
 			: visibleSection.currSection >= 1
 				? visibleSection.currSection
 				: activePreviewSectionIndex + 1;
-	const visibleSectionTitleText =
-		visibleSection && visibleSectionNumber !== null
-			? visibleSection.sectionTitle?.trim()
-				? `섹션 ${visibleSectionNumber} : ${visibleSection.sectionTitle}`
-				: `섹션 ${visibleSectionNumber}`
-			: "";
 
 	return (
 		<>
 			{inquiryListRow}
 
-			<Top
-				title={
-					<Top.TitleParagraph size={22} color={adaptive.grey900}>
-						{visibleSection && visibleSectionTitleText ? (
-							<TextWithLinks
-								text={visibleSectionTitleText}
-								variant="inline"
-								inheritLinkSize
-							/>
-						) : (
-							"설문 미리보기"
-						)}
-					</Top.TitleParagraph>
-				}
-				subtitleBottom={
-					visibleSection?.sectionDescription?.trim() ? (
-						<Top.SubtitleParagraph size={15} color={adaptive.grey600}>
+			{visibleSection && visibleSectionNumber !== null ? (
+				<div className="px-6 pt-6 pb-1">
+					<Badge variant="weak" color="green" size="small">
+						{`섹션 ${visibleSectionNumber}`}
+					</Badge>
+					<Text
+						display="block"
+						color={adaptive.grey900}
+						typography="st8"
+						fontWeight="bold"
+						className="mt-2.5"
+					>
+						<TextWithLinks
+							text={
+								visibleSection.sectionTitle?.trim()
+									? visibleSection.sectionTitle
+									: "(제목 없음)"
+							}
+							variant="inline"
+							inheritLinkSize
+						/>
+					</Text>
+					{visibleSection.sectionDescription?.trim() ? (
+						<Text
+							display="block"
+							color={adaptive.grey600}
+							typography="t5"
+							fontWeight="regular"
+							className="mt-2 leading-[1.6]"
+						>
 							<TextWithLinks
 								text={visibleSection.sectionDescription}
 								variant="inline"
 								inheritLinkSize
 							/>
-						</Top.SubtitleParagraph>
-					) : undefined
-				}
-			/>
+						</Text>
+					) : null}
+				</div>
+			) : (
+				<Top
+					title={
+						<Top.TitleParagraph size={22} color={adaptive.grey900}>
+							설문 미리보기
+						</Top.TitleParagraph>
+					}
+				/>
+			)}
 
 			<div className={hasInconvertible ? "pb-8" : "pb-6"}>
 				{visibleSection ? (

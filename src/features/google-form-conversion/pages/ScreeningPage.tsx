@@ -35,6 +35,10 @@ export const ScreeningPage = () => {
 		return typeof a === "boolean" ? a : null;
 	});
 	const isScreeningComplete = question.trim().length > 0 && answer !== null;
+	/** 옵션 폼에 이미 저장된 스크리닝이 있을 때만 삭제 가능 (추가 진입 시에는 비활성) */
+	const hasPersistedScreening = Boolean(
+		screening?.question?.trim() && typeof screening?.answer === "boolean",
+	);
 
 	useEffect(() => {
 		if (!isValidEntry) {
@@ -149,7 +153,12 @@ export const ScreeningPage = () => {
 
 			<FixedBottomCTA.Double
 				leftButton={
-					<CTAButton color="dark" variant="weak" onClick={handleDelete}>
+					<CTAButton
+						color="dark"
+						variant="weak"
+						disabled={!hasPersistedScreening}
+						onClick={handleDelete}
+					>
 						삭제
 					</CTAButton>
 				}
