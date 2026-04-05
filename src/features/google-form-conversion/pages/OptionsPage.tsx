@@ -392,6 +392,7 @@ export const OptionsPage = () => {
 					hasError={false}
 					label="성별"
 					labelOption="sustain"
+					help="성별 옵션을 설정하면 추가 요금이 부과돼요"
 					value={getGenderLabel(gender)}
 					placeholder="성별을 선택해주세요"
 					right={
@@ -410,6 +411,7 @@ export const OptionsPage = () => {
 					hasError={false}
 					label="연령대"
 					labelOption="sustain"
+					help="연령대 옵션을 설정하면 추가 요금이 부과돼요"
 					value={formatAgeDisplay(ages)}
 					placeholder="연령대를 선택해주세요"
 					right={
