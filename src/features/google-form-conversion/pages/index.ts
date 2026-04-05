@@ -4,7 +4,6 @@ export { LandingPage } from "./LandingPage";
 export { OptionsPage } from "./OptionsPage";
 export { PaymentConfirmPage } from "./PaymentConfirmPage";
 export { PaymentSuccessPage } from "./PaymentSuccessPage";
-export { PrecheckPage } from "./PrecheckPage";
 export { PreviewPage } from "./PreviewPage";
 export { PrivacyConsentPage } from "./PrivacyConsentPage";
 export { RequestPage } from "./RequestPage";

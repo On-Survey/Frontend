@@ -3,6 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import {
+	Navigate,
 	Outlet,
 	Route,
 	BrowserRouter as Router,
@@ -35,7 +36,6 @@ import {
 	LandingPage,
 	OptionsPage,
 	PaymentConfirmPage,
-	PrecheckPage,
 	PreviewPage,
 	PrivacyConsentPage,
 	RequestPage,
@@ -308,7 +308,12 @@ export const App = () => {
 												/>
 												<Route
 													path="/payment/google-form-conversion-check"
-													element={<PrecheckPage />}
+													element={
+														<Navigate
+															to="/payment/google-form-conversion-payment-confirm"
+															replace
+														/>
+													}
 												/>
 												<Route
 													path="/payment/google-form-conversion-payment-confirm"

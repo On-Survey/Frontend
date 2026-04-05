@@ -45,7 +45,6 @@ const PATH_TO_SCREEN_NAME: Record<string, string> = {
 	"/payment/google-form-conversion-preview": "구글폼 변환 설문 미리보기",
 	"/payment/google-form-conversion-options": "구글폼 변환 설문 정보",
 	"/payment/google-form-conversion-screening": "구글폼 변환 스크리닝",
-	"/payment/google-form-conversion-check": "구글폼 변환 안내",
 	"/payment/google-form-conversion-payment-confirm": "구글폼 변환 결제 확인",
 	"/payment/google-form-conversion-success": "구글폼 변환 완료",
 	"/payment/google-form-conversion-privacy-consent": "개인정보 동의",
