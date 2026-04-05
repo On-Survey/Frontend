@@ -20,6 +20,7 @@ import {
 	Top,
 } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
+import { parseIapDisplayAmount } from "../hooks/useIapProductByPrice";
 import { createRequest } from "../service/api";
 import {
 	buildCreateRequestBody,
@@ -50,7 +51,7 @@ export const PaymentConfirmPage = () => {
 			? deadlineIsoDate
 			: formatDateToISO(getDefaultDeadline());
 	const price = selectedProduct
-		? Number(selectedProduct.displayAmount.replace(/[^\d]/g, ""))
+		? parseIapDisplayAmount(selectedProduct.displayAmount)
 		: 0;
 	const discountCode =
 		verifiedPromotionCode !== null &&

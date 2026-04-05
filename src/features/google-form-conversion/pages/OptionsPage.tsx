@@ -7,7 +7,11 @@ import {
 	useRequestEntryContext,
 	useRequestFormContext,
 } from "@features/google-form-conversion/context/RequestEntryContext";
-import { useIapProductByPrice } from "@features/google-form-conversion/hooks/useIapProductByPrice";
+import {
+	fetchNearestIapProductForTablePrice,
+	parseIapDisplayAmount,
+	useIapProductByPrice,
+} from "@features/google-form-conversion/hooks/useIapProductByPrice";
 import { pickValidationSuccessForFormLink } from "@features/google-form-conversion/lib/pickValidationPreviewForFormLink";
 import { validateDiscountCode } from "@features/google-form-conversion/service/api";
 import type {
@@ -92,6 +96,8 @@ export const OptionsPage = () => {
 	const [isGenderSheetOpen, setIsGenderSheetOpen] = useState(false);
 	const [isAgeSheetOpen, setIsAgeSheetOpen] = useState(false);
 	const [isInterestSheetOpen, setIsInterestSheetOpen] = useState(false);
+	/** 결제 확인 페이지와 동일: IAP 상품 `displayAmount` (가격표 기준가와 다를 수 있음) */
+	const [iapChargeAmount, setIapChargeAmount] = useState<number | null>(null);
 
 	const formLink = formLinkFromState;
 	/** 가격 구간용 문항 수 — 검증 API 성공 행 (`totalCount`·`convertible` 등 보정, preview API 없음) */
@@ -166,6 +172,31 @@ export const OptionsPage = () => {
 			? lookupEstimatePromoTablePrice(estimate)
 			: lookupEstimateTablePrice(estimate);
 	}, [respondentCount, formQuestionCount, gender, ages, isPromoPriceApplied]);
+
+	useEffect(() => {
+		if (!Number.isFinite(price) || price <= 0) {
+			setIapChargeAmount(null);
+			return;
+		}
+		let cancelled = false;
+		fetchNearestIapProductForTablePrice(price)
+			.then((product) => {
+				if (cancelled) return;
+				setIapChargeAmount(
+					product ? parseIapDisplayAmount(product.displayAmount) : null,
+				);
+			})
+			.catch(() => {
+				if (!cancelled) {
+					setIapChargeAmount(null);
+				}
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [price]);
+
+	const ctaDisplayPrice = iapChargeAmount ?? price;
 
 	const handleVerifyPromotion = useCallback(async () => {
 		const code = getValues("promotionCode")?.trim() ?? "";
@@ -521,7 +552,7 @@ export const OptionsPage = () => {
 				bottomAccessory={productResolveError ?? undefined}
 				disabled={interestIds.length === 0}
 			>
-				{formatPrice(price)}원 결제하기
+				{formatPrice(ctaDisplayPrice)}원 결제하기
 			</FixedBottomCTA>
 		</>
 	);
