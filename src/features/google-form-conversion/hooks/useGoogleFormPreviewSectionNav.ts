@@ -39,9 +39,15 @@ export const useGoogleFormPreviewSectionNav = ({
 		);
 	}, [previewSectionBlocks.length]);
 
-	const goToPreviewSection = useCallback((index: number) => {
-		setActivePreviewSectionIndex(index);
-	}, []);
+	const goToPreviewSection = useCallback(
+		(index: number, options?: { skipScrollTop?: boolean }) => {
+			if (options?.skipScrollTop) {
+				skipScrollTopOnceAfterFocusRef.current = true;
+			}
+			setActivePreviewSectionIndex(index);
+		},
+		[],
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: 인덱스가 바뀔 때마다(클램프 포함) 본문 상단으로 스크롤
 	useEffect(() => {

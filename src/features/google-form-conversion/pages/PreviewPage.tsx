@@ -5,6 +5,7 @@ import {
 } from "@features/google-form-conversion/components/PreviewInconvertibleSectionRow";
 import { PreviewSectionNavBar } from "@features/google-form-conversion/components/PreviewSectionNavBar";
 import { UnsupportedRegisterConfirmBottomSheet } from "@features/google-form-conversion/components/UnsupportedRegisterConfirmBottomSheet";
+import { useGoogleFormPreviewInconvertibleBanner } from "@features/google-form-conversion/hooks/useGoogleFormPreviewInconvertibleBanner";
 import { useGoogleFormPreviewLocationIntent } from "@features/google-form-conversion/hooks/useGoogleFormPreviewLocationIntent";
 import { useGoogleFormPreviewModel } from "@features/google-form-conversion/hooks/useGoogleFormPreviewModel";
 import { useGoogleFormPreviewPageActions } from "@features/google-form-conversion/hooks/useGoogleFormPreviewPageActions";
@@ -33,8 +34,6 @@ export const PreviewPage = () => {
 		validationSuccess,
 		previewSectionBlocks,
 		hasInconvertible,
-		inconvertibleTotalCount,
-		firstInconvertibleHighlightLine,
 	} = useGoogleFormPreviewModel();
 
 	const {
@@ -47,6 +46,20 @@ export const PreviewPage = () => {
 		validationSuccess,
 		focusFirstInconvertibleFromNav,
 		locationKey,
+	});
+
+	const {
+		showBanner: showInconvertibleBanner,
+		sectionFailedCount,
+		highlightLine: bannerHighlightLine,
+		canGoPrev: bannerCanGoPrev,
+		canGoNext: bannerCanGoNext,
+		onBannerPrev,
+		onBannerNext,
+	} = useGoogleFormPreviewInconvertibleBanner({
+		previewSectionBlocks,
+		activePreviewSectionIndex,
+		goToPreviewSection,
 	});
 
 	const {
@@ -264,13 +277,17 @@ export const PreviewPage = () => {
 				loading={false}
 				onClick={handlePreviewPrimaryCta}
 				topAccessory={
-					hasInconvertible ? (
+					showInconvertibleBanner ? (
 						<div className="-mb-4 w-full">
 							<PreviewInconvertibleQuestionBanner
-								totalFailedCount={inconvertibleTotalCount}
-								highlightLine={firstInconvertibleHighlightLine}
+								totalFailedCount={sectionFailedCount}
+								highlightLine={bannerHighlightLine}
 								compactTop={false}
 								compactBottom
+								onHighlightPrev={onBannerPrev}
+								onHighlightNext={onBannerNext}
+								canGoHighlightPrev={bannerCanGoPrev}
+								canGoHighlightNext={bannerCanGoNext}
 							/>
 						</div>
 					) : undefined
