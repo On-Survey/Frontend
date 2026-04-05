@@ -77,6 +77,21 @@ const buildValidationSummary = (
 	}
 
 	const totalCount = getTotalQuestionCountForPricing(success);
+	const rowDetailMessage =
+		typeof success.message === "string" && success.message.trim().length > 0
+			? success.message.trim()
+			: null;
+
+	// success 본문인데 문항 0건이면 행의 message(예: 권한 없음)를 에러 문구로 쓴다
+	if (totalCount === 0) {
+		return {
+			totalCount: 0,
+			errorMessages: rowDetailMessage ? [rowDetailMessage] : [],
+			convertibleCount: 0,
+			unsupportedDetails: [],
+		};
+	}
+
 	return {
 		totalCount,
 		errorMessages: [],
