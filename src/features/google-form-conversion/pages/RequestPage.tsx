@@ -228,7 +228,6 @@ export const RequestPage = () => {
 										e.stopPropagation();
 										handleEmailAgreementClick();
 									}}
-									style={{ textDecoration: "underline" }}
 								>
 									이메일 발신 동의
 								</AgreementV4.Text>
