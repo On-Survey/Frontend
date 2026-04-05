@@ -4,6 +4,6 @@ export function getQuestionNumberLabelForValidationDetail(
 	detail: FormRequestValidationDetail,
 	listIndex: number,
 ): string {
-	const order = detail.questionOrder ?? listIndex + 1;
+	const order = detail.order ?? detail.questionOrder ?? listIndex + 1;
 	return `${order}번 문항`;
 }

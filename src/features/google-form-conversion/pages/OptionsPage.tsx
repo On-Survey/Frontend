@@ -191,7 +191,9 @@ export const OptionsPage = () => {
 
 	const handleNavigateToPreview = useCallback(() => {
 		if (!validationResult) return;
-		navigate("/payment/google-form-conversion-preview");
+		navigate("/payment/google-form-conversion-preview", {
+			state: { previewFrom: "options" },
+		});
 	}, [navigate, validationResult]);
 
 	const onSubmit = useCallback(

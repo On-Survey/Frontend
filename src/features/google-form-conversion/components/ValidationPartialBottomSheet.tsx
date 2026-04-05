@@ -23,7 +23,9 @@ export const ValidationPartialBottomSheet = ({
 
 	const handleGoPreview = () => {
 		onClose();
-		navigate(GOOGLE_FORM_CONVERSION_PREVIEW_PATH);
+		navigate(GOOGLE_FORM_CONVERSION_PREVIEW_PATH, {
+			state: { previewFrom: "flow", focusFirstInconvertible: true },
+		});
 	};
 
 	return (

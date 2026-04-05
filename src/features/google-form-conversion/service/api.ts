@@ -57,7 +57,9 @@ export interface FormRequestValidationDetail {
 	title: string;
 	type: string;
 	reason: string;
-	/** 폼 상 문항 순번(백엔드 제공 시). 없으면 목록 순서로 표시 */
+	/** 신규 API: 미지원 문항 순번 */
+	order?: number;
+	/** 구 API 호환: 폼 상 문항 순번 */
 	questionOrder?: number;
 	/** 백엔드 제공 시 — 미지원 문항 미리보기에서 필수/선택 표시 */
 	isRequired?: boolean;
@@ -71,14 +73,15 @@ export interface FormRequestValidationChoiceOption {
 }
 
 export interface FormRequestValidationConvertibleQuestionInfo {
-	questionId: number;
-	surveyId: number;
+	/** 검증 응답에서는 생략될 수 있음(미리보기에서 로컬 ID 부여) */
+	questionId?: number;
+	surveyId?: number;
 	questionType: string;
 	title: string | null;
 	description: string | null;
-	isRequired: boolean;
-	questionOrder: number;
-	section: number;
+	isRequired?: boolean;
+	questionOrder?: number;
+	section?: number;
 	imageUrl: string | null;
 	/** CHOICE */
 	maxChoice?: number;
@@ -104,12 +107,12 @@ export interface FormRequestValidationConvertibleSection {
 export interface FormRequestValidationSuccessResultItem {
 	url: string;
 	/** 성공 시 null·생략 가능 (백엔드에 따라 undefined일 수 있음) */
-	message?: null;
+	message?: string | null;
 	totalCount: number;
 	convertible: number;
 	inconvertible: number;
-	inconvertibleDetails: FormRequestValidationDetail[];
-	convertibleDetails: FormRequestValidationConvertibleSection[];
+	inconvertibleDetails?: FormRequestValidationDetail[];
+	convertibleDetails?: FormRequestValidationConvertibleSection[];
 }
 
 /** 검증 실패한 URL (`message`에 사유) */
@@ -138,6 +141,7 @@ export interface FormRequestValidationResponse {
 	message: string;
 	result: {
 		results: FormRequestValidationResultItem[];
+		emailSent?: number;
 	};
 	success: boolean;
 }

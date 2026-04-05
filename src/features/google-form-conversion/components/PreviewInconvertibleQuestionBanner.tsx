@@ -6,15 +6,20 @@ export type PreviewInconvertibleQuestionBannerProps = {
 	highlightLine: string | null;
 	/** 섹션 이동 바로 아래에 붙을 때 상단 여백을 조금 더 줌 */
 	compactTop?: boolean;
+	/** 하단 고정 CTA 위에 둘 때 하단 여백 축소 */
+	compactBottom?: boolean;
 };
 
 export const PreviewInconvertibleQuestionBanner = ({
 	totalFailedCount,
 	highlightLine,
 	compactTop = false,
+	compactBottom = false,
 }: PreviewInconvertibleQuestionBannerProps) => {
 	return (
-		<div className={`w-full  ${compactTop ? "pt-3" : "pt-1"} pb-2`}>
+		<div
+			className={`w-full  ${compactTop ? "pt-3" : "pt-1"} ${compactBottom ? "pb-0" : "pb-2"}`}
+		>
 			<div
 				className="rounded-2xl p-4"
 				style={{ backgroundColor: adaptive.red50 }}

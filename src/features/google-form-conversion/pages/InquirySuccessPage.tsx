@@ -12,7 +12,9 @@ export const InquirySuccessPage = () => {
 	const navigate = useNavigate();
 
 	const handleContinue = () => {
-		navigate("/payment/google-form-conversion-preview");
+		navigate("/payment/google-form-conversion-preview", {
+			state: { previewFrom: "flow" },
+		});
 	};
 
 	const handleGoHome = () => {
