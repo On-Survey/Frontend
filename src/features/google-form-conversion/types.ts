@@ -44,6 +44,13 @@ export type RequestEntryState = {
 	email: string;
 };
 
+/**
+ * `/payment/google-form-conversion` 진입 시 — 랜딩에서만 전달해 신청 입력·검증·옵션 초안을 비운다.
+ */
+export type GoogleFormConversionRequestLocationState = {
+	fromConversionLanding?: boolean;
+};
+
 /** 스크리닝 질문 구성 화면에서 저장해 옵션 등으로 넘기는 초안 (`answer`: 참여 허용 O=true, X=false) */
 export type ScreeningDraft = {
 	question: string;

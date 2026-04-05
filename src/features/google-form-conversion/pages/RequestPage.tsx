@@ -12,7 +12,10 @@ import {
 	type ValidateRequestResult,
 } from "@features/google-form-conversion/hooks/useGoogleFormRequestValidation";
 import type { FormRequestValidationDetail } from "@features/google-form-conversion/service/api";
-import type { RequestFormValues } from "@features/google-form-conversion/types";
+import type {
+	GoogleFormConversionRequestLocationState,
+	RequestFormValues,
+} from "@features/google-form-conversion/types";
 import {
 	emailHasNonAsciiCharacters,
 	getFormRequestValidationErrorMessage,
@@ -28,15 +31,31 @@ import {
 	TextField,
 	Top,
 } from "@toss/tds-mobile";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Controller, useFormState } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const RequestPage = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 
-	const { setAfterValidation } = useRequestEntryContext();
+	const { setAfterValidation, resetFlow } = useRequestEntryContext();
 	const resetOptionsForm = useOptionsFormReset();
+
+	useEffect(() => {
+		const state =
+			location.state as GoogleFormConversionRequestLocationState | null;
+		if (!state?.fromConversionLanding) return;
+		resetFlow();
+		resetOptionsForm();
+		navigate(location.pathname, { replace: true, state: {} });
+	}, [
+		location.pathname,
+		location.state,
+		navigate,
+		resetFlow,
+		resetOptionsForm,
+	]);
 
 	const { mutateAsync: validateRequest, isPending: isValidating } =
 		useGoogleFormRequestValidation();

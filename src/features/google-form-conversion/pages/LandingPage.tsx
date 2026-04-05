@@ -1,3 +1,4 @@
+import type { GoogleFormConversionRequestLocationState } from "@features/google-form-conversion/types";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { FixedBottomCTA } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +16,10 @@ export const LandingPage = () => {
 			event: "form_convert_button_click",
 			pagePath: "/google-form-conversion-landing",
 		});
-		navigate("/payment/google-form-conversion");
+		const state: GoogleFormConversionRequestLocationState = {
+			fromConversionLanding: true,
+		};
+		navigate("/payment/google-form-conversion", { state });
 	};
 
 	return (
