@@ -137,7 +137,9 @@ export const OptionsPage = () => {
 	const isPromoPriceApplied =
 		verifiedPromotionCode !== null &&
 		verifiedPromotionCode === promotionCodeInput.trim();
-	const promotionVerifyMessage = isPromoPriceApplied ? "인증되었어요" : null;
+	const promotionVerifyMessage = isPromoPriceApplied
+		? "코드가 적용되었어요"
+		: null;
 
 	const deadlineDate = useMemo(() => {
 		if (!deadlineIsoDate || !/^\d{4}-\d{2}-\d{2}$/.test(deadlineIsoDate)) {
@@ -178,11 +180,11 @@ export const OptionsPage = () => {
 			if (valid) {
 				setValue("verifiedPromotionCode", code);
 			} else {
-				setPromotionCodeError("유효하지 않은 프로모션 코드예요");
+				setPromotionCodeError("등록된 코드가 아니에요");
 				setValue("verifiedPromotionCode", null);
 			}
 		} catch {
-			setPromotionCodeError("인증에 실패했어요, 다시 시도해주세요");
+			setPromotionCodeError("등록된 코드가 아니에요");
 			setValue("verifiedPromotionCode", null);
 		} finally {
 			setIsPromotionVerifying(false);
@@ -243,7 +245,7 @@ export const OptionsPage = () => {
 				} catch {
 					// noop
 				}
-				setPromotionCodeError("유효하지 않은 프로모션 코드예요");
+				setPromotionCodeError("등록된 코드가 아니에요");
 				return;
 			}
 
