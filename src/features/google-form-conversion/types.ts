@@ -57,11 +57,13 @@ export type FlowState = RequestEntryState & {
 };
 
 /** 옵션 폼 기본 마감일: 오늘 (로컬, YYYY-MM-DD) */
+/** `getDefaultDeadline`(utils)과 동일: 오늘(로컬) + 7일 — 옵션 드래프트 초기값 */
 const defaultDeadlineIsoDate = (): string => {
 	const d = new Date();
-	const y = d.getFullYear();
-	const m = String(d.getMonth() + 1).padStart(2, "0");
-	const day = String(d.getDate()).padStart(2, "0");
+	const t = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 7);
+	const y = t.getFullYear();
+	const m = String(t.getMonth() + 1).padStart(2, "0");
+	const day = String(t.getDate()).padStart(2, "0");
 	return `${y}-${m}-${day}`;
 };
 
