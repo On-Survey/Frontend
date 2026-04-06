@@ -57,11 +57,10 @@ export interface FormRequestValidationDetail {
 	title: string;
 	type: string;
 	reason: string;
-	/** 신규 API: 미지원 문항 순번 */
+	section?: number;
 	order?: number;
-	/** 구 API 호환: 폼 상 문항 순번 */
+
 	questionOrder?: number;
-	/** 백엔드 제공 시 — 미지원 문항 미리보기에서 필수/선택 표시 */
 	isRequired?: boolean;
 }
 export interface FormRequestValidationChoiceOption {
@@ -118,7 +117,7 @@ export interface FormRequestValidationSuccessResultItem {
 /** 검증 실패한 URL (`message`에 사유) */
 export interface FormRequestValidationErrorResultItem {
 	url: string;
-	message: string;
+	message: string | null;
 }
 
 export type FormRequestValidationResultItem =
