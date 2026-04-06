@@ -165,7 +165,7 @@ export const PreviewPage = () => {
 
 			{visibleSection && visibleSectionNumber !== null ? (
 				<div className="px-6 pt-6 pb-1">
-					<Badge variant="weak" color="green" size="small">
+					<Badge variant="weak" color="green" size="small" className="mb-2">
 						{`섹션 ${visibleSectionNumber}`}
 					</Badge>
 					<Text
