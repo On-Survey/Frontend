@@ -124,13 +124,11 @@ export const OptionsPage = () => {
 	const isFullConversionSuccess = inconvertibleQuestionCount === 0;
 
 	const handleHeaderBack = useCallback(() => {
-		if (validationSuccess && !isFullConversionSuccess) {
-			navigate("/payment/google-form-conversion-preview", {
-				state: { previewFrom: "options" },
-			});
+		if (validationSuccess && isFullConversionSuccess) {
+			navigate("/payment/google-form-conversion");
 			return;
 		}
-		navigate("/payment/google-form-conversion");
+		navigate(-1);
 	}, [validationSuccess, isFullConversionSuccess, navigate]);
 
 	useBackEventListener(handleHeaderBack);
@@ -235,7 +233,11 @@ export const OptionsPage = () => {
 		}
 	}, [getValues, setValue]);
 
-	const handleNavigateToPreview = useCallback(() => {
+	const handleNavigateToPreviewBack = useCallback(() => {
+		navigate(-1);
+	}, [navigate]);
+
+	const handleNavigateToPreviewPage = useCallback(() => {
 		if (!validationResult) return;
 		navigate("/payment/google-form-conversion-preview", {
 			state: { previewFrom: "options" },
@@ -365,7 +367,11 @@ export const OptionsPage = () => {
 								size="small"
 								variant="weak"
 								color={isFullConversionSuccess ? undefined : "danger"}
-								onClick={handleNavigateToPreview}
+								onClick={
+									isFullConversionSuccess
+										? handleNavigateToPreviewPage
+										: handleNavigateToPreviewBack
+								}
 							>
 								설문 보기
 							</Button>
