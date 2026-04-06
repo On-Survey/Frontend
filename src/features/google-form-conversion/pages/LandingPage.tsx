@@ -1,24 +1,33 @@
+import type { GoogleFormConversionRequestLocationState } from "@features/google-form-conversion/types";
+import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { pushGtmEvent } from "@shared/lib/gtm";
 import { FixedBottomCTA } from "@toss/tds-mobile";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import landing1 from "../../../assets/landingPage/landing1.svg";
 import landing2 from "../../../assets/landingPage/landing2.svg";
 import landing3 from "../../../assets/landingPage/landing3.svg";
 import landing4 from "../../../assets/landingPage/landing4.svg";
 import landing5 from "../../../assets/landingPage/landing5.svg";
 
-export const GoogleFormConversionLandingPage = () => {
+export const LandingPage = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
+
+	const handleBackToHome = useCallback(() => {
+		navigate("/home");
+	}, [navigate]);
+
+	useBackEventListener(handleBackToHome);
 
 	const handleRegister = () => {
 		pushGtmEvent({
 			event: "form_convert_button_click",
 			pagePath: "/google-form-conversion-landing",
 		});
-		navigate("/payment/google-form-conversion", {
-			state: location.state,
-		});
+		const state: GoogleFormConversionRequestLocationState = {
+			fromConversionLanding: true,
+		};
+		navigate("/payment/google-form-conversion", { state });
 	};
 
 	return (

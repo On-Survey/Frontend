@@ -14,11 +14,10 @@ import { SurveyTabLoading } from "../ui/SurveyTabLoading";
 const FAB_SIZE_CLASS = "h-[54px] w-[54px] min-h-[54px] min-w-[54px]";
 
 const fabActionVariants = {
-	hidden: { opacity: 0, y: 16, scale: 0.92 },
+	hidden: { opacity: 0, y: 16 },
 	visible: (i: number) => ({
 		opacity: 1,
 		y: 0,
-		scale: 1,
 		transition: {
 			delay: i * 0.07,
 			duration: 0.22,
@@ -28,7 +27,6 @@ const fabActionVariants = {
 	exit: (i: number) => ({
 		opacity: 0,
 		y: 12,
-		scale: 0.92,
 		transition: {
 			delay: (1 - i) * 0.05,
 			duration: 0.18,
@@ -42,7 +40,7 @@ export const MySurvey = () => {
 	const [selectedTab, setSelectedTab] = useState(0);
 	const [isFabOpen, setIsFabOpen] = useState(false);
 
-	const goToGoogleFormConversion = () => {
+	const goTo = () => {
 		setIsFabOpen(false);
 		navigate("/google-form-conversion-landing", {
 			state: { source: "mysurvey_fab" },
@@ -87,7 +85,7 @@ export const MySurvey = () => {
 						<>
 							<motion.div
 								key="fab-google-form"
-								custom={0}
+								custom={1}
 								variants={fabActionVariants}
 								initial="hidden"
 								animate="visible"
@@ -100,7 +98,7 @@ export const MySurvey = () => {
 								<button
 									type="button"
 									className={`${FAB_SIZE_CLASS} flex shrink-0 items-center justify-center rounded-full! bg-white`}
-									onClick={goToGoogleFormConversion}
+									onClick={goTo}
 									aria-label="구글폼으로 설문 등록하기"
 								>
 									<img
@@ -112,7 +110,7 @@ export const MySurvey = () => {
 							</motion.div>
 							<motion.div
 								key="fab-new-survey"
-								custom={1}
+								custom={0}
 								variants={fabActionVariants}
 								initial="hidden"
 								animate="visible"

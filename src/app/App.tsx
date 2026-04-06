@@ -3,6 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import {
+	Navigate,
 	Outlet,
 	Route,
 	BrowserRouter as Router,
@@ -26,13 +27,19 @@ import {
 	SurveyMain,
 	SurveyStart,
 } from "../features/create-survey";
+import { OptionsFormProvider } from "../features/google-form-conversion/context/OptionsFormContext";
+import { RequestEntryProvider } from "../features/google-form-conversion/context/RequestEntryContext";
 import {
-	GoogleFormConversionLandingPage,
-	GoogleFormConversionPaymentConfirmPage,
-	GoogleFormConversionPaymentSuccessPage,
-	GoogleFormConversionPrecheckPage,
-	GoogleFormConversionPrivacyConsentPage,
-	GoogleFormConversionRequestPage,
+	PaymentSuccessPage as ConversionPaymentSuccessPage,
+	InquiryPage,
+	InquirySuccessPage,
+	LandingPage,
+	OptionsPage,
+	PaymentConfirmPage,
+	PreviewPage,
+	PrivacyConsentPage,
+	RequestPage,
+	ScreeningPage,
 } from "../features/google-form-conversion/pages";
 import BusinessInfo from "../features/mypage/pages/BusinessInfo";
 import CoinDetail from "../features/mypage/pages/CoinDetail";
@@ -166,176 +173,232 @@ export const App = () => {
 			<Router>
 				<DeepLinkHandler />
 				<AnalyticsTracker />
-				<UserProvider>
-					<GlobalNavigationLayout>
-						<Routes>
-							<Route path="/" element={<Intro />} />
-							<Route path="/ad" element={<AdPage />} />
-							<Route path="/home" element={<Home />} />
-							<Route
-								path="/google-form-conversion-landing"
-								element={<GoogleFormConversionLandingPage />}
-							/>
-							<Route path="/onboarding" element={<Onboarding />} />
-							<Route path="/createFormStart" element={<SurveyStart />} />
-							<Route element={<SurveyProviderLayout />}>
-								<Route element={<MultiStepProviderWrapper />}>
-									<Route path="/mysurvey" element={<MySurvey />} />
-								</Route>
-							</Route>
-							<Route
-								path="/mysurvey/:surveyId"
-								element={<SurveyResponseDetail />}
-							/>
-							<Route element={<MultiStepProviderWrapper />}>
-								<Route element={<PaymentProviderLayout />}>
-									<Route path="/mypage" element={<Mypage />} />
-								</Route>
-							</Route>
-							<Route path="/mypage/orderHistory" element={<OrderHistory />} />
-							<Route
-								path="/mypage/orderHistory/:orderId"
-								element={<OrderDetail />}
-							/>
-							<Route path="/mypage/coinHistory" element={<CoinHistory />} />
-							<Route
-								path="/mypage/coinHistory/:coinId"
-								element={<CoinDetail />}
-							/>
-							<Route path="/mypage/refundPolicy" element={<RefundPolicy />} />
-							<Route path="/mypage/privacyPolicy" element={<PrivacyPolicy />} />
-							<Route
-								path="/mypage/termsOfService"
-								element={<TermsOfService />}
-							/>
-							<Route path="/mypage/businessInfo" element={<BusinessInfo />} />
-							<Route
-								path="/mypage/promotionNotice"
-								element={<PromotionNotice />}
-							/>
-							<Route path="/oxScreening" element={<OxScreening />} />
-							<Route path="/survey" element={<Survey />} />
-							<Route path="/surveyList" element={<SurveyListPage />} />
-							<Route element={<SurveyProviderLayout />}>
-								<Route
-									path="/survey/singleChoice"
-									element={<SurveySingleChoice />}
-								/>
-								<Route path="/survey/essay" element={<SurveyEssay />} />
-								<Route
-									path="/survey/shortAnswer"
-									element={<SurveyShortAnswer />}
-								/>
-								<Route path="/survey/rating" element={<SurveyRating />} />
-								<Route path="/survey/nps" element={<SurveyNPS />} />
-								<Route path="/survey/number" element={<SurveyNumber />} />
-								<Route path="/survey/date" element={<SurveyDate />} />
-								<Route
-									path="/survey/section"
-									element={<SectionBasedSurvey />}
-								/>
-								<Route path="/survey/complete" element={<SurveyComplete />} />
-								<Route path="/survey/ineligible" element={<Ineligible />} />
-							</Route>
-							<Route
-								path="/result/shortAnswer"
-								element={<ShortAnswerResultPage />}
-							/>
-							<Route
-								path="/result/longAnswer"
-								element={<LongAnswerResultPage />}
-							/>
-							<Route
-								path="/result/multipleChoice"
-								element={<MultipleChoiceResultPage />}
-							/>
-							<Route path="/result/rating" element={<RatingResultPage />} />
-							<Route path="/result/nps" element={<NpsResultPage />} />
-							<Route path="/result/date" element={<DateResultPage />} />
-							<Route path="/result/number" element={<NumberResultPage />} />
-							<Route path="/estimate" element={<EstimatePage />} />
-							<Route element={<SurveyProviderLayout />}>
-								<Route element={<MultiStepProviderWrapper />}>
-									<Route element={<PaymentProviderLayout />}>
-										<Route path="/createForm" element={<SurveyMain />} />
-										<Route
-											path="/payment/google-form-conversion"
-											element={<GoogleFormConversionRequestPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-check"
-											element={<GoogleFormConversionPrecheckPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-payment-confirm"
-											element={<GoogleFormConversionPaymentConfirmPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-success"
-											element={<GoogleFormConversionPaymentSuccessPage />}
-										/>
-										<Route
-											path="/payment/google-form-conversion-privacy-consent"
-											element={<GoogleFormConversionPrivacyConsentPage />}
-										/>
-										<Route
-											path="/payment/location"
-											element={<LocationSelectPage />}
-										/>
-										<Route
-											path="/estimate/location"
-											element={<EstimateLocationSelectPage />}
-										/>
-										<Route
-											path="/estimateNavigation"
-											element={<EstimateNavigationPage />}
-										/>
-										<Route path="/payment/charge" element={<PaymentMain />} />
-										<Route
-											path="/payment/free-registration-notice"
-											element={<FreeRegistrationNotice />}
-										/>
-										<Route
-											path="/payment/loading"
-											element={<PaymentLoading />}
-										/>
-										<Route
-											path="/payment/success"
-											element={<PaymentSuccessPage />}
-										/>
-										<Route
-											path="/createForm/multipleChoice"
-											element={<MultipleChoicePage />}
-										>
-											<Route index element={<MultipleChoiceMain />} />
-											<Route path="questions" element={<QuestionListPage />} />
-											<Route
-												path="questions/:questionId"
-												element={<QuestionOptionsPage />}
-											/>
+				<RequestEntryProvider>
+					<OptionsFormProvider>
+						<UserProvider>
+							<GlobalNavigationLayout>
+								<Routes>
+									<Route path="/" element={<Intro />} />
+									<Route path="/ad" element={<AdPage />} />
+									<Route path="/home" element={<Home />} />
+									<Route
+										path="/google-form-conversion-landing"
+										element={<LandingPage />}
+									/>
+									<Route path="/onboarding" element={<Onboarding />} />
+									<Route path="/createFormStart" element={<SurveyStart />} />
+									<Route element={<SurveyProviderLayout />}>
+										<Route element={<MultiStepProviderWrapper />}>
+											<Route path="/mysurvey" element={<MySurvey />} />
 										</Route>
-										<Route path="/createForm/rating" element={<RatingPage />} />
-										<Route path="/createForm/nps" element={<NPSPage />} />
-										<Route
-											path="/createForm/shortAnswer"
-											element={<ShortAnswerPage />}
-										/>
-										<Route
-											path="/createForm/longAnswer"
-											element={<LongAnswerPage />}
-										/>
-										<Route path="/createForm/date" element={<DatePage />} />
-										<Route path="/createForm/number" element={<NumberPage />} />
-										<Route
-											path="/createForm/:questionType/edit"
-											element={<QuestionTitleAndDescriptionEditPage />}
-										/>
 									</Route>
-								</Route>
-							</Route>
-						</Routes>
-					</GlobalNavigationLayout>
-				</UserProvider>
+									<Route
+										path="/mysurvey/:surveyId"
+										element={<SurveyResponseDetail />}
+									/>
+									<Route element={<MultiStepProviderWrapper />}>
+										<Route element={<PaymentProviderLayout />}>
+											<Route path="/mypage" element={<Mypage />} />
+										</Route>
+									</Route>
+									<Route
+										path="/mypage/orderHistory"
+										element={<OrderHistory />}
+									/>
+									<Route
+										path="/mypage/orderHistory/:orderId"
+										element={<OrderDetail />}
+									/>
+									<Route path="/mypage/coinHistory" element={<CoinHistory />} />
+									<Route
+										path="/mypage/coinHistory/:coinId"
+										element={<CoinDetail />}
+									/>
+									<Route
+										path="/mypage/refundPolicy"
+										element={<RefundPolicy />}
+									/>
+									<Route
+										path="/mypage/privacyPolicy"
+										element={<PrivacyPolicy />}
+									/>
+									<Route
+										path="/mypage/termsOfService"
+										element={<TermsOfService />}
+									/>
+									<Route
+										path="/mypage/businessInfo"
+										element={<BusinessInfo />}
+									/>
+									<Route
+										path="/mypage/promotionNotice"
+										element={<PromotionNotice />}
+									/>
+									<Route path="/oxScreening" element={<OxScreening />} />
+									<Route path="/survey" element={<Survey />} />
+									<Route path="/surveyList" element={<SurveyListPage />} />
+									<Route element={<SurveyProviderLayout />}>
+										<Route
+											path="/survey/singleChoice"
+											element={<SurveySingleChoice />}
+										/>
+										<Route path="/survey/essay" element={<SurveyEssay />} />
+										<Route
+											path="/survey/shortAnswer"
+											element={<SurveyShortAnswer />}
+										/>
+										<Route path="/survey/rating" element={<SurveyRating />} />
+										<Route path="/survey/nps" element={<SurveyNPS />} />
+										<Route path="/survey/number" element={<SurveyNumber />} />
+										<Route path="/survey/date" element={<SurveyDate />} />
+										<Route
+											path="/survey/section"
+											element={<SectionBasedSurvey />}
+										/>
+										<Route
+											path="/survey/complete"
+											element={<SurveyComplete />}
+										/>
+										<Route path="/survey/ineligible" element={<Ineligible />} />
+									</Route>
+									<Route
+										path="/result/shortAnswer"
+										element={<ShortAnswerResultPage />}
+									/>
+									<Route
+										path="/result/longAnswer"
+										element={<LongAnswerResultPage />}
+									/>
+									<Route
+										path="/result/multipleChoice"
+										element={<MultipleChoiceResultPage />}
+									/>
+									<Route path="/result/rating" element={<RatingResultPage />} />
+									<Route path="/result/nps" element={<NpsResultPage />} />
+									<Route path="/result/date" element={<DateResultPage />} />
+									<Route path="/result/number" element={<NumberResultPage />} />
+									<Route path="/estimate" element={<EstimatePage />} />
+									<Route element={<SurveyProviderLayout />}>
+										<Route element={<MultiStepProviderWrapper />}>
+											<Route element={<PaymentProviderLayout />}>
+												<Route path="/createForm" element={<SurveyMain />} />
+												<Route
+													path="/payment/google-form-conversion"
+													element={<RequestPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-inquiry"
+													element={<InquiryPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-inquiry-success"
+													element={<InquirySuccessPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-preview"
+													element={<PreviewPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-options"
+													element={<OptionsPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-screening"
+													element={<ScreeningPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-check"
+													element={
+														<Navigate
+															to="/payment/google-form-conversion-payment-confirm"
+															replace
+														/>
+													}
+												/>
+												<Route
+													path="/payment/google-form-conversion-payment-confirm"
+													element={<PaymentConfirmPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-success"
+													element={<ConversionPaymentSuccessPage />}
+												/>
+												<Route
+													path="/payment/google-form-conversion-privacy-consent"
+													element={<PrivacyConsentPage />}
+												/>
+												<Route
+													path="/payment/location"
+													element={<LocationSelectPage />}
+												/>
+												<Route
+													path="/estimate/location"
+													element={<EstimateLocationSelectPage />}
+												/>
+												<Route
+													path="/estimateNavigation"
+													element={<EstimateNavigationPage />}
+												/>
+												<Route
+													path="/payment/charge"
+													element={<PaymentMain />}
+												/>
+												<Route
+													path="/payment/free-registration-notice"
+													element={<FreeRegistrationNotice />}
+												/>
+												<Route
+													path="/payment/loading"
+													element={<PaymentLoading />}
+												/>
+												<Route
+													path="/payment/success"
+													element={<PaymentSuccessPage />}
+												/>
+												<Route
+													path="/createForm/multipleChoice"
+													element={<MultipleChoicePage />}
+												>
+													<Route index element={<MultipleChoiceMain />} />
+													<Route
+														path="questions"
+														element={<QuestionListPage />}
+													/>
+													<Route
+														path="questions/:questionId"
+														element={<QuestionOptionsPage />}
+													/>
+												</Route>
+												<Route
+													path="/createForm/rating"
+													element={<RatingPage />}
+												/>
+												<Route path="/createForm/nps" element={<NPSPage />} />
+												<Route
+													path="/createForm/shortAnswer"
+													element={<ShortAnswerPage />}
+												/>
+												<Route
+													path="/createForm/longAnswer"
+													element={<LongAnswerPage />}
+												/>
+												<Route path="/createForm/date" element={<DatePage />} />
+												<Route
+													path="/createForm/number"
+													element={<NumberPage />}
+												/>
+												<Route
+													path="/createForm/:questionType/edit"
+													element={<QuestionTitleAndDescriptionEditPage />}
+												/>
+											</Route>
+										</Route>
+									</Route>
+								</Routes>
+							</GlobalNavigationLayout>
+						</UserProvider>
+					</OptionsFormProvider>
+				</RequestEntryProvider>
 			</Router>
 		</QueryClientProvider>
 	);

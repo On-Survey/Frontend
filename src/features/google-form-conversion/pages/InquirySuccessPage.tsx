@@ -1,0 +1,79 @@
+import type { GoogleFormConversionPreviewLocationState } from "@features/google-form-conversion/lib/previewPageLocationState";
+import { adaptive } from "@toss/tds-colors";
+import {
+	Asset,
+	CTAButton,
+	FixedBottomCTA,
+	Spacing,
+	Text,
+} from "@toss/tds-mobile";
+import { useLocation, useNavigate } from "react-router-dom";
+
+export const InquirySuccessPage = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const handleContinue = () => {
+		const previewFrom =
+			(location.state as GoogleFormConversionPreviewLocationState | null)
+				?.previewFrom ?? "flow";
+		navigate("/payment/google-form-conversion-preview", {
+			state: { previewFrom },
+		});
+	};
+
+	const handleGoHome = () => {
+		navigate("/home");
+	};
+
+	return (
+		<div className="flex w-full flex-col items-center justify-center p-4">
+			<Spacing size={160} />
+			<Asset.Image
+				frameShape={Asset.frameShape.CleanW100}
+				backgroundColor="transparent"
+				src="https://static.toss.im/lotties/check-spot-apng.png"
+				aria-hidden={true}
+				style={{ aspectRatio: "1/1" }}
+			/>
+			<Spacing size={24} />
+			<Text
+				display="block"
+				color={adaptive.grey800}
+				typography="t2"
+				fontWeight="bold"
+				textAlign="center"
+				className="w-full max-w-[320px]"
+			>
+				문의 사항이 잘 접수되었어요
+			</Text>
+			<Text
+				display="block"
+				color={adaptive.grey700}
+				typography="t5"
+				fontWeight="medium"
+				textAlign="center"
+				className="mt-1 w-full max-w-[320px]"
+			>
+				24시간 이내로 빠르게 검토해 이메일로 안내해 드릴게요
+			</Text>
+			<FixedBottomCTA.Double
+				leftButton={
+					<CTAButton
+						color="dark"
+						variant="weak"
+						display="block"
+						onClick={handleContinue}
+					>
+						계속 진행하기
+					</CTAButton>
+				}
+				rightButton={
+					<CTAButton display="block" onClick={handleGoHome}>
+						홈으로 돌아가기
+					</CTAButton>
+				}
+			/>
+		</div>
+	);
+};

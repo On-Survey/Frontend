@@ -13,11 +13,11 @@ export const DateSelectBottomSheet = ({
 }: DateSelectBottomSheetProps) => {
 	return (
 		<WheelDatePicker
-			title={"날짜를 선택해주세요"}
+			title="날짜를 선택해주세요"
 			value={value}
 			onChange={onChange}
 			triggerLabel={triggerLabel}
-			buttonText={"확인"}
+			buttonText="확인"
 			description="선택일 자정에 설문이 마감돼요"
 		/>
 	);

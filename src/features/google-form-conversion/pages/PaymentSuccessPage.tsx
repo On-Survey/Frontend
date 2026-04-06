@@ -1,11 +1,17 @@
+import { useOptionsFormReset } from "@features/google-form-conversion/context/OptionsFormContext";
+import { useRequestEntryContext } from "@features/google-form-conversion/context/RequestEntryContext";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, FixedBottomCTA, Spacing, Text } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
-export const GoogleFormConversionPaymentSuccessPage = () => {
+export const PaymentSuccessPage = () => {
 	const navigate = useNavigate();
+	const { resetFlow } = useRequestEntryContext();
+	const resetOptionsForm = useOptionsFormReset();
 
 	const handleConfirm = () => {
+		resetOptionsForm();
+		resetFlow();
 		navigate("/home");
 	};
 
@@ -36,7 +42,7 @@ export const GoogleFormConversionPaymentSuccessPage = () => {
 				fontWeight="medium"
 				textAlign="center"
 			>
-				등록해주신 폼은 빠르게 검토해 이메일로 안내해 드릴게요.
+				등록해주신 폼은 빠르게 검토해 이메일로 안내해 드릴게요
 			</Text>
 			<FixedBottomCTA loading={false} onClick={handleConfirm}>
 				확인했어요
