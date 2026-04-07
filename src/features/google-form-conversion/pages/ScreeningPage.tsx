@@ -116,17 +116,17 @@ export const ScreeningPage = () => {
 						type="button"
 						aria-label="O"
 						onClick={() => setAnswer(true)}
-						className={`flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors ${
-							answer === true
-								? "bg-green-200"
-								: "bg-green-100 hover:bg-green-200"
-						}`}
+						className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors"
+						style={{
+							backgroundColor:
+								"var(--token-tds-color-adaptive-green-50, var(--adaptiveGreen50, #f0faf6))",
+						}}
 					>
 						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW24}
+							frameShape={Asset.frameShape.CleanW40}
 							backgroundColor="transparent"
 							name="icon-o-mono"
-							color={adaptive.green500}
+							color={adaptive.green400}
 							aria-hidden={true}
 							ratio="1/1"
 						/>
@@ -135,12 +135,14 @@ export const ScreeningPage = () => {
 						type="button"
 						aria-label="X"
 						onClick={() => setAnswer(false)}
-						className={`flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors ${
-							answer === false ? "bg-red-200" : "bg-red-100 hover:bg-red-200"
-						}`}
+						className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors"
+						style={{
+							backgroundColor:
+								"var(--token-tds-color-adaptive-red-50, var(--adaptiveRed50, #ffeeee))",
+						}}
 					>
 						<Asset.Icon
-							frameShape={Asset.frameShape.CleanW24}
+							frameShape={Asset.frameShape.CleanW40}
 							backgroundColor="transparent"
 							name="icon-x-mono"
 							color={adaptive.red500}

@@ -154,7 +154,7 @@ export const RequestPage = () => {
 				lowerGap={0}
 			/>
 
-			<div className="flex flex-col gap-4 px-2 pt-4">
+			<div className="flex flex-col gap-4 px-4 pt-4">
 				<Controller
 					control={control}
 					name="formLink"

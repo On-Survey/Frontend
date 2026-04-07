@@ -16,7 +16,9 @@ export const UnsupportedRegisterConfirmBottomSheet = ({
 		<BottomSheet
 			header={
 				<BottomSheet.Header>
-					미지원 문항이 남아 있어요 그대로 등록할까요?
+					미지원 문항이 남아 있어요
+					<br />
+					그대로 등록할까요?
 				</BottomSheet.Header>
 			}
 			headerDescription={
