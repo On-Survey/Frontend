@@ -363,7 +363,7 @@ export const OptionsPage = () => {
 								>
 									{isFullConversionSuccess
 										? `${convertibleQuestionCount}개의 문항이 변환됐어요`
-										: `변환에 실패한 문항이 ${inconvertibleQuestionCount}개 있어요`}
+										: `${inconvertibleQuestionCount}개 문항이 변환에 실패했어요`}
 								</Text>
 							</div>
 							<Button
