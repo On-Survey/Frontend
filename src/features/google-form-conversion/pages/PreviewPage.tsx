@@ -17,7 +17,6 @@ import { useBackEventListener } from "@shared/hooks/useBackEventListener";
 import { adaptive } from "@toss/tds-colors";
 import {
 	Asset,
-	Badge,
 	Border,
 	FixedBottomCTA,
 	List,
@@ -165,42 +164,45 @@ export const PreviewPage = () => {
 
 			{visibleSection && visibleSectionNumber !== null ? (
 				<>
-					<div className="px-6 pt-6 pb-6">
-						<Badge variant="weak" color="green" size="small" className="mb-2">
-							{`섹션 ${visibleSectionNumber}`}
-						</Badge>
-						<Text
-							display="block"
-							color={adaptive.grey900}
-							typography="st8"
-							fontWeight="bold"
-							className="mt-2.5"
-						>
-							<TextWithLinks
-								text={
-									visibleSection.sectionTitle?.trim()
-										? visibleSection.sectionTitle
-										: "(제목 없음)"
-								}
-								variant="inline"
-								inheritLinkSize
-							/>
-						</Text>
-						{visibleSection.sectionDescription?.trim() ? (
-							<Text
-								display="block"
-								color={adaptive.grey600}
-								typography="t5"
-								fontWeight="regular"
-								className="mt-2 leading-[1.6]"
-							>
-								<TextWithLinks
-									text={visibleSection.sectionDescription}
-									variant="inline"
-									inheritLinkSize
+					<div className="pb-6">
+						<Top
+							title={
+								<Top.TitleParagraph size={22} color={adaptive.grey900}>
+									<TextWithLinks
+										text={
+											visibleSection.sectionTitle?.trim()
+												? visibleSection.sectionTitle
+												: "(제목 없음)"
+										}
+										variant="inline"
+										inheritLinkSize
+									/>
+								</Top.TitleParagraph>
+							}
+							subtitleTop={
+								<Top.SubtitleBadges
+									badges={[
+										{
+											text: `섹션 ${visibleSectionNumber}`,
+											color: "green",
+											variant: "weak",
+										},
+									]}
 								/>
-							</Text>
-						) : null}
+							}
+							subtitleBottom={
+								visibleSection.sectionDescription?.trim() ? (
+									<Top.SubtitleParagraph size={15} color={adaptive.grey600}>
+										<TextWithLinks
+											text={visibleSection.sectionDescription}
+											variant="inline"
+											inheritLinkSize
+										/>
+									</Top.SubtitleParagraph>
+								) : undefined
+							}
+							lowerGap={0}
+						/>
 					</div>
 					<Border variant="height16" />
 				</>
