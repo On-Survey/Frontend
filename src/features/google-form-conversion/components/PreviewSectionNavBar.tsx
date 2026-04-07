@@ -17,7 +17,7 @@ export const PreviewSectionNavBar = ({
 	if (sectionCount <= 1) return null;
 
 	return (
-		<div className="mt-6 grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 border-t border-[#E5E8EB] px-6 pt-4 pb-1">
+		<div className="mt-6 grid w-full grid-cols-[auto_1fr_auto] items-center gap-2 px-6 pt-4 pb-1">
 			<div className="flex min-w-0 justify-start">
 				{activeSectionIndex > 0 ? (
 					<TextButton

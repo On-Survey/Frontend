@@ -119,7 +119,9 @@ export const ScreeningPage = () => {
 						className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors"
 						style={{
 							backgroundColor:
-								"var(--token-tds-color-adaptive-green-50, var(--adaptiveGreen50, #f0faf6))",
+								answer === true
+									? "var(--token-tds-color-adaptive-green-100, var(--adaptiveGreen100, #aeefd5))"
+									: "var(--token-tds-color-adaptive-green-50, var(--adaptiveGreen50, #f0faf6))",
 						}}
 					>
 						<Asset.Icon
@@ -138,7 +140,9 @@ export const ScreeningPage = () => {
 						className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl! p-4 transition-colors"
 						style={{
 							backgroundColor:
-								"var(--token-tds-color-adaptive-red-50, var(--adaptiveRed50, #ffeeee))",
+								answer === false
+									? "var(--token-tds-color-adaptive-red-100, var(--adaptiveRed100, #ffd4d6))"
+									: "var(--token-tds-color-adaptive-red-50, var(--adaptiveRed50, #ffeeee))",
 						}}
 					>
 						<Asset.Icon

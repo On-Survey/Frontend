@@ -65,21 +65,21 @@ export const ValidationPartialBottomSheet = ({
 							<Text
 								display="block"
 								color={adaptive.grey600}
-								typography="t7"
+								typography="t6"
 								fontWeight="medium"
 							>
 								{getQuestionNumberLabelForValidationDetail(detail, index)}
 							</Text>
-							<div className="h-1.5" />
+							<div className="h-1" />
 							<Text
 								display="block"
-								color={adaptive.grey900}
+								color={adaptive.grey800}
 								typography="t5"
-								fontWeight="bold"
+								fontWeight="semibold"
 							>
 								{detail.title?.trim() ? detail.title : "(제목 없음)"}
 							</Text>
-							<div className="h-2" />
+							<div className="h-1" />
 							<Text
 								display="block"
 								color={adaptive.red500}
