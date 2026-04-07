@@ -42,7 +42,7 @@ export const useGoogleFormPreviewPageActions = ({
 
 	const navigateBackFromPreview = useCallback(() => {
 		if (isPreviewFromOptions) {
-			navigate("/payment/google-form-conversion-options");
+			navigate(-1);
 			return;
 		}
 		navigate("/payment/google-form-conversion");

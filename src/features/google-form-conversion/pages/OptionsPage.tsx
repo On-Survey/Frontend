@@ -234,8 +234,11 @@ export const OptionsPage = () => {
 	}, [getValues, setValue]);
 
 	const handleNavigateToPreviewBack = useCallback(() => {
-		navigate(-1);
-	}, [navigate]);
+		if (!validationResult) return;
+		navigate("/payment/google-form-conversion-preview", {
+			state: { previewFrom: "options" },
+		});
+	}, [navigate, validationResult]);
 
 	const handleNavigateToPreviewPage = useCallback(() => {
 		if (!validationResult) return;
