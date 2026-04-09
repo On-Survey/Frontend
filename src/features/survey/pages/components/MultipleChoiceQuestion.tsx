@@ -115,21 +115,40 @@ export const MultipleChoiceQuestion = ({
 			return;
 		}
 
-		const nextSelectedIds: number[] = [];
-		const usedIndexes = new Set<number>();
+		setSelectedOptionIds((prev) => {
+			const nextSelectedIds: number[] = [];
+			const usedOptionIds = new Set<number>();
 
-		selectedAnswers.forEach((answerText) => {
-			const idx = regularOptions.findIndex(
-				(option, index) =>
-					!usedIndexes.has(index) && option.content === answerText,
-			);
-			if (idx >= 0) {
-				usedIndexes.add(idx);
-				nextSelectedIds.push(regularOptions[idx].optionId);
-			}
+			selectedAnswers.forEach((answerText) => {
+				const previousMatchId = prev.find((optionId) => {
+					if (usedOptionIds.has(optionId)) {
+						return false;
+					}
+					const option = regularOptions.find(
+						(item) => item.optionId === optionId,
+					);
+					return option?.content === answerText;
+				});
+
+				if (previousMatchId !== undefined) {
+					usedOptionIds.add(previousMatchId);
+					nextSelectedIds.push(previousMatchId);
+					return;
+				}
+
+				const nextMatch = regularOptions.find(
+					(option) =>
+						!usedOptionIds.has(option.optionId) &&
+						option.content === answerText,
+				);
+				if (nextMatch) {
+					usedOptionIds.add(nextMatch.optionId);
+					nextSelectedIds.push(nextMatch.optionId);
+				}
+			});
+
+			return nextSelectedIds;
 		});
-
-		setSelectedOptionIds(nextSelectedIds);
 	}, [regularOptions, selectedAnswers]);
 
 	// hasCustomInput 확인

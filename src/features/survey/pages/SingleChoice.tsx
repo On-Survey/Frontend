@@ -108,10 +108,21 @@ export const SurveySingleChoice = () => {
 			return;
 		}
 
-		const matched = regularOptions.find(
-			(option) => option.content === currentAnswer,
-		);
-		setSelectedOptionId(matched?.optionId ?? null);
+		setSelectedOptionId((prev) => {
+			if (prev !== null) {
+				const previousOption = regularOptions.find(
+					(option) => option.optionId === prev,
+				);
+				if (previousOption?.content === currentAnswer) {
+					return prev;
+				}
+			}
+
+			const matched = regularOptions.find(
+				(option) => option.content === currentAnswer,
+			);
+			return matched?.optionId ?? null;
+		});
 	}, [currentAnswer, regularOptions]);
 
 	const hasCustomInput =
