@@ -141,6 +141,7 @@ export const MultipleChoiceQuestion = ({
 
 	const handleOptionToggle = (optionId: number, optionContent: string) => {
 		const isSelected = selectedOptionIds.includes(optionId);
+		const otherAnswers = selectedAnswers.filter(isOtherOption);
 
 		if (isMultipleSelection) {
 			if (isSelected) {
@@ -155,9 +156,10 @@ export const MultipleChoiceQuestion = ({
 							option !== undefined,
 					)
 					.map((option) => option.content);
+				const mergedAnswers = [...newAnswers, ...otherAnswers];
 				onAnswerChange(
 					question.questionId,
-					newAnswers.length > 0 ? joinAnswers(newAnswers) : "",
+					mergedAnswers.length > 0 ? joinAnswers(mergedAnswers) : "",
 				);
 
 				// 기타 옵션 해제 시 입력값 초기화
@@ -180,7 +182,7 @@ export const MultipleChoiceQuestion = ({
 					// 입력 필드가 즉시 표시되도록 입력값 초기화
 					setCustomInputValue("");
 				} else {
-					// 일반 옵션 선택 시 기존 답변 유지 (기타 답변 제외)
+					// 일반 옵션 선택 시 기존 기타 답변도 함께 유지
 					const nextSelectedIds = [...selectedOptionIds, optionId];
 					setSelectedOptionIds(nextSelectedIds);
 					const newAnswers = nextSelectedIds
@@ -192,7 +194,8 @@ export const MultipleChoiceQuestion = ({
 								option !== undefined,
 						)
 						.map((option) => option.content);
-					onAnswerChange(question.questionId, joinAnswers(newAnswers));
+					const mergedAnswers = [...newAnswers, ...otherAnswers];
+					onAnswerChange(question.questionId, joinAnswers(mergedAnswers));
 				}
 			}
 		} else {
