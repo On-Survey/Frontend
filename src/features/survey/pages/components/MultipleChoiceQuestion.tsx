@@ -107,6 +107,31 @@ export const MultipleChoiceQuestion = ({
 		);
 	}, [question.options]);
 
+	const [selectedOptionIds, setSelectedOptionIds] = useState<number[]>([]);
+
+	useEffect(() => {
+		if (!regularOptions.length) {
+			setSelectedOptionIds([]);
+			return;
+		}
+
+		const nextSelectedIds: number[] = [];
+		const usedIndexes = new Set<number>();
+
+		selectedAnswers.forEach((answerText) => {
+			const idx = regularOptions.findIndex(
+				(option, index) =>
+					!usedIndexes.has(index) && option.content === answerText,
+			);
+			if (idx >= 0) {
+				usedIndexes.add(idx);
+				nextSelectedIds.push(regularOptions[idx].optionId);
+			}
+		});
+
+		setSelectedOptionIds(nextSelectedIds);
+	}, [regularOptions, selectedAnswers]);
+
 	// hasCustomInput 확인
 	const hasCustomInput =
 		question.hasCustomInput === true ||
@@ -114,19 +139,22 @@ export const MultipleChoiceQuestion = ({
 			(option) => option.content === OTHER_OPTION_PREFIX,
 		);
 
-	const handleOptionToggle = (optionContent: string) => {
-		const isSelected = selectedAnswers.some(
-			(answer) =>
-				answer === optionContent || answer.startsWith(`${optionContent}:`),
-		);
+	const handleOptionToggle = (optionId: number, optionContent: string) => {
+		const isSelected = selectedOptionIds.includes(optionId);
 
 		if (isMultipleSelection) {
 			if (isSelected) {
-				// 선택 해제
-				const newAnswers = selectedAnswers.filter(
-					(answer) =>
-						answer !== optionContent && !answer.startsWith(`${optionContent}:`),
+				const nextSelectedIds = selectedOptionIds.filter(
+					(id) => id !== optionId,
 				);
+				setSelectedOptionIds(nextSelectedIds);
+				const newAnswers = nextSelectedIds
+					.map((id) => regularOptions.find((option) => option.optionId === id))
+					.filter(
+						(option): option is (typeof regularOptions)[number] =>
+							option !== undefined,
+					)
+					.map((option) => option.content);
 				onAnswerChange(
 					question.questionId,
 					newAnswers.length > 0 ? joinAnswers(newAnswers) : "",
@@ -138,7 +166,7 @@ export const MultipleChoiceQuestion = ({
 				}
 			} else {
 				// 선택 추가
-				if (selectedAnswers.length >= maxChoice) {
+				if (selectedOptionIds.length >= maxChoice) {
 					return; // 최대 선택 개수 초과
 				}
 
@@ -152,24 +180,37 @@ export const MultipleChoiceQuestion = ({
 					// 입력 필드가 즉시 표시되도록 입력값 초기화
 					setCustomInputValue("");
 				} else {
-					// 일반 옵션 선택 시 기존 답변 유지 (기타 답변 포함)
-					const newAnswers = [...selectedAnswers, optionContent];
+					// 일반 옵션 선택 시 기존 답변 유지 (기타 답변 제외)
+					const nextSelectedIds = [...selectedOptionIds, optionId];
+					setSelectedOptionIds(nextSelectedIds);
+					const newAnswers = nextSelectedIds
+						.map((id) =>
+							regularOptions.find((option) => option.optionId === id),
+						)
+						.filter(
+							(option): option is (typeof regularOptions)[number] =>
+								option !== undefined,
+						)
+						.map((option) => option.content);
 					onAnswerChange(question.questionId, joinAnswers(newAnswers));
 				}
 			}
 		} else {
 			// 단일 선택
 			if (isSelected) {
+				setSelectedOptionIds([]);
 				onAnswerChange(question.questionId, "");
 				if (optionContent === OTHER_OPTION_PREFIX) {
 					setCustomInputValue("");
 				}
 			} else {
 				if (optionContent === OTHER_OPTION_PREFIX) {
+					setSelectedOptionIds([]);
 					onAnswerChange(question.questionId, OTHER_OPTION_PREFIX);
 					// 입력 필드가 즉시 표시되도록 입력값 초기화
 					setCustomInputValue("");
 				} else {
+					setSelectedOptionIds([optionId]);
 					onAnswerChange(question.questionId, optionContent);
 				}
 			}
@@ -273,11 +314,7 @@ export const MultipleChoiceQuestion = ({
 					{regularOptions.length > 0 && (
 						<List>
 							{regularOptions.map((option) => {
-								const isSelected = selectedAnswers.some(
-									(answer) =>
-										answer === option.content ||
-										answer.startsWith(`${option.content}:`),
-								);
+								const isSelected = selectedOptionIds.includes(option.optionId);
 								return (
 									<div key={option.optionId}>
 										<ListRow
@@ -297,7 +334,9 @@ export const MultipleChoiceQuestion = ({
 													aria-hidden={true}
 												/>
 											}
-											onClick={() => handleOptionToggle(option.content)}
+											onClick={() =>
+												handleOptionToggle(option.optionId, option.content)
+											}
 										/>
 										{option.imageUrl && (
 											<div className="px-6 pt-2 pb-3">

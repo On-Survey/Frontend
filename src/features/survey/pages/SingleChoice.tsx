@@ -95,6 +95,25 @@ export const SurveySingleChoice = () => {
 		[currentQuestion?.options],
 	);
 
+	const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
+
+	useEffect(() => {
+		if (!regularOptions.length) {
+			setSelectedOptionId(null);
+			return;
+		}
+
+		if (!currentAnswer) {
+			setSelectedOptionId(null);
+			return;
+		}
+
+		const matched = regularOptions.find(
+			(option) => option.content === currentAnswer,
+		);
+		setSelectedOptionId(matched?.optionId ?? null);
+	}, [currentAnswer, regularOptions]);
+
 	const hasCustomInput =
 		currentQuestion?.hasCustomInput === true ||
 		currentQuestion?.options?.some(
@@ -106,26 +125,31 @@ export const SurveySingleChoice = () => {
 	}
 
 	// 일반 옵션 선택/해제 처리
-	const handleOptionSelect = (optionContent: string) => {
+	const handleOptionSelect = (optionId: number, optionContent: string) => {
 		if (isMultipleSelection) {
-			handleMultipleSelection(optionContent);
+			handleMultipleSelection(optionId, optionContent);
 		} else {
-			handleSingleSelection(optionContent);
+			handleSingleSelection(optionId, optionContent);
 		}
 	};
 
-	const handleSingleSelection = (optionContent: string) => {
-		if (currentAnswer === optionContent) {
+	const handleSingleSelection = (optionId: number, optionContent: string) => {
+		if (selectedOptionId === optionId) {
 			updateAnswer(currentQuestion.questionId, "");
+			setSelectedOptionId(null);
 		} else {
 			updateAnswer(currentQuestion.questionId, optionContent);
+			setSelectedOptionId(optionId);
 			if (isOtherOptionSelected) {
 				setCustomInputValue("");
 			}
 		}
 	};
 
-	const handleMultipleSelection = (optionContent: string) => {
+	const handleMultipleSelection = (
+		_optionId: number,
+		optionContent: string,
+	) => {
 		const isAlreadySelected = selectedAnswers.includes(optionContent);
 
 		if (isAlreadySelected) {
@@ -233,7 +257,9 @@ export const SurveySingleChoice = () => {
 				{regularOptions.length > 0 && (
 					<List role={isMultipleSelection ? "group" : "radiogroup"}>
 						{regularOptions.map((choice) => {
-							const isSelected = selectedAnswers.includes(choice.content);
+							const isSelected = isMultipleSelection
+								? selectedAnswers.includes(choice.content)
+								: selectedOptionId === choice.optionId;
 							const isDisabled =
 								isMultipleSelection &&
 								!isSelected &&
@@ -245,7 +271,8 @@ export const SurveySingleChoice = () => {
 									role={isMultipleSelection ? "checkbox" : "radio"}
 									aria-checked={isSelected}
 									onClick={() =>
-										!isDisabled && handleOptionSelect(choice.content)
+										!isDisabled &&
+										handleOptionSelect(choice.optionId, choice.content)
 									}
 									contents={
 										<ListRow.Texts

@@ -24,20 +24,24 @@ export const QuestionSelectionBottomSheet = ({
 	}, [state.survey.question, questionId]);
 
 	const currentOptions = question?.option ?? [];
+	const trimmedSelection = selection.trim();
+	const hasDuplicateOption = currentOptions.some(
+		(option) => option.content === trimmedSelection,
+	);
 
 	const handleSelectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSelection(e.target.value);
 	};
 
 	const handleConfirm = () => {
-		if (selection.trim() && question) {
+		if (trimmedSelection && question && !hasDuplicateOption) {
 			updateQuestion(questionId, {
 				option: [
 					...currentOptions,
 					{
 						optionId: null,
 						order: currentOptions.length + 1,
-						content: selection.trim(),
+						content: trimmedSelection,
 						nextQuestionId: null,
 					},
 				],
@@ -64,7 +68,7 @@ export const QuestionSelectionBottomSheet = ({
 				<BottomSheet.CTA
 					color="primary"
 					variant="fill"
-					disabled={!selection.trim()}
+					disabled={!trimmedSelection || hasDuplicateOption}
 					onClick={handleConfirm}
 					style={
 						{ "--button-background-color": "#15c67f" } as React.CSSProperties
