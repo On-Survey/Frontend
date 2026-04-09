@@ -4,11 +4,11 @@ import { pushGtmEvent } from "@shared/lib/gtm";
 import { FixedBottomCTA } from "@toss/tds-mobile";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import landing1 from "../../../assets/landingPage/landing1.svg";
-import landing2 from "../../../assets/landingPage/landing2.svg";
-import landing3 from "../../../assets/landingPage/landing3.svg";
-import landing4 from "../../../assets/landingPage/landing4.svg";
-import landing5 from "../../../assets/landingPage/landing5.svg";
+import landing1 from "../../../assets/landingPage/landing1.png";
+import landing2 from "../../../assets/landingPage/landing2.png";
+import landing3 from "../../../assets/landingPage/landing3.png";
+import landing4 from "../../../assets/landingPage/landing4.png";
+import landing5 from "../../../assets/landingPage/landing5.png";
 
 export const LandingPage = () => {
 	const navigate = useNavigate();

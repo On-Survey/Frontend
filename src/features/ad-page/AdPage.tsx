@@ -6,7 +6,7 @@ import ad2 from "../../assets/adPage/ad2.svg";
 import ad3 from "../../assets/adPage/ad3.svg";
 import ad4 from "../../assets/adPage/ad4.svg";
 import ad5 from "../../assets/adPage/ad5.svg";
-import landing4 from "../../assets/landingPage/landing4.svg";
+import landing4 from "../../assets/landingPage/landing4.png";
 
 export const AdPage = () => {
 	const navigate = useNavigate();
