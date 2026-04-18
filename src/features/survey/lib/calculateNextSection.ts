@@ -31,5 +31,22 @@ export function calculateNextSection(
 		}
 	}
 
+	if (questions.length === 0) {
+		if (
+			nextSectionFromApi != null &&
+			nextSectionFromApi > 0 &&
+			nextSectionFromApi !== currentSection
+		) {
+			return nextSectionFromApi;
+		}
+		if (nextSectionFromApi === currentSection) {
+			return currentSection + 1;
+		}
+		if (nextSectionFromApi === 0) {
+			return currentSection + 1;
+		}
+		return nextSectionFromApi ?? currentSection + 1;
+	}
+
 	return nextSectionFromApi ?? currentSection + 1;
 }

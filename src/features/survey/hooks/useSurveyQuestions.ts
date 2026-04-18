@@ -1,5 +1,5 @@
 import {
-	getSurveyQuestions,
+	getSurveyQuestionsForSurveyIntro,
 	type TransformedSurveyQuestion,
 } from "@features/survey/service/surveyParticipation";
 import { useQuery } from "@tanstack/react-query";
@@ -20,7 +20,7 @@ export const useSurveyQuestions = (
 			if (surveyId === undefined || surveyId === null) {
 				throw new Error("surveyId가 필요합니다.");
 			}
-			return getSurveyQuestions({ surveyId });
+			return getSurveyQuestionsForSurveyIntro(surveyId);
 		},
 		enabled: Boolean(surveyId) && enabled,
 		retry: false,
