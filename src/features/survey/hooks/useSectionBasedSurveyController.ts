@@ -76,6 +76,13 @@ export function useSectionBasedSurveyController() {
 	);
 
 	const isLastSection = actualNextSection === 0;
+
+	const canSkipEmptySectionForward =
+		questions.length === 0 &&
+		!isLastSection &&
+		actualNextSection > 0 &&
+		actualNextSection !== currentSection;
+
 	const [previousAnswers, setPreviousAnswers] = useState<
 		Record<number, string>
 	>(locationState?.previousAnswers ?? {});
@@ -246,7 +253,8 @@ export function useSectionBasedSurveyController() {
 	const handleNext = async () => {
 		if (!surveyId) return;
 		if (sectionActionInFlightRef.current) return;
-		if (isPending || questions.length === 0) return;
+		if (isPending) return;
+		if (questions.length === 0 && !canSkipEmptySectionForward) return;
 
 		pushGtmEvent({
 			event: "survey_progress_button_click",
@@ -328,7 +336,8 @@ export function useSectionBasedSurveyController() {
 
 	const handleSubmitClick = async () => {
 		if (sectionActionInFlightRef.current) return;
-		if (isPending || questions.length === 0) return;
+		if (isPending) return;
+		if (questions.length === 0 && !isLastSection) return;
 
 		if (surveyId) {
 			pushGtmEvent({
@@ -366,6 +375,7 @@ export function useSectionBasedSurveyController() {
 	return {
 		headerTitleText,
 		headerSubtitleText,
+		canSkipEmptySectionForward,
 		questions,
 		answers,
 		updateAnswer,

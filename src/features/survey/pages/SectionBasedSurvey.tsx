@@ -31,6 +31,7 @@ export const SectionBasedSurvey = () => {
 		submitting,
 		nextLoading,
 		isPending,
+		canSkipEmptySectionForward,
 	} = useSectionBasedSurveyController();
 
 	return (
@@ -101,7 +102,7 @@ export const SectionBasedSurvey = () => {
 				rightButton={
 					isLastSection ? (
 						<CTAButton
-							disabled={submitting || isPending || questions.length === 0}
+							disabled={submitting || isPending}
 							loading={submitting}
 							onClick={handleSubmitClick}
 						>
@@ -109,7 +110,11 @@ export const SectionBasedSurvey = () => {
 						</CTAButton>
 					) : (
 						<CTAButton
-							disabled={nextLoading || isPending || questions.length === 0}
+							disabled={
+								nextLoading ||
+								isPending ||
+								(questions.length === 0 && !canSkipEmptySectionForward)
+							}
 							loading={nextLoading}
 							onClick={handleNext}
 						>
