@@ -218,10 +218,52 @@ export function useSectionBasedSurveyController() {
 		}
 	};
 
+	/** 분기 경로 */
+	const buildVisitedSectionsPayload = (): number[] => {
+		const path: number[] = [];
+		for (const s of sectionHistory) {
+			if (path.length === 0 || path[path.length - 1] !== s) {
+				path.push(s);
+			}
+		}
+		if (path.length === 0 || path[path.length - 1] !== currentSection) {
+			path.push(currentSection);
+		}
+		return path;
+	};
+
+	const clearAnswersForCurrentSection = () => {
+		if (questions.length === 0) return;
+		const ids = questions.map((q) => q.questionId);
+		const nextAnswers = { ...answersRef.current };
+		for (const id of ids) {
+			delete nextAnswers[id];
+		}
+		answersRef.current = nextAnswers;
+		setAnswers(nextAnswers);
+		setPreviousAnswers((p) => {
+			const cp = { ...p };
+			for (const id of ids) {
+				delete cp[id];
+			}
+			return cp;
+		});
+		setQuestionErrors((p) => {
+			const cp = { ...p };
+			for (const id of ids) {
+				delete cp[id];
+			}
+			return cp;
+		});
+	};
+
 	const handlePrev = () => {
 		if (currentSection === 1) {
 			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
 		} else {
+			// 이전으로 가면서 떠나는 섹션의 로컬 응답을 제거해 분기 변경 시 응답이 섞이지 않게 함
+			clearAnswersForCurrentSection();
+
 			const currentIndex = sectionHistory.lastIndexOf(currentSection);
 			let prevSection: number;
 			let newHistory: number[];
@@ -304,7 +346,9 @@ export function useSectionBasedSurveyController() {
 	const handleSubmit = async () => {
 		if (!surveyId) return;
 
-		await completeSurveyMutation({ surveyId });
+		const visitedSections = buildVisitedSectionsPayload();
+
+		await completeSurveyMutation({ surveyId, visitedSections });
 
 		let surveyInfo: Awaited<ReturnType<typeof getSurveyInfo>> | undefined;
 		try {

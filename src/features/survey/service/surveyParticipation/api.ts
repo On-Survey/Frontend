@@ -204,11 +204,24 @@ export const submitScreeningResponse = async (
 	});
 };
 
+/** 완료 시 서버가 최종 방문 경로만 반영하도록 방문 섹션 목록을 전달할 때 사용 */
+export type CompleteSurveyRequestBody = {
+	visitedSections?: number[];
+};
+
 //설문 완료 처리
-export const completeSurvey = async (surveyId: number): Promise<boolean> => {
-	const { data } = await api.post<{ result: boolean }, undefined>(
-		`/v1/survey-participation/surveys/${surveyId}/complete`,
-	);
+export const completeSurvey = async (
+	surveyId: number,
+	body?: CompleteSurveyRequestBody,
+): Promise<boolean> => {
+	const url = `/v1/survey-participation/surveys/${surveyId}/complete`;
+	if (import.meta.env.DEV) {
+		console.log("[completeSurvey] POST", url, body ?? {});
+	}
+	const { data } = await api.post<
+		{ result: boolean },
+		CompleteSurveyRequestBody
+	>(url, body);
 	return data.result ?? false;
 };
 
