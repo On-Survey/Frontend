@@ -215,9 +215,6 @@ export const completeSurvey = async (
 	body?: CompleteSurveyRequestBody,
 ): Promise<boolean> => {
 	const url = `/v1/survey-participation/surveys/${surveyId}/complete`;
-	if (import.meta.env.DEV) {
-		console.log("[completeSurvey] POST", url, body ?? {});
-	}
 	const { data } = await api.post<
 		{ result: boolean },
 		CompleteSurveyRequestBody
