@@ -5,8 +5,17 @@ export const useCompleteSurvey = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ surveyId }: { surveyId: number }) =>
-			completeSurvey(surveyId),
+		mutationFn: ({
+			surveyId,
+			visitedSections,
+		}: {
+			surveyId: number;
+			visitedSections?: number[];
+		}) =>
+			completeSurvey(
+				surveyId,
+				visitedSections?.length ? { visitedSections } : undefined,
+			),
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: ["surveyInfo", variables.surveyId],
