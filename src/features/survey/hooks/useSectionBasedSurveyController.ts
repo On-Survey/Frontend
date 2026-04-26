@@ -26,6 +26,7 @@ export interface SectionBasedSurveyState {
 	surveyDescription?: string;
 	source?: "main" | "quiz" | "after_complete";
 	sectionHistory?: number[];
+	price?: number;
 }
 
 export function useSectionBasedSurveyController() {
@@ -266,7 +267,10 @@ export function useSectionBasedSurveyController() {
 
 	const handlePrev = () => {
 		if (currentSection === 1) {
-			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
+			navigate(`/survey?surveyId=${surveyId}`, {
+				replace: true,
+				state: { surveyId, price: locationState?.price },
+			});
 		} else {
 			// 이전으로 가면서 떠나는 섹션의 로컬 응답을 제거해 분기 변경 시 응답이 섞이지 않게 함
 			clearAnswersForCurrentSection();

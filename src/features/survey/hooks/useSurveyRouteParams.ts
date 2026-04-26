@@ -7,6 +7,7 @@ export interface SurveyLocationState {
 	surveyId?: string;
 	source?: "main" | "quiz" | "after_complete";
 	quiz_id?: number;
+	price?: number;
 }
 
 export const useSurveyRouteParams = () => {
@@ -26,10 +27,13 @@ export const useSurveyRouteParams = () => {
 		return Number.isNaN(parsed) ? null : parsed;
 	}, [surveyId]);
 
+	const priceFromState = locationState?.price ?? locationState?.survey?.price;
+
 	return {
 		surveyId,
 		numericSurveyId,
 		surveyFromState,
 		locationState,
+		priceFromState,
 	};
 };

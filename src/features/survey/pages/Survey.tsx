@@ -43,8 +43,13 @@ export const Survey = () => {
 	});
 	const [hasAuthToken, setHasAuthToken] = useState<boolean | null>(null);
 
-	const { surveyId, numericSurveyId, surveyFromState, locationState } =
-		useSurveyRouteParams();
+	const {
+		surveyId,
+		numericSurveyId,
+		surveyFromState,
+		locationState,
+		priceFromState,
+	} = useSurveyRouteParams();
 
 	useEffect(() => {
 		let isMounted = true;
@@ -220,6 +225,7 @@ export const Survey = () => {
 				surveyTitle: surveyTitle ?? "",
 				surveyDescription: surveyDescription ?? "",
 				source,
+				price: surveyBasicInfoData?.price ?? priceFromState,
 			},
 		});
 	};
@@ -299,7 +305,7 @@ export const Survey = () => {
 						isFree={isFree}
 						questionCount={sortedQuestions.length}
 						remainingTimeText={remainingTimeText}
-						price={surveyBasicInfoData?.price ?? surveyFromState?.price}
+						price={surveyBasicInfoData?.price ?? priceFromState}
 					/>
 					<div className="px-4 mt-4">
 						<Button
