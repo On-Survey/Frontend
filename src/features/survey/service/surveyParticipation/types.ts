@@ -9,7 +9,8 @@ export type BackendQuestionType =
 	| "LONG_ANSWER"
 	| "DATE"
 	| "NUMBER"
-	| "IMAGE"; // 이미지 전용 문항
+	| "IMAGE" // 이미지 전용 문항
+	| "TITLE"; // 타이틀 전용 문항
 
 // 백엔드 응답의 옵션 타입
 export interface BackendOption {
@@ -69,13 +70,19 @@ export type OtherQuestion = BaseSurveyParticipationQuestion & {
 	questionType: "NPS" | "SHORT_ANSWER" | "LONG_ANSWER" | "NUMBER";
 };
 
+// 타이틀 전용 문항 (제목·설명만)
+export type TitleQuestion = BaseSurveyParticipationQuestion & {
+	questionType: "TITLE";
+};
+
 // 모든 문항 타입의 유니온
 export type SurveyParticipationQuestion =
 	| ChoiceQuestion
 	| DateQuestion
 	| RatingQuestion
 	| ImageQuestion
-	| OtherQuestion;
+	| OtherQuestion
+	| TitleQuestion;
 
 export const mapBackendQuestionType = (
 	backendType: BackendQuestionType | string,
@@ -91,6 +98,7 @@ export const mapBackendQuestionType = (
 		DATE: "date",
 		NUMBER: "number",
 		IMAGE: "image",
+		TITLE: "title",
 	};
 	const key = String(backendType ?? "")
 		.trim()

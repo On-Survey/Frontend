@@ -7,3 +7,4 @@ export * from "./NumberQuestion";
 export * from "./QuestionRenderer";
 export * from "./RatingQuestion";
 export * from "./ShortAnswerQuestion";
+export * from "./TitleQuestion";

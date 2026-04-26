@@ -10,4 +10,5 @@ export const QUESTION_TYPE_ROUTES: Record<QuestionType, string> = {
 	date: "/createForm/date",
 	number: "/createForm/number",
 	image: "/createForm/image",
+	title: "/createForm/image",
 };
