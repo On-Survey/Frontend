@@ -7,6 +7,7 @@ import { NPSQuestion } from "./NPSQuestion";
 import { NumberQuestion } from "./NumberQuestion";
 import { RatingQuestion } from "./RatingQuestion";
 import { ShortAnswerQuestion } from "./ShortAnswerQuestion";
+import { TitleQuestion } from "./TitleQuestion";
 
 interface QuestionRendererProps {
 	question: TransformedSurveyQuestion;
@@ -58,6 +59,8 @@ export const QuestionRenderer = ({
 			return <NPSQuestion {...commonProps} />;
 		case "image":
 			return <ImageQuestion {...commonProps} />;
+		case "title":
+			return <TitleQuestion {...commonProps} />;
 		default:
 			return null;
 	}

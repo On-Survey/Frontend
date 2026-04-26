@@ -12,7 +12,7 @@ interface BuildSectionAnswersPayloadParams {
 /** 참여 화면에서 사용자 입력 필드가 없어 응답을 제출하지 않는 문항 */
 export const isNonAnswerableParticipationQuestion = (
 	question: Pick<TransformedSurveyQuestion, "type">,
-): boolean => question.type === "image";
+): boolean => question.type === "image" || question.type === "title";
 
 /**
  * 현재 섹션의 답변을 제출 형식으로 변환
