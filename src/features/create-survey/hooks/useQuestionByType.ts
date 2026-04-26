@@ -10,6 +10,7 @@ import {
 	isNumberQuestion,
 	isRatingQuestion,
 	isShortAnswerQuestion,
+	isTitleQuestion,
 	type LongAnswerQuestion,
 	type MultipleChoiceQuestion,
 	type NPSQuestion,
@@ -17,6 +18,7 @@ import {
 	type QuestionType,
 	type RatingQuestion,
 	type ShortAnswerQuestion,
+	type TitleQuestion,
 } from "@shared/types/survey";
 import { useSearchParams } from "react-router-dom";
 
@@ -29,6 +31,7 @@ type QuestionTypeMap = {
 	number: NumberQuestion;
 	multipleChoice: MultipleChoiceQuestion;
 	image: ImageQuestion;
+	title: TitleQuestion;
 };
 
 const typeGuardMap = {
@@ -40,6 +43,7 @@ const typeGuardMap = {
 	number: isNumberQuestion,
 	multipleChoice: isMultipleChoiceQuestion,
 	image: isImageQuestion,
+	title: isTitleQuestion,
 } as const;
 
 export const useQuestionByType = <T extends QuestionType>(type: T) => {

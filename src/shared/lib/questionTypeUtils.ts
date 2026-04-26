@@ -10,10 +10,19 @@ export const mapQuestionTypeToServerFormat = (
 	| "LONG"
 	| "DATE"
 	| "NUMBER"
-	| "IMAGE" => {
+	| "IMAGE"
+	| "TITLE" => {
 	const typeMap: Record<
 		Question["type"],
-		"CHOICE" | "RATING" | "NPS" | "SHORT" | "LONG" | "DATE" | "NUMBER" | "IMAGE"
+		| "CHOICE"
+		| "RATING"
+		| "NPS"
+		| "SHORT"
+		| "LONG"
+		| "DATE"
+		| "NUMBER"
+		| "IMAGE"
+		| "TITLE"
 	> = {
 		multipleChoice: "CHOICE",
 		rating: "RATING",
@@ -23,6 +32,7 @@ export const mapQuestionTypeToServerFormat = (
 		date: "DATE",
 		number: "NUMBER",
 		image: "IMAGE",
+		title: "TITLE",
 	};
 	return typeMap[type];
 };

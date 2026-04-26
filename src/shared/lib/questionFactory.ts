@@ -29,6 +29,7 @@ export const getQuestionTypeLabel = (type: Question["type"]): string => {
 		date: "날짜",
 		number: "숫자",
 		image: "이미지",
+		title: "타이틀",
 	};
 	return typeLabels[type];
 };

@@ -14,6 +14,7 @@ export const getQuestionTypeRoute = (
 		date: "/survey/date",
 		number: "/survey/number",
 		image: "/survey/shortAnswer", // 이미지 문항은 섹션 설문에서만 표시
+		title: "/survey/shortAnswer", // 타이틀 문항은 섹션 설문에서만 표시
 	};
 	return routes[type] || "/survey/shortAnswer";
 };
@@ -29,6 +30,7 @@ export const getQuestionResultRoute = (type: QuestionType): string => {
 		date: "/result/date",
 		number: "/result/number",
 		image: "/result/shortAnswer", // 이미지 문항 결과는 단답형과 동일 경로
+		title: "/result/shortAnswer", // 타이틀 문항 결과는 단답형과 동일 경로
 	};
 	return routes[type] || "/result/shortAnswer";
 };
