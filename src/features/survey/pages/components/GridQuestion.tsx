@@ -64,6 +64,8 @@ export const GridQuestion = ({
 			: "";
 	const rows = question.rows ?? [];
 	const columns = question.columns ?? [];
+	const gridTypeLabel = isCheckbox ? "체크박스 그리드" : "객관식 그리드";
+	const hasTitle = Boolean(question.title?.trim());
 	const rowItems = useMemo(() => buildStableKeys(rows), [rows]);
 	const columnItems = useMemo(() => buildStableKeys(columns), [columns]);
 
@@ -116,17 +118,19 @@ export const GridQuestion = ({
 			<ListHeader
 				descriptionPosition="top"
 				title={
-					<ListHeader.TitleParagraph
-						color={adaptive.grey800}
-						fontWeight="bold"
-						typography="t4"
-					>
-						<TextWithLinks
-							text={question.title}
-							variant="inline"
-							inheritLinkSize
-						/>
-					</ListHeader.TitleParagraph>
+					hasTitle ? (
+						<ListHeader.TitleParagraph
+							color={adaptive.grey800}
+							fontWeight="bold"
+							typography="t4"
+						>
+							<TextWithLinks
+								text={question.title}
+								variant="inline"
+								inheritLinkSize
+							/>
+						</ListHeader.TitleParagraph>
+					) : undefined
 				}
 				description={
 					<ListHeader.DescriptionParagraph>
@@ -169,7 +173,15 @@ export const GridQuestion = ({
 							}}
 						>
 							{/* 헤더 행 */}
-							<div />
+							<div className="flex items-center py-2 pr-3">
+								<Text
+									color={adaptive.grey600}
+									typography="t7"
+									fontWeight="medium"
+								>
+									{gridTypeLabel}
+								</Text>
+							</div>
 							{columnItems.map((col) => (
 								<div
 									key={`col-${col.key}`}
