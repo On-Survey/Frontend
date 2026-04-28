@@ -207,14 +207,17 @@ export function useSectionBasedSurveyController() {
 	const submitCurrentSectionAnswers = async () => {
 		if (!surveyId) return;
 
-		const payload = buildSectionAnswersPayload({
+		const infoList = buildSectionAnswersPayload({
 			questions,
 			answers: answersRef.current,
 			previousAnswers,
 		});
 
-		if (payload.length > 0) {
-			await submitSurveyParticipation(surveyId, payload);
+		if (infoList.length > 0) {
+			await submitSurveyParticipation(surveyId, {
+				section: currentSection,
+				infoList,
+			});
 		}
 	};
 

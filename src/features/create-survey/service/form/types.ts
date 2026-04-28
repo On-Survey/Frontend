@@ -23,10 +23,13 @@ export interface createSurveyQuestionRequest {
 		| "SHORT"
 		| "LONG"
 		| "DATE"
-		| "NUMBER";
+		| "TIME"
+		| "NUMBER"
+		| "GRID";
 	title: string;
 	description: string;
 	questionOrder: number;
+	isCheckbox?: boolean;
 }
 
 export interface ServerQuestionOption {
@@ -43,7 +46,9 @@ interface BaseServerQuestion {
 		| "SHORT"
 		| "LONG"
 		| "DATE"
-		| "NUMBER";
+		| "TIME"
+		| "NUMBER"
+		| "GRID";
 	title: string;
 	description: string;
 	questionOrder: number;
@@ -51,6 +56,14 @@ interface BaseServerQuestion {
 	isRequired?: boolean;
 	questionId?: number;
 	surveyId?: number;
+}
+
+export interface ServerGridOption {
+	gridOptionId?: number;
+	questionId?: number;
+	isRow: boolean;
+	content: string;
+	order: number;
 }
 
 export interface ServerChoiceQuestion extends BaseServerQuestion {
@@ -70,10 +83,17 @@ export interface ServerRatingQuestion extends BaseServerQuestion {
 	rate?: number;
 }
 
+export interface ServerGridQuestion extends BaseServerQuestion {
+	questionType: "GRID";
+	isCheckbox: boolean;
+	gridOptions: ServerGridOption[];
+}
+
 export type ServerQuestion =
 	| BaseServerQuestion
 	| ServerChoiceQuestion
-	| ServerRatingQuestion;
+	| ServerRatingQuestion
+	| ServerGridQuestion;
 
 export type ServerQuestionRequest = ServerQuestion[];
 

@@ -199,13 +199,27 @@ export const useSurveyNavigation = ({
 
 		try {
 			setSubmitting(true);
-			const payload = [
-				{
-					questionId: isCurrentQuestionType.questionId,
-					content: currentAnswer,
-				},
-			];
-			await submitSurveyParticipation(surveyId, payload);
+			const infoList =
+				isCurrentQuestionType.type === "multipleChoice"
+					? currentAnswer
+							.split("|||")
+							.filter(Boolean)
+							.map((content) => ({
+								questionId: isCurrentQuestionType.questionId,
+								rowOrder: null,
+								content,
+							}))
+					: [
+							{
+								questionId: isCurrentQuestionType.questionId,
+								rowOrder: null,
+								content: currentAnswer,
+							},
+						];
+			await submitSurveyParticipation(surveyId, {
+				section: 0,
+				infoList,
+			});
 
 			const isLastQuestion = initialQuestionIndex >= allQuestions.length - 1;
 			if (isLastQuestion) {

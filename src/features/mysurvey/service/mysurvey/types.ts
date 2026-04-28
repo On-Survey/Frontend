@@ -115,12 +115,22 @@ export type WritingQuestionType =
 	| "LONG"
 	| "NUMBER"
 	| "DATE"
-	| "TEXT";
+	| "TIME"
+	| "TEXT"
+	| "GRID";
 
 export interface WritingQuestionOption {
 	optionId: number;
 	content: string;
 	nextQuestionId?: number;
+}
+
+export interface WritingGridOption {
+	gridOptionId: number;
+	questionId: number;
+	isRow: boolean;
+	content: string;
+	order: number;
 }
 
 export interface WritingQuestion {
@@ -136,9 +146,12 @@ export interface WritingQuestion {
 	hasCustomInput?: boolean;
 	options?: WritingQuestionOption[];
 	defaultDate?: string;
+	isInterval?: boolean;
 	minValue?: string | number;
 	maxValue?: string | number;
 	rate?: number;
+	isCheckbox?: boolean | null;
+	gridOptions?: WritingGridOption[];
 }
 
 export interface WritingSurveyResult {

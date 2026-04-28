@@ -12,8 +12,11 @@ export const getQuestionTypeRoute = (
 		shortAnswer: "/survey/shortAnswer",
 		longAnswer: "/survey/essay",
 		date: "/survey/date",
+		time: "/survey/section",
 		number: "/survey/number",
 		image: "/survey/shortAnswer", // 이미지 문항은 섹션 설문에서만 표시
+		checkboxGrid: "/survey/section",
+		multipleChoiceGrid: "/survey/section",
 	};
 	return routes[type] || "/survey/shortAnswer";
 };
@@ -27,8 +30,11 @@ export const getQuestionResultRoute = (type: QuestionType): string => {
 		rating: "/result/rating",
 		nps: "/result/nps",
 		date: "/result/date",
+		time: "/result/shortAnswer",
 		number: "/result/number",
 		image: "/result/shortAnswer", // 이미지 문항 결과는 단답형과 동일 경로
+		checkboxGrid: "/result/shortAnswer",
+		multipleChoiceGrid: "/result/shortAnswer",
 	};
 	return routes[type] || "/result/shortAnswer";
 };

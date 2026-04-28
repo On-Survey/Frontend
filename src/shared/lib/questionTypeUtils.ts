@@ -9,11 +9,22 @@ export const mapQuestionTypeToServerFormat = (
 	| "SHORT"
 	| "LONG"
 	| "DATE"
+	| "TIME"
 	| "NUMBER"
-	| "IMAGE" => {
+	| "IMAGE"
+	| "GRID" => {
 	const typeMap: Record<
 		Question["type"],
-		"CHOICE" | "RATING" | "NPS" | "SHORT" | "LONG" | "DATE" | "NUMBER" | "IMAGE"
+		| "CHOICE"
+		| "RATING"
+		| "NPS"
+		| "SHORT"
+		| "LONG"
+		| "DATE"
+		| "TIME"
+		| "NUMBER"
+		| "IMAGE"
+		| "GRID"
 	> = {
 		multipleChoice: "CHOICE",
 		rating: "RATING",
@@ -21,8 +32,11 @@ export const mapQuestionTypeToServerFormat = (
 		shortAnswer: "SHORT",
 		longAnswer: "LONG",
 		date: "DATE",
+		time: "TIME",
 		number: "NUMBER",
 		image: "IMAGE",
+		checkboxGrid: "GRID",
+		multipleChoiceGrid: "GRID",
 	};
 	return typeMap[type];
 };

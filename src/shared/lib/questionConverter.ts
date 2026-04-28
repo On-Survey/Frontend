@@ -1,8 +1,14 @@
 import type {
+	ServerGridOption,
 	ServerQuestion,
 	ServerQuestionOption,
 } from "@features/create-survey/service/form/types";
-import type { MultipleChoiceQuestion, Question } from "../types/survey";
+import type {
+	CheckboxGridQuestion,
+	MultipleChoiceGridQuestion,
+	MultipleChoiceQuestion,
+	Question,
+} from "../types/survey";
 import { isMultipleChoiceQuestion, isRatingQuestion } from "../types/survey";
 import { mapQuestionTypeToServerFormat } from "./questionTypeUtils";
 
@@ -17,6 +23,23 @@ const convertOptionsToServerFormat = (
 		content: option.content,
 		nextQuestionId: option.nextQuestionId,
 	}));
+};
+
+const convertGridOptionsToServerFormat = (
+	question: CheckboxGridQuestion | MultipleChoiceGridQuestion,
+): ServerGridOption[] => {
+	const rowOptions = question.rows.map((content, order) => ({
+		isRow: true,
+		content,
+		order,
+	}));
+	const columnOptions = question.columns.map((content, order) => ({
+		isRow: false,
+		content,
+		order,
+	}));
+
+	return [...rowOptions, ...columnOptions];
 };
 
 /**
@@ -57,6 +80,18 @@ export const convertQuestionToServerFormat = (
 			maxValue: question.maxValue,
 			rate: question.rate,
 		} as ServerQuestion;
+	}
+
+	if (
+		question.type === "checkboxGrid" ||
+		question.type === "multipleChoiceGrid"
+	) {
+		return {
+			...baseQuestion,
+			questionType: "GRID",
+			isCheckbox: question.type === "checkboxGrid",
+			gridOptions: convertGridOptionsToServerFormat(question),
+		};
 	}
 
 	// 기타 타입 (SHORT, LONG, DATE, NUMBER, NPS)
