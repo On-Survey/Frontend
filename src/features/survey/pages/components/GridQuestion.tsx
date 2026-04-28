@@ -230,16 +230,32 @@ export const GridQuestion = ({
 											>
 												{isCheckbox ? (
 													// 체크박스 그리드 셀
-													<Asset.Icon
-														frameShape={Asset.frameShape.CleanW24}
-														backgroundColor="transparent"
-														name="icon-square-dark-grey-check"
-														color={
-															selected ? adaptive.green500 : adaptive.grey300
-														}
-														aria-label={`${row.label} ${col.label} 선택`}
-														ratio="1/1"
-													/>
+													selected ? (
+														<div
+															className="flex items-center justify-center w-5 h-5 rounded-[4px] border"
+															style={{
+																borderColor: adaptive.green500,
+																backgroundColor: adaptive.green500,
+															}}
+														>
+															<Asset.Icon
+																frameShape={Asset.frameShape.CleanW20}
+																backgroundColor="transparent"
+																name="icon-check-mono"
+																color="#ffffff"
+																aria-hidden={true}
+																ratio="1/1"
+															/>
+														</div>
+													) : (
+														<Asset.Icon
+															frameShape={Asset.frameShape.CleanW24}
+															backgroundColor="transparent"
+															name="icon-square-dark-grey-check"
+															aria-hidden={true}
+															ratio="1/1"
+														/>
+													)
 												) : (
 													// 객관식 그리드 셀
 													<Asset.Icon

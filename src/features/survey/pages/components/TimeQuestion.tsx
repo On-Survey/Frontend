@@ -197,7 +197,11 @@ export const TimeQuestion = ({
 						label="시간"
 						labelOption="sustain"
 						value={localAnswer}
-						placeholder={isInterval ? "HH:MM:SS" : "HH:MM"}
+						placeholder={
+							isInterval
+								? "HH:MM:SS"
+								: `${period === "AM" ? "[오전]" : "[오후]"} HH:MM`
+						}
 						type="tel"
 						inputMode="numeric"
 						onChange={(e) => handleChange(e.target.value)}
