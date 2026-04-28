@@ -20,33 +20,20 @@ export const Intro = () => {
 		const checkAuth = async () => {
 			try {
 				const memberInfo = await getMemberInfo();
-
-				// 자동 로그인 완료 시 user_info 이벤트 전송
 				void sendUserInfoEvent("Toss");
-
-				// isOnboardingCompleted 상태에 따라 분기
 				if (memberInfo.isOnboardingCompleted) {
-					// 원래 페이지로 돌아가거나 홈으로 이동
 					if (returnTo) {
-						navigate(returnTo.path, {
-							replace: true,
-							state: returnTo.state,
-						});
+						navigate(returnTo.path, { replace: true, state: returnTo.state });
 					} else {
-						navigate("/home", {
-							replace: true,
-							state: { isAutoLogin: true },
-						});
+						navigate("/home", { replace: true, state: { isAutoLogin: true } });
 					}
 				} else {
-					// 온보딩으로 이동 (returnTo 정보 전달)
 					navigate("/onboarding", {
 						replace: true,
 						state: returnTo ? { returnTo } : undefined,
 					});
 				}
 			} catch (error) {
-				// 인증 실패 (토큰 없거나 만료 등) 시에는 로그인 페이지 유지
 				console.error("자동 로그인 확인 실패:", error);
 			}
 		};
@@ -132,6 +119,7 @@ export const Intro = () => {
 				}
 				hideLine={true}
 			/>
+
 			<FixedBottomCTA
 				loading={false}
 				onClick={handleLogin}

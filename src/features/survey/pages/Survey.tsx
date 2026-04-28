@@ -146,15 +146,12 @@ export const Survey = () => {
 		);
 	}, [surveyQuestionsData?.info]);
 
-	const { getScreeningError, getAuthErrorFromException } = useSurveyAccessCheck(
-		{
-			surveyBasicInfoData: surveyBasicInfoData ?? null,
-			surveyId,
-			surveyFromState,
-			locationState,
-		},
-	);
-	const screeningError = getScreeningError();
+	const { getAuthErrorFromException } = useSurveyAccessCheck({
+		surveyBasicInfoData: surveyBasicInfoData ?? null,
+		surveyId,
+		surveyFromState,
+		locationState,
+	});
 	const isAccessChecking =
 		hasAuthToken === null ||
 		(Boolean(numericSurveyId) &&
@@ -164,12 +161,36 @@ export const Survey = () => {
 		sortedQuestions.length === 0 ||
 		!numericSurveyId ||
 		isAccessChecking ||
-		Boolean(screeningError);
+		Boolean(surveyBasicInfoData?.isScreenRequired) ||
+		Boolean(surveyBasicInfoData?.isScreened);
 
 	useEffect(() => {
-		if (!numericSurveyId || !screeningError) return;
-		setErrorDialog(screeningError);
-	}, [numericSurveyId, screeningError]);
+		if (!numericSurveyId || !surveyBasicInfoData || hasAuthToken !== true)
+			return;
+		if (isSurveyBasicInfoLoading || isSurveyBasicInfoFetching) return;
+
+		if (surveyBasicInfoData.isScreenRequired) {
+			navigate(`/oxScreening?surveyId=${numericSurveyId}`, { replace: true });
+			return;
+		}
+
+		if (surveyBasicInfoData.isScreened) {
+			setErrorDialog({
+				open: true,
+				title: "스크리닝 조건이 맞지 않습니다",
+				description:
+					"설정하신 스크리닝 조건에 맞지 않아 설문에 참여할 수 없어요.",
+				redirectTo: "/home",
+			});
+		}
+	}, [
+		hasAuthToken,
+		isSurveyBasicInfoFetching,
+		isSurveyBasicInfoLoading,
+		navigate,
+		numericSurveyId,
+		surveyBasicInfoData,
+	]);
 
 	const apiError = surveyBasicInfoError ?? surveyQuestionsError;
 
@@ -198,8 +219,16 @@ export const Survey = () => {
 
 	const handleStart = () => {
 		if (isStartDisabled) {
-			if (screeningError) {
-				setErrorDialog(screeningError);
+			if (surveyBasicInfoData?.isScreenRequired) {
+				navigate(`/oxScreening?surveyId=${numericSurveyId}`, { replace: true });
+			} else if (surveyBasicInfoData?.isScreened) {
+				setErrorDialog({
+					open: true,
+					title: "스크리닝 조건이 맞지 않습니다",
+					description:
+						"설정하신 스크리닝 조건에 맞지 않아 설문에 참여할 수 없어요.",
+					redirectTo: "/home",
+				});
 			}
 			return;
 		}
