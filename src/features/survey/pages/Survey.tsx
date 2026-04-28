@@ -192,6 +192,16 @@ export const Survey = () => {
 		surveyBasicInfoData,
 	]);
 
+	useEffect(() => {
+		if (!isClosed) return;
+		setErrorDialog({
+			open: true,
+			title: "마감된 설문입니다",
+			description: "참여 기간이 종료된 설문이에요.",
+			redirectTo: "/home",
+		});
+	}, [isClosed]);
+
 	const apiError = surveyBasicInfoError ?? surveyQuestionsError;
 
 	useEffect(() => {
