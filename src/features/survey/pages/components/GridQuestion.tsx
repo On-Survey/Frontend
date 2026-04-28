@@ -37,6 +37,7 @@ const isColumnSelected = (
 };
 
 const COLUMN_VIOLATION_MESSAGE = "열당 응답을 두개 이상 선택하지 마세요";
+const MULTI_SELECT_HINT_MESSAGE = "복수 응답 가능";
 
 const buildStableKeys = (items: string[]) => {
 	const counts = new Map<string, number>();
@@ -61,9 +62,7 @@ export const GridQuestion = ({
 		isCheckbox && question.isChoiceDistinct === true;
 	const requirementText = question.isRequired ? "필수" : "선택";
 	const distinctRuleText =
-		question.isRequired && question.isChoiceDistinct
-			? " / 1열 당 응답 1개"
-			: "";
+		question.isRequired && enforceColumnDistinct ? " / 1열 당 응답 1개" : "";
 	const rows = question.rows ?? [];
 	const columns = question.columns ?? [];
 	const gridTypeLabel = isCheckbox ? "체크박스 그리드" : "객관식 그리드";
@@ -91,6 +90,10 @@ export const GridQuestion = ({
 			: columnViolation
 				? COLUMN_VIOLATION_MESSAGE
 				: null;
+	const displayHint =
+		isCheckbox && !enforceColumnDistinct && !displayError
+			? MULTI_SELECT_HINT_MESSAGE
+			: null;
 
 	const handleCellClick = (rowLabel: string, colLabel: string) => {
 		const currentVal = gridAnswers[rowLabel] ?? "";
@@ -280,18 +283,16 @@ export const GridQuestion = ({
 						</div>
 					</div>
 
-					{/* 에러 메시지 */}
-					{displayError && (
-						<Text
-							display="block"
-							color={adaptive.red500}
-							typography="t7"
-							fontWeight="regular"
-							className="px-6! mt-2!"
-						>
-							{displayError}
-						</Text>
-					)}
+					{/* 안내/에러 메시지 */}
+					<Text
+						display="block"
+						color={displayError ? adaptive.red500 : adaptive.grey600}
+						typography="t7"
+						fontWeight="regular"
+						className="px-6! mt-2!"
+					>
+						{displayError || displayHint || ""}
+					</Text>
 				</>
 			)}
 			<Spacing size={32} />

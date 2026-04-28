@@ -11,6 +11,7 @@ const ANSWER_SEPARATOR = "|||";
 export interface QuestionForValidation {
 	questionId: number;
 	isRequired?: boolean;
+	isChoiceDistinct?: boolean;
 	type?: TransformedSurveyQuestion["type"];
 	rows?: string[]; // 그리드 문항 행 목록
 	columns?: string[]; // 그리드 문항 열 목록
@@ -82,8 +83,11 @@ export function validateSectionAnswers(
 			const rows = q.rows ?? [];
 			const columns = q.columns ?? [];
 
-			// 열 중복 선택 위반 (체크박스 그리드, 필수 여부 무관하게 항상 검사)
-			if (q.type === "checkboxGrid" && hasColumnViolation(a, rows, columns)) {
+			const enforceColumnDistinct =
+				q.type === "checkboxGrid" && q.isChoiceDistinct === true;
+
+			// 열 중복 선택 위반 (체크박스 + 열당 제한 설정된 경우만 검사)
+			if (enforceColumnDistinct && hasColumnViolation(a, rows, columns)) {
 				errors[q.questionId] = GRID_COLUMN_VIOLATION_MESSAGE;
 			} else if (q.isRequired && !isGridAnswerComplete(a, rows)) {
 				// 필수인데 미응답 행 존재
