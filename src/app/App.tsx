@@ -79,6 +79,7 @@ import { Survey } from "../features/survey/pages/Survey";
 import { Home } from "../features/survey-list/pages/Home";
 import { SurveyListPage } from "../features/survey-list/pages/SurveyList";
 import DateResultPage from "../features/survey-result/pages/DateResultPage";
+import GridResultPage from "../features/survey-result/pages/GridResultPage";
 import LongAnswerResultPage from "../features/survey-result/pages/LongAnswerResultPage";
 import MultipleChoiceResultPage from "../features/survey-result/pages/MultipleChoiceResultPage";
 import NpsResultPage from "../features/survey-result/pages/NpsResultPage";
@@ -277,6 +278,7 @@ export const App = () => {
 									<Route path="/result/nps" element={<NpsResultPage />} />
 									<Route path="/result/date" element={<DateResultPage />} />
 									<Route path="/result/number" element={<NumberResultPage />} />
+									<Route path="/result/grid" element={<GridResultPage />} />
 									<Route path="/estimate" element={<EstimatePage />} />
 									<Route element={<SurveyProviderLayout />}>
 										<Route element={<MultiStepProviderWrapper />}>

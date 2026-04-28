@@ -33,8 +33,8 @@ export const getQuestionResultRoute = (type: QuestionType): string => {
 		time: "/result/shortAnswer",
 		number: "/result/number",
 		image: "/result/shortAnswer", // 이미지 문항 결과는 단답형과 동일 경로
-		checkboxGrid: "/result/shortAnswer",
-		multipleChoiceGrid: "/result/shortAnswer",
+		checkboxGrid: "/result/grid",
+		multipleChoiceGrid: "/result/grid",
 	};
 	return routes[type] || "/result/shortAnswer";
 };

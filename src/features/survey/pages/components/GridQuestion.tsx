@@ -57,6 +57,8 @@ export const GridQuestion = ({
 	onToggleExpand,
 }: GridQuestionProps) => {
 	const isCheckbox = question.type === "checkboxGrid";
+	const enforceColumnDistinct =
+		isCheckbox && question.isChoiceDistinct === true;
 	const requirementText = question.isRequired ? "필수" : "선택";
 	const distinctRuleText =
 		question.isRequired && question.isChoiceDistinct
@@ -73,21 +75,22 @@ export const GridQuestion = ({
 
 	/** 체크박스 그리드에서 동일 열이 2행 이상 선택됐는지 실시간 감지 */
 	const columnViolation = useMemo(() => {
-		if (!isCheckbox) return false;
+		if (!enforceColumnDistinct) return false;
 		return columnItems.some((col) => {
 			const count = rowItems.filter((row) =>
 				isColumnSelected(gridAnswers, row.label, col.label),
 			).length;
 			return count > 1;
 		});
-	}, [isCheckbox, gridAnswers, rowItems, columnItems]);
+	}, [enforceColumnDistinct, gridAnswers, rowItems, columnItems]);
 
-	/** 표시할 에러: 열 위반 > 부모에서 전달된 에러 순 */
-	const displayError = columnViolation
-		? COLUMN_VIOLATION_MESSAGE
-		: error && errorMessage
+	/** 표시할 에러: 부모 검증(행 필수) > 열 위반 순 */
+	const displayError =
+		error && errorMessage
 			? errorMessage
-			: null;
+			: columnViolation
+				? COLUMN_VIOLATION_MESSAGE
+				: null;
 
 	const handleCellClick = (rowLabel: string, colLabel: string) => {
 		const currentVal = gridAnswers[rowLabel] ?? "";

@@ -78,6 +78,7 @@ export interface SurveyAnswerDetailInfo {
 	description: string;
 	isRequired: boolean;
 	answerMap: Record<string, number>;
+	gridAnswerMap?: Record<string, Record<string, number>>;
 	answerList: string[];
 	rate?: number;
 	respondentCount?: number; // 복수 선택 가능한 문항의 실제 응답자 수

@@ -8,6 +8,7 @@ export const useResultPageData = () => {
 
 	const question = state?.question;
 	const answerMap = state?.answerMap || {};
+	const gridAnswerMap = state?.gridAnswerMap || {};
 	const answerList = state?.answerList || [];
 	const surveyTitle = state?.surveyTitle || "설문 제목";
 	const surveyStatus = state?.surveyStatus || "active";
@@ -20,6 +21,7 @@ export const useResultPageData = () => {
 	return {
 		question,
 		answerMap,
+		gridAnswerMap,
 		answerList,
 		surveyTitle,
 		surveyStatus,

@@ -21,4 +21,6 @@ export const QUESTION_TYPE_LABELS: Record<string, string> = {
 	nps: "NPS",
 	date: "날짜",
 	number: "숫자",
+	checkboxGrid: "체크박스 그리드",
+	multipleChoiceGrid: "객관식 그리드",
 };
