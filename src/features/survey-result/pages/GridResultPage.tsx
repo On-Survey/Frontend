@@ -1,5 +1,6 @@
 import { adaptive } from "@toss/tds-colors";
 import { Border, Text, Top } from "@toss/tds-mobile";
+import { useState } from "react";
 import { SURVEY_BADGE_CONFIG, SURVEY_STATUS_LABELS } from "../constants/survey";
 import { useResultPageData } from "../hooks/useResultPageData";
 
@@ -46,6 +47,7 @@ export const GridResultPage = () => {
 		responseCount,
 		requiredLabel,
 	} = useResultPageData();
+	const [activeTooltipKey, setActiveTooltipKey] = useState<string | null>(null);
 
 	const badge = SURVEY_BADGE_CONFIG[surveyStatus];
 	const normalizedGridAnswerMap = (gridAnswerMap ?? {}) as GridAnswerMap;
@@ -160,19 +162,54 @@ export const GridResultPage = () => {
 											return (
 												<div
 													key={`bar-${rowLabel}-${columnLabel}`}
-													className="w-8 rounded-[8px] flex items-start justify-center pt-2"
-													style={{
-														height: `${barHeight}px`,
-														backgroundColor: getColumnColor(columnLabel, index),
-													}}
+													className="relative"
 												>
-													<Text
-														color={adaptive.background}
-														typography="t6"
-														fontWeight="semibold"
+													{activeTooltipKey === `${rowLabel}-${columnLabel}` ? (
+														<div
+															className="absolute left-1/2 -translate-x-1/2 -top-9 z-10 px-2 py-1 rounded-md"
+															style={{ backgroundColor: adaptive.grey800 }}
+														>
+															<Text
+																color={adaptive.background}
+																typography="t7"
+																fontWeight="medium"
+																className="block max-w-[140px] overflow-hidden text-ellipsis"
+																style={{
+																	whiteSpace: "nowrap",
+																	wordBreak: "keep-all",
+																}}
+															>
+																{columnLabel}
+															</Text>
+														</div>
+													) : null}
+													<button
+														type="button"
+														className="w-8 rounded-[8px]! flex items-start justify-center pt-2 border-none"
+														style={{
+															height: `${barHeight}px`,
+															backgroundColor: getColumnColor(
+																columnLabel,
+																index,
+															),
+														}}
+														onClick={() =>
+															setActiveTooltipKey((prev) =>
+																prev === `${rowLabel}-${columnLabel}`
+																	? null
+																	: `${rowLabel}-${columnLabel}`,
+															)
+														}
+														aria-label={`${rowLabel} - ${columnLabel}`}
 													>
-														{count}명
-													</Text>
+														<Text
+															color={adaptive.background}
+															typography="t6"
+															fontWeight="semibold"
+														>
+															{count}명
+														</Text>
+													</button>
 												</div>
 											);
 										})}
