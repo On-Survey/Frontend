@@ -9,3 +9,4 @@ export * from "./QuestionRenderer";
 export * from "./RatingQuestion";
 export * from "./ShortAnswerQuestion";
 export * from "./TimeQuestion";
+export * from "./TitleQuestion";

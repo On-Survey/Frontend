@@ -16,6 +16,7 @@ export const mapApiQuestionTypeToComponentType = (
 		TIME: "time",
 		NUMBER: "number",
 		GRID: "multipleChoiceGrid",
+		TITLE: "title",
 	};
 
 	const normalizedType = String(apiType ?? "")
@@ -38,6 +39,7 @@ export const getQuestionTypeLabel = (type: Question["type"]): string => {
 		image: "이미지",
 		checkboxGrid: "체크박스 그리드",
 		multipleChoiceGrid: "객관식 그리드",
+		title: "타이틀",
 	};
 	return typeLabels[type];
 };
@@ -125,6 +127,11 @@ export const createQuestion = (
 				type: "multipleChoiceGrid",
 				rows: ["행 1", "행 2", "행 3"],
 				columns: ["열 1", "열 2", "열 3"],
+			};
+		case "title":
+			return {
+				...baseQuestion,
+				type: "title",
 			};
 		default:
 			throw new Error(`지원하지 않는 문항 타입: ${questionType}`);

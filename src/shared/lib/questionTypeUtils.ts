@@ -12,7 +12,8 @@ export const mapQuestionTypeToServerFormat = (
 	| "TIME"
 	| "NUMBER"
 	| "IMAGE"
-	| "GRID" => {
+	| "GRID"
+	| "TITLE" => {
 	const typeMap: Record<
 		Question["type"],
 		| "CHOICE"
@@ -25,6 +26,7 @@ export const mapQuestionTypeToServerFormat = (
 		| "NUMBER"
 		| "IMAGE"
 		| "GRID"
+		| "TITLE"
 	> = {
 		multipleChoice: "CHOICE",
 		rating: "RATING",
@@ -37,6 +39,7 @@ export const mapQuestionTypeToServerFormat = (
 		image: "IMAGE",
 		checkboxGrid: "GRID",
 		multipleChoiceGrid: "GRID",
+		title: "TITLE",
 	};
 	return typeMap[type];
 };

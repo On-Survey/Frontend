@@ -9,6 +9,7 @@ import { NumberQuestion } from "./NumberQuestion";
 import { RatingQuestion } from "./RatingQuestion";
 import { ShortAnswerQuestion } from "./ShortAnswerQuestion";
 import { TimeQuestion } from "./TimeQuestion";
+import { TitleQuestion } from "./TitleQuestion";
 
 interface QuestionRendererProps {
 	question: TransformedSurveyQuestion;
@@ -65,6 +66,8 @@ export const QuestionRenderer = ({
 		case "checkboxGrid":
 		case "multipleChoiceGrid":
 			return <GridQuestion {...commonProps} />;
+		case "title":
+			return <TitleQuestion {...commonProps} />;
 		default:
 			return null;
 	}

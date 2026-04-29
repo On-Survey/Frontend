@@ -148,6 +148,43 @@ export const getSurveyQuestions = async (
 	};
 };
 
+export const getSurveyQuestionsForSurveyIntro = async (
+	surveyId: number,
+): Promise<{
+	info: TransformedSurveyQuestion[];
+	sectionTitle?: string;
+	sectionDescription?: string;
+	currSection?: number;
+	nextSection?: number;
+}> => {
+	const section1 = await getSurveyQuestions({ surveyId, section: 1 });
+	if (section1.info.length > 0) {
+		return section1;
+	}
+
+	const sectionsToTry = new Set<number>();
+	if (
+		section1.nextSection != null &&
+		section1.nextSection > 0 &&
+		section1.nextSection !== 1
+	) {
+		sectionsToTry.add(section1.nextSection);
+	}
+	for (let s = 2; s <= 30; s += 1) {
+		sectionsToTry.add(s);
+	}
+
+	for (const section of sectionsToTry) {
+		if (section <= 1) continue;
+		const res = await getSurveyQuestions({ surveyId, section });
+		if (res.info.length > 0) {
+			return res;
+		}
+	}
+
+	return section1;
+};
+
 // 설문 정보와 문항 정보를 함께 조회 (하위 호환성 유지)
 export const getSurveyParticipation = async (
 	params: GetSurveyParticipationParams,

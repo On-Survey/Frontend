@@ -13,4 +13,5 @@ export const QUESTION_TYPE_ROUTES: Record<QuestionType, string> = {
 	image: "/createForm/image",
 	checkboxGrid: "/createForm/checkboxGrid",
 	multipleChoiceGrid: "/createForm/multipleChoiceGrid",
+	title: "/createForm/image",
 };

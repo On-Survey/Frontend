@@ -26,6 +26,7 @@ export interface SectionBasedSurveyState {
 	surveyDescription?: string;
 	source?: "main" | "quiz" | "after_complete";
 	sectionHistory?: number[];
+	price?: number;
 }
 
 export function useSectionBasedSurveyController() {
@@ -76,6 +77,13 @@ export function useSectionBasedSurveyController() {
 	);
 
 	const isLastSection = actualNextSection === 0;
+
+	const canSkipEmptySectionForward =
+		questions.length === 0 &&
+		!isLastSection &&
+		actualNextSection > 0 &&
+		actualNextSection !== currentSection;
+
 	const [previousAnswers, setPreviousAnswers] = useState<
 		Record<number, string>
 	>(locationState?.previousAnswers ?? {});
@@ -262,7 +270,10 @@ export function useSectionBasedSurveyController() {
 
 	const handlePrev = () => {
 		if (currentSection === 1) {
-			navigate(`/survey?surveyId=${surveyId}`, { replace: true });
+			navigate(`/survey?surveyId=${surveyId}`, {
+				replace: true,
+				state: { surveyId, price: locationState?.price },
+			});
 		} else {
 			// 이전으로 가면서 떠나는 섹션의 로컬 응답을 제거해 분기 변경 시 응답이 섞이지 않게 함
 			clearAnswersForCurrentSection();
@@ -291,7 +302,8 @@ export function useSectionBasedSurveyController() {
 	const handleNext = async () => {
 		if (!surveyId) return;
 		if (sectionActionInFlightRef.current) return;
-		if (isPending || questions.length === 0) return;
+		if (isPending) return;
+		if (questions.length === 0 && !canSkipEmptySectionForward) return;
 
 		pushGtmEvent({
 			event: "survey_progress_button_click",
@@ -375,7 +387,8 @@ export function useSectionBasedSurveyController() {
 
 	const handleSubmitClick = async () => {
 		if (sectionActionInFlightRef.current) return;
-		if (isPending || questions.length === 0) return;
+		if (isPending) return;
+		if (questions.length === 0 && !isLastSection) return;
 
 		if (surveyId) {
 			pushGtmEvent({
@@ -413,6 +426,7 @@ export function useSectionBasedSurveyController() {
 	return {
 		headerTitleText,
 		headerSubtitleText,
+		canSkipEmptySectionForward,
 		questions,
 		answers,
 		updateAnswer,
