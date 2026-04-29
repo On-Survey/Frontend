@@ -15,6 +15,28 @@ const MAX_BAR_HEIGHT = 176;
 
 type GridAnswerMap = Record<string, Record<string, number>>;
 
+const getHash = (value: string) => {
+	let hash = 0;
+	for (let i = 0; i < value.length; i += 1) {
+		hash = (hash << 5) - hash + value.charCodeAt(i);
+		hash |= 0;
+	}
+	return Math.abs(hash);
+};
+
+const getColumnColor = (columnLabel: string, index: number) => {
+	if (index < BAR_COLORS.length) {
+		return BAR_COLORS[index];
+	}
+
+	// 기본 팔레트 이후에는 컬럼별로 고정된 HSL 색상을 생성
+	const seed = getHash(`${columnLabel}-${index}`);
+	const hue = seed % 360;
+	const saturation = 68 + (seed % 8); // 68~75%
+	const lightness = 58 + (seed % 6); // 58~63%
+	return `hsl(${hue} ${saturation}% ${lightness}%)`;
+};
+
 export const GridResultPage = () => {
 	const {
 		question,
@@ -96,7 +118,7 @@ export const GridResultPage = () => {
 								<span
 									className="inline-block h-4 w-4 rounded-full shrink-0"
 									style={{
-										backgroundColor: BAR_COLORS[index % BAR_COLORS.length],
+										backgroundColor: getColumnColor(columnLabel, index),
 									}}
 								/>
 								<Text
@@ -141,8 +163,7 @@ export const GridResultPage = () => {
 													className="w-8 rounded-[8px] flex items-start justify-center pt-2"
 													style={{
 														height: `${barHeight}px`,
-														backgroundColor:
-															BAR_COLORS[index % BAR_COLORS.length],
+														backgroundColor: getColumnColor(columnLabel, index),
 													}}
 												>
 													<Text
