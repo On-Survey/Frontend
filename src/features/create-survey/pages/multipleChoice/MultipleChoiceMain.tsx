@@ -66,14 +66,6 @@ export const MultipleChoiceMain = () => {
 		}
 	};
 
-	const handleQuestionNavigation = () => {
-		if (questionId) {
-			navigate(`/createForm/multipleChoice/questions?questionId=${questionId}`);
-		} else {
-			navigate("/createForm/multipleChoice/questions");
-		}
-	};
-
 	const handleDeleteOption = (orderToDelete: number) => {
 		if (questionId && question) {
 			const updatedOptions = options
@@ -176,16 +168,6 @@ export const MultipleChoiceMain = () => {
 					onClick={handleCreateMultiChoiceOpen}
 				>
 					옵션 추가
-				</Button>
-				<Button
-					size="large"
-					color="dark"
-					variant="weak"
-					display="block"
-					onClick={handleQuestionNavigation}
-					disabled={options.length === 0 || true}
-				>
-					응답에 따라 문항 이동
 				</Button>
 			</div>
 			<div className="h-4" />

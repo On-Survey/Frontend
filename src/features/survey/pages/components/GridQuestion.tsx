@@ -83,7 +83,7 @@ export const GridQuestion = ({
 		});
 	}, [enforceColumnDistinct, gridAnswers, rowItems, columnItems]);
 
-	/** 표시할 에러: 부모 검증(행 필수) > 열 위반 순 */
+	/** 행 필수 > 열 위반 순으로 에러 표시 */
 	const displayError =
 		error && errorMessage
 			? errorMessage
@@ -204,7 +204,6 @@ export const GridQuestion = ({
 								</div>
 							))}
 
-							{/* 데이터 행들 */}
 							{rowItems.map((row) => (
 								<>
 									<div
@@ -283,7 +282,7 @@ export const GridQuestion = ({
 						</div>
 					</div>
 
-					{/* 안내/에러 메시지 */}
+					{/* 에러 메시지 */}
 					<Text
 						display="block"
 						color={displayError ? adaptive.red500 : adaptive.grey600}
