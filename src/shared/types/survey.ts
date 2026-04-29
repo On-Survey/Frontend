@@ -90,6 +90,7 @@ export interface ImageQuestion extends BaseQuestion {
 // 체크박스 그리드 문항
 export interface CheckboxGridQuestion extends BaseQuestion {
 	type: "checkboxGrid";
+	isChoiceDistinct?: boolean;
 	rows: string[];
 	columns: string[];
 }
@@ -97,6 +98,7 @@ export interface CheckboxGridQuestion extends BaseQuestion {
 // 객관식 그리드 문항
 export interface MultipleChoiceGridQuestion extends BaseQuestion {
 	type: "multipleChoiceGrid";
+	isChoiceDistinct?: boolean;
 	rows: string[];
 	columns: string[];
 }
@@ -189,6 +191,7 @@ export type QuestionUpdateData = {
 	surveyId?: number;
 	hasCustomInput?: boolean;
 	hasOtherOption?: boolean;
+	isChoiceDistinct?: boolean;
 	rows?: string[];
 	columns?: string[];
 };

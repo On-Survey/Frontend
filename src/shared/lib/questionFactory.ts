@@ -118,6 +118,7 @@ export const createQuestion = (
 			return {
 				...baseQuestion,
 				type: "checkboxGrid",
+				isChoiceDistinct: false,
 				rows: ["행 1", "행 2", "행 3"],
 				columns: ["열 1", "열 2", "열 3"],
 			};
@@ -125,6 +126,7 @@ export const createQuestion = (
 			return {
 				...baseQuestion,
 				type: "multipleChoiceGrid",
+				isChoiceDistinct: false,
 				rows: ["행 1", "행 2", "행 3"],
 				columns: ["열 1", "열 2", "열 3"],
 			};
