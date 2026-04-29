@@ -119,6 +119,9 @@ export const SurveyResponseDetail = () => {
 		if (!questionDetail) return;
 
 		const path = getQuestionResultRoute(type);
+		const normalizedTitle = questionDetail.title?.trim()
+			? questionDetail.title
+			: "제목 없음";
 		const hasAnswerMap = Object.keys(questionDetail.answerMap ?? {}).length > 0;
 		const effectiveAnswerMap = hasAnswerMap ? questionDetail.answerMap : {};
 		const effectiveGridAnswerMap = questionDetail.gridAnswerMap ?? {};
@@ -144,7 +147,7 @@ export const SurveyResponseDetail = () => {
 			state: {
 				question: {
 					id: questionDetail.questionId,
-					title: questionDetail.title,
+					title: normalizedTitle,
 					description: questionDetail.description,
 					type,
 					isRequired: questionDetail.isRequired,

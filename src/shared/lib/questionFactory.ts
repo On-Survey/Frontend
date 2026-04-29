@@ -18,7 +18,11 @@ export const mapApiQuestionTypeToComponentType = (
 		GRID: "multipleChoiceGrid",
 	};
 
-	return typeMap[apiType] || "shortAnswer";
+	const normalizedType = String(apiType ?? "")
+		.trim()
+		.toUpperCase()
+		.replace(/-/g, "_");
+	return typeMap[normalizedType] || "shortAnswer";
 };
 
 export const getQuestionTypeLabel = (type: Question["type"]): string => {

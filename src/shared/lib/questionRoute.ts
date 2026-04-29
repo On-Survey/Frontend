@@ -30,7 +30,7 @@ export const getQuestionResultRoute = (type: QuestionType): string => {
 		rating: "/result/rating",
 		nps: "/result/nps",
 		date: "/result/date",
-		time: "/result/shortAnswer",
+		time: "/result/time",
 		number: "/result/number",
 		image: "/result/shortAnswer", // 이미지 문항 결과는 단답형과 동일 경로
 		checkboxGrid: "/result/grid",

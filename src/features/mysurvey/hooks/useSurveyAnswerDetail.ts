@@ -55,6 +55,7 @@ export const useSurveyAnswerDetail = (
 
 		const questions = answerDetails.detailInfoList.map((detail) => {
 			const questionType = mapApiQuestionTypeToComponentType(detail.type);
+			const normalizedTitle = detail.title?.trim() ? detail.title : "제목 없음";
 			const aggregatedCount = sumNumericValues(
 				detail.answerMap as Record<string, unknown>,
 			);
@@ -69,7 +70,7 @@ export const useSurveyAnswerDetail = (
 
 			return {
 				id: String(detail.questionId),
-				title: detail.title,
+				title: normalizedTitle,
 				type: questionType,
 				required: detail.isRequired,
 				responseCount: normalizedResponseCount,

@@ -20,6 +20,7 @@ export const QUESTION_TYPE_LABELS: Record<string, string> = {
 	rating: "평가형",
 	nps: "NPS",
 	date: "날짜",
+	time: "시간",
 	number: "숫자",
 	checkboxGrid: "체크박스 그리드",
 	multipleChoiceGrid: "객관식 그리드",
