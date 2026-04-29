@@ -62,12 +62,10 @@ export const getSurveyQuestions = async (
 	});
 
 	const transformed = result.info.map((question) => {
-		const mappedType =
-			question.questionType === "GRID"
-				? question.isCheckbox
-					? "checkboxGrid"
-					: "multipleChoiceGrid"
-				: mapBackendQuestionType(question.questionType);
+		const mappedType = mapBackendQuestionType(
+			question.questionType,
+			question.questionType === "GRID" ? question.isCheckbox : undefined,
+		);
 
 		const base: TransformedSurveyQuestion = {
 			questionId: question.questionId,

@@ -31,9 +31,9 @@ export const mapRawToPreviewQuestion = (
 	const questionId = makePreviewQuestionId(sectionIndex, questionIndex);
 	const type = mapBackendQuestionType(
 		String(raw.questionType ?? "").toUpperCase(),
+		raw.isCheckbox,
 	);
-	const normalizedType =
-		type === "multipleChoiceGrid" && raw.isCheckbox ? "checkboxGrid" : type;
+	const normalizedType = type;
 	const description = raw.description ?? "";
 
 	const base: TransformedSurveyQuestion = {

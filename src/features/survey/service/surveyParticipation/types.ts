@@ -10,7 +10,6 @@ export type BackendQuestionType =
 	| "DATE"
 	| "TIME"
 	| "NUMBER"
-	| "IMAGE"
 	| "IMAGE" // 이미지 전용 문항
 	| "GRID" // 그리드 문항
 	| "TITLE"; // 타이틀 전용 문항
@@ -111,6 +110,7 @@ export type SurveyParticipationQuestion =
 
 export const mapBackendQuestionType = (
 	backendType: BackendQuestionType | string,
+	isCheckbox?: boolean | null,
 ): QuestionType => {
 	const mapping: Record<string, QuestionType> = {
 		CHOICE: "multipleChoice",
@@ -124,7 +124,7 @@ export const mapBackendQuestionType = (
 		TIME: "time",
 		NUMBER: "number",
 		IMAGE: "image",
-		GRID: "multipleChoiceGrid",
+		GRID: isCheckbox ? "checkboxGrid" : "multipleChoiceGrid",
 		TITLE: "title",
 	};
 	const key = String(backendType ?? "")
