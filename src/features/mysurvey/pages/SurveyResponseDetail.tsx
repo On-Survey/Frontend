@@ -32,6 +32,21 @@ import { SurveyFilterBottomSheet } from "../components/SurveyFilterBottomSheet";
 import { useSurveyAnswerDetail } from "../hooks/useSurveyAnswerDetail";
 import { useSurveyFilters } from "../hooks/useSurveyFilters";
 
+const sumNumericValues = (answerMap: Record<string, unknown> | undefined) =>
+	Object.values(answerMap ?? {}).reduce<number>(
+		(sum, value) => sum + (typeof value === "number" ? value : 0),
+		0,
+	);
+
+const sumNestedNumericValues = (
+	gridAnswerMap: Record<string, Record<string, number>> | undefined,
+) =>
+	Object.values(gridAnswerMap ?? {}).reduce<number>(
+		(total, rowMap) =>
+			total + sumNumericValues(rowMap as Record<string, unknown>),
+		0,
+	);
+
 export const SurveyResponseDetail = () => {
 	const navigate = useNavigate();
 	const { surveyId } = useParams<{ surveyId: string }>();
@@ -104,41 +119,43 @@ export const SurveyResponseDetail = () => {
 		if (!questionDetail) return;
 
 		const path = getQuestionResultRoute(type);
+		const normalizedTitle = questionDetail.title?.trim()
+			? questionDetail.title
+			: "제목 없음";
+		const hasAnswerMap = Object.keys(questionDetail.answerMap ?? {}).length > 0;
+		const effectiveAnswerMap = hasAnswerMap ? questionDetail.answerMap : {};
+		const effectiveGridAnswerMap = questionDetail.gridAnswerMap ?? {};
 
+		const aggregatedCount = sumNumericValues(
+			effectiveAnswerMap as Record<string, unknown>,
+		);
+		const aggregatedGridCount = sumNestedNumericValues(effectiveGridAnswerMap);
+		const fallbackAggregatedCount =
+			aggregatedCount > 0 ? aggregatedCount : aggregatedGridCount;
 		const responseCount =
-			questionDetail.type === "CHOICE" &&
-			questionDetail.respondentCount !== undefined
-				? questionDetail.respondentCount
-				: (questionDetail.type === "CHOICE" ||
-							questionDetail.type === "RATING" ||
-							questionDetail.type === "NPS") &&
-						questionDetail.answerMap
-					? (Object.values(questionDetail.answerMap) as number[]).reduce(
-							(sum, count) => sum + (count as number),
-							0,
-						)
-					: questionDetail.answerList?.length || 0;
+			questionDetail.respondentCount ??
+			(fallbackAggregatedCount > 0
+				? fallbackAggregatedCount
+				: (questionDetail.answerList?.length ?? 0));
 
 		const totalAnswerCount =
-			questionDetail.type === "CHOICE" && questionDetail.answerMap
-				? (Object.values(questionDetail.answerMap) as number[]).reduce(
-						(sum, count) => sum + (count as number),
-						0,
-					)
+			questionDetail.type === "CHOICE" && effectiveAnswerMap
+				? sumNumericValues(effectiveAnswerMap as Record<string, unknown>)
 				: undefined;
 
 		navigate(path, {
 			state: {
 				question: {
 					id: questionDetail.questionId,
-					title: questionDetail.title,
+					title: normalizedTitle,
 					description: questionDetail.description,
 					type,
 					isRequired: questionDetail.isRequired,
 					order: questionDetail.order,
 					rate: questionDetail.rate,
 				},
-				answerMap: questionDetail.answerMap || {},
+				answerMap: effectiveAnswerMap,
+				gridAnswerMap: effectiveGridAnswerMap,
 				answerList: questionDetail.answerList || [],
 				surveyTitle: surveyResponse?.title || "",
 				surveyStatus: surveyResponse?.status || "active",
@@ -241,7 +258,7 @@ export const SurveyResponseDetail = () => {
 									/>
 								}
 								right={
-									<div className="[&_button]:!text-[#15c67f]">
+									<div className="[&_button]:text-[#15c67f]!">
 										<Button
 											size="medium"
 											variant="weak"

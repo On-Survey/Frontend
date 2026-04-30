@@ -8,7 +8,10 @@ export const QUESTION_TYPE_ROUTES: Record<QuestionType, string> = {
 	shortAnswer: "/createForm/shortAnswer",
 	longAnswer: "/createForm/longAnswer",
 	date: "/createForm/date",
+	time: "/createForm/date",
 	number: "/createForm/number",
 	image: "/createForm/image",
+	checkboxGrid: "/createForm/checkboxGrid/edit",
+	multipleChoiceGrid: "/createForm/multipleChoiceGrid/edit",
 	title: "/createForm/image",
 };

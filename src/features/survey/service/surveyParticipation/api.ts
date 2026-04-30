@@ -62,13 +62,19 @@ export const getSurveyQuestions = async (
 	});
 
 	const transformed = result.info.map((question) => {
+		const mappedType = mapBackendQuestionType(
+			question.questionType,
+			question.questionType === "GRID" ? question.isCheckbox : undefined,
+		);
+
 		const base: TransformedSurveyQuestion = {
 			questionId: question.questionId,
 			surveyId: question.surveyId,
-			type: mapBackendQuestionType(question.questionType),
+			type: mappedType,
 			title: question.title,
 			description: question.description,
 			isRequired: question.isRequired,
+			isChoiceDistinct: question.isChoiceDistinct,
 			questionOrder: question.questionOrder,
 			...(question.imageUrl != null && { imageUrl: question.imageUrl }),
 		};
@@ -102,6 +108,10 @@ export const getSurveyQuestions = async (
 			base.date = question.date;
 		}
 
+		if (question.questionType === "TIME" && "isInterval" in question) {
+			base.isInterval = question.isInterval;
+		}
+
 		if (question.questionType === "RATING" && "minValue" in question) {
 			base.minValue = question.minValue;
 			base.maxValue = question.maxValue;
@@ -110,6 +120,18 @@ export const getSurveyQuestions = async (
 
 		if (question.questionType === "IMAGE" && "imageUrl" in question) {
 			base.imageUrl = question.imageUrl;
+		}
+
+		if (question.questionType === "GRID" && "gridOptions" in question) {
+			const sortedOptions = [...(question.gridOptions ?? [])].sort(
+				(a, b) => a.order - b.order,
+			);
+			base.rows = sortedOptions
+				.filter((option) => option.isRow)
+				.map((option) => option.content);
+			base.columns = sortedOptions
+				.filter((option) => !option.isRow)
+				.map((option) => option.content);
 		}
 
 		return base;
@@ -202,12 +224,12 @@ export const getSurveyInfo = async (
 //설문에 대한 응답 생성
 export const submitSurveyParticipation = async (
 	surveyId: number,
-	infoList: SubmitSurveyParticipationPayload["infoList"],
+	payload: SubmitSurveyParticipationPayload,
 ): Promise<boolean> => {
 	return apiCall<boolean>({
 		method: "POST",
 		url: `/v1/survey-participation/surveys/${surveyId}`,
-		data: { infoList },
+		data: payload,
 	});
 };
 

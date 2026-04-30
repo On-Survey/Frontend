@@ -7,8 +7,11 @@ export type QuestionType =
 	| "shortAnswer" // 단답형
 	| "longAnswer" // 장문형
 	| "date" // 날짜 (ex: 2025-10-26)
+	| "time" // 시간 (isInterval 여부에 따라 기간/시각)
 	| "number" // 숫자형 (1~100)
 	| "image" // 이미지 전용 (타이틀·보조설명·이미지만 표시)
+	| "checkboxGrid" // 체크박스 그리드
+	| "multipleChoiceGrid" // 객관식 그리드
 	| "title"; // 타이틀 전용 (제목·설명만 표시)
 
 export interface BaseQuestion {
@@ -72,10 +75,32 @@ export interface NumberQuestion extends BaseQuestion {
 	type: "number";
 }
 
+// 시간형 문항
+export interface TimeQuestion extends BaseQuestion {
+	type: "time";
+	isInterval: boolean;
+}
+
 // 이미지 전용 문항 (참여 화면 전용, 타이틀·보조설명·이미지만)
 export interface ImageQuestion extends BaseQuestion {
 	type: "image";
 	imageUrl: string;
+}
+
+// 체크박스 그리드 문항
+export interface CheckboxGridQuestion extends BaseQuestion {
+	type: "checkboxGrid";
+	isChoiceDistinct?: boolean;
+	rows: string[];
+	columns: string[];
+}
+
+// 객관식 그리드 문항
+export interface MultipleChoiceGridQuestion extends BaseQuestion {
+	type: "multipleChoiceGrid";
+	isChoiceDistinct?: boolean;
+	rows: string[];
+	columns: string[];
 }
 
 // 타이틀 전용 문항 (제목·설명만 표시)
@@ -91,8 +116,11 @@ export type Question =
 	| ShortAnswerQuestion
 	| LongAnswerQuestion
 	| DateQuestion
+	| TimeQuestion
 	| NumberQuestion
 	| ImageQuestion
+	| CheckboxGridQuestion
+	| MultipleChoiceGridQuestion
 	| TitleQuestion;
 
 // 문항 정보 구조
@@ -105,7 +133,11 @@ export interface QuestionInfo {
 		shortAnswer: ShortAnswerQuestion[];
 		longAnswer: LongAnswerQuestion[];
 		date: DateQuestion[];
+		time: TimeQuestion[];
 		number: NumberQuestion[];
+		checkboxGrid: CheckboxGridQuestion[];
+		multipleChoiceGrid: MultipleChoiceGridQuestion[];
+		title: TitleQuestion[];
 	};
 }
 
@@ -155,9 +187,13 @@ export type QuestionUpdateData = {
 	maxValue?: string;
 	rate?: number;
 	date?: Date;
+	isInterval?: boolean;
 	surveyId?: number;
 	hasCustomInput?: boolean;
 	hasOtherOption?: boolean;
+	isChoiceDistinct?: boolean;
+	rows?: string[];
+	columns?: string[];
 };
 
 // 설문 폼 액션 타입
@@ -245,10 +281,28 @@ export const isNumberQuestion = (
 	return question?.type === "number";
 };
 
+export const isTimeQuestion = (
+	question: Question | undefined,
+): question is TimeQuestion => {
+	return question?.type === "time";
+};
+
 export const isImageQuestion = (
 	question: Question | undefined,
 ): question is ImageQuestion => {
 	return question?.type === "image";
+};
+
+export const isCheckboxGridQuestion = (
+	question: Question | undefined,
+): question is CheckboxGridQuestion => {
+	return question?.type === "checkboxGrid";
+};
+
+export const isMultipleChoiceGridQuestion = (
+	question: Question | undefined,
+): question is MultipleChoiceGridQuestion => {
+	return question?.type === "multipleChoiceGrid";
 };
 
 export const isTitleQuestion = (

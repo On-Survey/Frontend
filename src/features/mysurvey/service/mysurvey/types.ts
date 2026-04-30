@@ -78,6 +78,7 @@ export interface SurveyAnswerDetailInfo {
 	description: string;
 	isRequired: boolean;
 	answerMap: Record<string, number>;
+	gridAnswerMap?: Record<string, Record<string, number>>;
 	answerList: string[];
 	rate?: number;
 	respondentCount?: number; // 복수 선택 가능한 문항의 실제 응답자 수
@@ -115,12 +116,22 @@ export type WritingQuestionType =
 	| "LONG"
 	| "NUMBER"
 	| "DATE"
-	| "TEXT";
+	| "TIME"
+	| "TEXT"
+	| "GRID";
 
 export interface WritingQuestionOption {
 	optionId: number;
 	content: string;
 	nextQuestionId?: number;
+}
+
+export interface WritingGridOption {
+	gridOptionId: number;
+	questionId: number;
+	isRow: boolean;
+	content: string;
+	order: number;
 }
 
 export interface WritingQuestion {
@@ -136,9 +147,12 @@ export interface WritingQuestion {
 	hasCustomInput?: boolean;
 	options?: WritingQuestionOption[];
 	defaultDate?: string;
+	isInterval?: boolean;
 	minValue?: string | number;
 	maxValue?: string | number;
 	rate?: number;
+	isCheckbox?: boolean | null;
+	gridOptions?: WritingGridOption[];
 }
 
 export interface WritingSurveyResult {

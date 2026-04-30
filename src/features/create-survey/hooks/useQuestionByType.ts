@@ -1,23 +1,29 @@
 import { useSurvey } from "@shared/contexts/SurveyContext";
 import {
+	type CheckboxGridQuestion,
 	type DateQuestion,
 	type ImageQuestion,
+	isCheckboxGridQuestion,
 	isDateQuestion,
 	isImageQuestion,
 	isLongAnswerQuestion,
+	isMultipleChoiceGridQuestion,
 	isMultipleChoiceQuestion,
 	isNPSQuestion,
 	isNumberQuestion,
 	isRatingQuestion,
 	isShortAnswerQuestion,
+	isTimeQuestion,
 	isTitleQuestion,
 	type LongAnswerQuestion,
+	type MultipleChoiceGridQuestion,
 	type MultipleChoiceQuestion,
 	type NPSQuestion,
 	type NumberQuestion,
 	type QuestionType,
 	type RatingQuestion,
 	type ShortAnswerQuestion,
+	type TimeQuestion,
 	type TitleQuestion,
 } from "@shared/types/survey";
 import { useSearchParams } from "react-router-dom";
@@ -29,8 +35,11 @@ type QuestionTypeMap = {
 	rating: RatingQuestion;
 	nps: NPSQuestion;
 	number: NumberQuestion;
+	time: TimeQuestion;
 	multipleChoice: MultipleChoiceQuestion;
 	image: ImageQuestion;
+	checkboxGrid: CheckboxGridQuestion;
+	multipleChoiceGrid: MultipleChoiceGridQuestion;
 	title: TitleQuestion;
 };
 
@@ -41,8 +50,11 @@ const typeGuardMap = {
 	rating: isRatingQuestion,
 	nps: isNPSQuestion,
 	number: isNumberQuestion,
+	time: isTimeQuestion,
 	multipleChoice: isMultipleChoiceQuestion,
 	image: isImageQuestion,
+	checkboxGrid: isCheckboxGridQuestion,
+	multipleChoiceGrid: isMultipleChoiceGridQuestion,
 	title: isTitleQuestion,
 } as const;
 

@@ -79,12 +79,14 @@ import { Survey } from "../features/survey/pages/Survey";
 import { Home } from "../features/survey-list/pages/Home";
 import { SurveyListPage } from "../features/survey-list/pages/SurveyList";
 import DateResultPage from "../features/survey-result/pages/DateResultPage";
+import GridResultPage from "../features/survey-result/pages/GridResultPage";
 import LongAnswerResultPage from "../features/survey-result/pages/LongAnswerResultPage";
 import MultipleChoiceResultPage from "../features/survey-result/pages/MultipleChoiceResultPage";
 import NpsResultPage from "../features/survey-result/pages/NpsResultPage";
 import NumberResultPage from "../features/survey-result/pages/NumberResultPage";
 import RatingResultPage from "../features/survey-result/pages/RatingResultPage";
 import ShortAnswerResultPage from "../features/survey-result/pages/ShortAnswerResultPage";
+import TimeResultPage from "../features/survey-result/pages/TimeResultPage";
 import { MultiStepProvider } from "../shared/contexts/MultiStepContext";
 import { PaymentProvider } from "../shared/contexts/PaymentContext";
 import { queryClient } from "../shared/contexts/queryClient";
@@ -276,7 +278,9 @@ export const App = () => {
 									<Route path="/result/rating" element={<RatingResultPage />} />
 									<Route path="/result/nps" element={<NpsResultPage />} />
 									<Route path="/result/date" element={<DateResultPage />} />
+									<Route path="/result/time" element={<TimeResultPage />} />
 									<Route path="/result/number" element={<NumberResultPage />} />
+									<Route path="/result/grid" element={<GridResultPage />} />
 									<Route path="/estimate" element={<EstimatePage />} />
 									<Route element={<SurveyProviderLayout />}>
 										<Route element={<MultiStepProviderWrapper />}>

@@ -26,6 +26,16 @@ export const buildSectionAnswersPayload = ({
 	previousAnswers,
 }: BuildSectionAnswersPayloadParams): SubmitSurveyParticipationAnswer[] => {
 	const payload: SubmitSurveyParticipationAnswer[] = [];
+	const parseGridAnswer = (
+		raw: string | undefined,
+	): Record<string, string> | undefined => {
+		if (!raw) return undefined;
+		try {
+			return JSON.parse(raw) as Record<string, string>;
+		} catch {
+			return undefined;
+		}
+	};
 
 	questions.forEach((question) => {
 		if (isNonAnswerableParticipationQuestion(question)) {
@@ -42,6 +52,7 @@ export const buildSectionAnswersPayload = ({
 				selectedOptions.forEach((option) => {
 					payload.push({
 						questionId: question.questionId,
+						rowOrder: null,
 						content: option,
 					});
 				});
@@ -53,21 +64,56 @@ export const buildSectionAnswersPayload = ({
 				previousOptions.forEach(() => {
 					payload.push({
 						questionId: question.questionId,
+						rowOrder: null,
 						content: null,
 					});
 				});
 			}
+		} else if (
+			question.type === "checkboxGrid" ||
+			question.type === "multipleChoiceGrid"
+		) {
+			const rows = question.rows ?? [];
+			const parsedAnswer = parseGridAnswer(answer) ?? {};
+			const parsedPreviousAnswer = parseGridAnswer(previousAnswer) ?? {};
+
+			rows.forEach((rowLabel, rowIndex) => {
+				const currentRowAnswer = parsedAnswer[rowLabel] ?? "";
+				const previousRowAnswer = parsedPreviousAnswer[rowLabel] ?? "";
+				const selectedColumns = currentRowAnswer.split("|||").filter(Boolean);
+
+				if (selectedColumns.length > 0) {
+					selectedColumns.forEach((content) => {
+						payload.push({
+							questionId: question.questionId,
+							rowOrder: rowIndex,
+							content,
+						});
+					});
+					return;
+				}
+
+				if (previousRowAnswer) {
+					payload.push({
+						questionId: question.questionId,
+						rowOrder: rowIndex,
+						content: "",
+					});
+				}
+			});
 		} else {
 			// 텍스트 입력 문항 (단답형, 장문형, 숫자형 등)
 			if (answer && answer.trim().length > 0) {
 				payload.push({
 					questionId: question.questionId,
+					rowOrder: null,
 					content: answer.trim(),
 				});
 			} else if (previousAnswer) {
 				// 이전에 답변했다가 지운 경우 빈 문자열 또는 null (해당 문항의 응답 삭제)
 				payload.push({
 					questionId: question.questionId,
+					rowOrder: null,
 					content: "",
 				});
 			}

@@ -31,16 +31,19 @@ export const mapRawToPreviewQuestion = (
 	const questionId = makePreviewQuestionId(sectionIndex, questionIndex);
 	const type = mapBackendQuestionType(
 		String(raw.questionType ?? "").toUpperCase(),
+		raw.isCheckbox,
 	);
+	const normalizedType = type;
 	const description = raw.description ?? "";
 
 	const base: TransformedSurveyQuestion = {
 		questionId,
 		surveyId: PREVIEW_SURVEY_ID,
-		type,
+		type: normalizedType,
 		title: raw.title ?? "",
 		description,
 		isRequired: raw.isRequired ?? true,
+		isChoiceDistinct: raw.isChoiceDistinct,
 		questionOrder: raw.questionOrder ?? questionIndex + 1,
 		section: raw.section ?? section.currSection,
 		...(raw.imageUrl != null && raw.imageUrl !== ""
@@ -48,13 +51,13 @@ export const mapRawToPreviewQuestion = (
 			: {}),
 	};
 
-	if (type === "rating") {
+	if (normalizedType === "rating") {
 		base.minValue = raw.minValue ?? "";
 		base.maxValue = raw.maxValue ?? "";
 		if (raw.rate != null) base.rate = raw.rate;
 	}
 
-	if (type === "multipleChoice") {
+	if (normalizedType === "multipleChoice") {
 		base.maxChoice = raw.maxChoice ?? 1;
 		base.hasNoneOption = raw.hasNoneOption;
 		base.hasCustomInput = raw.hasCustomInput;
@@ -73,7 +76,22 @@ export const mapRawToPreviewQuestion = (
 		}));
 	}
 
-	if (type === "image" && !base.imageUrl) {
+	if (
+		normalizedType === "checkboxGrid" ||
+		normalizedType === "multipleChoiceGrid"
+	) {
+		const sortedGridOptions = [...(raw.gridOptions ?? [])].sort(
+			(a, b) => a.order - b.order,
+		);
+		base.rows = sortedGridOptions
+			.filter((option) => option.isRow)
+			.map((option) => option.content);
+		base.columns = sortedGridOptions
+			.filter((option) => !option.isRow)
+			.map((option) => option.content);
+	}
+
+	if (normalizedType === "image" && !base.imageUrl) {
 		base.type = "shortAnswer";
 	}
 

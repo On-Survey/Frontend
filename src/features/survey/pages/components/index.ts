@@ -1,4 +1,5 @@
 export * from "./DateQuestion";
+export * from "./GridQuestion";
 export * from "./ImageQuestion";
 export * from "./LongAnswerQuestion";
 export * from "./MultipleChoiceQuestion";
@@ -7,4 +8,5 @@ export * from "./NumberQuestion";
 export * from "./QuestionRenderer";
 export * from "./RatingQuestion";
 export * from "./ShortAnswerQuestion";
+export * from "./TimeQuestion";
 export * from "./TitleQuestion";

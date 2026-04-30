@@ -37,6 +37,7 @@ export interface ResultPageState {
 		rate?: number;
 	};
 	answerMap?: Record<string, number>;
+	gridAnswerMap?: Record<string, Record<string, number>>;
 	answerList?: string[];
 	surveyTitle: string;
 	surveyStatus: "active" | "closed";

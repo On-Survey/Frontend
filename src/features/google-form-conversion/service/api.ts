@@ -71,6 +71,14 @@ export interface FormRequestValidationChoiceOption {
 	imageUrl: string;
 }
 
+export interface FormRequestValidationGridOption {
+	gridOptionId: number;
+	questionId: number;
+	isRow: boolean;
+	content: string;
+	order: number;
+}
+
 export interface FormRequestValidationConvertibleQuestionInfo {
 	/** 검증 응답에서는 생략될 수 있음(미리보기에서 로컬 ID 부여) */
 	questionId?: number;
@@ -92,6 +100,10 @@ export interface FormRequestValidationConvertibleQuestionInfo {
 	minValue?: string;
 	maxValue?: string;
 	rate?: number;
+	/** GRID */
+	isCheckbox?: boolean | null;
+	isChoiceDistinct?: boolean;
+	gridOptions?: FormRequestValidationGridOption[];
 }
 
 export interface FormRequestValidationConvertibleSection {

@@ -13,10 +13,17 @@ export const mapApiQuestionTypeToComponentType = (
 		RATING: "rating",
 		NPS: "nps",
 		DATE: "date",
+		TIME: "time",
 		NUMBER: "number",
+		GRID: "multipleChoiceGrid",
+		TITLE: "title",
 	};
 
-	return typeMap[apiType] || "shortAnswer";
+	const normalizedType = String(apiType ?? "")
+		.trim()
+		.toUpperCase()
+		.replace(/-/g, "_");
+	return typeMap[normalizedType] || "shortAnswer";
 };
 
 export const getQuestionTypeLabel = (type: Question["type"]): string => {
@@ -27,8 +34,11 @@ export const getQuestionTypeLabel = (type: Question["type"]): string => {
 		shortAnswer: "주관식 (단답형)",
 		longAnswer: "주관식 (장문형)",
 		date: "날짜",
+		time: "시간",
 		number: "숫자",
 		image: "이미지",
+		checkboxGrid: "체크박스 그리드",
+		multipleChoiceGrid: "객관식 그리드",
 		title: "타이틀",
 	};
 	return typeLabels[type];
@@ -97,6 +107,33 @@ export const createQuestion = (
 			return {
 				...baseQuestion,
 				type: "number",
+			};
+		case "time":
+			return {
+				...baseQuestion,
+				type: "time",
+				isInterval: false,
+			};
+		case "checkboxGrid":
+			return {
+				...baseQuestion,
+				type: "checkboxGrid",
+				isChoiceDistinct: false,
+				rows: ["행 1", "행 2", "행 3"],
+				columns: ["열 1", "열 2", "열 3"],
+			};
+		case "multipleChoiceGrid":
+			return {
+				...baseQuestion,
+				type: "multipleChoiceGrid",
+				isChoiceDistinct: false,
+				rows: ["행 1", "행 2", "행 3"],
+				columns: ["열 1", "열 2", "열 3"],
+			};
+		case "title":
+			return {
+				...baseQuestion,
+				type: "title",
 			};
 		default:
 			throw new Error(`지원하지 않는 문항 타입: ${questionType}`);

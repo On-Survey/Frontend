@@ -11,8 +11,10 @@ const mapServerQuestionTypeToClient = (
 		SHORT: "shortAnswer",
 		LONG: "longAnswer",
 		DATE: "date",
+		TIME: "time",
 		NUMBER: "number",
 		TEXT: "shortAnswer",
+		GRID: "multipleChoiceGrid",
 	};
 
 	return typeMap[serverType] ?? "shortAnswer";
@@ -21,10 +23,17 @@ const mapServerQuestionTypeToClient = (
 export const convertWritingQuestionToQuestion = (
 	writingQuestion: WritingQuestion,
 ): Question => {
+	const mappedType =
+		writingQuestion.questionType === "GRID"
+			? writingQuestion.isCheckbox
+				? "checkboxGrid"
+				: "multipleChoiceGrid"
+			: mapServerQuestionTypeToClient(writingQuestion.questionType);
+
 	const baseQuestion = {
 		surveyId: writingQuestion.surveyId,
 		questionId: writingQuestion.questionId,
-		type: mapServerQuestionTypeToClient(writingQuestion.questionType),
+		type: mappedType,
 		title: writingQuestion.title,
 		description: writingQuestion.description,
 		isRequired: writingQuestion.isRequired,
@@ -67,6 +76,14 @@ export const convertWritingQuestionToQuestion = (
 		};
 	}
 
+	if (writingQuestion.questionType === "TIME") {
+		return {
+			...baseQuestion,
+			type: "time",
+			isInterval: writingQuestion.isInterval ?? false,
+		};
+	}
+
 	if (writingQuestion.questionType === "NUMBER") {
 		return {
 			...baseQuestion,
@@ -78,6 +95,25 @@ export const convertWritingQuestionToQuestion = (
 		return {
 			...baseQuestion,
 			type: "nps",
+		};
+	}
+
+	if (writingQuestion.questionType === "GRID") {
+		const sortedGridOptions = [...(writingQuestion.gridOptions ?? [])].sort(
+			(a, b) => a.order - b.order,
+		);
+		const rows = sortedGridOptions
+			.filter((option) => option.isRow)
+			.map((option) => option.content);
+		const columns = sortedGridOptions
+			.filter((option) => !option.isRow)
+			.map((option) => option.content);
+
+		return {
+			...baseQuestion,
+			type: writingQuestion.isCheckbox ? "checkboxGrid" : "multipleChoiceGrid",
+			rows,
+			columns,
 		};
 	}
 

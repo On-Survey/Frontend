@@ -8,6 +8,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useUserSurveys } from "./useUserSurveys";
 
+const sumNumericValues = (answerMap: Record<string, unknown> | undefined) =>
+	Object.values(answerMap ?? {}).reduce<number>(
+		(sum, value) => sum + (typeof value === "number" ? value : 0),
+		0,
+	);
+
+const sumNestedNumericValues = (
+	gridAnswerMap: Record<string, Record<string, number>> | undefined,
+) =>
+	Object.values(gridAnswerMap ?? {}).reduce<number>(
+		(total, rowMap) =>
+			total + sumNumericValues(rowMap as Record<string, unknown>),
+		0,
+	);
+
 export const useSurveyAnswerDetail = (
 	surveyId: string | undefined,
 	filters: SurveyAnswerDetailFilters,
@@ -40,27 +55,25 @@ export const useSurveyAnswerDetail = (
 
 		const questions = answerDetails.detailInfoList.map((detail) => {
 			const questionType = mapApiQuestionTypeToComponentType(detail.type);
-			// 복수 선택 가능한 CHOICE 타입의 경우 respondentCount 사용
-			// 없으면 기존 방식으로 계산 (하위 호환성)
+			const normalizedTitle = detail.title?.trim() ? detail.title : "제목 없음";
+			const aggregatedCount = sumNumericValues(
+				detail.answerMap as Record<string, unknown>,
+			);
+			const aggregatedGridCount = sumNestedNumericValues(detail.gridAnswerMap);
+			const fallbackAggregatedCount =
+				aggregatedCount > 0 ? aggregatedCount : aggregatedGridCount;
 			const responseCount =
-				detail.type === "CHOICE" && detail.respondentCount !== undefined
-					? detail.respondentCount
-					: (detail.type === "CHOICE" ||
-								detail.type === "RATING" ||
-								detail.type === "NPS") &&
-							detail.answerMap
-						? Object.values(detail.answerMap).reduce(
-								(sum, count) => sum + count,
-								0,
-							)
-						: detail.answerList?.length || 0;
+				detail.respondentCount ??
+				(fallbackAggregatedCount > 0 ? fallbackAggregatedCount : 0);
+			const normalizedResponseCount =
+				responseCount > 0 ? responseCount : (detail.answerList?.length ?? 0);
 
 			return {
 				id: String(detail.questionId),
-				title: detail.title,
+				title: normalizedTitle,
 				type: questionType,
 				required: detail.isRequired,
-				responseCount,
+				responseCount: normalizedResponseCount,
 				order: detail.order,
 			};
 		});
