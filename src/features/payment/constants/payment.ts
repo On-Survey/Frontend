@@ -40,6 +40,48 @@ export const DESIRED_PARTICIPANTS = [
 		hideUnCheckedCheckBox: false,
 		disabled: false,
 	},
+	{
+		name: "250명",
+		value: "250",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "300명",
+		value: "300",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "400명",
+		value: "400",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "500명",
+		value: "500",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "600명",
+		value: "600",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "700명",
+		value: "700",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
+	{
+		name: "800명",
+		value: "800",
+		hideUnCheckedCheckBox: false,
+		disabled: false,
+	},
 ];
 
 export type GenderCode = "ALL" | "MALE" | "FEMALE";

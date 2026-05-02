@@ -142,6 +142,17 @@ export const OptionsPage = () => {
 		[],
 	);
 
+	const questionRange = useMemo(
+		() => getQuestionRange(formQuestionCount),
+		[formQuestionCount],
+	);
+
+	const respondentOptions = useMemo(() => {
+		const allowed =
+			questionRange === "1_30" ? [50, 100, 150, 200, 800] : [50, 100, 150, 200];
+		return RESPONDENT_OPTIONS.filter((o) => allowed.includes(o.value));
+	}, [questionRange]);
+
 	const respondentCount = watch("respondentCount");
 	const deadlineIsoDate = watch("deadlineIsoDate");
 	const interestIds = watch("interestIds");
@@ -543,6 +554,7 @@ export const OptionsPage = () => {
 				onClose={() => setIsRespondentSheetOpen(false)}
 				value={respondentCount}
 				onConfirm={(v) => setValue("respondentCount", v)}
+				options={respondentOptions}
 			/>
 
 			<GenderSelectBottomSheet

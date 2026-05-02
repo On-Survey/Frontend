@@ -8,6 +8,7 @@ type RespondentCountSelectBottomSheetProps = {
 	onClose: () => void;
 	value: RespondentCount;
 	onConfirm: (value: RespondentCount) => void;
+	options?: typeof RESPONDENT_OPTIONS;
 };
 
 export const RespondentCountSelectBottomSheet = ({
@@ -15,6 +16,7 @@ export const RespondentCountSelectBottomSheet = ({
 	onClose,
 	value,
 	onConfirm,
+	options = RESPONDENT_OPTIONS,
 }: RespondentCountSelectBottomSheetProps) => {
 	return (
 		<BottomSheet
@@ -28,7 +30,7 @@ export const RespondentCountSelectBottomSheet = ({
 			<div>
 				<BottomSheet.Select
 					value={String(value)}
-					options={RESPONDENT_OPTIONS.map((option) => ({
+					options={options.map((option) => ({
 						name: option.label,
 						value: String(option.value),
 						hideUnCheckedCheckBox: option.value !== value,
