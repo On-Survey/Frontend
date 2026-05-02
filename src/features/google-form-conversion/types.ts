@@ -7,7 +7,7 @@ import type {
 import type { InterestId } from "@shared/constants/topics";
 import type { FormRequestValidationResponse } from "./service/api";
 
-export type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300;
+export type RespondentCount = 50 | 100 | 150 | 200 | 250 | 300 | 800;
 
 export const RESPONDENT_OPTIONS: {
 	label: string;
@@ -20,6 +20,7 @@ export const RESPONDENT_OPTIONS: {
 	{ label: "200명", value: 200, display: "200명" },
 	{ label: "250명", value: 250, display: "250명" },
 	{ label: "300명", value: 300, display: "300명" },
+	{ label: "800명", value: 800, display: "800명" },
 ];
 
 /** 문항 구간: 1~30문항 / 31~50문항 */

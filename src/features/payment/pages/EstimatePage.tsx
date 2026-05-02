@@ -79,13 +79,22 @@ const EstimatePageContent = () => {
 					options: GENDER,
 					field: EstimateField.Gender,
 				};
-			case EstimateField.DesiredParticipants:
+			case EstimateField.DesiredParticipants: {
+				const participantOptions =
+					estimate.questionCount === "1~30"
+						? DESIRED_PARTICIPANTS.filter((o) =>
+								["50", "100", "150", "200", "800"].includes(o.value),
+							)
+						: DESIRED_PARTICIPANTS.filter((o) =>
+								["50", "100", "150", "200"].includes(o.value),
+							);
 				return {
 					value: estimate.desiredParticipants,
 					title: "원하는 응답자 수를 선택해주세요",
-					options: DESIRED_PARTICIPANTS,
+					options: participantOptions,
 					field: EstimateField.DesiredParticipants,
 				};
+			}
 			case EstimateField.QuestionCount:
 				return {
 					value: estimate.questionCount,
