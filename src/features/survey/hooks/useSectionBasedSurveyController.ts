@@ -20,6 +20,7 @@ import { useSurveySectionQuestions } from "./useSurveySectionQuestions";
 export interface SectionBasedSurveyState {
 	surveyId: number;
 	currentSection: number;
+	sectionCount?: number;
 	answers: Record<number, string>;
 	previousAnswers: Record<number, string>;
 	surveyTitle?: string;
@@ -116,6 +117,24 @@ export function useSectionBasedSurveyController() {
 	const [nextLoading, setNextLoading] = useState(false);
 
 	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
+	const [surveySectionCount, setSurveySectionCount] = useState<
+		number | undefined
+	>(locationState?.sectionCount);
+
+	useEffect(() => {
+		if (!surveyId || surveySectionCount != null) return;
+
+		void (async () => {
+			try {
+				const info = await getSurveyInfo(surveyId);
+				if (typeof info.sectionCount === "number") {
+					setSurveySectionCount(info.sectionCount);
+				}
+			} catch {
+				// 진행 바 표시를 위한 보조 정보이므로 조회 실패 시 무시
+			}
+		})();
+	}, [surveyId, surveySectionCount]);
 
 	useEffect(() => {
 		if (!data?.info.length) return;
@@ -426,6 +445,12 @@ export function useSectionBasedSurveyController() {
 	return {
 		headerTitleText,
 		headerSubtitleText,
+		currentSection,
+		sectionCount: surveySectionCount,
+		progress:
+			typeof surveySectionCount === "number" && surveySectionCount > 0
+				? Math.min(currentSection / surveySectionCount, 1)
+				: 0,
 		canSkipEmptySectionForward,
 		questions,
 		answers,
@@ -441,6 +466,7 @@ export function useSectionBasedSurveyController() {
 		handleNext,
 		handleSubmitClick,
 		isLastSection,
+		isBeforeSubmitStep: isLastSection,
 		submitting,
 		nextLoading,
 		isPending,

@@ -184,6 +184,7 @@ export interface SurveyBasicInfo {
 	deadline: string;
 	interests: string[];
 	responseCount: number;
+	sectionCount?: number;
 	isScreenRequired: boolean;
 	isScreened: boolean;
 	isSurveyResponded: boolean;
