@@ -1,5 +1,4 @@
 import { appLogin } from "@apps-in-toss/web-framework";
-import { IneligibleSurveyBottomSheet } from "@features/screening/components/IneligibleSurveyBottomSheet";
 import { getScreenings } from "@features/survey/service/surveyParticipation/api";
 import { mapOngoingSurveySummaryToSurveyListItem } from "@features/survey-list/hooks/useProcessedOngoingSurveys";
 import { useSurveyOpenStats } from "@features/survey-list/hooks/useSurveyOpenStats";
@@ -15,7 +14,7 @@ import { getMemberInfo } from "@shared/service/userInfo/api";
 import type { LocationStateWithReturnTo } from "@shared/types/navigation";
 import { adaptive } from "@toss/tds-colors";
 import { Asset, Button, FixedBottomCTA, Text } from "@toss/tds-mobile";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 /** 세그먼트 조건을 만족하는 설문만 대상으로 최고 프로모션가 설문 선택 */
@@ -34,11 +33,6 @@ export const Intro = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const returnTo = (location.state as LocationStateWithReturnTo)?.returnTo;
-	const [ineligibleSurveySheet, setIneligibleSurveySheet] = useState<{
-		open: boolean;
-		title?: string;
-		description?: string;
-	}>({ open: false });
 
 	const { data: openStats, isPending: isOpenStatsPending } =
 		useSurveyOpenStats();
@@ -172,21 +166,12 @@ export const Intro = () => {
 				targetSummary = pickHighestPriceAmongEligible(surveys);
 			} catch (error) {
 				console.error("진행 설문 목록 조회 실패:", error);
-				setIneligibleSurveySheet({
-					open: true,
-					title: "설문 목록을 불러오지 못했어요",
-					description:
-						"잠시 후 다시 시도하거나, 하단 다음 버튼으로 홈에서 확인해 주세요.",
-				});
+				navigate("/home", { replace: true });
 				return;
 			}
 
 			if (!targetSummary) {
-				setIneligibleSurveySheet({
-					open: true,
-					title: "지금 참여할 수 있는 설문이 없어요",
-					description: `로그인 후 조건에 맞는 설문이 없어요. \n새 설문이 열리면 홈에서 참여할 수 있어요.`,
-				});
+				navigate("/home", { replace: true });
 				return;
 			}
 
@@ -365,13 +350,6 @@ export const Intro = () => {
 			>
 				다음
 			</FixedBottomCTA>
-
-			<IneligibleSurveyBottomSheet
-				open={ineligibleSurveySheet.open}
-				title={ineligibleSurveySheet.title}
-				description={ineligibleSurveySheet.description}
-				onClose={() => setIneligibleSurveySheet({ open: false })}
-			/>
 		</section>
 	);
 };
