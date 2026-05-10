@@ -82,14 +82,12 @@ export function useSectionBasedSurveyController() {
 		nextSectionFromApi,
 	);
 
-	const decidableBranchQuestion = questions.find(
-		(q) => q.isSectionDecidable && q.type === "multipleChoice",
+	const awaitingDecidableBranch = questions.some(
+		(q) =>
+			q.isSectionDecidable &&
+			q.type === "multipleChoice" &&
+			isMultipleChoiceAnswerEmpty(answersRef.current[q.questionId]),
 	);
-	const awaitingDecidableBranch =
-		decidableBranchQuestion !== undefined &&
-		isMultipleChoiceAnswerEmpty(
-			answersRef.current[decidableBranchQuestion.questionId],
-		);
 
 	const isLastSection = actualNextSection === 0 && !awaitingDecidableBranch;
 
