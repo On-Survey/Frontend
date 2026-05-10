@@ -51,44 +51,49 @@ export const SectionBasedSurvey = () => {
 				progress={progress}
 			/>
 			{(showMilestoneMessage || showFinalStretchMessage) && (
-				<div className="px-4 mt-4 mb-2 flex items-center gap-2">
-					{showFinalStretchMessage ? (
-						<>
-							<Asset.Icon
-								frameShape={Asset.frameShape.CleanW24}
-								backgroundColor="transparent"
-								name="icon-place-cheer-exam-1"
-								aria-hidden={true}
-								ratio="12/11"
-							/>
-							<Text
-								display="block"
-								color={adaptive.green800}
-								typography="t6"
-								fontWeight="semibold"
-							>
-								거의 다 왔어요. 조금만 힘내세요!
-							</Text>
-						</>
-					) : (
-						<>
-							<Asset.Icon
-								frameShape={Asset.frameShape.CleanW24}
-								backgroundColor="transparent"
-								name="icon-check-circle-green-fill"
-								aria-hidden={true}
-								ratio="1/1"
-							/>
-							<Text
-								display="block"
-								color={adaptive.green800}
-								typography="t6"
-								fontWeight="semibold"
-							>
-								잘 하고 있어요! 곧 400원 획득!
-							</Text>
-						</>
-					)}
+				<div className="px-4 mt-4 mb-2">
+					<div
+						className="flex items-center gap-2 rounded-2xl px-4 py-3"
+						style={{ backgroundColor: adaptive.green50 }}
+					>
+						{showFinalStretchMessage ? (
+							<>
+								<Asset.Icon
+									frameShape={Asset.frameShape.CleanW24}
+									backgroundColor="transparent"
+									name="icon-place-cheer-exam-1"
+									aria-hidden={true}
+									ratio="12/11"
+								/>
+								<Text
+									display="block"
+									color={adaptive.green800}
+									typography="t6"
+									fontWeight="semibold"
+								>
+									거의 다 왔어요. 조금만 힘내세요!
+								</Text>
+							</>
+						) : (
+							<>
+								<Asset.Icon
+									frameShape={Asset.frameShape.CleanW24}
+									backgroundColor="transparent"
+									name="icon-check-circle-green-fill"
+									aria-hidden={true}
+									ratio="1/1"
+								/>
+								<Text
+									display="block"
+									color={adaptive.green800}
+									typography="t6"
+									fontWeight="semibold"
+								>
+									잘 하고 있어요! 곧 400원 획득!
+								</Text>
+							</>
+						)}
+					</div>
 				</div>
 			)}
 			<Top

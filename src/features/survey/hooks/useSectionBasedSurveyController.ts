@@ -17,6 +17,11 @@ import { useCompleteSurvey } from "./useCompleteSurvey";
 import { useSurveyRouteParams } from "./useSurveyRouteParams";
 import { useSurveySectionQuestions } from "./useSurveySectionQuestions";
 
+function isMultipleChoiceAnswerEmpty(raw: string | undefined): boolean {
+	if (raw === undefined) return true;
+	return raw.split("|||").filter(Boolean).length === 0;
+}
+
 export interface SectionBasedSurveyState {
 	surveyId: number;
 	currentSection: number;
@@ -77,7 +82,16 @@ export function useSectionBasedSurveyController() {
 		nextSectionFromApi,
 	);
 
-	const isLastSection = actualNextSection === 0;
+	const decidableBranchQuestion = questions.find(
+		(q) => q.isSectionDecidable && q.type === "multipleChoice",
+	);
+	const awaitingDecidableBranch =
+		decidableBranchQuestion !== undefined &&
+		isMultipleChoiceAnswerEmpty(
+			answersRef.current[decidableBranchQuestion.questionId],
+		);
+
+	const isLastSection = actualNextSection === 0 && !awaitingDecidableBranch;
 
 	const canSkipEmptySectionForward =
 		questions.length === 0 &&
@@ -127,8 +141,8 @@ export function useSectionBasedSurveyController() {
 		void (async () => {
 			try {
 				const info = await getSurveyInfo(surveyId);
-				if (typeof info.sectionCount === "number") {
-					setSurveySectionCount(info.sectionCount);
+				if (typeof info.totalSections === "number") {
+					setSurveySectionCount(info.totalSections);
 				}
 			} catch {
 				// 진행 바 표시를 위한 보조 정보이므로 조회 실패 시 무시
