@@ -34,8 +34,11 @@ export const Intro = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const returnTo = (location.state as LocationStateWithReturnTo)?.returnTo;
-	const [isIneligibleBottomSheetOpen, setIsIneligibleBottomSheetOpen] =
-		useState(false);
+	const [ineligibleSurveySheet, setIneligibleSurveySheet] = useState<{
+		open: boolean;
+		title?: string;
+		description?: string;
+	}>({ open: false });
 
 	const { data: openStats, isPending: isOpenStatsPending } =
 		useSurveyOpenStats();
@@ -160,27 +163,30 @@ export const Intro = () => {
 			void sendUserInfoEvent("Toss");
 
 			let targetSummary: OngoingSurveySummary | undefined;
-			let listedSurveyCount = 0;
 			try {
 				const result = await getAllOngoingSurveys({
 					lastSurveyId: 0,
 					size: 100,
 				});
 				const surveys = result.surveys ?? [];
-				listedSurveyCount = surveys.length;
 				targetSummary = pickHighestPriceAmongEligible(surveys);
 			} catch (error) {
 				console.error("진행 설문 목록 조회 실패:", error);
-				navigate("/home", { replace: true });
+				setIneligibleSurveySheet({
+					open: true,
+					title: "설문 목록을 불러오지 못했어요",
+					description:
+						"잠시 후 다시 시도하거나, 하단 다음 버튼으로 홈에서 확인해 주세요.",
+				});
 				return;
 			}
 
 			if (!targetSummary) {
-				if (listedSurveyCount > 0) {
-					setIsIneligibleBottomSheetOpen(true);
-				} else {
-					navigate("/home", { replace: true });
-				}
+				setIneligibleSurveySheet({
+					open: true,
+					title: "지금 참여할 수 있는 설문이 없어요",
+					description: `로그인 후 조건에 맞는 설문이 없어요. \n새 설문이 열리면 홈에서 참여할 수 있어요.`,
+				});
 				return;
 			}
 
@@ -361,8 +367,10 @@ export const Intro = () => {
 			</FixedBottomCTA>
 
 			<IneligibleSurveyBottomSheet
-				open={isIneligibleBottomSheetOpen}
-				onClose={() => setIsIneligibleBottomSheetOpen(false)}
+				open={ineligibleSurveySheet.open}
+				title={ineligibleSurveySheet.title}
+				description={ineligibleSurveySheet.description}
+				onClose={() => setIneligibleSurveySheet({ open: false })}
 			/>
 		</section>
 	);

@@ -4,27 +4,38 @@ import { useNavigate } from "react-router-dom";
 interface IneligibleSurveyBottomSheetProps {
 	open: boolean;
 	onClose: () => void;
+	/** 미입력 시 목록에서 단일 설문 비대상 안내 문구 */
+	title?: string;
+	description?: string;
+	/** false면 확인 시 홈으로 이동하지 않고 닫기만 (인트로 등) */
+	confirmNavigatesHome?: boolean;
 }
+
+const DEFAULT_TITLE = "해당 설문에 참여할 수 없어요";
+const DEFAULT_DESCRIPTION = "조건이 맞지 않아 설문 참여가 불가능해요";
 
 export const IneligibleSurveyBottomSheet = ({
 	open,
 	onClose,
+	title = DEFAULT_TITLE,
+	description = DEFAULT_DESCRIPTION,
+	confirmNavigatesHome = true,
 }: IneligibleSurveyBottomSheetProps) => {
 	const navigate = useNavigate();
 
 	const handleConfirm = () => {
+		if (confirmNavigatesHome) {
+			navigate("/home");
+		}
 		onClose();
-		navigate("/home");
 	};
 
 	return (
 		<BottomSheet
-			header={
-				<BottomSheet.Header>해당 설문에 참여할 수 없어요</BottomSheet.Header>
-			}
+			header={<BottomSheet.Header>{title}</BottomSheet.Header>}
 			headerDescription={
 				<BottomSheet.HeaderDescription>
-					조건이 맞지 않아 설문 참여가 불가능해요
+					{description}
 				</BottomSheet.HeaderDescription>
 			}
 			open={open}
