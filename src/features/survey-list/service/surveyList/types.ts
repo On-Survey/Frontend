@@ -45,6 +45,12 @@ export interface OngoingSurveyResponse extends BaseResponse {
 	result: OngoingSurveyResult;
 }
 
+/** GET /v1/surveys/open-stats — 비인증, 노출 가능 설문 수 + 최대 리워드 코인 */
+export interface SurveyOpenStats {
+	openSurveyCount: number;
+	maxRewardCoin: number;
+}
+
 export interface GlobalStats {
 	totalDueCount: number;
 	totalCompletedCount: number;

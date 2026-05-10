@@ -7,6 +7,33 @@ import { useMemo } from "react";
 
 const DEFAULT_TOPIC: SurveyListItem["topicId"] = "DAILY_LIFE";
 
+export const mapOngoingSurveySummaryToSurveyListItem = (
+	survey: OngoingSurveySummary,
+): SurveyListItem => {
+	const topicId =
+		(survey.interests && survey.interests.length > 0
+			? survey.interests[0]
+			: survey.interest) ?? DEFAULT_TOPIC;
+	const topic = topics.find((t) => t.id === topicId);
+	const iconSrc = topic?.icon.type === "image" ? topic.icon.src : undefined;
+
+	const remainingTime = formatRemainingTime(survey.deadline);
+	return {
+		id: String(survey.surveyId),
+		topicId: topicId as SurveyListItem["topicId"],
+		title: survey.title,
+		iconType: iconSrc ? "image" : "icon",
+		iconSrc,
+		iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
+		description: survey.description,
+		remainingTimeText: remainingTime,
+		isClosed: remainingTime === "마감됨",
+		isFree: survey.isFree,
+		responseCount: survey.responseCount,
+		price: survey.price,
+	};
+};
+
 /** 훅 반환값: 추천/임박 리스트와 프로모션 총액 */
 export interface ProcessedOngoingSurveysResult {
 	recommended: SurveyListItem[];
@@ -31,31 +58,6 @@ export const useProcessedOngoingSurveys = (
 			};
 		}
 
-		const mapSurveyToItem = (survey: OngoingSurveySummary): SurveyListItem => {
-			const topicId =
-				(survey.interests && survey.interests.length > 0
-					? survey.interests[0]
-					: survey.interest) ?? DEFAULT_TOPIC;
-			const topic = topics.find((t) => t.id === topicId);
-			const iconSrc = topic?.icon.type === "image" ? topic.icon.src : undefined;
-
-			const remainingTime = formatRemainingTime(survey.deadline);
-			return {
-				id: String(survey.surveyId),
-				topicId: topicId as SurveyListItem["topicId"],
-				title: survey.title,
-				iconType: iconSrc ? "image" : "icon",
-				iconSrc,
-				iconName: topic?.icon.type === "icon" ? topic.icon.name : undefined,
-				description: survey.description,
-				remainingTimeText: remainingTime,
-				isClosed: remainingTime === "마감됨",
-				isFree: survey.isFree,
-				responseCount: survey.responseCount,
-				price: survey.price,
-			};
-		};
-
 		const filterClosedSurveys = (surveys?: OngoingSurveySummary[]) => {
 			if (!surveys) return [];
 			return surveys.filter((survey) => {
@@ -67,8 +69,10 @@ export const useProcessedOngoingSurveys = (
 		const filteredRecommended = filterClosedSurveys(result.recommended);
 		const filteredImpending = filterClosedSurveys(result.impending);
 
-		const rec = filteredRecommended.map(mapSurveyToItem);
-		const imp = filteredImpending.map(mapSurveyToItem);
+		const rec = filteredRecommended.map(
+			mapOngoingSurveySummaryToSurveyListItem,
+		);
+		const imp = filteredImpending.map(mapOngoingSurveySummaryToSurveyListItem);
 
 		const uniqueSurveyIds = getUniqueSurveyIdsFromArrays(
 			result.recommended,

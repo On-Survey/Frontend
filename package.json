@@ -17,7 +17,7 @@
 		"pullapi": "orval --config tools/orval.config.ts && biome check --write src/api"
 	},
 	"dependencies": {
-		"@apps-in-toss/web-framework": "2.0.5",
+		"@apps-in-toss/web-framework": "2.0.4",
 		"@emotion/react": "^11",
 		"@microsoft/clarity": "^1.0.2",
 		"@sentry/react": "^10.17.0",

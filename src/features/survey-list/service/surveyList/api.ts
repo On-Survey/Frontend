@@ -5,6 +5,7 @@ import type {
 	ImpendingSurveyResult,
 	OngoingSurveyResult,
 	RecommendedSurveyResult,
+	SurveyOpenStats,
 } from "./types";
 
 export interface GetOngoingSurveysParams {
@@ -90,5 +91,13 @@ export const getGlobalStats = async (): Promise<GlobalStats> => {
 	return apiCall<GlobalStats>({
 		method: "GET",
 		url: "/v1/surveys/global-stats",
+	});
+};
+
+/** 비인증: 열린 설문 수 + 최대 리워드 코인 */
+export const getSurveyOpenStats = async (): Promise<SurveyOpenStats> => {
+	return apiCall<SurveyOpenStats>({
+		method: "GET",
+		url: "/v1/surveys/open-stats",
 	});
 };
