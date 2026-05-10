@@ -181,6 +181,7 @@ export const Intro = () => {
 
 			const surveyItem = mapOngoingSurveySummaryToSurveyListItem(summary);
 			let hasScreening = false;
+			let screeningLookupFailed = false;
 			try {
 				const screeningsData = await getScreenings({
 					lastSurveyId: 0,
@@ -191,6 +192,12 @@ export const Intro = () => {
 				);
 			} catch (error) {
 				console.error("스크리닝 목록 조회 실패:", error);
+				screeningLookupFailed = true;
+			}
+
+			if (screeningLookupFailed) {
+				navigate("/home", { replace: true });
+				return;
 			}
 
 			const surveyReturnTo = hasScreening
