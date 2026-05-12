@@ -259,6 +259,7 @@ export const Survey = () => {
 			state: {
 				surveyId: numericSurveyId,
 				currentSection: 1,
+				sectionCount: surveyBasicInfoData?.totalSections,
 				answers: {},
 				previousAnswers: {},
 				surveyTitle: surveyTitle ?? "",

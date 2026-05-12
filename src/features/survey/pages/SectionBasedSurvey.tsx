@@ -1,8 +1,11 @@
 import { adaptive } from "@toss/tds-colors";
 import {
+	Asset,
 	Border,
 	CTAButton,
 	FixedBottomCTA,
+	ProgressBar,
+	Text,
 	Top,
 	WheelDatePicker,
 } from "@toss/tds-mobile";
@@ -14,6 +17,9 @@ export const SectionBasedSurvey = () => {
 	const {
 		headerTitleText,
 		headerSubtitleText,
+		rewardPriceDisplay,
+		progress,
+		sectionCount,
 		questions,
 		answers,
 		updateAnswer,
@@ -28,14 +34,70 @@ export const SectionBasedSurvey = () => {
 		handleNext,
 		handleSubmitClick,
 		isLastSection,
+		isBeforeSubmitStep,
 		submitting,
 		nextLoading,
 		isPending,
 		canSkipEmptySectionForward,
 	} = useSectionBasedSurveyController();
 
+	const showMilestoneMessage = (sectionCount ?? 0) >= 4 && !isBeforeSubmitStep;
+	const showFinalStretchMessage = isBeforeSubmitStep;
+
 	return (
 		<>
+			<ProgressBar
+				size="normal"
+				color={adaptive.green500}
+				progress={progress}
+			/>
+			{(showMilestoneMessage || showFinalStretchMessage) && (
+				<div className="px-4 mt-4 mb-2">
+					<div
+						className="flex items-center gap-2 rounded-2xl px-4 py-3"
+						style={{ backgroundColor: adaptive.green50 }}
+					>
+						{showFinalStretchMessage ? (
+							<>
+								<Asset.Icon
+									frameShape={Asset.frameShape.CleanW24}
+									backgroundColor="transparent"
+									name="icon-place-cheer-exam-1"
+									aria-hidden={true}
+									ratio="12/11"
+								/>
+								<Text
+									display="block"
+									color={adaptive.green800}
+									typography="t6"
+									fontWeight="semibold"
+								>
+									거의 다 왔어요. 조금만 힘내세요!
+								</Text>
+							</>
+						) : (
+							<>
+								<Asset.Icon
+									frameShape={Asset.frameShape.CleanW24}
+									backgroundColor="transparent"
+									name="icon-check-circle-green-fill"
+									aria-hidden={true}
+									ratio="1/1"
+								/>
+								<Text
+									display="block"
+									color={adaptive.green800}
+									typography="t6"
+									fontWeight="semibold"
+								>
+									잘 하고 있어요! 곧{" "}
+									{rewardPriceDisplay.toLocaleString("ko-KR")}원 획득!
+								</Text>
+							</>
+						)}
+					</div>
+				</div>
+			)}
 			<Top
 				title={
 					headerTitleText ? (

@@ -17,9 +17,15 @@ import { useCompleteSurvey } from "./useCompleteSurvey";
 import { useSurveyRouteParams } from "./useSurveyRouteParams";
 import { useSurveySectionQuestions } from "./useSurveySectionQuestions";
 
+function isMultipleChoiceAnswerEmpty(raw: string | undefined): boolean {
+	if (raw === undefined) return true;
+	return raw.split("|||").filter(Boolean).length === 0;
+}
+
 export interface SectionBasedSurveyState {
 	surveyId: number;
 	currentSection: number;
+	sectionCount?: number;
 	answers: Record<number, string>;
 	previousAnswers: Record<number, string>;
 	surveyTitle?: string;
@@ -32,8 +38,18 @@ export interface SectionBasedSurveyState {
 export function useSectionBasedSurveyController() {
 	const navigate = useNavigate();
 	const { openToast } = useToast();
-	const { numericSurveyId, locationState: routeState } = useSurveyRouteParams();
+	const {
+		numericSurveyId,
+		locationState: routeState,
+		priceFromState,
+	} = useSurveyRouteParams();
 	const locationState = routeState as SectionBasedSurveyState | undefined;
+
+	const rawRewardPrice = locationState?.price ?? priceFromState;
+	const rewardPriceDisplay =
+		rawRewardPrice != null && Number.isFinite(Number(rawRewardPrice))
+			? Number(rawRewardPrice)
+			: 200;
 	const surveyId = numericSurveyId ?? locationState?.surveyId ?? null;
 
 	const [currentSection, setCurrentSection] = useState(
@@ -76,7 +92,14 @@ export function useSectionBasedSurveyController() {
 		nextSectionFromApi,
 	);
 
-	const isLastSection = actualNextSection === 0;
+	const awaitingDecidableBranch = questions.some(
+		(q) =>
+			q.isSectionDecidable &&
+			q.type === "multipleChoice" &&
+			isMultipleChoiceAnswerEmpty(answersRef.current[q.questionId]),
+	);
+
+	const isLastSection = actualNextSection === 0 && !awaitingDecidableBranch;
 
 	const canSkipEmptySectionForward =
 		questions.length === 0 &&
@@ -116,6 +139,24 @@ export function useSectionBasedSurveyController() {
 	const [nextLoading, setNextLoading] = useState(false);
 
 	const { mutateAsync: completeSurveyMutation } = useCompleteSurvey();
+	const [surveySectionCount, setSurveySectionCount] = useState<
+		number | undefined
+	>(locationState?.sectionCount);
+
+	useEffect(() => {
+		if (!surveyId || surveySectionCount != null) return;
+
+		void (async () => {
+			try {
+				const info = await getSurveyInfo(surveyId);
+				if (typeof info.totalSections === "number") {
+					setSurveySectionCount(info.totalSections);
+				}
+			} catch {
+				// 진행 바 표시를 위한 보조 정보이므로 조회 실패 시 무시
+			}
+		})();
+	}, [surveyId, surveySectionCount]);
 
 	useEffect(() => {
 		if (!data?.info.length) return;
@@ -426,6 +467,13 @@ export function useSectionBasedSurveyController() {
 	return {
 		headerTitleText,
 		headerSubtitleText,
+		rewardPriceDisplay,
+		currentSection,
+		sectionCount: surveySectionCount,
+		progress:
+			typeof surveySectionCount === "number" && surveySectionCount > 0
+				? Math.min(currentSection / surveySectionCount, 1)
+				: 0,
 		canSkipEmptySectionForward,
 		questions,
 		answers,
@@ -441,6 +489,7 @@ export function useSectionBasedSurveyController() {
 		handleNext,
 		handleSubmitClick,
 		isLastSection,
+		isBeforeSubmitStep: isLastSection,
 		submitting,
 		nextLoading,
 		isPending,
