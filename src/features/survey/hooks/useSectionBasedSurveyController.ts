@@ -38,8 +38,18 @@ export interface SectionBasedSurveyState {
 export function useSectionBasedSurveyController() {
 	const navigate = useNavigate();
 	const { openToast } = useToast();
-	const { numericSurveyId, locationState: routeState } = useSurveyRouteParams();
+	const {
+		numericSurveyId,
+		locationState: routeState,
+		priceFromState,
+	} = useSurveyRouteParams();
 	const locationState = routeState as SectionBasedSurveyState | undefined;
+
+	const rawRewardPrice = locationState?.price ?? priceFromState;
+	const rewardPriceDisplay =
+		rawRewardPrice != null && Number.isFinite(Number(rawRewardPrice))
+			? Number(rawRewardPrice)
+			: 200;
 	const surveyId = numericSurveyId ?? locationState?.surveyId ?? null;
 
 	const [currentSection, setCurrentSection] = useState(
@@ -457,6 +467,7 @@ export function useSectionBasedSurveyController() {
 	return {
 		headerTitleText,
 		headerSubtitleText,
+		rewardPriceDisplay,
 		currentSection,
 		sectionCount: surveySectionCount,
 		progress:

@@ -17,6 +17,7 @@ export const SectionBasedSurvey = () => {
 	const {
 		headerTitleText,
 		headerSubtitleText,
+		rewardPriceDisplay,
 		progress,
 		sectionCount,
 		questions,
@@ -89,7 +90,8 @@ export const SectionBasedSurvey = () => {
 									typography="t6"
 									fontWeight="semibold"
 								>
-									잘 하고 있어요! 곧 400원 획득!
+									잘 하고 있어요! 곧{" "}
+									{rewardPriceDisplay.toLocaleString("ko-KR")}원 획득!
 								</Text>
 							</>
 						)}

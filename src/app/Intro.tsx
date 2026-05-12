@@ -234,7 +234,7 @@ export const Intro = () => {
 
 	return (
 		<section
-			className="flex flex-col w-full mx-auto min-h-screen"
+			className="flex flex-col w-full mx-auto min-h-screen justify-center"
 			style={{
 				background:
 					"linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 15%, #C4E4D8 65%, #FFFFFF 100%)",
